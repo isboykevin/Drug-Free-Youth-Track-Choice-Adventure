@@ -1,0 +1,1719 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>無毒青春：跑道選擇大冒險 - 天主教新民書院 DO NOT 隊伍</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700;900&family=Noto+Sans+TC:wght@600;700;900&display=swap" rel="stylesheet">
+    <!-- Three.js Engine -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <style>
+        * {
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+        body {
+            font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+            overflow: hidden;
+            background-color: #070d1e;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.94);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        .btn-bounce {
+            transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.12s ease;
+        }
+        .btn-bounce:active {
+            transform: scale(0.92);
+        }
+        .animated-gradient-text {
+            background: linear-gradient(135deg, #fb923c, #facc15, #34d399, #38bdf8);
+            background-size: 250% 250%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientMove 3s ease infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes floatScore {
+            0% { transform: translateY(0) scale(0.8); opacity: 1; }
+            50% { transform: translateY(-45px) scale(1.3); opacity: 1; }
+            100% { transform: translateY(-90px) scale(0.9); opacity: 0; }
+        }
+        .animate-score-popup {
+            animation: floatScore 0.95s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+        }
+        @keyframes mascotPopup {
+            0% { transform: scale(0.6) translateY(50px); opacity: 0; }
+            10% { transform: scale(1.06) translateY(-8px); opacity: 1; }
+            18% { transform: scale(1) translateY(0); opacity: 1; }
+            88% { transform: scale(1) translateY(0); opacity: 1; }
+            100% { transform: scale(0.92) translateY(20px); opacity: 0; }
+        }
+        .animate-mascot-reaction {
+            animation: mascotPopup 5.0s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        @keyframes comboPulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-combo {
+            animation: comboPulse 0.4s ease-out forwards;
+        }
+        .safe-bottom-margin {
+            margin-bottom: max(env(safe-area-inset-bottom, 0px), 16px);
+        }
+    </style>
+</head>
+<body class="w-screen h-screen relative select-none overflow-hidden text-white bg-slate-950">
+
+    <!-- 3D Game Canvas Container -->
+    <div id="canvas-container" class="w-full h-full absolute inset-0 z-0"></div>
+
+    <!-- Screen Flash on Wrong Choice -->
+    <div id="damage-flash" class="absolute inset-0 bg-rose-600/30 z-15 pointer-events-none opacity-0 transition-opacity duration-150"></div>
+
+    <!-- Dynamic Floating Popups Container -->
+    <div id="score-popups-container" class="absolute inset-0 z-20 pointer-events-none overflow-hidden flex items-center justify-center"></div>
+
+    <!-- Mascot Reaction Overlay (5s Feedback) -->
+    <div id="mascot-reaction-container" class="absolute inset-x-0 bottom-24 sm:bottom-28 z-30 pointer-events-none flex flex-col items-center justify-center hidden px-4">
+        <div id="mascot-reaction-card" class="glass-card px-5 py-3.5 rounded-3xl border-2 shadow-2xl flex items-center gap-4 max-w-md w-full mx-auto transform">
+            <div id="mascot-svg-box" class="w-16 h-16 sm:w-18 sm:h-18 shrink-0 drop-shadow-lg"></div>
+            <div class="flex-1 min-w-0">
+                <div id="mascot-reaction-title" class="text-sm sm:text-base font-black flex items-center gap-1.5 mb-0.5"></div>
+                <div id="mascot-reaction-desc" class="text-xs sm:text-sm font-bold text-gray-100 leading-snug break-words"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HUD Layer -->
+    <div id="hud" class="absolute inset-0 z-20 pointer-events-none flex flex-col justify-between p-3 sm:p-5 hidden">
+        <!-- Top HUD Navigation -->
+        <div class="w-full flex justify-between items-center gap-2 max-w-5xl mx-auto">
+            <!-- Left Controls: Pause & Early End -->
+            <div class="flex items-center gap-1.5 sm:gap-2 pointer-events-auto shrink-0">
+                <button id="btn-pause" class="btn-bounce bg-amber-500 hover:bg-amber-600 text-white font-black p-2 sm:p-2.5 rounded-2xl shadow-xl border-2 border-amber-300 flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 text-base sm:text-lg">
+                    <i class="fa-solid fa-pause"></i>
+                </button>
+                <button id="btn-quit" class="btn-bounce bg-rose-600 hover:bg-rose-700 text-white font-bold px-2.5 sm:px-3 py-1.5 rounded-2xl shadow-xl border-2 border-rose-400 flex items-center justify-center h-10 sm:h-11 gap-1.5 text-xs whitespace-nowrap shrink-0">
+                    <i class="fa-solid fa-flag-checkered"></i>
+                    <span>提早結算</span>
+                </button>
+            </div>
+
+            <!-- Team Header Badge -->
+            <div class="hidden md:flex items-center gap-2 bg-slate-900/90 px-3.5 py-1.5 rounded-full border border-amber-400/40 shadow-lg">
+                <div class="w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 font-black text-xs">DN</div>
+                <span class="text-xs font-bold text-amber-300">天主教新民書院 DO NOT 隊伍</span>
+            </div>
+
+            <!-- Right Score & Health Display -->
+            <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                <!-- Heart Container -->
+                <div class="glass-card px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-2xl flex items-center gap-1.5 sm:gap-2 border border-rose-400/50 shadow-xl shrink-0">
+                    <i class="fa-solid fa-shield-halved text-rose-400 text-base sm:text-lg shrink-0"></i>
+                    <div>
+                        <div class="text-[9px] sm:text-[10px] text-rose-200 font-bold uppercase tracking-wider whitespace-nowrap">健康生命</div>
+                        <div id="hud-hearts" class="flex items-center gap-0.5 sm:gap-1 leading-none mt-0.5"></div>
+                    </div>
+                </div>
+
+                <!-- Score Container -->
+                <div class="glass-card px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-2xl flex items-center gap-1.5 sm:gap-2 border border-amber-400/50 shadow-xl shrink-0">
+                    <i class="fa-solid fa-star text-amber-400 text-base sm:text-lg shrink-0"></i>
+                    <div>
+                        <div class="text-[9px] sm:text-[10px] text-amber-200 font-bold uppercase tracking-wider whitespace-nowrap">正能量</div>
+                        <div id="hud-score" class="text-base sm:text-xl font-black text-amber-300 leading-none tabular-nums">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Touch Controls -->
+        <div class="w-full max-w-lg mx-auto flex justify-between items-end pb-10 sm:pb-14 pointer-events-auto md:hidden px-2 safe-bottom-margin">
+            <button id="btn-left" class="btn-bounce w-16 h-16 bg-amber-500/30 active:bg-amber-500/70 rounded-3xl backdrop-blur-md border-2 border-amber-300/70 text-2xl text-white flex items-center justify-center shadow-2xl">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="text-xs text-amber-200 bg-slate-900/90 px-3.5 py-2 rounded-full border border-amber-400/40 backdrop-blur-md pointer-events-none flex items-center gap-1.5 shadow-lg">
+                <i class="fa-solid fa-hand-pointer text-amber-400"></i> 滑動或點擊避開毒品
+            </div>
+            <button id="btn-right" class="btn-bounce w-16 h-16 bg-amber-500/30 active:bg-amber-500/70 rounded-3xl backdrop-blur-md border-2 border-amber-300/70 text-2xl text-white flex items-center justify-center shadow-2xl">
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="touch-controller" class="absolute inset-0 z-10 hidden"></div>
+
+    <!-- Start Screen Overlay -->
+    <div id="screen-start" class="absolute inset-0 z-40 flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-md overflow-y-auto">
+        <div class="glass-card max-w-lg w-full p-4 sm:p-6 rounded-3xl text-center border-2 border-amber-400/50 shadow-2xl relative my-auto">
+            <!-- Team Crest Header -->
+            <div class="flex justify-center items-center gap-3 mb-2.5">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-900/90 border-2 border-amber-400 p-1 shadow-lg flex items-center justify-center shrink-0">
+                    <div id="start-logo-svg" class="w-full h-full flex items-center justify-center"></div>
+                </div>
+                <div class="text-left">
+                    <div class="text-[10px] sm:text-xs font-black tracking-widest text-amber-400 uppercase">第五屆禁毒領袖學院</div>
+                    <div class="text-xs sm:text-sm font-extrabold text-cyan-300">天主教新民書院 DO NOT 隊伍</div>
+                    <div class="text-[10px] text-gray-300 font-bold">遊戲製作團隊 傾力創作</div>
+                </div>
+            </div>
+
+            <h1 class="text-2xl sm:text-3xl font-black mb-1 animated-gradient-text whitespace-nowrap">
+                無毒青春：跑道選擇大冒險
+            </h1>
+            <p class="text-amber-200 text-xs sm:text-sm mb-3 font-bold">燃亮正義之火 ‧ 斷絕毒害之鏈</p>
+
+            <!-- Rules Card -->
+            <div class="bg-slate-900/90 rounded-2xl p-3 mb-3 text-left border border-slate-700/80 text-xs space-y-2">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold shrink-0">🏁</span>
+                    <span><b>目標衝線過關</b>：隨機挑戰 10 道禁毒試煉，答對順利衝線！</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold shrink-0">📖</span>
+                    <span><b>選出正確觀念</b>：答對回復 0.5 顆心並累積正能量（上限 3 心）</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                    <span class="w-6 h-6 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center font-bold shrink-0">⚠️</span>
+                    <span><b>避開毒品陷阱</b>：選錯扣除 1 顆心，生命值歸零即宣告挑戰失敗</span>
+                </div>
+            </div>
+
+            <!-- Anti-Drug Notice -->
+            <div class="bg-gradient-to-r from-slate-900 to-amber-950/50 border border-amber-500/40 p-3 rounded-2xl text-left mb-3.5 text-[11px] leading-relaxed space-y-1">
+                <div class="font-bold text-amber-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-bullhorn text-amber-400"></i> 重要禁毒訊息：
+                </div>
+                <p class="text-gray-200">
+                    毒品摧毀一生，家不成家，社會也被迫付上沉重代價。請挺身而出，舉報毒品罪行。警察毒品舉報熱線: 2527-1234。市民如希望就依托咪酯作出舉報，請致電6629-2966
+                </p>
+            </div>
+
+            <button id="btn-start" class="btn-bounce w-full py-3.5 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 hover:from-amber-400 hover:to-rose-400 text-slate-950 font-black text-xl rounded-2xl shadow-xl shadow-amber-500/30 border-2 border-amber-200 flex items-center justify-center gap-2 mb-2">
+                <span>開始挑戰</span>
+                <i class="fa-solid fa-play"></i>
+            </button>
+
+            <!-- Disclaimer Button -->
+            <button id="btn-show-disclaimer" class="text-xs text-slate-400 hover:text-amber-300 underline flex items-center justify-center gap-1 mx-auto py-1">
+                <i class="fa-solid fa-scale-balanced"></i> 遊戲開發 AI 技術免責聲明
+            </button>
+        </div>
+    </div>
+
+    <!-- AI Disclaimer Modal -->
+    <div id="modal-disclaimer" class="absolute inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/95 backdrop-blur-md hidden overflow-y-auto">
+        <div class="glass-card max-w-lg w-full p-4 sm:p-6 rounded-3xl text-left border-2 border-amber-400/50 shadow-2xl relative my-auto max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between pb-2 border-b border-slate-700">
+                <div class="text-sm sm:text-base font-black text-amber-300 flex items-center gap-2">
+                    <i class="fa-solid fa-robot text-amber-400"></i>
+                    <span>遊戲開發採用 AI 技術之免責聲明</span>
+                </div>
+                <button id="btn-close-disclaimer" class="text-gray-400 hover:text-white text-xl p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="overflow-y-auto py-3 space-y-3 text-xs text-gray-200 leading-relaxed pr-1">
+                <p class="text-amber-200 font-bold">
+                    本遊戲在開發與製作過程中，部分或全部資產（包括但不限於：遊戲美術、腳本文案、音樂音效、程式代碼等）採用了人工智慧（AI）技術輔助生成。當您開始下載、安裝或使用本遊戲時，即視為您已理解並同意以下條款：
+                </p>
+                <div class="space-y-1">
+                    <b class="text-amber-300">1. 知識產權（版權）與商業授權聲明</b>
+                    <p class="text-gray-300">本遊戲所使用的 AI 生成素材，均已在開發階段通過合法渠道與技術工具進行生成與篩選。素材之版權與使用權歸本開發團隊所有，或已取得相關 AI 工具供應商之合法商業授權。用戶不得以「AI 生成內容不受版權保護」為由，未經授權惡意私自抓取、反編譯、複製、修改或將本遊戲之任何資產用於其他商業用途。</p>
+                </div>
+                <div class="space-y-1">
+                    <b class="text-amber-300">2. 禁止利用本遊戲擾亂社會秩序（核心規範）</b>
+                    <p class="text-gray-300">本遊戲內容均為教育宣導與虛構設計，不代表任何真實事件。嚴禁任何用戶利用、修改、傳播本遊戲之任何畫面、文案或衍生內容，從事任何擾亂社會秩序、危害公共安全、破壞社會穩定或違反所在地法律法規之行為。禁止將遊戲素材用於惡意造謠、散布假訊息、政治煽動或進行任何非法宣傳。若因不當傳播而觸犯法律，一切法律責任由用戶本人自行承擔。</p>
+                </div>
+                <div class="space-y-1">
+                    <b class="text-amber-300">3. 技術與內容局限性免責</b>
+                    <p class="text-gray-300">由於部分素材由 AI 輔助生成，遊戲內可能存在某些美術風格不一致、邏輯或文本細節未臻完美之處。本團隊不保證遊戲內容完全符合所有用戶的主觀審美或預期。遊戲以「現狀」提供，本團隊不對因遊戲內容產生的任何觀感不適承擔任何法律責任。</p>
+                </div>
+                <div class="space-y-1">
+                    <b class="text-amber-300">4. 處置與修訂權</b>
+                    <p class="text-gray-300">若發現用戶違反本聲明或利用本遊戲進行不法活動，官方有權立即封禁並追究法律責任。本團隊保留隨時修訂本聲明的權利，修訂後自公布時起生效。</p>
+                </div>
+            </div>
+
+            <button id="btn-ack-disclaimer" class="btn-bounce w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-sm mt-2">
+                我已閱讀並知悉
+            </button>
+        </div>
+    </div>
+
+    <!-- Pause Screen -->
+    <div id="screen-pause" class="absolute inset-0 z-40 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md hidden">
+        <div class="glass-card max-w-sm w-full p-6 rounded-3xl text-center border border-white/20 shadow-2xl">
+            <i class="fa-solid fa-circle-pause text-5xl text-amber-400 mb-2"></i>
+            <h2 class="text-2xl font-bold mb-1">遊戲暫停中</h2>
+            <p class="text-amber-300 text-sm mb-5 font-bold">天主教新民書院 DO NOT 隊伍提醒您：「毒品咪制！」</p>
+
+            <div class="space-y-3">
+                <button id="btn-resume" class="btn-bounce w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-2xl shadow-lg border border-amber-300 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> 繼續遊戲
+                </button>
+                <button id="btn-restart-pause" class="btn-bounce w-full py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-2xl border border-slate-500 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> 重新開始
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over / Victory Screen -->
+    <div id="screen-gameover" class="absolute inset-0 z-40 flex items-center justify-center p-3 sm:p-4 bg-slate-950/90 backdrop-blur-lg hidden overflow-y-auto" style="touch-action: pan-y;">
+        <div class="glass-card max-w-md w-full p-4 sm:p-6 rounded-3xl text-center border-2 border-amber-400/50 shadow-2xl relative my-auto">
+            <div id="result-icon" class="inline-block p-3.5 rounded-2xl mb-2 bg-amber-500/20 text-amber-400 border border-amber-400/30">
+                <i class="fa-solid fa-trophy text-4xl sm:text-5xl"></i>
+            </div>
+
+            <h2 id="result-title" class="text-2xl sm:text-3xl font-black mb-1 bg-clip-text text-transparent bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-500">
+                挑戰完成！
+            </h2>
+            <p id="result-subtitle" class="text-amber-200 text-xs sm:text-sm mb-3.5 font-bold">恭喜你！成功抵禦毒品誘惑，捍衛健康人生！</p>
+
+            <!-- Stats Grid -->
+            <div class="bg-slate-900/90 rounded-2xl p-2.5 sm:p-3 mb-3 border border-slate-700 grid grid-cols-2 gap-2 text-center">
+                <div class="p-2 bg-slate-800/80 rounded-xl">
+                    <div class="text-[10px] text-gray-400 font-bold mb-0.5">本局防毒得分</div>
+                    <div id="final-score" class="text-xl sm:text-2xl font-black text-amber-400">0</div>
+                </div>
+                <div class="p-2 bg-slate-800/80 rounded-xl">
+                    <div class="text-[10px] text-gray-400 font-bold mb-0.5">歷史最高紀錄</div>
+                    <div id="best-score" class="text-xl sm:text-2xl font-black text-cyan-400">0</div>
+                </div>
+                <div class="p-2 bg-slate-800/80 rounded-xl">
+                    <div class="text-[10px] text-gray-400 font-bold mb-0.5">剩餘健康生命</div>
+                    <div id="final-lives" class="flex items-center justify-center gap-1 mt-1"></div>
+                </div>
+                <div class="p-2 bg-slate-800/80 rounded-xl">
+                    <div class="text-[10px] text-gray-400 font-bold mb-0.5">正確抵禦誘惑</div>
+                    <div id="final-gates" class="text-base sm:text-lg font-bold text-emerald-400">0 / 10 次</div>
+                </div>
+            </div>
+
+            <!-- Creator Credit Box -->
+            <div class="bg-slate-900/80 border border-amber-400/30 rounded-xl p-2.5 mb-3 flex items-center justify-between text-left">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">DN</div>
+                    <div>
+                        <div class="text-[9px] text-amber-300 font-bold">遊戲製作團隊</div>
+                        <div class="text-[11px] text-white font-black">天主教新民書院 第五屆禁毒領袖學院 DO NOT 隊伍</div>
+                    </div>
+                </div>
+                <i class="fa-solid fa-award text-amber-400 text-lg"></i>
+            </div>
+
+            <!-- Hotline Notice Card -->
+            <div class="bg-gradient-to-r from-slate-900 to-amber-950/50 border border-amber-500/40 p-2.5 rounded-2xl text-left mb-3.5 text-[10px] sm:text-[11px] leading-relaxed space-y-1">
+                <div class="font-bold text-amber-300 flex items-center gap-1.5">
+                    <i class="fa-solid fa-bullhorn text-amber-400"></i> 重要禁毒訊息：
+                </div>
+                <p class="text-gray-200">
+                    毒品摧毀一生，家不成家，社會也被迫付上沉重代價。請挺身而出，舉報毒品罪行。警察毒品舉報熱線: 2527-1234。市民如希望就依托咪酯作出舉報，請致電6629-2966
+                </p>
+            </div>
+
+            <button id="btn-replay" class="btn-bounce w-full py-3 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-base sm:text-lg rounded-2xl shadow-lg shadow-amber-500/30 border-2 border-amber-300 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-house"></i> 回到主頁
+            </button>
+        </div>
+    </div>
+
+    <!-- Sound Effects Module -->
+    <script>
+        class SoundFX {
+            constructor() {
+                this.ctx = null;
+            }
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (this.ctx && this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+            playGatePositive() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.18);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.18);
+            }
+            playGateNegative() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.linearRampToValueAtTime(110, now + 0.25);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            }
+            playCoin() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(987.77, now);
+                osc.frequency.setValueAtTime(1318.51, now + 0.08);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+            playCombo() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(659.25, now);
+                osc.frequency.exponentialRampToValueAtTime(1318.51, now + 0.3);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+            playVictory() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+                notes.forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.1);
+                    gain.gain.setValueAtTime(0.3, now + idx * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.1 + 0.25);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + idx * 0.1);
+                    osc.stop(now + idx * 0.1 + 0.25);
+                });
+            }
+            playGameOver() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.linearRampToValueAtTime(80, now + 0.6);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.6);
+            }
+        }
+        const soundFx = new SoundFX();
+    </script>
+
+    <!-- 40 Question Pairs Updated with Exact Document Text Match -->
+    <script>
+        const antiDrugQuestionPairs = [
+            {
+                prompt: "面對依托咪酯誘惑時？",
+                good: { text: "堅決拒絕", fact: "依托咪酯已被列為毒品，吸食會引致昏迷、抽搐甚至猝死！" },
+                bad: { text: "好奇嘗試", fact: "依托咪酯已被列為毒品，吸食會引致昏迷、抽搐甚至猝死！" }
+            },
+            {
+                prompt: "大麻是否天然無害？",
+                good: { text: "極易成癮傷腦", fact: "大麻屬法定危險藥物，具高成癮性並會誘發嚴重精神障礙！" },
+                bad: { text: "天然無害", fact: "大麻屬法定危險藥物，具高成癮性並會誘發嚴重精神障礙！" }
+            },
+            {
+                prompt: "朋友慫恿嘗試吸毒時？",
+                good: { text: "堅定拒絕離開", fact: "真正的朋友絕不會拉你吸毒！勇敢拒絕並離開現場！" },
+                bad: { text: "礙於面子順從", fact: "真正的朋友絕不會拉你吸毒！勇敢拒絕並離開現場！" }
+            },
+            {
+                prompt: "面對學業或生活壓力時？",
+                good: { text: "運動聽歌紓壓", fact: "運動可自然釋放多巴胺，是健康減壓與提升能量的最佳途徑！" },
+                bad: { text: "吸毒逃避現實", fact: "運動可自然釋放多巴胺，是健康減壓與提升能量的最佳途徑！" }
+            },
+            {
+                prompt: "陌生人提供來歷不明的電子煙油？",
+                good: { text: "警惕果斷拒絕", fact: "不明煙油極常混入依托咪酯等致命毒品，切勿接觸！" },
+                bad: { text: "好奇接過試吸", fact: "不明煙油極常混入依托咪酯等致命毒品，切勿接觸！" }
+            },
+            {
+                prompt: "關於氯胺酮（K仔）的嚴重危害？",
+                good: { text: "引致膀胱萎縮", fact: "濫用K仔會造成永久性尿頻、尿失禁及不可逆的腎臟損害！" },
+                bad: { text: "毫無身體影響", fact: "濫用K仔會造成永久性尿頻、尿失禁及不可逆的腎臟損害！" }
+            },
+            {
+                prompt: "防範毒品誘惑的最佳態度？",
+                good: { text: "毒品咪制！", fact: "堅守底線！一啖都唔好試，遠離任何毒品陷阱！" },
+                bad: { text: "只試一口無妨", fact: "堅守底線！一啖都唔好試，遠離任何毒品陷阱！" }
+            },
+            {
+                prompt: "吸食或販運毒品的法律後果？",
+                good: { text: "留下終身案底", fact: "涉毒罪行懲處極其嚴厲，將留下終身刑事案底並摧毀前途！" },
+                bad: { text: "只是小事一樁", fact: "涉毒罪行懲處極其嚴厲，將留下終身刑事案底並摧毀前途！" }
+            },
+            {
+                prompt: "冰毒（甲基安非他命）對大腦的影響？",
+                good: { text: "永久損害腦神經", fact: "冰毒會嚴重破壞中樞神經系統，引致永久性腦損與精神失常！" },
+                bad: { text: "吸食後可提神", fact: "冰毒會嚴重破壞中樞神經系統，引致永久性腦損與精神失常！" }
+            },
+            {
+                prompt: "懷疑身邊朋友染上毒癮時？",
+                good: { text: "尋求師長協助", fact: "及早尋求信任的老師、社工或專業機構協助才是真正幫他！" },
+                bad: { text: "盲目幫忙隱瞞", fact: "及早尋求信任的老師、社工或專業機構協助才是真正幫他！" }
+            },
+            {
+                prompt: "濫用可卡因對心血管的致命危險？",
+                good: { text: "引發心律不正猝死", fact: "可卡因會導致血管急速劇烈收縮，極易誘發急性心臟病發猝死！" },
+                bad: { text: "完全沒有危險", fact: "可卡因會導致血管急速劇烈收縮，極易誘發急性心臟病發猝死！" }
+            },
+            {
+                prompt: "服用處方鎮靜劑或止痛藥的正確原則？",
+                good: { text: "嚴格按醫囑服用", fact: "非醫療用途或過量濫用處方藥物等同吸毒，極易造成生理成癮！" },
+                bad: { text: "擅自過量濫用", fact: "非醫療用途或過量濫用處方藥物等同吸毒，極易造成生理成癮！" }
+            },
+            {
+                prompt: "網上「兼職賺快錢」招攬代購運貨？",
+                good: { text: "提防販毒陷阱", fact: "販毒集團常以高薪誘騙青少年運毒，協助代購同樣犯重罪！" },
+                bad: { text: "貪圖快錢代購", fact: "販毒集團常以高薪誘騙青少年運毒，協助代購同樣犯重罪！" }
+            },
+            {
+                prompt: "含有大麻成分的進口零食或軟糖？",
+                good: { text: "屬非法危險藥物", fact: "含有THC或CBD成分的食品在香港均屬法定危險藥物，全面違法！" },
+                bad: { text: "當作普通零食", fact: "含有THC或CBD成分的食品在香港均屬法定危險藥物，全面違法！" }
+            },
+            {
+                prompt: "關於搖頭丸（MDMA）的毒害？",
+                good: { text: "引發體溫過高衰竭", fact: "搖頭丸會導致體溫急劇飆升、嚴重脫水及急性心腎衰竭！" },
+                bad: { text: "出現輕鬆愉快的感覺", fact: "搖頭丸會導致體溫急劇飆升、嚴重脫水及急性心腎衰竭！" }
+            },
+            {
+                prompt: "吸食海洛英（白粉）的嚴重後果？",
+                good: { text: "極速成癮且難戒", fact: "海洛英成癮速度驚人，戒斷反應極其劇烈，過量吸食會即時窒息！" },
+                bad: { text: "自認可控制毒癮", fact: "海洛英成癮速度驚人，戒斷反應極其劇烈，過量吸食會即時窒息！" }
+            },
+            {
+                prompt: "部分海外合法毒品（如大麻）？",
+                good: { text: "攜帶入境即屬販毒", fact: "無論來源地是否合法，攜帶任何毒品進入香港境內均屬非法販毒！" },
+                bad: { text: "順便帶回香港", fact: "無論來源地是否合法，攜帶任何毒品進入香港境內均屬非法販毒！" }
+            },
+            {
+                prompt: "毒販聲稱吸毒能夠「快速減肥」？",
+                good: { text: "識破毒販謊言", fact: "毒品透過摧毀代謝系統與器官健康致病，絕非健康減肥方法！" },
+                bad: { text: "嘗試藉此減肥", fact: "毒品透過摧毀代謝系統與器官健康致病，絕非健康減肥方法！" }
+            },
+            {
+                prompt: "未成年人涉及販毒之法律責任？",
+                good: { text: "同樣判處重刑", fact: "法庭對青少年涉毒案件絕不姑息，販運毒品同樣面臨長期監禁！" },
+                bad: { text: "免受刑事懲罰", fact: "法庭對青少年涉毒案件絕不姑息，販運毒品同樣面臨長期監禁！" }
+            },
+            {
+                prompt: "濫用含可待因之止咳藥水？",
+                good: { text: "會上癮並抑制呼吸", fact: "長期過量濫用咳藥水會上癮，過量更會直接抑制呼吸中樞致死！" },
+                bad: { text: "當作普通成藥", fact: "長期過量濫用咳藥水會上癮，過量更會直接抑制呼吸中樞致死！" }
+            },
+            {
+                prompt: "朋友聲稱「只試一次不會上癮」？",
+                good: { text: "堅決一口都不試", fact: "許多毒品（如冰毒、依托咪酯）極易產生強烈心理依賴，一口都不能試！" },
+                bad: { text: "淺嚐一次無妨", fact: "許多毒品（如冰毒、依托咪酯）極易產生強烈心理依賴，一口都不能試！" }
+            },
+            {
+                prompt: "發現同學藏有依托咪酯或毒品時？",
+                good: { text: "即時向老師求助", fact: "及時向學校師長反映，才能讓專業團隊介入挽救同學！" },
+                bad: { text: "包庇並一同嘗試", fact: "及時向學校師長反映，才能讓專業團隊介入挽救同學！" }
+            },
+            {
+                prompt: "吸毒對家庭與人際關係的打擊？",
+                good: { text: "破壞信任摧毀家庭", fact: "吸毒會導致性情大變、親友信任破裂，令整個家庭承受巨大痛苦！" },
+                bad: { text: "不影響其他人", fact: "吸毒會導致性情大變、親友信任破裂，令整個家庭承受巨大痛苦！" }
+            },
+            {
+                prompt: "遇到無法宣洩的情緒低潮？",
+                good: { text: "尋求社工熱線支援", fact: "主動尋求社工、輔導員或熱線協助，才是積極健康的解決之道！" },
+                bad: { text: "借毒消愁麻醉自己", fact: "主動尋求社工、輔導員或熱線協助，才是積極健康的解決之道！" }
+            },
+            {
+                prompt: "香港法例對依托咪酯之管制規範？",
+                good: { text: "已列為第一部毒藥", fact: "非法管有、吸食或售賣依托咪酯均屬嚴重違法罪行，警方全力嚴打！" },
+                bad: { text: "不受法律監管", fact: "非法管有、吸食或售賣依托咪酯均屬嚴重違法罪行，警方全力嚴打！" }
+            },
+            {
+                prompt: "濫用冰毒引發的精神症狀？",
+                good: { text: "導致幻覺被害妄想", fact: "冰毒會損害神經突觸，引發嚴重的被害妄想、幻聽與暴力傾向！" },
+                bad: { text: "令人頭腦清醒", fact: "冰毒會損害神經突觸，引發嚴重的被害妄想、幻聽與暴力傾向！" }
+            },
+            {
+                prompt: "舉報依托咪酯之專線電話？",
+                good: { text: "致電 6629-2966", fact: "如掌握任何涉及依托咪酯毒品的線索，請致電專線 6629-2966 舉報！" },
+                bad: { text: "置身事外不理會", fact: "如掌握任何涉及依托咪酯毒品的線索，請致電專線 6629-2966 舉報！" }
+            },
+            {
+                prompt: "在社交平台看見以暗語出售草藥或煙油？",
+                good: { text: "警惕暗藏大麻毒品", fact: "網絡暗語常偽裝大麻或合成毒品，切勿因好奇而私訊購買！" },
+                bad: { text: "好奇私訊購買", fact: "網絡暗語常偽裝大麻或合成毒品，切勿因好奇而私訊購買！" }
+            },
+            {
+                prompt: "長期吸毒對容貌與身體外觀的損害？",
+                good: { text: "加速衰老皮膚潰爛", fact: "毒品嚴重破壞免疫系統與微血管，導致牙齒脫落、面部潰爛與早衰！" },
+                bad: { text: "不會影響外貌", fact: "毒品嚴重破壞免疫系統與微血管，導致牙齒脫落、面部潰爛與早衰！" }
+            },
+            {
+                prompt: "混合吸食兩種或以上的危險藥物？",
+                good: { text: "極易急性中毒猝死", fact: "混合毒品會產生致命的協同毒性，引發急性中毒與器官衰竭！" },
+                bad: { text: "追求混食刺激", fact: "混合毒品會產生致命的協同毒性，引發急性中毒與器官衰竭！" }
+            },
+            {
+                prompt: "察覺身邊親友有吸毒跡象時？",
+                good: { text: "及早尋求專業戒毒", fact: "越早尋求戒毒機構與專業輔導介入，戒毒成功率與康復機會越高！" },
+                bad: { text: "逃避縱容惡化", fact: "越早尋求戒毒機構與專業輔導介入，戒毒成功率與康復機會越高！" }
+            },
+            {
+                prompt: "陌生人請求幫忙看管或轉交不明行李？",
+                good: { text: "果斷拒絕以免涉毒", fact: "若包裹內藏有毒品，替人看管同樣構成非法管有或販運毒品罪！" },
+                bad: { text: "隨手答應幫忙", fact: "若包裹內藏有毒品，替人看管同樣構成非法管有或販運毒品罪！" }
+            },
+            {
+                prompt: "面對同儕毒品誘惑的最佳應對？",
+                good: { text: "堅定說不藉故離開", fact: "果斷表達堅決立場，並藉故迅速離開現場，遠離高危環境！" },
+                bad: { text: "猶豫不決難以開口", fact: "果斷表達堅決立場，並藉故迅速離開現場，遠離高危環境！" }
+            },
+            {
+                prompt: "關於含有大麻二酚（CBD）之產品？",
+                good: { text: "在香港全屬違法", fact: "香港法例已將CBD全面列為危險藥物，管有、進口或銷售皆屬違法！" },
+                bad: { text: "當作普通保健品", fact: "香港法例已將CBD全面列為危險藥物，管有、進口或銷售皆屬違法！" }
+            },
+            {
+                prompt: "利用加密軟件Telegram買賣毒品？",
+                good: { text: "網絡交易無所遁形", fact: "執法人員具備先進科技全天候監控打擊，網絡交易絕非避風港！" },
+                bad: { text: "網上交易安全隱蔽", fact: "執法人員具備先進科技全天候監控打擊，網絡交易絕非避風港！" }
+            },
+            {
+                prompt: "吸毒是否能增強學習記憶力或專注？",
+                good: { text: "損害大腦成績暴跌", fact: "毒品嚴重破壞大腦海馬體與前額葉皮質，導致專注力與智力下降！" },
+                bad: { text: "短暫提升專注力", fact: "毒品嚴重破壞大腦海馬體與前額葉皮質，導致專注力與智力下降！" }
+            },
+            {
+                prompt: "損友說「吸毒是時尚潮流」？",
+                good: { text: "堅定拒絕錯誤風氣", fact: "吸毒絕非時尚，只會讓人失去尊嚴、健康與美好人生！" },
+                bad: { text: "盲從跟風追求潮流", fact: "吸毒絕非時尚，只會讓人失去尊嚴、健康與美好人生！" }
+            },
+            {
+                prompt: "在學校或校園周邊販賣毒品之罰則？",
+                good: { text: "屬加重判刑之重罪", fact: "在學校或向青少年販運毒品屬法定加重刑責罪行，刑罰極其沉重！" },
+                bad: { text: "學校內部自行處理", fact: "在學校或向青少年販運毒品屬法定加重刑責罪行，刑罰極其沉重！" }
+            },
+            {
+                prompt: "在公眾場所發現有人吸食或交易毒品？",
+                good: { text: "迅速遠離並即時報警", fact: "保障自身安全並立即報警舉報，能有效遏止毒害蔓延！" },
+                bad: { text: "好奇圍觀湊熱鬧", fact: "保障自身安全並立即報警舉報，能有效遏止毒害蔓延！" }
+            },
+            {
+                prompt: "面對成長路上的各種考驗與誘惑？",
+                good: { text: "冷靜自律守護人生", fact: "堅持健康生活與正向價值觀，攜手共創無毒健康的美好青春！" },
+                bad: { text: "輕率屈服於壓力", fact: "堅持健康生活與正向價值觀，攜手共創無毒健康的美好青春！" }
+            }
+        ];
+    </script>
+
+    <!-- Vector Mascot & Team Crest SVGs -->
+    <script>
+        function getMascotSVG(type = 'happy') {
+            const isHappy = type === 'happy';
+            const signBg = isHappy ? '#22c55e' : '#ef4444';
+            const signIcon = isHappy 
+                ? `<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#ffffff"/>`
+                : `<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z" fill="#ffffff"/>`;
+            
+            const mouthPath = isHappy 
+                ? `<path d="M 45 68 Q 50 74 55 68 Z" fill="#e11d48"/>`
+                : `<path d="M 44 70 Q 50 64 56 70" stroke="#713f12" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+
+            const eyeDetail = isHappy
+                ? `<circle cx="38" cy="58" r="6" fill="#451a03"/><circle cx="40" cy="56" r="2.5" fill="#ffffff"/>
+                   <circle cx="62" cy="58" r="6" fill="#451a03"/><circle cx="64" cy="56" r="2.5" fill="#ffffff"/>`
+                : `<path d="M 32 50 L 42 56" stroke="#451a03" stroke-width="3.5" stroke-linecap="round"/>
+                   <path d="M 68 50 L 58 56" stroke="#451a03" stroke-width="3.5" stroke-linecap="round"/>
+                   <circle cx="38" cy="58" r="5" fill="#451a03"/>
+                   <circle cx="62" cy="58" r="5" fill="#451a03"/>`;
+
+            return `
+            <svg viewBox="0 0 100 110" class="w-full h-full drop-shadow-md">
+                <path d="M 50 5 Q 65 18 70 30 Q 82 25 88 40 Q 95 60 82 72 Q 78 85 50 90 Q 22 85 18 72 Q 5 60 12 40 Q 18 25 30 30 Q 35 18 50 5 Z" fill="url(#flameGrad)" stroke="#c2410c" stroke-width="2.5"/>
+                <path d="M 50 20 Q 72 25 74 52 Q 74 76 50 80 Q 26 76 26 52 Q 28 25 50 20 Z" fill="#fde047"/>
+                ${eyeDetail}
+                ${mouthPath}
+                <path d="M 30 78 Q 50 75 70 78 L 74 100 Q 50 106 26 100 Z" fill="#38bdf8" stroke="#0284c7" stroke-width="2"/>
+                <circle cx="62" cy="88" r="4.5" fill="#ffffff" stroke="#0369a1" stroke-width="1"/>
+                <text x="62" y="90" font-size="3.5" font-weight="900" text-anchor="middle" fill="#0369a1">DN</text>
+                <g transform="translate(${isHappy ? '12, 45' : '65, 45'}) scale(0.9)">
+                    <svg viewBox="0 0 24 24" width="32" height="32">
+                        ${signIcon}
+                    </svg>
+                </g>
+                <defs>
+                    <linearGradient id="flameGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#ef4444" />
+                        <stop offset="50%" stop-color="#f97316" />
+                        <stop offset="100%" stop-color="#eab308" />
+                    </linearGradient>
+                </defs>
+            </svg>`;
+        }
+
+        function getTeamLogoSVG() {
+            return `
+            <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+                <circle cx="50" cy="50" r="48" fill="#0c1e3d" stroke="#facc15" stroke-width="3"/>
+                <!-- Skyline -->
+                <rect x="20" y="32" width="6" height="18" fill="#94a3b8"/>
+                <rect x="28" y="26" width="7" height="24" fill="#cbd5e1"/>
+                <rect x="65" y="24" width="7" height="26" fill="#cbd5e1"/>
+                <rect x="74" y="30" width="6" height="20" fill="#94a3b8"/>
+                <!-- Cross & Dove -->
+                <path d="M 28 16 H 32 V 25 H 28 Z M 25 19 H 35 V 22 H 25 Z" fill="#facc15"/>
+                <path d="M 72 16 Q 78 14 82 18 Q 78 22 74 19 Z" fill="#ffffff"/>
+                <!-- Top Red School Shield -->
+                <path d="M 40 4 L 60 4 L 60 18 Q 50 25 40 18 Z" fill="#dc2626" stroke="#facc15" stroke-width="1.2"/>
+                <path d="M 50 6 V 21 M 44 11 H 56" stroke="#ffffff" stroke-width="1.5"/>
+                <!-- Golden Laurel -->
+                <path d="M 16 38 Q 12 55 18 72 Q 22 62 18 48 Z" fill="#facc15"/>
+                <path d="M 84 38 Q 88 55 82 72 Q 78 62 82 48 Z" fill="#facc15"/>
+                <!-- Center Shield & Torch -->
+                <path d="M 32 34 L 68 34 L 68 56 Q 50 72 32 56 Z" fill="#0f172a" stroke="#facc15" stroke-width="2"/>
+                <path d="M 50 36 L 46 50 L 54 50 Z" fill="#f59e0b"/>
+                <path d="M 50 30 Q 55 35 52 40 Q 48 38 50 30 Z" fill="#ef4444"/>
+                <!-- Broken Chain -->
+                <path d="M 24 50 L 32 50" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M 68 50 L 76 50" stroke="#e2e8f0" stroke-width="2.5" stroke-linecap="round"/>
+                <!-- Gold Ribbon & DN -->
+                <path d="M 20 66 L 80 66 L 74 77 L 26 77 Z" fill="#eab308" stroke="#ca8a04" stroke-width="1"/>
+                <text x="50" y="75" font-size="10" font-weight="900" font-style="italic" fill="#0f172a" text-anchor="middle" font-family="sans-serif">DN</text>
+                <!-- Destroyed Drug & Needle -->
+                <path d="M 32 88 L 44 80" stroke="#94a3b8" stroke-width="2"/>
+                <path d="M 56 80 L 68 88" stroke="#ef4444" stroke-width="3"/>
+                <circle cx="50" cy="85" r="3" fill="#f59e0b"/>
+            </svg>`;
+        }
+    </script>
+
+    <!-- Core 3D Engine & Game Logic -->
+    <script>
+        let scene, camera, renderer;
+        let isPlaying = false;
+        let isPaused = false;
+
+        // Player Forward Movement Speed precisely set to 0.09
+        const gameSpeed = 0.09;
+        const GATE_SPACING = 64;
+
+        let sessionQuestions = [];
+        let sessionSideSequence = [];
+        let spawnedGateCount = 0;
+        let finishLineMesh = null;
+        let finishLineZ = null;
+        let hasCrossedFinishLine = false;
+
+        // Vivid Gate Color Palette for Maximum Contrast
+        const gateColorPalette = [
+            { bg1: '#0284c7', bg2: '#0369a1', hex: 0x38bdf8 }, // Sky Blue
+            { bg1: '#059669', bg2: '#047857', hex: 0x34d399 }, // Emerald Green
+            { bg1: '#d97706', bg2: '#b45309', hex: 0xfbbf24 }, // Radiant Gold
+            { bg1: '#ea580c', bg2: '#c2410c', hex: 0xfb923c }, // Vibrant Orange
+            { bg1: '#7c3aed', bg2: '#6d28d9', hex: 0xa78bfa }, // Neon Purple
+            { bg1: '#db2777', bg2: '#be185d', hex: 0xf472b6 }  // Pink Crimson
+        ];
+
+        // Player State
+        let playerX = 0;
+        let targetPlayerX = 0;
+        let playerZ = 0;
+        let playerLives = 3.0;
+        const maxLives = 3.0;
+        let totalScore = 0;
+        let passedGatesCount = 0;
+        let comboStreak = 0;
+        let highScore = parseInt(localStorage.getItem('antidrug_runner_highscore') || '0');
+
+        // 3D Objects
+        let playerGroup;
+        let playerMascotMesh;
+        let trackSegments = [];
+        let gatePairs = [];
+        let coins = [];
+        let animatedSpectators = [];
+        let particlesGeo, particlesMat, particlesSystem;
+        const particleCount = 140;
+
+        const trackWidth = 8.5;
+
+        function initThree() {
+            const container = document.getElementById('canvas-container');
+            container.innerHTML = '';
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x060b18);
+            scene.fog = new THREE.FogExp2(0x060b18, 0.011);
+
+            camera = new THREE.PerspectiveCamera(58, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 6.2, 11.2);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            // Lighting Setup
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.95);
+            dirLight.position.set(12, 24, 12);
+            dirLight.castShadow = true;
+            scene.add(dirLight);
+
+            // Searchlights pointing high to sky without occluding airborne boards
+            const spotLight1 = new THREE.SpotLight(0x38bdf8, 2, 80, Math.PI / 6, 0.4);
+            spotLight1.position.set(-15, 1, -20);
+            spotLight1.target.position.set(-10, 45, -60);
+            scene.add(spotLight1);
+            scene.add(spotLight1.target);
+
+            const spotLight2 = new THREE.SpotLight(0xfacc15, 2, 80, Math.PI / 6, 0.4);
+            spotLight2.position.set(15, 1, -20);
+            spotLight2.target.position.set(10, 45, -60);
+            scene.add(spotLight2);
+            scene.add(spotLight2.target);
+
+            playerGroup = new THREE.Group();
+            scene.add(playerGroup);
+
+            createParticleSystem();
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function create3DMascotMesh() {
+            const mascotGroup = new THREE.Group();
+
+            const bodyGeo = new THREE.CylinderGeometry(0.28, 0.22, 0.68, 14);
+            const shirtMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, roughness: 0.3 });
+            const body = new THREE.Mesh(bodyGeo, shirtMat);
+            body.position.y = 0.34;
+            body.castShadow = true;
+            mascotGroup.add(body);
+
+            const headGeo = new THREE.SphereGeometry(0.28, 16, 16);
+            const headMat = new THREE.MeshStandardMaterial({ color: 0xfde047, roughness: 0.2 });
+            const head = new THREE.Mesh(headGeo, headMat);
+            head.position.y = 0.88;
+            head.castShadow = true;
+            mascotGroup.add(head);
+
+            const flameHairGroup = new THREE.Group();
+            const flameMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xeab308, emissiveIntensity: 0.35 });
+            
+            const spikeGeo = new THREE.ConeGeometry(0.15, 0.48, 8);
+            const s1 = new THREE.Mesh(spikeGeo, flameMat);
+            s1.position.set(0, 1.2, -0.02);
+            flameHairGroup.add(s1);
+
+            const s2 = new THREE.Mesh(spikeGeo, flameMat);
+            s2.position.set(-0.18, 1.05, 0);
+            s2.rotation.z = 0.42;
+            flameHairGroup.add(s2);
+
+            const s3 = new THREE.Mesh(spikeGeo, flameMat);
+            s3.position.set(0.18, 1.05, 0);
+            s3.rotation.z = -0.42;
+            flameHairGroup.add(s3);
+            mascotGroup.add(flameHairGroup);
+
+            const eyeGeo = new THREE.SphereGeometry(0.048, 8, 8);
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0x27272a });
+            const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+            leftEye.position.set(-0.095, 0.9, 0.25);
+            mascotGroup.add(leftEye);
+
+            const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+            rightEye.position.set(0.095, 0.9, 0.25);
+            mascotGroup.add(rightEye);
+
+            return mascotGroup;
+        }
+
+        function createParticleSystem() {
+            particlesGeo = new THREE.BufferGeometry();
+            const posArray = new Float32Array(particleCount * 3);
+            for (let i = 0; i < particleCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 20;
+            }
+            particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            particlesMat = new THREE.PointsMaterial({
+                size: 0.16,
+                color: 0xfacc15,
+                transparent: true,
+                opacity: 0,
+                depthWrite: false
+            });
+            particlesSystem = new THREE.Points(particlesGeo, particlesMat);
+            scene.add(particlesSystem);
+        }
+
+        function triggerParticleBurst(x, y, z, colorHex = 0xfacc15) {
+            particlesMat.color.setHex(colorHex);
+            particlesMat.opacity = 1.0;
+            const positions = particlesGeo.attributes.position.array;
+            for (let i = 0; i < particleCount; i++) {
+                positions[i * 3] = x + (Math.random() - 0.5) * 3.5;
+                positions[i * 3 + 1] = y + (Math.random() - 0.5) * 3.5;
+                positions[i * 3 + 2] = z + (Math.random() - 0.5) * 3.5;
+            }
+            particlesGeo.attributes.position.needsUpdate = true;
+        }
+
+        function triggerDamageFlash() {
+            const flash = document.getElementById('damage-flash');
+            if (!flash) return;
+            flash.style.opacity = '1';
+            setTimeout(() => { flash.style.opacity = '0'; }, 180);
+        }
+
+        // Texture Generators (Opaque, High-Contrast & Enriched Large Typography)
+        function createGateTexture(text, colorObj) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1000;
+            canvas.height = 600;
+            const ctx = canvas.getContext('2d');
+
+            // 100% Opaque Gradient Base
+            const gradient = ctx.createLinearGradient(0, 0, 0, 600);
+            gradient.addColorStop(0, colorObj.bg1);
+            gradient.addColorStop(1, colorObj.bg2);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1000, 600);
+
+            // Subtle Internal Panel
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.18)';
+            ctx.fillRect(24, 24, 952, 552);
+
+            // Solid White Glowing Border
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 24;
+            ctx.strokeRect(16, 16, 968, 568);
+
+            // 100% Solid Opaque White Text with Drop Shadow
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetX = 0;
+            ctx.shadowOffsetY = 6;
+
+            if (text.length > 5 || text.includes('+')) {
+                const parts = text.includes('+') ? text.split('+') : [text.slice(0, Math.ceil(text.length / 2)), text.slice(Math.ceil(text.length / 2))];
+                const maxLen = Math.max(parts[0].length, parts[1].length);
+                const fontSize = maxLen > 5 ? 116 : 128;
+                ctx.font = `900 ${fontSize}px "Noto Sans TC", sans-serif`;
+                ctx.fillText(parts[0], 500, 210);
+                ctx.fillText(parts[1], 500, 390);
+            } else {
+                ctx.font = '900 160px "Noto Sans TC", sans-serif';
+                ctx.fillText(text, 500, 300);
+            }
+
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.needsUpdate = true;
+            return tex;
+        }
+
+        function createAirPromptTexture(promptText, questionIndex) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1320;
+            canvas.height = 460;
+            const ctx = canvas.getContext('2d');
+
+            // 100% Solid Opaque Dark Navy Background
+            ctx.fillStyle = '#070f24';
+            if (ctx.roundRect) {
+                ctx.roundRect(14, 14, 1292, 432, 42);
+            } else {
+                ctx.rect(14, 14, 1292, 432);
+            }
+            ctx.fill();
+
+            // Neon Outer Border
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 14;
+            ctx.stroke();
+
+            // Golden Inner Accent Frame
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 5;
+            if (ctx.roundRect) {
+                ctx.roundRect(26, 26, 1268, 408, 32);
+            } else {
+                ctx.rect(26, 26, 1268, 408);
+            }
+            ctx.stroke();
+
+            // Badge Header (Opaque Gold)
+            ctx.fillStyle = '#facc15';
+            ctx.font = '900 52px "Noto Sans TC", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+            ctx.shadowBlur = 10;
+            ctx.fillText(`❓ 【第 ${questionIndex} / 10 題】`, 660, 96);
+
+            // Main Question Text (100% Opaque Solid White)
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.95)';
+            ctx.shadowBlur = 14;
+
+            const maxCharsPerLine = 16;
+            if (promptText.length > maxCharsPerLine) {
+                ctx.font = '900 68px "Noto Sans TC", sans-serif';
+                const splitIndex = Math.ceil(promptText.length / 2);
+                ctx.fillText(promptText.substring(0, splitIndex), 660, 220);
+                ctx.fillText(promptText.substring(splitIndex), 660, 340);
+            } else {
+                ctx.font = '900 84px "Noto Sans TC", sans-serif';
+                ctx.fillText(promptText, 660, 270);
+            }
+
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.needsUpdate = true;
+            return tex;
+        }
+
+        function createTrackSegment(zPos) {
+            const group = new THREE.Group();
+            group.position.z = zPos;
+
+            // Main Track Floor
+            const roadGeo = new THREE.PlaneGeometry(trackWidth, 100);
+            const roadMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.5 });
+            const road = new THREE.Mesh(roadGeo, roadMat);
+            road.rotation.x = -Math.PI / 2;
+            road.receiveShadow = true;
+            group.add(road);
+
+            // Boundary Rails (Low Height y=0.18)
+            const railGeo = new THREE.BoxGeometry(0.35, 0.35, 100);
+            const railMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xc2410c, emissiveIntensity: 0.6 });
+            
+            const leftRail = new THREE.Mesh(railGeo, railMat);
+            leftRail.position.set(-trackWidth / 2 - 0.2, 0.18, 0);
+            group.add(leftRail);
+
+            const rightRail = new THREE.Mesh(railGeo, railMat);
+            rightRail.position.set(trackWidth / 2 + 0.2, 0.18, 0);
+            group.add(rightRail);
+
+            // Lane Divider Lines
+            const lineGeo = new THREE.PlaneGeometry(0.14, 4.5);
+            const lineMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.7 });
+            for (let z = -45; z < 50; z += 12) {
+                const l1 = new THREE.Mesh(lineGeo, lineMat);
+                l1.rotation.x = -Math.PI / 2;
+                l1.position.set(-trackWidth / 4, 0.015, z);
+                group.add(l1);
+
+                const l2 = new THREE.Mesh(lineGeo, lineMat);
+                l2.rotation.x = -Math.PI / 2;
+                l2.position.set(trackWidth / 4, 0.015, z);
+                group.add(l2);
+            }
+
+            // Spectator Bleachers (x = ±9.0, low height y=0.3-1.8)
+            const standMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.7 });
+            for (let side of [-1, 1]) {
+                for (let tier = 0; tier < 3; tier++) {
+                    const stepGeo = new THREE.BoxGeometry(1.8, 0.6, 100);
+                    const step = new THREE.Mesh(stepGeo, standMat);
+                    step.position.set(side * (trackWidth / 2 + 2.2 + tier * 1.8), 0.3 + tier * 0.6, 0);
+                    group.add(step);
+
+                    // Animated Cheering Crowd
+                    for (let cz = -40; cz < 45; cz += 7) {
+                        const spectatorGroup = new THREE.Group();
+                        spectatorGroup.position.set(
+                            side * (trackWidth / 2 + 2.2 + tier * 1.8),
+                            0.6 + tier * 0.6,
+                            cz + (Math.random() * 2 - 1)
+                        );
+
+                        const colorHex = [0x38bdf8, 0xfacc15, 0x34d399, 0xf43f5e, 0xa855f7][Math.floor(Math.random() * 5)];
+                        const specBodyGeo = new THREE.CylinderGeometry(0.2, 0.22, 0.5, 8);
+                        const specBodyMat = new THREE.MeshStandardMaterial({ color: colorHex, roughness: 0.4 });
+                        const specBody = new THREE.Mesh(specBodyGeo, specBodyMat);
+                        specBody.position.y = 0.25;
+                        spectatorGroup.add(specBody);
+
+                        const specHeadGeo = new THREE.SphereGeometry(0.18, 8, 8);
+                        const specHeadMat = new THREE.MeshStandardMaterial({ color: 0xffedd5 });
+                        const specHead = new THREE.Mesh(specHeadGeo, specHeadMat);
+                        specHead.position.y = 0.6;
+                        spectatorGroup.add(specHead);
+
+                        group.add(spectatorGroup);
+                        animatedSpectators.push({ mesh: spectatorGroup, basePos: spectatorGroup.position.y, offset: Math.random() * Math.PI * 2 });
+                    }
+                }
+            }
+
+            scene.add(group);
+            trackSegments.push(group);
+        }
+
+        function createGateMesh(gateData, xPos, colorObj) {
+            const gateWidth = 4.1;
+            const gateHeight = 3.6;
+            const geo = new THREE.BoxGeometry(gateWidth, gateHeight, 0.25);
+            
+            const texture = createGateTexture(gateData.text, colorObj);
+            const mat = new THREE.MeshStandardMaterial({
+                map: texture,
+                transparent: false,
+                roughness: 0.2,
+                depthWrite: true,
+                depthTest: true
+            });
+
+            const mesh = new THREE.Mesh(geo, mat);
+            mesh.position.set(xPos, gateHeight / 2, 0);
+            mesh.renderOrder = 50;
+            mesh.userData = gateData;
+            return mesh;
+        }
+
+        function generateGateSideSequence() {
+            let seq;
+            let isValid = false;
+            while (!isValid) {
+                // Exactly 5 left good (true) and 5 right good (false)
+                seq = [true, true, true, true, true, false, false, false, false, false];
+                for (let i = seq.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [seq[i], seq[j]] = [seq[j], seq[i]];
+                }
+                // Validate streaks: cannot have more than 3 consecutive right correct answers
+                let maxRightStreak = 0;
+                let currentRightStreak = 0;
+                let maxLeftStreak = 0;
+                let currentLeftStreak = 0;
+                for (let i = 0; i < seq.length; i++) {
+                    if (!seq[i]) {
+                        currentRightStreak++;
+                        if (currentRightStreak > maxRightStreak) maxRightStreak = currentRightStreak;
+                    } else {
+                        currentRightStreak = 0;
+                    }
+
+                    if (seq[i]) {
+                        currentLeftStreak++;
+                        if (currentLeftStreak > maxLeftStreak) maxLeftStreak = currentLeftStreak;
+                    } else {
+                        currentLeftStreak = 0;
+                    }
+                }
+                // Enforce at most 3 consecutive right correct answers (and <= 3 left)
+                if (maxRightStreak <= 3 && maxLeftStreak <= 3) {
+                    isValid = true;
+                }
+            }
+            return seq;
+        }
+
+        function spawnGatePair(zPos) {
+            if (spawnedGateCount >= 10) return;
+
+            const pairGroup = new THREE.Group();
+            pairGroup.position.z = zPos;
+
+            const qData = sessionQuestions[spawnedGateCount];
+            const isLeftGood = sessionSideSequence[spawnedGateCount];
+            spawnedGateCount++;
+            const questionIndex = spawnedGateCount;
+
+            const leftData = isLeftGood ? { ...qData.good, isGood: true } : { ...qData.bad, isGood: false };
+            const rightData = isLeftGood ? { ...qData.bad, isGood: false } : { ...qData.good, isGood: true };
+
+            const colorIdx1 = (questionIndex * 2) % gateColorPalette.length;
+            const colorIdx2 = (colorIdx1 + 3) % gateColorPalette.length;
+
+            const leftGate = createGateMesh(leftData, -2.25, gateColorPalette[colorIdx1]);
+            const rightGate = createGateMesh(rightData, 2.25, gateColorPalette[colorIdx2]);
+            pairGroup.add(leftGate);
+            pairGroup.add(rightGate);
+
+            // Elevated Airborne Question Banner (100% Opaque, depthWrite & high renderOrder)
+            const promptTexture = createAirPromptTexture(qData.prompt, questionIndex);
+            const promptGeo = new THREE.PlaneGeometry(13.2, 4.6);
+            const promptMat = new THREE.MeshBasicMaterial({ 
+                map: promptTexture, 
+                transparent: false, 
+                side: THREE.FrontSide,
+                depthWrite: true,
+                depthTest: true
+            });
+            const promptMesh = new THREE.Mesh(promptGeo, promptMat);
+            promptMesh.position.set(0, 7.2, 0);
+            promptMesh.renderOrder = 999;
+            pairGroup.add(promptMesh);
+
+            pairGroup.userData = {
+                passed: false,
+                prompt: qData.prompt,
+                leftData: leftData,
+                rightData: rightData,
+                index: questionIndex
+            };
+
+            scene.add(pairGroup);
+            gatePairs.push(pairGroup);
+
+            if (spawnedGateCount === 10) {
+                spawnFinishLine(zPos - 28);
+            }
+        }
+
+        function spawnFinishLine(zPos) {
+            finishLineZ = zPos;
+            const archGroup = new THREE.Group();
+            archGroup.position.z = zPos;
+
+            const pillarGeo = new THREE.CylinderGeometry(0.4, 0.4, 7, 16);
+            const pillarMat = new THREE.MeshStandardMaterial({ color: 0xf97316, emissive: 0xc2410c, emissiveIntensity: 0.5 });
+            
+            const p1 = new THREE.Mesh(pillarGeo, pillarMat);
+            p1.position.set(-trackWidth / 2 - 0.3, 3.5, 0);
+            archGroup.add(p1);
+
+            const p2 = new THREE.Mesh(pillarGeo, pillarMat);
+            p2.position.set(trackWidth / 2 + 0.3, 3.5, 0);
+            archGroup.add(p2);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(0, 0, 1024, 256);
+            ctx.strokeStyle = '#facc15';
+            ctx.lineWidth = 14;
+            ctx.strokeRect(8, 8, 1008, 240);
+
+            ctx.fillStyle = '#facc15';
+            ctx.font = '900 82px "Noto Sans TC", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText("🏁 衝線過關 🏁", 512, 128);
+
+            const bannerTex = new THREE.CanvasTexture(canvas);
+            const textPlaneGeo = new THREE.PlaneGeometry(trackWidth + 1.2, 1.8);
+            const textPlaneMat = new THREE.MeshBasicMaterial({ map: bannerTex, depthWrite: true });
+            const textPlane = new THREE.Mesh(textPlaneGeo, textPlaneMat);
+            textPlane.position.set(0, 6.8, 0);
+            archGroup.add(textPlane);
+
+            scene.add(archGroup);
+            finishLineMesh = archGroup;
+        }
+
+        function spawnCoins(zPos) {
+            if (Math.random() > 0.25) {
+                const coinGroup = new THREE.Group();
+                coinGroup.position.z = zPos;
+                const coinX = (Math.random() - 0.5) * 4.5;
+                
+                const starGeo = new THREE.OctahedronGeometry(0.45);
+                const starMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.8, roughness: 0.2, emissive: 0xd97706, emissiveIntensity: 0.4 });
+                const star = new THREE.Mesh(starGeo, starMat);
+                star.position.set(coinX, 0.85, 0);
+                star.castShadow = true;
+
+                coinGroup.add(star);
+                coinGroup.userData = { collected: false };
+                scene.add(coinGroup);
+                coins.push(coinGroup);
+            }
+        }
+
+        function showCoinScorePopup(text, isCombo = false) {
+            const container = document.getElementById('score-popups-container');
+            if (!container) return;
+            const el = document.createElement('div');
+            el.className = isCombo 
+                ? 'absolute text-emerald-400 font-black text-2xl sm:text-3xl drop-shadow-[0_4px_16px_rgba(52,211,153,0.9)] animate-combo flex items-center gap-2 bg-slate-900/90 px-4 py-2 rounded-2xl border-2 border-emerald-400'
+                : 'absolute text-amber-300 font-black text-xl sm:text-2xl drop-shadow-[0_4px_12px_rgba(245,158,11,0.8)] animate-score-popup flex items-center gap-1.5';
+            
+            el.innerHTML = isCombo 
+                ? `<i class="fa-solid fa-bolt text-amber-400 animate-bounce"></i> ${text}`
+                : `<i class="fa-solid fa-gem text-amber-400"></i> ${text}`;
+            
+            container.appendChild(el);
+            setTimeout(() => {
+                if (container.contains(el)) container.removeChild(el);
+            }, isCombo ? 1200 : 900);
+        }
+
+        let reactionTimer = null;
+        function triggerMascotReaction(isGood, factText) {
+            const container = document.getElementById('mascot-reaction-container');
+            const card = document.getElementById('mascot-reaction-card');
+            const svgBox = document.getElementById('mascot-svg-box');
+            const titleEl = document.getElementById('mascot-reaction-title');
+            const descEl = document.getElementById('mascot-reaction-desc');
+
+            if (!container || !card || !svgBox) return;
+            if (reactionTimer) clearTimeout(reactionTimer);
+
+            svgBox.innerHTML = getMascotSVG(isGood ? 'happy' : 'angry');
+
+            if (isGood) {
+                card.className = "glass-card px-5 py-3.5 rounded-3xl border-2 border-emerald-400/90 shadow-2xl flex items-center gap-3.5 max-w-md w-full mx-auto transform animate-mascot-reaction";
+                titleEl.className = "text-sm sm:text-base font-black text-emerald-300 flex items-center gap-1.5 mb-0.5";
+                titleEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> 正確答對！(+0.5 心心)`;
+            } else {
+                card.className = "glass-card px-5 py-3.5 rounded-3xl border-2 border-rose-400/90 shadow-2xl flex items-center gap-3.5 max-w-md w-full mx-auto transform animate-mascot-reaction";
+                titleEl.className = "text-sm sm:text-base font-black text-rose-300 flex items-center gap-1.5 mb-0.5";
+                titleEl.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i> 誤墮陷阱！(-1 心心)`;
+            }
+
+            descEl.innerText = factText;
+            container.classList.remove('hidden');
+
+            reactionTimer = setTimeout(() => {
+                container.classList.add('hidden');
+            }, 5000);
+        }
+
+        function getHeartSVG(type) {
+            if (type === 'full') {
+                return `<svg class="w-4 h-4 sm:w-5 sm:h-5 text-rose-500 drop-shadow-[0_2px_4px_rgba(244,63,94,0.6)]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+            } else if (type === 'half') {
+                return `<svg class="w-4 h-4 sm:w-5 sm:h-5 drop-shadow-[0_2px_4px_rgba(244,63,94,0.4)]" viewBox="0 0 24 24"><defs><linearGradient id="halfHeartGrad"><stop offset="50%" stop-color="#f43f5e"/><stop offset="50%" stop-color="#334155"/></linearGradient></defs><path fill="url(#halfHeartGrad)" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+            } else {
+                return `<svg class="w-4 h-4 sm:w-5 sm:h-5 text-slate-700/80" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`;
+            }
+        }
+
+        function updateHeartsDisplay() {
+            const container = document.getElementById('hud-hearts');
+            if (!container) return;
+            let html = '';
+            for (let i = 1; i <= 3; i++) {
+                if (playerLives >= i) {
+                    html += getHeartSVG('full');
+                } else if (playerLives >= i - 0.5) {
+                    html += getHeartSVG('half');
+                } else {
+                    html += getHeartSVG('empty');
+                }
+            }
+            container.innerHTML = html;
+        }
+
+        function initPlayerModel() {
+            while (playerGroup.children.length > 0) {
+                playerGroup.remove(playerGroup.children[0]);
+            }
+            playerMascotMesh = create3DMascotMesh();
+            playerGroup.add(playerMascotMesh);
+            updateHeartsDisplay();
+        }
+
+        function onWindowResize() {
+            if (!camera || !renderer) return;
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function checkCollisions() {
+            // Choice Gate Collisions: Precise Distance-Based Decision Logic
+            const leftGatePos = -2.25;
+            const rightGatePos = 2.25;
+
+            gatePairs.forEach(pair => {
+                if (!pair.userData.passed && Math.abs(playerZ - pair.position.z) < 1.3) {
+                    pair.userData.passed = true;
+                    
+                    // Calculate exact distances from left and right door centerlines
+                    const distLeft = Math.abs(playerX - leftGatePos);
+                    const distRight = Math.abs(playerX - rightGatePos);
+                    
+                    // Accurately assign the closest gate
+                    const chosenGate = (distLeft < distRight) ? pair.userData.leftData : pair.userData.rightData;
+                    const triggerX = (distLeft < distRight) ? leftGatePos : rightGatePos;
+
+                    if (chosenGate.isGood) {
+                        playerLives = Math.min(maxLives, playerLives + 0.5);
+                        comboStreak++;
+                        const comboBonus = comboStreak > 1 ? comboStreak * 60 : 0;
+                        totalScore += 200 + comboBonus;
+                        passedGatesCount++;
+
+                        soundFx.playGatePositive();
+                        triggerParticleBurst(triggerX, 1.4, playerZ, 0x34d399);
+                        triggerMascotReaction(true, chosenGate.fact);
+
+                        if (comboStreak >= 2) {
+                            soundFx.playCombo();
+                            showCoinScorePopup(`${comboStreak} 連勝！+${200 + comboBonus} 能量`, true);
+                        }
+                    } else {
+                        playerLives -= 1.0;
+                        comboStreak = 0;
+                        soundFx.playGateNegative();
+                        triggerDamageFlash();
+                        triggerParticleBurst(triggerX, 1.4, playerZ, 0xf43f5e);
+                        triggerMascotReaction(false, chosenGate.fact);
+                    }
+
+                    updateHeartsDisplay();
+
+                    if (playerLives <= 0) {
+                        triggerGameOver(false, false);
+                    } else if (spawnedGateCount < 10) {
+                        const nextZ = pair.position.z - GATE_SPACING;
+                        spawnGatePair(nextZ);
+                        spawnCoins(nextZ + GATE_SPACING * 0.5);
+                    }
+                }
+            });
+
+            // Coin Collect Collisions
+            coins.forEach(cGroup => {
+                if (!cGroup.userData.collected && Math.abs(playerZ - cGroup.position.z) < 1.5) {
+                    const coinX = cGroup.children[0].position.x;
+                    if (Math.abs(playerX - coinX) < 1.5) {
+                        cGroup.userData.collected = true;
+                        scene.remove(cGroup);
+                        totalScore += 100;
+                        soundFx.playCoin();
+                        triggerParticleBurst(playerX, 0.85, playerZ, 0xfacc15);
+                        showCoinScorePopup("+100 能量！");
+                    }
+                }
+            });
+
+            // Finish Line Crossing Check
+            if (finishLineZ !== null && !hasCrossedFinishLine && playerZ <= finishLineZ) {
+                hasCrossedFinishLine = true;
+                soundFx.playVictory();
+                triggerParticleBurst(0, 5, finishLineZ, 0xf97316);
+                triggerGameOver(false, true);
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (!isPlaying || isPaused) return;
+
+            playerZ -= gameSpeed;
+            totalScore += 1;
+
+            playerX += (targetPlayerX - playerX) * 0.22;
+            playerGroup.position.set(playerX, 0, playerZ);
+
+            const time = Date.now() * 0.008;
+            if (playerMascotMesh) {
+                playerMascotMesh.position.y = Math.abs(Math.sin(time * 2)) * 0.14;
+            }
+
+            // Animate Gems
+            coins.forEach(cGroup => {
+                if (cGroup.children.length > 0) {
+                    cGroup.children[0].rotation.y += 0.04;
+                }
+            });
+
+            // Animate Spectators on Bleachers
+            animatedSpectators.forEach(spec => {
+                spec.mesh.position.y = spec.basePos + Math.abs(Math.sin(time * 3 + spec.offset)) * 0.18;
+            });
+
+            // Fade Particle Bursts
+            if (particlesMat && particlesMat.opacity > 0) {
+                particlesMat.opacity -= 0.025;
+            }
+
+            // Recycle Track Segments
+            const farthestZ = playerZ - 180;
+            const lastTrack = trackSegments[trackSegments.length - 1];
+            if (lastTrack && lastTrack.position.z > farthestZ) {
+                const nextZ = lastTrack.position.z - 100;
+                createTrackSegment(nextZ);
+
+                if (trackSegments.length > 5) {
+                    const oldTrack = trackSegments.shift();
+                    scene.remove(oldTrack);
+                }
+            }
+
+            camera.position.set(playerX * 0.35, 6.2, playerZ + 11.2);
+            camera.lookAt(playerX * 0.25, 1.2, playerZ - 10);
+
+            checkCollisions();
+
+            const hudScore = document.getElementById('hud-score');
+            if (hudScore) hudScore.innerText = totalScore;
+
+            renderer.render(scene, camera);
+        }
+
+        function setupInputs() {
+            let isDragging = false;
+            let startX = 0;
+
+            function handlePointerDown(e) {
+                soundFx.init();
+                if (!isPlaying || isPaused) return;
+                isDragging = true;
+                startX = e.clientX || (e.touches && e.touches[0].clientX);
+            }
+
+            function handlePointerMove(e) {
+                if (!isDragging) return;
+                const currentX = e.clientX || (e.touches && e.touches[0].clientX);
+                const diffX = currentX - startX;
+                startX = currentX;
+
+                targetPlayerX += diffX * 0.024;
+                targetPlayerX = Math.max(-3.3, Math.min(3.3, targetPlayerX));
+            }
+
+            function handlePointerUp() {
+                isDragging = false;
+            }
+
+            window.addEventListener('mousedown', handlePointerDown);
+            window.addEventListener('mousemove', handlePointerMove);
+            window.addEventListener('mouseup', handlePointerUp);
+
+            window.addEventListener('touchstart', handlePointerDown, { passive: true });
+            window.addEventListener('touchmove', handlePointerMove, { passive: true });
+            window.addEventListener('touchend', handlePointerUp);
+
+            const btnLeft = document.getElementById('btn-left');
+            const btnRight = document.getElementById('btn-right');
+            if (btnLeft) {
+                btnLeft.addEventListener('click', () => {
+                    targetPlayerX = Math.max(-3.3, targetPlayerX - 1.35);
+                });
+            }
+            if (btnRight) {
+                btnRight.addEventListener('click', () => {
+                    targetPlayerX = Math.min(3.3, targetPlayerX + 1.35);
+                });
+            }
+
+            window.addEventListener('keydown', (e) => {
+                if (!isPlaying || isPaused) return;
+                if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+                    targetPlayerX = Math.max(-3.3, targetPlayerX - 1.0);
+                } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+                    targetPlayerX = Math.min(3.3, targetPlayerX + 1.0);
+                }
+            });
+        }
+
+        function startGame() {
+            soundFx.init();
+
+            // Shuffle 10 questions from bank
+            const shuffled = [...antiDrugQuestionPairs];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            sessionQuestions = shuffled.slice(0, 10);
+            sessionSideSequence = generateGateSideSequence();
+
+            playerX = 0;
+            targetPlayerX = 0;
+            playerZ = 0;
+            playerLives = 3.0;
+            totalScore = 0;
+            passedGatesCount = 0;
+            comboStreak = 0;
+            spawnedGateCount = 0;
+            finishLineZ = null;
+            finishLineMesh = null;
+            hasCrossedFinishLine = false;
+
+            isPlaying = true;
+            isPaused = false;
+
+            // Clear Scene Objects
+            trackSegments.forEach(s => scene.remove(s));
+            gatePairs.forEach(g => scene.remove(g));
+            coins.forEach(c => scene.remove(c));
+            animatedSpectators = [];
+            if (finishLineMesh) scene.remove(finishLineMesh);
+            
+            trackSegments = [];
+            gatePairs = [];
+            coins = [];
+
+            // Spawn Track & Initial Question Gate
+            createTrackSegment(0);
+            createTrackSegment(-100);
+            createTrackSegment(-200);
+
+            // Spawn first gate
+            spawnGatePair(-50);
+            spawnCoins(-25);
+
+            initPlayerModel();
+
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-pause').classList.add('hidden');
+            document.getElementById('screen-gameover').classList.add('hidden');
+            document.getElementById('hud').classList.remove('hidden');
+            document.getElementById('touch-controller').classList.remove('hidden');
+        }
+
+        function togglePause() {
+            if (!isPlaying) return;
+            isPaused = !isPaused;
+            if (isPaused) {
+                document.getElementById('screen-pause').classList.remove('hidden');
+            } else {
+                document.getElementById('screen-pause').classList.add('hidden');
+            }
+        }
+
+        function triggerGameOver(isEarlyQuit = false, isVictory = false) {
+            isPlaying = false;
+            
+            if (!isVictory && !isEarlyQuit) {
+                soundFx.playGameOver();
+            }
+
+            if (totalScore > highScore) {
+                highScore = totalScore;
+                localStorage.setItem('antidrug_runner_highscore', highScore);
+            }
+
+            document.getElementById('final-score').innerText = totalScore;
+            document.getElementById('best-score').innerText = highScore;
+            document.getElementById('final-gates').innerText = `${passedGatesCount} / 10 次`;
+
+            const finalLivesContainer = document.getElementById('final-lives');
+            if (finalLivesContainer) {
+                let html = '';
+                for (let i = 1; i <= 3; i++) {
+                    if (playerLives >= i) {
+                        html += getHeartSVG('full');
+                    } else if (playerLives >= i - 0.5) {
+                        html += getHeartSVG('half');
+                    } else {
+                        html += getHeartSVG('empty');
+                    }
+                }
+                finalLivesContainer.innerHTML = html;
+            }
+
+            const resTitle = document.getElementById('result-title');
+            const resSub = document.getElementById('result-subtitle');
+            const resIcon = document.getElementById('result-icon');
+
+            if (isVictory) {
+                resTitle.innerText = "🎉 成功衝線過關！";
+                resSub.innerText = "恭喜你！成功抵禦毒品誘惑，捍衛健康人生！";
+                resIcon.className = "inline-block p-3.5 rounded-2xl mb-2 bg-emerald-500/20 text-emerald-400 border border-emerald-400/30";
+                resIcon.innerHTML = '<i class="fa-solid fa-trophy text-4xl sm:text-5xl"></i>';
+            } else if (isEarlyQuit) {
+                resTitle.innerText = "提早結算";
+                resSub.innerText = "已結算當前防毒得分，繼續保持警惕！";
+                resIcon.className = "inline-block p-3.5 rounded-2xl mb-2 bg-blue-500/20 text-blue-400 border border-blue-400/30";
+                resIcon.innerHTML = '<i class="fa-solid fa-flag-checkered text-4xl sm:text-5xl"></i>';
+            } else {
+                resTitle.innerText = "誤墮毒品陷阱！";
+                resSub.innerText = "生命值已耗盡！謹記「毒品咪制！」遠離依托咪酯及大麻等毒品！";
+                resIcon.className = "inline-block p-3.5 rounded-2xl mb-2 bg-rose-500/20 text-rose-400 border border-rose-400/30";
+                resIcon.innerHTML = '<i class="fa-solid fa-shield-cat text-4xl sm:text-5xl"></i>';
+            }
+
+            document.getElementById('hud').classList.add('hidden');
+            document.getElementById('screen-pause').classList.add('hidden');
+            document.getElementById('screen-gameover').classList.remove('hidden');
+        }
+
+        window.onload = function() {
+            initThree();
+            setupInputs();
+
+            const logoContainer = document.getElementById('start-logo-svg');
+            if (logoContainer) {
+                logoContainer.innerHTML = getTeamLogoSVG();
+            }
+
+            // Disclaimer Modal Bindings
+            const modalDisclaimer = document.getElementById('modal-disclaimer');
+            document.getElementById('btn-show-disclaimer').addEventListener('click', () => modalDisclaimer.classList.remove('hidden'));
+            document.getElementById('btn-close-disclaimer').addEventListener('click', () => modalDisclaimer.classList.add('hidden'));
+            document.getElementById('btn-ack-disclaimer').addEventListener('click', () => modalDisclaimer.classList.add('hidden'));
+
+            // Action Buttons
+            document.getElementById('btn-start').addEventListener('click', startGame);
+            document.getElementById('btn-pause').addEventListener('click', togglePause);
+            document.getElementById('btn-resume').addEventListener('click', togglePause);
+            document.getElementById('btn-restart-pause').addEventListener('click', startGame);
+            document.getElementById('btn-quit').addEventListener('click', () => triggerGameOver(true, false));
+            
+            document.getElementById('btn-replay').addEventListener('click', () => {
+                document.getElementById('screen-gameover').classList.add('hidden');
+                document.getElementById('hud').classList.add('hidden');
+                document.getElementById('touch-controller').classList.add('hidden');
+                document.getElementById('screen-start').classList.remove('hidden');
+            });
+
+            animate();
+        };
+    </script>
+</body>
+</html>
