@@ -134,27 +134,44 @@
       }
     }
 
-    /* 6孔點滴板凹槽專用樣式 */
-    .spot-well {
-      aspect-ratio: 1 / 1;
-      border-radius: 9999px;
-      background: radial-gradient(circle at 35% 35%, #1e293b 0%, #090d16 100%);
-      box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.9), 0 2px 5px rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(148, 163, 184, 0.3);
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.4s ease;
+    /* 雙試管快篩專用立體視覺樣式（緊湊零捲動設計） */
+    .test-tube-rack {
+      background: radial-gradient(circle at 50% 30%, #1e293b 0%, #090d16 100%);
+      border: 1.5px solid rgba(56, 189, 248, 0.3);
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6);
     }
 
-    .well-liquid {
-      width: 84%;
-      height: 84%;
-      border-radius: 9999px;
-      transition: background-color 0.5s ease, transform 0.3s ease;
-      opacity: 0.94;
+    .test-tube-glass {
+      width: 46px;
+      height: 110px;
+      border: 2.5px solid rgba(255, 255, 255, 0.45);
+      border-top: none;
+      border-radius: 0 0 24px 24px;
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(4px);
+      box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.15), 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .test-tube-liquid {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 65%;
+      border-radius: 0 0 20px 20px;
+      transition: background-color 0.6s ease, height 0.4s ease, filter 0.5s ease;
+    }
+
+    .tube-meniscus {
+      position: absolute;
+      top: -3px;
+      left: 0;
+      right: 0;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
     }
 
     /* 虛擬操作桿樣式 */
@@ -315,362 +332,227 @@
   </div>
 
   <!-- 劇情對話介面 (優化橫屏滾動防截斷，字體加大便於閱讀) -->
-  <div id="dialogue-box" class="fixed safe-bottom left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-3xl z-40 pointer-events-none opacity-0 translate-y-6 transition-all duration-300 max-h-[46vh] flex flex-col" role="region" aria-label="情境劇情對話框">
-    <div class="glass-panel p-3.5 sm:p-4 rounded-3xl border-orange-400/40 relative shadow-2xl flex flex-col max-h-full">
-      <!-- 說話者資訊 (固定頂部) -->
-      <div class="flex items-center justify-between mb-2 border-b border-slate-700/60 pb-1.5 shrink-0">
-        <div class="flex items-center gap-2.5">
-          <div id="dialogue-avatar" class="w-10 h-10 rounded-2xl bg-orange-600/20 border border-orange-400/60 flex items-center justify-center text-xl shadow-inner">
+  <div id="dialogue-box" class="fixed safe-bottom left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-3xl z-40 pointer-events-none opacity-0 translate-y-6 transition-all duration-300 flex flex-col" role="region" aria-label="情境劇情對話框">
+    <div class="glass-panel p-2.5 sm:p-3.5 rounded-2xl border-orange-400/40 relative shadow-2xl flex flex-col">
+      <!-- 說話者資訊 -->
+      <div class="flex items-center justify-between mb-1 border-b border-slate-700/60 pb-1 shrink-0">
+        <div class="flex items-center gap-2">
+          <div id="dialogue-avatar" class="w-8 h-8 rounded-xl bg-orange-600/20 border border-orange-400/60 flex items-center justify-center text-lg shadow-inner">
             🧑‍💼
           </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <span id="dialogue-speaker" class="font-black text-amber-300 text-sm sm:text-base">梁澤銘</span>
-              <span id="dialogue-role-tag" class="text-[10px] sm:text-xs bg-slate-800 text-orange-300 px-2 py-0.5 rounded-full border border-orange-500/30 font-bold">特約校園安全調查員</span>
-            </div>
+          <div class="flex items-center gap-1.5">
+            <span id="dialogue-speaker" class="font-black text-amber-300 text-xs sm:text-sm">梁澤銘</span>
+            <span id="dialogue-role-tag" class="text-[9px] sm:text-[10px] bg-slate-800 text-orange-300 px-1.5 py-0.5 rounded-full border border-orange-500/30 font-bold">特約校園安全調查員</span>
           </div>
         </div>
-        <div class="text-[10px] text-slate-400 font-mono hidden sm:block">CASE: SEC-EDU-2026-09</div>
+        <span class="text-[10px] text-amber-400/90 font-bold">點擊繼續 ▶</span>
       </div>
       
-      <!-- 對話文字內容 (可自適應內部捲動，絕不被截斷) -->
-      <div class="modal-scroll-body flex-1 pr-1">
-        <p id="dialogue-text" class="text-slate-100 text-xs sm:text-sm md:text-base leading-relaxed cinematic-serif">
-          考場已經被全面封鎖。中六生岑詠蕎在應考途中全身劇烈抽搐休克……我必須從她的事發座位著手，找出致病真相！
-        </p>
-      </div>
-
-      <!-- 繼續按鈕提示 (固定底部) -->
-      <div class="flex justify-between items-center mt-2 pt-1.5 border-t border-slate-800/80 text-[11px] sm:text-xs text-slate-400 shrink-0">
-        <span class="text-amber-300/90 font-medium">點擊對話框或按「搜查」鍵推進</span>
-        <span class="text-orange-400 font-bold flex items-center gap-1">
-          <span>繼續</span>
-          <svg class="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </span>
-      </div>
+      <!-- 對話文字內容 (精簡扼要，無溢出) -->
+      <p id="dialogue-text" class="text-slate-100 text-xs sm:text-sm leading-snug cinematic-serif m-0">
+        考場已被全面封鎖。中六生岑詠蕎在應考時全身抽搐休克……我必須從她的課桌搜集證物！
+      </p>
     </div>
   </div>
 
-  <!-- 學生標準 6孔點滴板雙重交叉檢驗台（簡化直觀、保證不超出屏幕） -->
-  <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="lab-modal-title" tabindex="-1">
-    <div class="glass-panel w-full max-w-2xl max-h-[92vh] rounded-3xl p-3 sm:p-4 relative border-cyan-500/50 flex flex-col justify-between">
+  <!-- 直覺雙試管快篩鑑驗台（橫屏免滾動、一秒看懂） -->
+  <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="lab-modal-title" tabindex="-1">
+    <div class="glass-panel w-full max-w-2xl rounded-3xl p-3 sm:p-3.5 relative border-cyan-500/50 flex flex-col justify-between">
       
-      <!-- 實驗台頂部 (固定) -->
-      <div class="shrink-0 pb-2 border-b border-slate-700/80 mb-2">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <div class="p-1.5 rounded-xl bg-cyan-600/20 border border-cyan-500/40 text-cyan-400 text-lg">🧪</div>
-            <div>
-              <h3 id="lab-modal-title" class="text-sm sm:text-base font-black text-white flex items-center gap-1.5">
-                <span>法醫毒理定性：6孔點滴板雙重交叉盲測</span>
-              </h3>
-              <p class="text-[11px] text-cyan-300">按順序完成兩組試劑檢驗，排除干擾物並確診毒物</p>
-            </div>
-          </div>
-          <button id="btn-close-lab" class="p-1.5 px-3 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉鑑驗台">✕</button>
-        </div>
-      </div>
-
-      <!-- 可捲動的主體內容區 (點滴板實物與比對結果) -->
-      <div class="modal-scroll-body flex-1 pr-1 space-y-2.5">
-        <!-- 狀態進度條 -->
-        <div class="grid grid-cols-3 gap-1.5 text-[11px] text-center font-bold">
-          <div id="spot-step-1" class="py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-700">1. 分注三份樣品</div>
-          <div id="spot-step-2" class="py-1 rounded bg-slate-900 text-slate-500 border border-slate-800">2. 滴管① 篩查K仔</div>
-          <div id="spot-step-3" class="py-1 rounded bg-slate-900 text-slate-500 border border-slate-800">3. 滴管② 篩查依托咪酯</div>
-        </div>
-
-        <!-- 6孔瓷板實物區 -->
-        <div class="bg-slate-950/90 p-3 rounded-2xl border border-slate-800">
-          <div class="flex items-center justify-between text-xs text-slate-400 font-bold pb-1.5 border-b border-slate-800">
-            <span>標準白色瓷點滴板（Spot Plate）</span>
-            <span id="spot-status-tag" class="text-amber-400 font-bold text-[11px]">步驟 1：請點擊「分注 6 槽」</span>
-          </div>
-
-          <!-- 6 個孔位網格 (緊湊自適應) -->
-          <div class="grid grid-cols-3 gap-2.5 p-2.5 bg-slate-900/70 rounded-2xl border border-slate-800/80 my-2">
-            <!-- 證物 A：課桌紫晶液 (孔 1, 孔 2) -->
-            <div class="flex flex-col items-center bg-slate-950/60 p-2 rounded-xl border border-purple-500/20">
-              <div class="text-[11px] text-purple-300 font-bold mb-1">孔 1 (滴管①)</div>
-              <div class="spot-well w-12 sm:w-14">
-                <div id="well-1-liquid" class="well-liquid bg-transparent"></div>
-              </div>
-              <div class="text-[11px] text-purple-300 font-bold mt-2 mb-1">孔 2 (滴管②)</div>
-              <div class="spot-well w-12 sm:w-14">
-                <div id="well-2-liquid" class="well-liquid bg-transparent"></div>
-              </div>
-              <div class="text-[10px] text-slate-400 mt-1.5 font-bold">證物A: 課桌液</div>
-            </div>
-
-            <!-- 證物 B：水管夾層軟糖 (孔 3, 孔 4) -->
-            <div class="flex flex-col items-center bg-slate-950/60 p-2 rounded-xl border border-blue-500/20">
-              <div class="text-[11px] text-blue-300 font-bold mb-1">孔 3 (滴管①)</div>
-              <div class="spot-well w-12 sm:w-14">
-                <div id="well-3-liquid" class="well-liquid bg-transparent"></div>
-              </div>
-              <div class="text-[11px] text-blue-300 font-bold mt-2 mb-1">孔 4 (滴管②)</div>
-              <div class="spot-well w-12 sm:w-14">
-                <div id="well-4-liquid" class="well-liquid bg-transparent"></div>
-              </div>
-              <div class="text-[10px] text-slate-400 mt-1.5 font-bold">證物B: 水管糖</div>
-            </div>
-
-            <!-- 證物 C：純水對照組 (孔 5, 孔 6) -->
-            <div class="flex flex-col items-center bg-slate-950/60 p-2 rounded-xl border border-emerald-500/20">
-              <div class="text-[11px] text-emerald-300 font-bold mb-1">孔 5 (滴管①)</div>
-              <div class="spot-well w-12 sm:w-14">
-                <div id="well-5-liquid" class="well-liquid bg-transparent"></div>
-              </div>
-              <div class="text-[11px] text-emerald-300 font-bold mt-2 mb-1">孔 6 (滴管②)</div>
-              <div class="spot-well w-12 sm:w-14">
-                <div id="well-6-liquid" class="well-liquid bg-transparent"></div>
-              </div>
-              <div class="text-[10px] text-slate-400 mt-1.5 font-bold">證物C: 空白對照</div>
-            </div>
-          </div>
-
-          <!-- 說明與即時檢驗結論卡 -->
-          <div id="spot-verdict-box" class="p-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs leading-relaxed">
-            <div class="font-bold text-amber-300 mb-0.5">📋 化驗結果即時監控：</div>
-            <div id="spot-verdict-text" class="text-slate-300 text-[11px]">
-              點滴板已清洗乾淨。請點擊下方「1️⃣ 取樣分注入 6 槽」開始交叉盲測。
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 固定底部操作按鈕列 (加大、確保絕不被推出螢幕) -->
-      <div class="shrink-0 pt-2 border-t border-slate-800 space-y-1.5">
-        <div class="grid grid-cols-3 gap-1.5">
-          <button id="btn-spot-load" class="py-2 rounded-xl bg-cyan-700 hover:bg-cyan-600 text-xs font-bold text-white border border-cyan-500 active:scale-95 transition">
-            1️⃣ 分注 6 槽
-          </button>
-          <button id="btn-spot-reagent1" class="py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-500 border border-slate-700 transition" disabled>
-            2️⃣ 滴管① 篩K仔
-          </button>
-          <button id="btn-spot-reagent2" class="py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-500 border border-slate-700 transition" disabled>
-            3️⃣ 滴管② 篩依托咪酯
-          </button>
-        </div>
-
-        <div class="flex gap-2">
-          <button id="btn-spot-reset" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold active:scale-95 transition">
-            🔄 重置
-          </button>
-          <button id="btn-spot-submit" class="flex-1 py-2 rounded-xl bg-cyan-600 text-white font-bold text-xs sm:text-sm tracking-wider shadow-lg transition active:scale-95 disabled:opacity-40 disabled:pointer-events-none" disabled>
-            確認結論並通報解鎖天台
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- 調查員案件手冊與思維宮殿（嚴格 5/5 佈局，滾動防溢出） -->
-  <div id="notebook-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="notebook-modal-title" tabindex="-1">
-    <div class="glass-panel w-full max-w-2xl max-h-[90vh] rounded-3xl p-3.5 sm:p-5 flex flex-col relative border-amber-500/40">
-      
-      <!-- 手冊頂部 (固定) -->
-      <div class="shrink-0 flex items-center justify-between pb-2 border-b border-slate-700">
+      <!-- 實驗台頂部標題列 -->
+      <div class="shrink-0 flex items-center justify-between pb-1.5 border-b border-slate-700/80 mb-2">
         <div class="flex items-center gap-2">
-          <div class="p-1.5 rounded-xl bg-orange-600/20 border border-orange-500/40 text-orange-400 text-lg">📋</div>
+          <span class="text-lg">🧪</span>
           <div>
-            <h2 id="notebook-modal-title" class="text-sm sm:text-base font-black text-white">咪制書院校園安全專案卷宗</h2>
-            <p class="text-[11px] text-orange-400">學生嚴重抽搐昏迷專案 • 現場偵查手記</p>
+            <h3 id="lab-modal-title" class="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">
+              <span>法醫毒理鑑證：雙試管極速快篩台</span>
+            </h3>
+            <p class="text-[10px] text-cyan-300">依序滴入兩組試劑，比對課桌液與軟糖的化學顯色反應</p>
           </div>
         </div>
-        <button id="btn-close-notebook" class="p-1.5 px-3 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉案件手冊">✕</button>
+        <button id="btn-close-lab" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉鑑驗台">✕</button>
       </div>
 
-      <!-- 分頁標籤 (固定) -->
-      <div class="shrink-0 flex gap-2 my-2">
-        <button id="tab-btn-clues" class="px-3 py-1 rounded-xl text-xs font-bold bg-orange-500 text-white transition">現場物證 (<span id="clue-count-text">0</span>/5)</button>
-        <button id="tab-btn-mindpalace" class="px-3 py-1 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition">思維宮殿定案鏈</button>
-        <button id="tab-btn-profiles" class="px-3 py-1 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition">涉案人員名冊</button>
-      </div>
-
-      <!-- 分頁 1：物證卡清單 (可捲動) -->
-      <div id="tab-content-clues" class="modal-scroll-body flex-1 pr-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <!-- 動態渲染 5 張物證卡 -->
-      </div>
-
-      <!-- 分頁 2：思維宮殿推理鏈 (可捲動) -->
-      <div id="tab-content-mindpalace" class="modal-scroll-body flex-1 hidden pr-1 space-y-2">
-        <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800">
-          <h3 id="deduce-header" class="text-xs sm:text-sm font-bold text-amber-300 mb-1">🔍 邏輯因果定案鏈</h3>
-          <p class="text-[11px] text-slate-400 mb-2 leading-relaxed">
-            綜合班房殘留液、水管夾層軟糖、點滴板雙重交叉檢驗報告與天台通聯錄音，完成官方舉報通報。
-          </p>
-
-          <div class="space-y-2 text-xs">
-            <div class="p-2 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-vector" class="text-slate-200 font-bold">1. 經 6 孔點滴板交叉確診的致病化學物質身分：</label>
-              <select id="deduce-vector" class="bg-slate-900 text-xs text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
-                <option value="none">-- 請選擇化驗推論 --</option>
-                <option value="wrong1">普通未過期的濃縮葡萄運動飲料</option>
-                <option value="correct">受香港特區政府《危險藥物條例》（第134章）嚴格管制的危險藥物「依托咪酯（Etomidate）」</option>
-                <option value="wrong2">常規薄荷甘油調味劑</option>
-              </select>
+      <!-- 橫向雙欄主體（左：雙試管架，右：即時化驗報告與操作）免捲動！ -->
+      <div class="grid grid-cols-2 gap-3 items-center my-1">
+        
+        <!-- 左側：雙試管實物架 -->
+        <div class="test-tube-rack p-2.5 rounded-2xl flex flex-col items-center justify-center">
+          <div class="flex items-end justify-center gap-6 py-1">
+            <!-- 試管 A：課桌紫晶液 -->
+            <div class="flex flex-col items-center">
+              <span class="text-[10px] font-black text-purple-300 mb-1">試管 A</span>
+              <div class="test-tube-glass">
+                <div id="tube-a-liquid" class="test-tube-liquid bg-purple-500/40">
+                  <div class="tube-meniscus"></div>
+                </div>
+              </div>
+              <span class="text-[9px] text-slate-300 font-bold mt-1.5 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">課桌液</span>
             </div>
 
-            <div class="p-2 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-symptoms" class="text-slate-200 font-bold">2. 岑詠蕎等同學突發的典型中樞神經毒理反應：</label>
-              <select id="deduce-symptoms" class="bg-slate-900 text-xs text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
-                <option value="none">-- 請選擇臨床症狀 --</option>
-                <option value="wrong1">普通考前眼睛乾澀疲倦</option>
-                <option value="correct">肌陣攣全身劇烈抽搐、意識記憶斷片、急性腎上腺皮質抑制</option>
-                <option value="wrong2">專注力明顯提升且無任何不適</option>
-              </select>
+            <!-- 試管 B：水管夾層軟糖 -->
+            <div class="flex flex-col items-center">
+              <span class="text-[10px] font-black text-cyan-300 mb-1">試管 B</span>
+              <div class="test-tube-glass">
+                <div id="tube-b-liquid" class="test-tube-liquid bg-cyan-500/40">
+                  <div class="tube-meniscus"></div>
+                </div>
+              </div>
+              <span class="text-[9px] text-slate-300 font-bold mt-1.5 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">夾層軟糖</span>
             </div>
+          </div>
+          <div class="text-[9px] text-slate-400 font-mono mt-1">【兩份現場樣品已預載入試管】</div>
+        </div>
 
-            <div class="p-2 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-source" class="text-slate-200 font-bold">3. 毒販「暗夜調劑師」侵蝕校園的偽裝誘騙手段：</label>
-              <select id="deduce-source" class="bg-slate-900 text-xs text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
-                <option value="none">-- 請選擇犯罪手法 --</option>
-                <option value="correct">偽裝成『純天然提神果味煙油』與『速效止痛軟糖』，藏於水管夾層，利用學生焦慮實施誘騙勒索</option>
-                <option value="wrong1">在校舍門口向所有學生公開派發宣傳單</option>
-              </select>
+        <!-- 右側：化驗監控與結論卡片 -->
+        <div class="flex flex-col justify-between h-full space-y-2">
+          <div id="spot-verdict-box" class="p-2.5 rounded-2xl bg-slate-900/90 border border-slate-700 flex-1 flex flex-col justify-center">
+            <div class="flex items-center justify-between text-[11px] font-bold text-amber-300 mb-1">
+              <span>📋 檢驗反應即時判定：</span>
+              <span id="spot-status-badge" class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[10px]">待化驗</span>
             </div>
+            <div id="spot-verdict-text" class="text-slate-200 text-[11px] leading-relaxed">
+              請點擊下方 <strong class="text-cyan-400">1️⃣ 滴入 K仔試劑</strong>，排查是否為常規氯胺酮。
+            </div>
+          </div>
 
-            <div class="p-2 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-action" class="text-slate-200 font-bold">4. 禁毒核心準則與舉報途徑：</label>
-              <select id="deduce-action" class="bg-slate-900 text-xs text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
-                <option value="none">-- 請選擇防毒守則 --</option>
-                <option value="correct">牢記【毒品咪制！】口號！即撥打警務處毒品舉報熱線 2527-1234 或依托咪酯專線 6629-2966！</option>
-                <option value="wrong1">只要吸食間隔時間長就不會成癮，無需通報官方機構</option>
-              </select>
-            </div>
+          <!-- 步驟指示 -->
+          <div class="grid grid-cols-2 gap-1.5 text-[10px] text-center font-bold">
+            <div id="spot-step-1" class="py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600">步驟 1: 篩查 K仔</div>
+            <div id="spot-step-2" class="py-1 rounded bg-slate-900 text-slate-500 border border-slate-800">步驟 2: 篩查 依托咪酯</div>
           </div>
         </div>
 
-        <button id="btn-submit-deduction" class="w-full py-2.5 rounded-2xl glass-btn font-black text-amber-200 text-xs sm:text-sm tracking-wider flex items-center justify-center gap-1.5 active:scale-95 shadow-lg">
-          <span>確認定案鏈並發出警務通報</span>
+      </div>
+
+      <!-- 固定底部操作按鈕列（簡明快捷、無多餘層級） -->
+      <div class="shrink-0 pt-2 border-t border-slate-800 flex gap-2">
+        <button id="btn-spot-reagent1" class="flex-1 py-2 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md">
+          1️⃣ 滴入 K仔試劑
+        </button>
+        <button id="btn-spot-reagent2" class="flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 transition" disabled>
+          2️⃣ 滴入 依托咪酯試劑
+        </button>
+        <button id="btn-spot-reset" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold active:scale-95 transition">
+          🔄 重置
+        </button>
+        <button id="btn-spot-submit" class="flex-1 py-2 rounded-xl bg-cyan-600 text-white font-bold text-xs shadow-lg transition active:scale-95 disabled:opacity-30 disabled:pointer-events-none" disabled>
+          確認報告通報天台
         </button>
       </div>
 
-      <!-- 分頁 3：涉案人員檔案 (可捲動) -->
-      <div id="tab-content-profiles" class="modal-scroll-body flex-1 hidden pr-1 space-y-2.5">
-      <div id="tab-content-mindpalace" class="flex-1 overflow-y-auto hidden pr-1 flex flex-col justify-between">
-        <div class="bg-slate-900/90 p-3.5 sm:p-4 rounded-2xl border border-slate-800 mb-2">
-          <h3 id="deduce-header" class="text-sm sm:text-base font-bold text-amber-300 mb-1">🔍 邏輯因果定案鏈</h3>
-          <p class="text-xs text-slate-400 mb-3 leading-relaxed">
-            綜合班房便條、水管夾層軟糖、點滴板雙重交叉檢驗報告與天台毒販通聯錄音，完成校園防護通報。
-          </p>
+    </div>
+  </div>
 
-          <div class="space-y-2.5 text-xs sm:text-sm">
-            <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-vector" class="text-xs sm:text-sm text-slate-200 font-bold">1. 經 6 孔點滴板交叉檢驗確診的致毒化學物質法定身分：</label>
-              <select id="deduce-vector" class="bg-slate-900 text-xs sm:text-sm text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
-                <option value="none">-- 請選擇鑑驗推論 --</option>
-                <option value="wrong1">普通未過期的濃縮葡萄運動飲料</option>
-                <option value="correct">受香港特區政府《危險藥物條例》（第134章）嚴格管制的危險藥物「依托咪酯（Etomidate）」</option>
-                <option value="wrong2">常規劣質尼古丁薄荷甘油</option>
+  <!-- 調查員案件手冊與思維宮殿（修復重複元素 Bug，緊湊零捲動佈局） -->
+  <div id="notebook-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="notebook-modal-title" tabindex="-1">
+    <div class="glass-panel w-full max-w-2xl rounded-3xl p-3 sm:p-4 flex flex-col justify-between relative border-amber-500/40">
+      
+      <!-- 手冊頂部標題與切換分頁 -->
+      <div class="shrink-0 flex items-center justify-between pb-1.5 border-b border-slate-700">
+        <div class="flex items-center gap-2">
+          <span class="text-base">📋</span>
+          <div>
+            <h2 id="notebook-modal-title" class="text-xs sm:text-sm font-black text-white">咪制書院校園安全專案手冊</h2>
+            <p class="text-[10px] text-orange-400">現場偵查卷宗 • 5大核心物證全覽</p>
+          </div>
+        </div>
+        
+        <!-- 分頁標籤 -->
+        <div class="flex gap-1.5">
+          <button id="tab-btn-clues" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-500 text-white transition">現場物證 (<span id="clue-count-text">0</span>/5)</button>
+          <button id="tab-btn-mindpalace" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">思維宮殿定案</button>
+          <button id="tab-btn-profiles" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">人員名冊</button>
+          <button id="btn-close-notebook" class="ml-2 px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉案件手冊">✕</button>
+        </div>
+      </div>
+
+      <!-- 分頁 1：物證卡清單（精簡 5 欄磁貼，無溢出） -->
+      <div id="tab-content-clues" class="grid grid-cols-5 gap-1.5 my-2">
+        <!-- 動態渲染 5 張物證磁貼卡片 -->
+      </div>
+
+      <!-- 分頁 2：思維宮殿推理鏈（精準 3 道定案核心題目，無重複元素） -->
+      <div id="tab-content-mindpalace" class="hidden my-2 space-y-1.5">
+        <div class="bg-slate-900/90 p-2 rounded-2xl border border-slate-800">
+          <div class="flex items-center justify-between text-xs font-bold text-amber-300 mb-1">
+            <span id="deduce-header">🔍 邏輯因果定案鏈：完成官方通報</span>
+            <span class="text-[10px] text-slate-400">核對快篩報告與天台通聯</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2 text-[11px]">
+            <div class="p-1.5 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1">
+              <label for="deduce-vector" class="text-slate-200 font-bold">1. 雙試管確診物質：</label>
+              <select id="deduce-vector" class="bg-slate-900 text-[10px] text-orange-300 p-1.5 rounded border border-slate-700 outline-none">
+                <option value="none">-- 請選擇 --</option>
+                <option value="wrong1">普通葡萄運動飲料</option>
+                <option value="correct">危險藥物「依托咪酯 (Etomidate)」</option>
+                <option value="wrong2">薄荷調味甘油</option>
               </select>
             </div>
 
-            <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-symptoms" class="text-xs sm:text-sm text-slate-200 font-bold">2. 岑詠蕎等受害同學突發的典型中樞神經毒理症狀：</label>
-              <select id="deduce-symptoms" class="bg-slate-900 text-xs sm:text-sm text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
-                <option value="none">-- 請選擇臨床症狀 --</option>
-                <option value="wrong1">短暫眼睛乾澀與偶爾打哈欠</option>
-                <option value="correct">肌陣攣全身劇烈抽搐、意識記憶斷片、急性腎上腺皮質抑制與呼吸衰竭</option>
-                <option value="wrong2">大腦專注力大幅提升且毫無毒副反應</option>
+            <div class="p-1.5 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1">
+              <label for="deduce-symptoms" class="text-slate-200 font-bold">2. 典型中毒臨床反應：</label>
+              <select id="deduce-symptoms" class="bg-slate-900 text-[10px] text-orange-300 p-1.5 rounded border border-slate-700 outline-none">
+                <option value="none">-- 請選擇 --</option>
+                <option value="wrong1">考前眼睛疲倦</option>
+                <option value="correct">肌陣攣全身劇烈抽搐、意識斷片</option>
+                <option value="wrong2">專注力明顯提升</option>
               </select>
             </div>
 
-            <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-source" class="text-xs sm:text-sm text-slate-200 font-bold">3. 毒販「暗夜調劑師」侵蝕校園的偽裝誘騙手法：</label>
-              <select id="deduce-source" class="bg-slate-900 text-xs sm:text-sm text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
-                <option value="none">-- 請選擇犯罪手法 --</option>
-                <option value="correct">將毒品偽裝成『無毒提神果味煙油』與『速效止痛軟糖』，藏於水管夾層，利用升學焦慮與運動傷痛實施誘騙勒索</option>
-                <option value="wrong1">在校舍正門公開設攤分發印刷傳單促銷</option>
-              </select>
-            </div>
-
-            <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-action" class="text-xs sm:text-sm text-slate-200 font-bold">4. 禁毒核心守則與官方舉報途徑：</label>
-              <select id="deduce-action" class="bg-slate-900 text-xs sm:text-sm text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
-                <option value="none">-- 請選擇防毒守則 --</option>
-                <option value="correct">牢記【毒品咪制！】口號！對不明特調煙油零容忍，即打警務處毒品舉報熱線 2527-1234 或警方依托咪酯專線 6629-2966！</option>
-                <option value="wrong1">只要吸食間隔時間長就不會成癮，無需通報官方機構</option>
+            <div class="p-1.5 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1">
+              <label for="deduce-action" class="text-slate-200 font-bold">3. 禁毒口號與舉報熱線：</label>
+              <select id="deduce-action" class="bg-slate-900 text-[10px] text-orange-300 p-1.5 rounded border border-slate-700 outline-none">
+                <option value="none">-- 請選擇 --</option>
+                <option value="correct">【毒品咪制！】打熱線 2527-1234 或專線 6629-2966</option>
+                <option value="wrong1">只要吸食間隔長就不會上癮</option>
               </select>
             </div>
           </div>
         </div>
 
-        <button id="btn-submit-deduction" class="w-full py-3.5 rounded-2xl glass-btn font-black text-amber-200 text-xs sm:text-sm tracking-wider flex items-center justify-center gap-1.5 active:scale-95 shadow-lg">
-          <span>完成邏輯閉環並發出全港預警與通報</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        <button id="btn-submit-deduction" class="w-full py-2 rounded-xl glass-btn font-black text-amber-200 text-xs tracking-wider flex items-center justify-center gap-1 active:scale-95 shadow-lg">
+          <span>確認定案鏈並向警務處發出通報</span>
         </button>
       </div>
 
-      <!-- 分頁 3：涉案人員檔案 -->
-      <div id="tab-content-profiles" class="flex-1 overflow-y-auto hidden pr-1 space-y-3">
-        <!-- 調查人員 -->
-        <div>
-          <div class="flex items-center gap-2 mb-2 pb-1 border-b border-slate-800">
-            <span class="text-xs font-black text-cyan-400">🛡️ 專案調查人員</span>
-          </div>
-          <div class="glass-panel p-3 rounded-2xl border-cyan-500/40 flex gap-3 items-center">
-            <div class="w-12 h-12 rounded-xl bg-cyan-900/50 flex items-center justify-center text-2xl border border-cyan-400 shrink-0">🧑‍💼</div>
+      <!-- 分頁 3：涉案人員檔案（簡潔 3 卡並列，無多餘捲動） -->
+      <div id="tab-content-profiles" class="hidden grid grid-cols-3 gap-2 my-2">
+        <div class="glass-panel p-2 rounded-xl border-cyan-500/40 flex flex-col">
+          <div class="flex items-center gap-1.5 mb-1">
+            <span class="text-base">🧑‍💼</span>
             <div>
-              <div class="flex items-center gap-1.5">
-                <span class="font-bold text-white text-sm">梁澤銘（Investigator Leung）</span>
-                <span class="text-[9px] bg-cyan-950 text-cyan-200 px-1.5 py-0.5 rounded">特約校園安全調查員</span>
-              </div>
-              <p class="text-xs text-slate-300 mt-0.5 leading-snug">
-                青少年健康保護協進會特約調查員。具備法醫毒理鑑識背景，受託進入咪制書院採集化驗微量物證，誓要阻截毒販黑手！
-              </p>
+              <div class="font-bold text-white text-[11px]">梁澤銘</div>
+              <div class="text-[9px] text-cyan-300">特約安全調查員</div>
             </div>
           </div>
+          <p class="text-[10px] text-slate-300 leading-tight">具備毒理鑑識背景，受託進入書院搜查微量物證。</p>
         </div>
 
-        <!-- 受害學生 -->
-        <div>
-          <div class="flex items-center gap-2 mb-2 pb-1 border-b border-slate-800">
-            <span class="text-xs font-black text-amber-400">🎓 受害學生檔案（急需救治）</span>
-          </div>
-          <div class="space-y-2">
-            <div class="glass-panel p-3 rounded-2xl border-slate-700 flex gap-3 items-center">
-              <div class="w-12 h-12 rounded-xl bg-purple-900/50 flex items-center justify-center text-2xl border border-purple-400 shrink-0">👩‍🎓</div>
-              <div>
-                <span class="font-bold text-white text-sm">岑詠蕎</span>
-                <span class="text-[10px] bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded ml-1">中六B班班長 • 受害者</span>
-                <p class="text-xs text-slate-300 mt-0.5 leading-snug">
-                  面臨 DSE 巨大壓力誤信「無毒提神果味煙油」謊言，吸食含高濃度依托咪酯煙油，於模擬試場突發肌陣攣劇烈抽搐休克送院。
-                </p>
-              </div>
-            </div>
-
-            <div class="glass-panel p-3 rounded-2xl border-slate-700 flex gap-3 items-center">
-              <div class="w-12 h-12 rounded-xl bg-blue-900/50 flex items-center justify-center text-2xl border border-blue-400 shrink-0">🏃‍♂️</div>
-              <div>
-                <span class="font-bold text-white text-sm">霍展霆</span>
-                <span class="text-[10px] bg-blue-950 text-blue-300 px-1.5 py-0.5 rounded ml-1">校田徑隊隊長 • 受害者</span>
-                <p class="text-xs text-slate-300 mt-0.5 leading-snug">
-                  因腳踝韌帶挫傷劇痛誤信「秒速止痛無毒軟糖」，吸入依托咪酯導致中樞運動神經受損，雙手持續無法自主劇烈震顫。
-                </p>
-              </div>
+        <div class="glass-panel p-2 rounded-xl border-purple-500/40 flex flex-col">
+          <div class="flex items-center gap-1.5 mb-1">
+            <span class="text-base">👩‍🎓</span>
+            <div>
+              <div class="font-bold text-white text-[11px]">岑詠蕎 / 霍展霆</div>
+              <div class="text-[9px] text-purple-300">受害學生</div>
             </div>
           </div>
+          <p class="text-[10px] text-slate-300 leading-tight">因升學焦慮與傷痛誤服偽裝果味物，引發嚴重肌陣攣抽搐。</p>
         </div>
 
-        <!-- 通緝主謀 -->
-        <div>
-          <div class="flex items-center gap-2 mb-2 pb-1 border-b border-rose-900/60">
-            <span class="text-xs font-black text-rose-400">🚨 涉案重大通緝嫌疑人（警方追緝主謀）</span>
-          </div>
-          <div class="glass-panel p-3 rounded-2xl border-rose-600/50 bg-rose-950/20 flex gap-3 items-center">
-            <div class="w-12 h-12 rounded-xl bg-rose-950/80 flex items-center justify-center text-2xl border border-rose-500 shrink-0 shadow-lg">⚠️</div>
+        <div class="glass-panel p-2 rounded-xl border-rose-500/40 bg-rose-950/20 flex flex-col">
+          <div class="flex items-center gap-1.5 mb-1">
+            <span class="text-base">⚠️</span>
             <div>
-              <span class="font-bold text-rose-400 text-sm">「暗夜調劑師」及其校外黑市團伙</span>
-              <p class="text-xs text-slate-300 mt-0.5 leading-snug">
-                將受管制的麻醉藥「依托咪酯」偽裝成果味煙油與止痛糖，利用社交暗號與校園隱蔽夾層交收，上癮後威脅學生繳交巨額封口費。
-              </p>
+              <div class="font-bold text-rose-400 text-[11px]">「暗夜調劑師」</div>
+              <div class="text-[9px] text-rose-300">黑市通緝主謀</div>
             </div>
           </div>
+          <p class="text-[10px] text-slate-300 leading-tight">將管制藥依托咪酯偽裝成果味煙油與軟糖滲透校園。</p>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -1477,8 +1359,8 @@
 
     const player = new InvestigatorAvatar();
 
-    // 點滴板實驗狀態
-    let spotStage = 0; // 0: 待取樣, 1: 已分注, 2: 已加滴管1, 3: 已加滴管2, 4: 完成出具報告
+    // 雙試管快篩實驗狀態
+    let spotStage = 0; // 0: 樣品預載入, 1: 已滴加K仔試劑(陰性), 2: 已滴加依托咪酯試劑(陽性確診), 3: 出具報告
 
     let lastFocusedElement = null;
 
@@ -1556,30 +1438,30 @@
     function resetSpotPlate() {
       spotStage = 0;
 
-      // 清空 6 個凹槽的顏色
-      for (let i = 1; i <= 6; i++) {
-        const well = document.getElementById(`well-${i}-liquid`);
-        if (well) {
-          well.style.backgroundColor = 'transparent';
-          well.style.transform = 'scale(0)';
-        }
+      // 恢復兩支試管初始淡色
+      const tubeA = document.getElementById('tube-a-liquid');
+      const tubeB = document.getElementById('tube-b-liquid');
+      if (tubeA) {
+        tubeA.style.backgroundColor = 'rgba(168, 85, 247, 0.45)';
+        tubeA.style.filter = 'none';
+      }
+      if (tubeB) {
+        tubeB.style.backgroundColor = 'rgba(6, 182, 212, 0.45)';
+        tubeB.style.filter = 'none';
       }
 
-      document.getElementById('spot-status-tag').textContent = "步驟 1：請點擊「分注 6 槽」";
-      document.getElementById('spot-verdict-text').textContent = "點滴板已清洗乾淨。請點擊「1️⃣ 分注 6 槽」開始交叉盲測。";
+      document.getElementById('spot-status-badge').textContent = "待化驗";
+      document.getElementById('spot-status-badge').className = "px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[10px]";
+      document.getElementById('spot-verdict-text').innerHTML = "請點擊下方 <strong class='text-cyan-400'>1️⃣ 滴入 K仔試劑</strong>，排查是否為氯胺酮。";
 
       // 按鈕狀態重置
-      const bLoad = document.getElementById('btn-spot-load');
-      bLoad.disabled = false;
-      bLoad.className = "py-2 rounded-xl bg-cyan-700 hover:bg-cyan-600 text-xs font-bold text-white border border-cyan-500 active:scale-95 transition";
-
       const bR1 = document.getElementById('btn-spot-reagent1');
-      bR1.disabled = true;
-      bR1.className = "py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-500 border border-slate-700 transition";
+      bR1.disabled = false;
+      bR1.className = "flex-1 py-2 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md animate-pulse";
 
       const bR2 = document.getElementById('btn-spot-reagent2');
       bR2.disabled = true;
-      bR2.className = "py-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-500 border border-slate-700 transition";
+      bR2.className = "flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 transition";
 
       document.getElementById('btn-spot-submit').disabled = true;
 
@@ -1587,101 +1469,72 @@
     }
 
     function updateSpotStepBadges() {
-      for (let i = 1; i <= 3; i++) {
-        const badge = document.getElementById(`spot-step-${i}`);
-        if (!badge) continue;
-        if (i <= spotStage) {
-          badge.className = "py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold";
-        } else if (i === spotStage + 1) {
-          badge.className = "py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600 animate-pulse font-bold";
-        } else {
-          badge.className = "py-1 rounded bg-slate-900 text-slate-500 border border-slate-800";
-        }
+      const b1 = document.getElementById('spot-step-1');
+      const b2 = document.getElementById('spot-step-2');
+      if (!b1 || !b2) return;
+
+      if (spotStage >= 1) {
+        b1.className = "py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold";
+      } else {
+        b1.className = "py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600 animate-pulse font-bold";
+      }
+
+      if (spotStage >= 2) {
+        b2.className = "py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold";
+      } else if (spotStage === 1) {
+        b2.className = "py-1 rounded bg-purple-950 text-purple-300 border border-purple-600 animate-pulse font-bold";
+      } else {
+        b2.className = "py-1 rounded bg-slate-900 text-slate-500 border border-slate-800";
       }
     }
 
-    // 步驟 1：分注樣品到 6 個凹槽
-    function spotStepLoadSamples() {
+    // 步驟 1：滴入滴管①（K仔篩查）
+    function spotStepApplyReagent1() {
       sound.playPipetteDrop();
       spotStage = 1;
 
-      // 孔 1, 2 (證物 A)：淺紫微濁液
-      ['well-1-liquid', 'well-2-liquid'].forEach(id => {
-        const el = document.getElementById(id);
-        el.style.backgroundColor = 'rgba(192, 132, 252, 0.45)';
-        el.style.transform = 'scale(1)';
-      });
+      // 兩試管液體顏色無明顯變化，排除K仔
+      document.getElementById('tube-a-liquid').style.backgroundColor = 'rgba(192, 132, 252, 0.4)';
+      document.getElementById('tube-b-liquid').style.backgroundColor = 'rgba(103, 232, 249, 0.4)';
 
-      // 孔 3, 4 (證物 B)：淺黃微濁液
-      ['well-3-liquid', 'well-4-liquid'].forEach(id => {
-        const el = document.getElementById(id);
-        el.style.backgroundColor = 'rgba(250, 204, 21, 0.45)';
-        el.style.transform = 'scale(1)';
-      });
-
-      // 孔 5, 6 (證物 C)：透明純水
-      ['well-5-liquid', 'well-6-liquid'].forEach(id => {
-        const el = document.getElementById(id);
-        el.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
-        el.style.transform = 'scale(1)';
-      });
-
-      document.getElementById('spot-status-tag').textContent = "步驟 2：請點擊「滴管① 篩K仔」";
-      document.getElementById('spot-verdict-text').innerHTML = "樣品注入完成！孔 1&2 盛放課桌液，孔 3&4 盛放軟糖萃取液，孔 5&6 為純水空白對照。<br><span class='text-cyan-400 font-bold'>請點擊「2️⃣ 滴管① 篩K仔」檢驗 1、3、5 孔。</span>";
-
-      const bLoad = document.getElementById('btn-spot-load');
-      bLoad.disabled = true;
-      bLoad.className = "py-2 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
-
-      const bR1 = document.getElementById('btn-spot-reagent1');
-      bR1.disabled = false;
-      bR1.className = "py-2 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md animate-pulse";
-
-      updateSpotStepBadges();
-    }
-
-    // 步驟 2：滴加滴管①（K仔篩查）
-    function spotStepApplyReagent1() {
-      sound.playPipetteDrop();
-      spotStage = 2;
-
-      // 1、3、5 號槽均不變藍，維持清澈
-      document.getElementById('well-1-liquid').style.backgroundColor = 'rgba(216, 180, 254, 0.35)';
-      document.getElementById('well-3-liquid').style.backgroundColor = 'rgba(253, 224, 71, 0.35)';
-      document.getElementById('well-5-liquid').style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-
-      document.getElementById('spot-status-tag').textContent = "步驟 3：請點擊「滴管② 篩依托咪酯」";
-      document.getElementById('spot-verdict-text').innerHTML = "<strong class='text-emerald-400'>【第一輪結果：陰性】</strong> 孔 1、3、5 均未變為湛藍色，<strong>完全排除氯胺酮（K仔）</strong>！<br><span class='text-purple-400 font-bold'>請點擊「3️⃣ 滴管② 篩依托咪酯」檢驗 2、4、6 孔。</span>";
+      document.getElementById('spot-status-badge').textContent = "❌ 排除K仔";
+      document.getElementById('spot-status-badge').className = "px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/50 text-[10px]";
+      
+      document.getElementById('spot-verdict-text').innerHTML = "<strong class='text-emerald-400'>【第一輪反應：陰性】</strong> 兩試管皆未變藍，<strong>排除氯胺酮(K仔)</strong>！<br>請點擊 <strong class='text-purple-400'>2️⃣ 滴入 依托咪酯試劑</strong> 繼續檢驗。";
 
       const bR1 = document.getElementById('btn-spot-reagent1');
       bR1.disabled = true;
-      bR1.className = "py-2 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
+      bR1.className = "flex-1 py-2 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
 
       const bR2 = document.getElementById('btn-spot-reagent2');
       bR2.disabled = false;
-      bR2.className = "py-2 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs border border-purple-400 active:scale-95 transition shadow-md animate-pulse";
+      bR2.className = "flex-1 py-2 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs border border-purple-400 active:scale-95 transition shadow-md animate-pulse";
 
       updateSpotStepBadges();
     }
 
-    // 步驟 3：滴加滴管②（依托咪酯篩查）
+    // 步驟 2：滴入滴管②（依托咪酯篩查）
     function spotStepApplyReagent2() {
       sound.playPipetteDrop();
-      spotStage = 3;
+      spotStage = 2;
 
-      // 孔 2 (紫晶液) 與 孔 4 (軟糖)：迅速轉化為深紫褐色沉澱！
-      // 孔 6 (純水)：維持透明！
-      document.getElementById('well-2-liquid').style.backgroundColor = 'rgba(112, 26, 117, 0.95)';
-      document.getElementById('well-4-liquid').style.backgroundColor = 'rgba(134, 25, 143, 0.95)';
-      document.getElementById('well-6-liquid').style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+      // 試管 A 與 試管 B 迅速翻騰變為深紫黑褐沉澱！
+      const tubeA = document.getElementById('tube-a-liquid');
+      const tubeB = document.getElementById('tube-b-liquid');
+      tubeA.style.backgroundColor = 'rgba(88, 28, 135, 0.96)';
+      tubeB.style.backgroundColor = 'rgba(88, 28, 135, 0.96)';
+      tubeA.style.filter = 'drop-shadow(0 0 6px rgba(168, 85, 247, 0.8))';
+      tubeB.style.filter = 'drop-shadow(0 0 6px rgba(168, 85, 247, 0.8))';
 
       sound.playClueFound();
-      document.getElementById('spot-status-tag').textContent = "檢驗完成！請點擊出具通報";
-      document.getElementById('spot-verdict-text').innerHTML = "<strong class='text-rose-400 font-bold'>⚡ 雙重交叉檢驗確診：陽性（POSITIVE）</strong><br>孔 2 與孔 4 同時析出<strong>深紫褐色沉澱</strong>，對照組孔 6 保持透明！確診兩份證物均含有受管制的危險藥物<strong>「依托咪酯（Etomidate）」</strong>！";
+      document.getElementById('spot-status-badge').textContent = "⚠️ 陽性確診！";
+      document.getElementById('spot-status-badge').className = "px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600/60 text-[10px] animate-pulse";
+
+      document.getElementById('spot-verdict-text').innerHTML = "<strong class='text-rose-400 font-bold'>【第二輪反應：陽性 POSITIVE】</strong><br>兩試管同時劇烈變為<strong>深紫褐沉澱</strong>！確診課桌紫液與軟糖均含有危險藥物<strong>「依托咪酯 (Etomidate)」</strong>！";
 
       const bR2 = document.getElementById('btn-spot-reagent2');
       bR2.disabled = true;
-      bR2.className = "py-2 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
+      bR2.className = "flex-1 py-2 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
 
       const bSubmit = document.getElementById('btn-spot-submit');
       bSubmit.disabled = false;
@@ -1690,7 +1543,7 @@
       updateSpotStepBadges();
     }
 
-    // 步驟 4：出具報告並解鎖天台大門
+    // 步驟 3：出具報告並解鎖天台大門
     function spotStepSubmitReport() {
       sound.playClueFound();
       GAME_STATE.hasIdentifiedEtomidate = true;
@@ -1704,13 +1557,13 @@
       startDialogueQueue([
         {
           speaker: "梁澤銘",
-          role: "特約校園安全調查員",
-          text: "點滴板雙重交叉盲測結果出爐！排除常規氯胺酮，課桌紫晶液與水管夾層軟糖中，均確診含有受香港特區政府嚴格管制的危險藥物——『依托咪酯』！"
+          role: "特約安全調查員",
+          text: "雙試管快篩結果確鑿！排除K仔，課桌殘留液與夾層軟糖中，均含有受管制的危險藥物——『依托咪酯』！"
         },
         {
           speaker: "梁澤銘",
           role: "循聲追查",
-          text: "這正是導致岑詠蕎全身劇烈肌陣攣抽搐的罪魁禍首！等等……東側樓梯口的天台方向，傳來了急促的電話震動鈴聲！天台防火門已解鎖，我必須立刻上去截獲線索！"
+          text: "這正是導致岑同學全身肌陣攣抽搐的元兇！東側樓梯天台方向傳來急促震動鈴聲，防火門已解鎖，立即登頂搜查！"
         }
       ]);
     }
@@ -1935,22 +1788,17 @@
       Object.values(CLUES_DATA).forEach(clue => {
         const found = GAME_STATE.cluesFound.has(clue.id);
         const card = document.createElement('div');
-        card.className = `p-3 rounded-2xl border transition-all ${
+        card.className = `p-1.5 rounded-xl border flex flex-col justify-between ${
           found ? 'bg-slate-900/90 border-orange-500/50 shadow-md' : 'bg-slate-950/40 border-slate-800 opacity-40'
         }`;
         card.innerHTML = `
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-xl">${found ? clue.icon : '❓'}</span>
-            <div class="truncate">
-              <h4 class="font-bold text-xs sm:text-sm ${found ? 'text-amber-300' : 'text-slate-500'} truncate">
-                ${found ? clue.name : '未搜獲的主線關鍵物證'}
-              </h4>
-              <span class="text-[10px] text-slate-400 font-mono">${found ? clue.zone : '地點待查'}</span>
-            </div>
+          <div class="flex items-center gap-1 mb-0.5">
+            <span class="text-base">${found ? clue.icon : '❓'}</span>
+            <span class="text-[10px] font-bold ${found ? 'text-amber-300' : 'text-slate-500'} truncate">
+              ${found ? clue.name.slice(0, 8) + '...' : '未知物證'}
+            </span>
           </div>
-          <p class="text-[11px] sm:text-xs text-slate-300 leading-snug">
-            ${found ? clue.shortDesc : '遵循當前任務引導在校舍逐步搜查。'}
-          </p>
+          <div class="text-[9px] text-slate-400 font-mono truncate">${found ? clue.zone.slice(0, 8) : '待調查'}</div>
         `;
         container.appendChild(card);
       });
@@ -1969,21 +1817,28 @@
 
     function switchNotebookTab(tab) {
       ['clues', 'mindpalace', 'profiles'].forEach(t => {
-        document.getElementById(`tab-content-${t}`).classList.add('hidden');
-        document.getElementById(`tab-btn-${t}`).classList.remove('bg-orange-500', 'text-white');
-        document.getElementById(`tab-btn-${t}`).classList.add('bg-slate-800', 'text-slate-300');
+        const el = document.getElementById(`tab-content-${t}`);
+        if (el) el.classList.add('hidden');
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (btn) {
+          btn.classList.remove('bg-orange-500', 'text-white');
+          btn.classList.add('bg-slate-800', 'text-slate-300');
+        }
       });
-      document.getElementById(`tab-content-${tab}`).classList.remove('hidden');
-      document.getElementById(`tab-btn-${tab}`).classList.add('bg-orange-500', 'text-white');
+      const activeContent = document.getElementById(`tab-content-${tab}`);
+      if (activeContent) activeContent.classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-btn-${tab}`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-orange-500', 'text-white');
+      }
     }
 
     function submitFinalDeduction() {
-      const v = document.getElementById('deduce-vector').value;
-      const s = document.getElementById('deduce-symptoms').value;
-      const src = document.getElementById('deduce-source').value;
-      const a = document.getElementById('deduce-action').value;
+      const v = document.getElementById('deduce-vector')?.value;
+      const s = document.getElementById('deduce-symptoms')?.value;
+      const a = document.getElementById('deduce-action')?.value;
 
-      if (v === 'correct' && s === 'correct' && src === 'correct' && a === 'correct') {
+      if (v === 'correct' && s === 'correct' && a === 'correct') {
         toggleNotebook();
         const win = document.getElementById('victory-screen');
         openModalWithA11y(win, () => {});
@@ -1991,12 +1846,14 @@
       } else {
         sound.playDialogueBlip();
         const header = document.getElementById('deduce-header');
-        header.textContent = "⚠️ 推論存在漏洞：請核對 6 孔點滴板交叉檢測確診報告！";
-        header.className = "text-sm sm:text-base font-bold text-rose-400 mb-1";
-        setTimeout(() => {
-          header.textContent = "🔍 邏輯因果定案鏈";
-          header.className = "text-sm sm:text-base font-bold text-amber-300 mb-1";
-        }, 2500);
+        if (header) {
+          header.textContent = "⚠️ 推論存在漏洞：請核對快篩確診報告！";
+          header.className = "text-xs font-bold text-rose-400 mb-1";
+          setTimeout(() => {
+            header.textContent = "🔍 邏輯因果定案鏈：完成官方通報";
+            header.className = "text-xs font-bold text-amber-300 mb-1";
+          }, 2500);
+        }
       }
     }
 
@@ -2267,9 +2124,8 @@
         document.getElementById('icon-sound-on').style.opacity = isMuted ? '0.3' : '1';
       });
 
-      // 6 孔點滴板實驗按鈕
+      // 雙試管極速快篩實驗按鈕
       document.getElementById('btn-close-lab')?.addEventListener('click', closeLabModal);
-      document.getElementById('btn-spot-load')?.addEventListener('click', spotStepLoadSamples);
       document.getElementById('btn-spot-reagent1')?.addEventListener('click', spotStepApplyReagent1);
       document.getElementById('btn-spot-reagent2')?.addEventListener('click', spotStepApplyReagent2);
       document.getElementById('btn-spot-reset')?.addEventListener('click', resetSpotPlate);
