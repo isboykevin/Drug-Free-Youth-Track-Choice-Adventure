@@ -785,7 +785,7 @@
       currentFloor: 1 // 1: 1F大堂更衣室, 2: 2F教學化驗區, 3: 3F暮光天台
     };
 
-    // 精準三層分佈的 5 大核心物證卷宗
+    // 階梯式全無遮擋三層校舍 5 大核心物證卷宗
     const CLUES_DATA = {
       clue_gym_fok: {
         id: "clue_gym_fok",
@@ -793,10 +793,10 @@
         name: "1F 體育更衣室外霍展霆的護膝與水果糖紙",
         zone: "1F 體育更衣室走廊",
         icon: "🩹",
-        pos: { x: -14, y: 1.25, z: 2.0 },
+        pos: { x: -20, y: 1.25, z: 2.0 },
         floor: 1,
         shortDesc: "籃球隊長霍展霆在此休克送醫。現場拾獲撕開的奇異果糖包裝紙與沾有淡紫粉末的護膝，便條寫著：『展霆，中六B班詠蕎那裡還有存貨……』引導登上 2F 教學樓！",
-        fullDesc: "揭示霍展霆與岑詠蕎受害之共同源頭。引導調查員沿中庭樓梯前往 2F 中六B班房！"
+        fullDesc: "揭示霍展霆與岑詠蕎受害之共同源頭。引導調查員沿階梯A前往 2F 中六B班房！"
       },
       clue_desk: {
         id: "clue_desk",
@@ -804,7 +804,7 @@
         name: "2F 中六B班 岑詠蕎課桌紫晶液滴與求助字條",
         zone: "2F 中六B班房",
         icon: "📝",
-        pos: { x: -15, y: 5.05, z: -3.5 },
+        pos: { x: 5.0, y: 4.85, z: -4.5 },
         floor: 2,
         shortDesc: "考場 2 號課桌殘留深紫色未知液滴（證物 A）。撕碎字條寫著：『17 號儲物櫃留了新暗號……我和展霆吸了全身劇烈抽搐……』指引排查 2F 走廊儲物櫃！",
         fullDesc: "採集到證物 A（紫晶液滴）。指示前往 2F 走廊排查 17 號儲物櫃。"
@@ -815,7 +815,7 @@
         name: "2F 走廊 17 號儲物櫃內的暗號提貨單",
         zone: "2F 教學樓中央長廊",
         icon: "🏷️",
-        pos: { x: -2, y: 5.05, z: -3.4 },
+        pos: { x: 16.0, y: 4.85, z: -0.4 },
         floor: 2,
         shortDesc: "排查 17 號儲物櫃起獲暗號提貨單：『新一批特調奇異果軟糖已放置在【化學實驗室外走廊水管夾層】，速取。』",
         fullDesc: "明確指出毒物藏匿於 2F 化學室外走廊水管夾層中。"
@@ -826,7 +826,7 @@
         name: "2F 化學室外水管夾層內的特調奇異果軟糖",
         zone: "2F 理科化學室外廊水管夾層",
         icon: "🍬",
-        pos: { x: -3, y: 5.05, z: 5.5 },
+        pos: { x: 10.0, y: 4.85, z: 5.6 },
         floor: 2,
         shortDesc: "起獲一包偽裝成提神果糖的未知軟糖（證物 B）！兩份樣品已齊全，立即進入旁邊化學室進行雙試管定性快篩！",
         fullDesc: "起獲證物 B（軟糖樣品）。與證物 A 一同送進 2F 理科實驗室化驗。"
@@ -837,10 +837,10 @@
         name: "2F 理科實驗室 雙試管快篩定性確診報告",
         zone: "2F 理科綜合化學實驗室",
         icon: "🧪",
-        pos: { x: -3, y: 5.05, z: 12 },
+        pos: { x: 10.0, y: 4.85, z: 11.5 },
         floor: 2,
         shortDesc: "排除氯胺酮，確診兩份樣品均含有受管制的危險藥物「依托咪酯」！此時 3F 天台方向傳來急促震動鈴聲！",
-        fullDesc: "實驗室定性確診！通往 3F 天台之防火門解鎖，立即登上天台追捕訊號源！"
+        fullDesc: "實驗室定性確診！通往 3F 天台之階梯B解鎖，立即登上天台追捕訊號源！"
       },
       clue_rooftop_burner: {
         id: "clue_rooftop_burner",
@@ -848,51 +848,51 @@
         name: "3F 暮光天台排風箱後震動響鈴的毒販通聯手機",
         zone: "3F 教學樓暮光天台",
         icon: "📱",
-        pos: { x: 20, y: 8.85, z: -2.0 },
+        pos: { x: 34.0, y: 8.45, z: -2.0 },
         floor: 3,
         shortDesc: "接聽排風箱後的加密手機，成功錄下主謀「暗夜調劑師」勒索學生的通話錄音！定罪鏈全數完成！",
         fullDesc: "截獲關鍵鐵證通聯！立即打開案件手冊，進入思維宮殿完成定案並通報警方！"
       }
     };
 
-    // 2F 走廊非目標儲物櫃排查庫
+    // 2F 走廊儲物櫃非目標排查庫
     const DUMMY_LOCKERS = {
       locker_11: {
         id: "locker_11",
         num: 11,
         name: "2F 走廊 11 號儲物櫃",
-        pos: { x: -7.5, y: 5.0, z: -3.4 },
+        pos: { x: 12.0, y: 4.8, z: -0.4 },
         desc: "這是 11 號儲物櫃。裡面整齊疊放著校服與幾本 DSE 歷屆試題，未發現可疑暗號。"
       },
       locker_14: {
         id: "locker_14",
         num: 14,
         name: "2F 走廊 14 號儲物櫃",
-        pos: { x: -4.8, y: 5.0, z: -3.4 },
+        pos: { x: 14.0, y: 4.8, z: -0.4 },
         desc: "這是 14 號儲物櫃。門外貼著學界籃球錦標賽賽程表，鎖具完好，無異常夾層。"
       },
       locker_20: {
         id: "locker_20",
         num: 20,
         name: "2F 走廊 20 號儲物櫃",
-        pos: { x: 1.0, y: 5.0, z: -3.4 },
+        pos: { x: 18.0, y: 4.8, z: -0.4 },
         desc: "這是 20 號儲物櫃。裡面放置著雨傘與水樽，縫隙乾淨，不是藏匿地點。"
       },
       locker_23: {
         id: "locker_23",
         num: 23,
         name: "2F 走廊 23 號儲物櫃",
-        pos: { x: 3.8, y: 5.0, z: -3.4 },
+        pos: { x: 19.5, y: 4.8, z: -0.4 },
         desc: "這是 23 號儲物櫃。鎖頭有些許鏽蝕，顯然近期無人動過。"
       }
     };
 
-    // 1F 大堂榮譽陳列櫃（補充校園背景探索）
+    // 1F 大堂榮譽陳列櫃
     const FOYER_INSPECTS = {
       trophy_case: {
         id: "trophy_case",
         name: "1F 大堂學界榮譽陳列櫃",
-        pos: { x: -3.0, y: 1.2, z: -3.4 },
+        pos: { x: -10.0, y: 1.2, z: -3.4 },
         desc: "陳列櫃擺放著咪制書院在學界體育與學術賽事的獎盃。其中『全港學界男子組冠軍 MVP 霍展霆』與『文憑試傑出特許生 岑詠蕎』的照片格外耀眼……兩人本應前途似錦，卻被毒販的偽裝話術拖入深淵！"
       }
     };
@@ -915,41 +915,40 @@
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x060814);
-    scene.fog = new THREE.FogExp2(0x0a0f20, 0.022);
+    scene.fog = new THREE.FogExp2(0x0a0f20, 0.016);
 
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    // 限制最大像素比例至 1.25，顯著降低同學手機發熱與顯存消耗
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
     renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.BasicShadowMap; // 高性能低內存基礎陰影
+    renderer.shadowMap.type = THREE.BasicShadowMap;
 
     const ambientLight = new THREE.AmbientLight(0xdba686, 0.95);
     scene.add(ambientLight);
 
     const isMobileDevice = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
     const sunLight = new THREE.DirectionalLight(0xfb923c, 1.35);
-    sunLight.position.set(-25, 30, -15);
+    sunLight.position.set(-15, 35, -20);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = isMobileDevice ? 512 : 1024;
     sunLight.shadow.mapSize.height = isMobileDevice ? 512 : 1024;
     sunLight.shadow.camera.near = 0.5;
-    sunLight.shadow.camera.far = 100;
-    sunLight.shadow.camera.left = -35;
-    sunLight.shadow.camera.right = 35;
-    sunLight.shadow.camera.top = 35;
-    sunLight.shadow.camera.bottom = -35;
+    sunLight.shadow.camera.far = 120;
+    sunLight.shadow.camera.left = -45;
+    sunLight.shadow.camera.right = 45;
+    sunLight.shadow.camera.top = 45;
+    sunLight.shadow.camera.bottom = -45;
     scene.add(sunLight);
 
-    const roofPointLight = new THREE.PointLight(0xa855f7, 1.2, 25);
-    roofPointLight.position.set(20, 11, 0);
+    const roofPointLight = new THREE.PointLight(0xa855f7, 1.2, 30);
+    roofPointLight.position.set(34, 11, 0);
     scene.add(roofPointLight);
 
     const CAMERA_PRESETS = [
-      { name: "斜角俯視", dist: 7.8, height: 6.5 },
-      { name: "特寫跟隨", dist: 5.2, height: 4.0 },
-      { name: "高空全覽", dist: 12.5, height: 11.0 }
+      { name: "斜角俯視", dist: 8.5, height: 7.0 },
+      { name: "特寫跟隨", dist: 5.6, height: 4.5 },
+      { name: "高空全覽", dist: 14.0, height: 12.0 }
     ];
 
     function cycleCameraPreset() {
@@ -988,24 +987,23 @@
     scene.add(worldGroup);
     const interactableMeshes = [];
 
-    // 精確校準的三層實體障礙物碰撞箱 (Obstacle AABB Boxes)
+    // 實體障礙物碰撞箱 (完全匹配階梯式校舍)
     const SOLID_OBSTACLES = [
-      // 1F 大堂陳列櫃 (y: 0~3.8)
-      { minX: -5.0, maxX: -1.0, minZ: -4.0, maxZ: -2.8, floor: 1 },
-      // 1F 體育更衣室隔間長椅 (y: 0~3.8)
-      { minX: -17.0, maxX: -11.0, minZ: 3.2, maxZ: 5.0, floor: 1 },
-      // 2F 走廊儲物櫃 (x: -9 ~ 7, z: -4.0 ~ -2.9, floor: 2)
-      { minX: -9.0, maxX: 7.0, minZ: -4.0, maxZ: -2.9, floor: 2 },
+      // 1F 大堂陳列櫃 (y: 0~3.6)
+      { minX: -11.8, maxX: -8.2, minZ: -4.0, maxZ: -2.8, floor: 1 },
+      // 1F 體育更衣室隔間長椅 (y: 0~3.6)
+      { minX: -22.5, maxX: -17.5, minZ: 3.2, maxZ: 4.8, floor: 1 },
+      // 2F 走廊儲物櫃 (x: 11 ~ 20.2, z: -0.8 ~ 0.0, floor: 2)
+      { minX: 11.0, maxX: 20.2, minZ: -0.8, maxZ: 0.0, floor: 2 },
       // 2F 化學實驗台 1 & 2 (floor: 2)
-      { minX: -7.0, maxX: 1.0, minZ: 7.2, maxZ: 8.8, floor: 2 },
-      { minX: -7.0, maxX: 1.0, minZ: 11.2, maxZ: 12.8, floor: 2 },
+      { minX: 7.0, maxX: 13.0, minZ: 7.2, maxZ: 8.8, floor: 2 },
+      { minX: 7.0, maxX: 13.0, minZ: 10.8, maxZ: 12.4, floor: 2 },
       // 3F 天台大水塔 (floor: 3)
-      { minX: 22.0, maxX: 26.5, minZ: 1.5, maxZ: 5.5, floor: 3 },
+      { minX: 36.0, maxX: 40.0, minZ: 1.5, maxZ: 5.5, floor: 3 },
       // 3F 天台排風箱 (floor: 3)
-      { minX: 18.0, maxX: 22.0, minZ: -4.5, maxZ: -2.5, floor: 3 }
+      { minX: 32.0, maxX: 36.0, minZ: -4.5, maxZ: -2.5, floor: 3 }
     ];
 
-    // 輕量復古共享材質（減少 draw call 與顯存壓力）
     const materials = {
       foyerFloor: new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.5 }),
       woodFloor: new THREE.MeshStandardMaterial({ color: 0x54321d, roughness: 0.6 }),
@@ -1014,6 +1012,8 @@
       rooftopFloor: new THREE.MeshStandardMaterial({ color: 0x221f28, roughness: 0.85 }),
       stairMat: new THREE.MeshStandardMaterial({ color: 0x333b4d, roughness: 0.5, metalness: 0.2 }),
       wallMat: new THREE.MeshStandardMaterial({ color: 0xdfd3c5, roughness: 0.85 }),
+      halfWallMat: new THREE.MeshStandardMaterial({ color: 0xc8b8a6, roughness: 0.85 }),
+      glassMat: new THREE.MeshStandardMaterial({ color: 0x93c5fd, transparent: true, opacity: 0.35, roughness: 0.1 }),
       darkMetal: new THREE.MeshStandardMaterial({ color: 0x222733, metalness: 0.7, roughness: 0.35 }),
       deskWood: new THREE.MeshStandardMaterial({ color: 0xa35e30, roughness: 0.5 }),
       targetDeskWood: new THREE.MeshStandardMaterial({ color: 0xc2410c, roughness: 0.4 }),
@@ -1052,102 +1052,88 @@
     }
 
     function buildSeamlessWorld() {
-      // ==========================================
-      // 【1F 地面層：中庭接待大堂 & 體育更衣室區】(Y = 0)
-      // ==========================================
-      const f1Floor = new THREE.Mesh(new THREE.PlaneGeometry(28, 14), materials.foyerFloor);
+      // =========================================================================================
+      // 【1F 西翼地面層：中庭接待大堂 & 體育部走廊】(X: -26 ~ -6, Y = 0, Z: -7 ~ 7)
+      // 零垂直重疊，相機由高處向下俯瞰完全通透！
+      // =========================================================================================
+      const f1Floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 14), materials.foyerFloor);
       f1Floor.rotation.x = -Math.PI / 2;
-      f1Floor.position.set(-6, 0, 0);
+      f1Floor.position.set(-16, 0, 0);
       f1Floor.receiveShadow = true;
       worldGroup.add(f1Floor);
 
-      // 1F 南北西牆
-      const f1WallN = new THREE.Mesh(new THREE.BoxGeometry(28, 3.2, 0.4), materials.wallMat);
-      f1WallN.position.set(-6, 1.6, -7);
+      // 1F 北牆與西牆（高牆）
+      const f1WallN = new THREE.Mesh(new THREE.BoxGeometry(20, 3.2, 0.4), materials.wallMat);
+      f1WallN.position.set(-16, 1.6, -7);
       worldGroup.add(f1WallN);
 
-      const f1WallS = new THREE.Mesh(new THREE.BoxGeometry(28, 3.2, 0.4), materials.wallMat);
-      f1WallS.position.set(-6, 1.6, 7);
-      worldGroup.add(f1WallS);
-
       const f1WallW = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 14), materials.wallMat);
-      f1WallW.position.set(-20, 1.6, 0);
+      f1WallW.position.set(-26, 1.6, 0);
       worldGroup.add(f1WallW);
+
+      // 1F 南牆（半截防遮擋矮牆 1.2m，確保相機視角毫無遮蔽）
+      const f1WallS = new THREE.Mesh(new THREE.BoxGeometry(20, 1.2, 0.4), materials.halfWallMat);
+      f1WallS.position.set(-16, 0.6, 7);
+      worldGroup.add(f1WallS);
 
       // 1F 榮譽獎盃陳列櫃
       const trophyMesh = new THREE.Mesh(new THREE.BoxGeometry(3.6, 2.2, 0.8), materials.darkMetal);
-      trophyMesh.position.set(-3, 1.1, -3.4);
+      trophyMesh.position.set(-10, 1.1, -3.4);
       trophyMesh.castShadow = true;
       worldGroup.add(trophyMesh);
 
-      // 1F 體育更衣室長椅與置物隔板（霍展霆倒下的地點）
+      // 1F 體育更衣室長椅（霍展霆倒下處）
       const bench = new THREE.Mesh(new THREE.BoxGeometry(5.0, 0.6, 1.2), materials.woodFloor);
-      bench.position.set(-14, 0.3, 3.8);
+      bench.position.set(-20, 0.3, 3.8);
       bench.castShadow = true;
       worldGroup.add(bench);
 
-      // 1F -> 2F 實體樓梯 A (連接 x: 4.0 ~ 8.0, y: 0 -> 3.8)
+      // 1F -> 2F 景觀階梯 A (連接 x: -6.0 ~ 0.0, y: 0 -> 3.6, z: -2 ~ 2)
       const stair1Steps = 10;
-      const stair1Rise = 3.8 / stair1Steps;
-      const stair1Run = 4.0 / stair1Steps;
+      const stair1Rise = 3.6 / stair1Steps;
+      const stair1Run = 6.0 / stair1Steps;
       for (let s = 0; s < stair1Steps; s++) {
-        const sx = 4.0 + s * stair1Run + stair1Run / 2;
+        const sx = -6.0 + s * stair1Run + stair1Run / 2;
         const sh = (s + 1) * stair1Rise;
-        const step = new THREE.Mesh(new THREE.BoxGeometry(stair1Run * 1.02, sh, 3.4), materials.stairMat);
-        step.position.set(sx, sh / 2, -3.5);
+        const step = new THREE.Mesh(new THREE.BoxGeometry(stair1Run * 1.02, sh, 4.0), materials.stairMat);
+        step.position.set(sx, sh / 2, 0);
         step.receiveShadow = true;
         worldGroup.add(step);
       }
 
-      // ==========================================
-      // 【2F 教學樓層：中六B班房、走廊與理科化學室】(Y = 3.8)
-      // ==========================================
-      // 2F 班房地面 (x: -22 ~ -10, z: -6 ~ 6)
-      const classFloor = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), materials.woodFloor);
+      // =========================================================================================
+      // 【2F 中翼教學樓層：中六B班房、走廊與理科化學室】(X: 0 ~ 20, Y = 3.6)
+      // 水平向東展開，階梯向上攀升，與 1F、3F 均無重疊！
+      // =========================================================================================
+      // 2F 班房地面 (x: 0 ~ 10, z: -7 ~ 0)
+      const classFloor = new THREE.Mesh(new THREE.PlaneGeometry(10, 7), materials.woodFloor);
       classFloor.rotation.x = -Math.PI / 2;
-      classFloor.position.set(-16, 3.8, 0);
+      classFloor.position.set(5, 3.6, -3.5);
       classFloor.receiveShadow = true;
       worldGroup.add(classFloor);
 
-      const f2WallN = new THREE.Mesh(new THREE.BoxGeometry(12, 2.6, 0.4), materials.wallMat);
-      f2WallN.position.set(-16, 5.1, -6);
-      worldGroup.add(f2WallN);
+      const f2ClassN = new THREE.Mesh(new THREE.BoxGeometry(10, 2.6, 0.4), materials.wallMat);
+      f2ClassN.position.set(5, 4.9, -7);
+      worldGroup.add(f2ClassN);
 
-      const f2WallW = new THREE.Mesh(new THREE.BoxGeometry(0.4, 2.6, 12), materials.wallMat);
-      f2WallW.position.set(-22, 5.1, 0);
-      worldGroup.add(f2WallW);
-
-      const f2WallS = new THREE.Mesh(new THREE.BoxGeometry(12, 2.6, 0.4), materials.wallMat);
-      f2WallS.position.set(-16, 5.1, 6);
-      worldGroup.add(f2WallS);
-
-      const f2WallE1 = new THREE.Mesh(new THREE.BoxGeometry(0.4, 2.6, 4.5), materials.wallMat);
-      f2WallE1.position.set(-10, 5.1, -3.75);
-      worldGroup.add(f2WallE1);
-
-      const f2WallE2 = new THREE.Mesh(new THREE.BoxGeometry(0.4, 2.6, 4.5), materials.wallMat);
-      f2WallE2.position.set(-10, 5.1, 3.75);
-      worldGroup.add(f2WallE2);
-
-      const board = new THREE.Mesh(new THREE.BoxGeometry(6, 1.8, 0.1), materials.chalkboard);
-      board.position.set(-16, 5.4, -5.75);
+      const board = new THREE.Mesh(new THREE.BoxGeometry(6, 1.6, 0.1), materials.chalkboard);
+      board.position.set(5, 5.2, -6.75);
       worldGroup.add(board);
 
       // 【2F 班房課桌椅：精準 3 排 x 3 列 = 9 張課桌】
-      const deskCols = [-19, -16, -13];
-      const deskRows = [-3.5, -0.5, 2.5];
+      const deskCols = [3, 5, 7];
+      const deskRows = [-5.0, -3.2, -1.4];
       deskCols.forEach(dx => {
         deskRows.forEach(dz => {
-          const isTargetDesk = (dx === -15 && dz === -3.5);
+          const isTargetDesk = (dx === 5 && dz === -5.0);
           const deskMesh = new THREE.Mesh(
             new THREE.BoxGeometry(1.2, 0.75, 0.65),
             isTargetDesk ? materials.targetDeskWood : materials.deskWood
           );
-          deskMesh.position.set(dx, 4.25, dz);
+          deskMesh.position.set(dx, 4.05, dz);
           deskMesh.castShadow = true;
           worldGroup.add(deskMesh);
 
-          // 障礙物碰撞
           SOLID_OBSTACLES.push({
             minX: dx - 0.6,
             maxX: dx + 0.6,
@@ -1158,135 +1144,128 @@
         });
       });
 
-      // 2F 中央長廊 (x: -10 ~ 8, z: -4 ~ 4)
-      const f2CorrFloor = new THREE.Mesh(new THREE.PlaneGeometry(18, 8), materials.corridorFloor);
+      // 2F 中央長廊 (x: 0 ~ 20, z: 0 ~ 5.2)
+      const f2CorrFloor = new THREE.Mesh(new THREE.PlaneGeometry(20, 5.2), materials.corridorFloor);
       f2CorrFloor.rotation.x = -Math.PI / 2;
-      f2CorrFloor.position.set(-1, 3.8, 0);
+      f2CorrFloor.position.set(10, 3.6, 2.6);
       f2CorrFloor.receiveShadow = true;
       worldGroup.add(f2CorrFloor);
 
-      const f2CorrN = new THREE.Mesh(new THREE.BoxGeometry(18, 2.6, 0.4), materials.wallMat);
-      f2CorrN.position.set(-1, 5.1, -4);
-      worldGroup.add(f2CorrN);
-
       // 2F 走廊儲物櫃（11、14、17、20、23 號）
       const lockerPositions = [
-        { x: -7.5, num: "11" },
-        { x: -4.8, num: "14" },
-        { x: -2.0, num: "17" },
-        { x: 1.0, num: "20" },
-        { x: 3.8, num: "23" }
+        { x: 12.0, num: "11" },
+        { x: 14.0, num: "14" },
+        { x: 16.0, num: "17" },
+        { x: 18.0, num: "20" },
+        { x: 19.5, num: "23" }
       ];
       lockerPositions.forEach(loc => {
         const locker = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.2, 0.75), materials.darkMetal);
-        locker.position.set(loc.x, 4.9, -3.4);
+        locker.position.set(loc.x, 4.7, -0.4);
         locker.castShadow = true;
         worldGroup.add(locker);
       });
 
       // 2F 化學室外露水管
       const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 3.0, 12), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8, roughness: 0.2 }));
-      pipe.position.set(-3, 5.3, 5.6);
+      pipe.position.set(10, 5.1, 5.6);
       worldGroup.add(pipe);
 
-      // 2F 理科化學實驗室
-      const labFloor = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), materials.labFloor);
+      // 2F 理科化學實驗室 (x: 5.5 ~ 16.5, z: 5.2 ~ 15)
+      const labFloor = new THREE.Mesh(new THREE.PlaneGeometry(11, 9.8), materials.labFloor);
       labFloor.rotation.x = -Math.PI / 2;
-      labFloor.position.set(-3, 3.8, 10);
+      labFloor.position.set(11, 3.6, 10.1);
       labFloor.receiveShadow = true;
       worldGroup.add(labFloor);
 
-      const labW = new THREE.Mesh(new THREE.BoxGeometry(0.4, 2.6, 12), materials.wallMat);
-      labW.position.set(-9, 5.1, 10);
-      worldGroup.add(labW);
-
-      const labE = new THREE.Mesh(new THREE.BoxGeometry(0.4, 2.6, 12), materials.wallMat);
-      labE.position.set(3, 5.1, 10);
+      const labE = new THREE.Mesh(new THREE.BoxGeometry(0.4, 2.6, 9.8), materials.wallMat);
+      labE.position.set(16.5, 4.9, 10.1);
       worldGroup.add(labE);
 
-      const labS = new THREE.Mesh(new THREE.BoxGeometry(12, 2.6, 0.4), materials.wallMat);
-      labS.position.set(-3, 5.1, 16);
+      const labS = new THREE.Mesh(new THREE.BoxGeometry(11, 1.2, 0.4), materials.halfWallMat);
+      labS.position.set(11, 4.2, 15);
       worldGroup.add(labS);
 
-      for (let lz = 8; lz <= 12; lz += 4) {
-        const labTable = new THREE.Mesh(new THREE.BoxGeometry(7.0, 1.0, 1.6), new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3 }));
-        labTable.position.set(-3, 4.35, lz);
+      for (let lz = 8; lz <= 11.6; lz += 3.6) {
+        const labTable = new THREE.Mesh(new THREE.BoxGeometry(6.0, 1.0, 1.6), new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3 }));
+        labTable.position.set(10, 4.15, lz);
         labTable.castShadow = true;
         worldGroup.add(labTable);
       }
 
-      // 2F -> 3F 實體樓梯 B (連接 x: 8.0 ~ 13.0, y: 3.8 -> 7.6)
+      // 2F -> 3F 實體階梯 B (連接 x: 20.0 ~ 26.0, y: 3.6 -> 7.2, z: -2 ~ 2)
       const stair2Steps = 10;
-      const stair2Rise = 3.8 / stair2Steps;
-      const stair2Run = 5.0 / stair2Steps;
+      const stair2Rise = 3.6 / stair2Steps;
+      const stair2Run = 6.0 / stair2Steps;
       for (let s = 0; s < stair2Steps; s++) {
-        const sx = 8.0 + s * stair2Run + stair2Run / 2;
-        const sh = 3.8 + (s + 1) * stair2Rise;
-        const step = new THREE.Mesh(new THREE.BoxGeometry(stair2Run * 1.02, sh, 3.4), materials.stairMat);
+        const sx = 20.0 + s * stair2Run + stair2Run / 2;
+        const sh = 3.6 + (s + 1) * stair2Rise;
+        const step = new THREE.Mesh(new THREE.BoxGeometry(stair2Run * 1.02, sh, 4.0), materials.stairMat);
         step.position.set(sx, sh / 2, 0);
         step.receiveShadow = true;
         worldGroup.add(step);
       }
 
-      // ==========================================
-      // 【3F 頂層：暮光全景天台 & 排風水塔區】(Y = 7.6)
-      // ==========================================
+      // =========================================================================================
+      // 【3F 東翼頂層：暮光全景天台 & 排風水塔區】(X: 26 ~ 42, Y = 7.2)
+      // 居高臨下，俯瞰整座校舍！
+      // =========================================================================================
       const roofFloor = new THREE.Mesh(new THREE.PlaneGeometry(16, 14), materials.rooftopFloor);
       roofFloor.rotation.x = -Math.PI / 2;
-      roofFloor.position.set(21, 7.6, 0);
+      roofFloor.position.set(34, 7.2, 0);
       roofFloor.receiveShadow = true;
       worldGroup.add(roofFloor);
 
-      const roofBase = new THREE.Mesh(new THREE.BoxGeometry(16, 7.6, 14), new THREE.MeshStandardMaterial({ color: 0x141822 }));
-      roofBase.position.set(21, 3.8, 0);
+      const roofBase = new THREE.Mesh(new THREE.BoxGeometry(16, 7.2, 14), new THREE.MeshStandardMaterial({ color: 0x141822 }));
+      roofBase.position.set(34, 3.6, 0);
       worldGroup.add(roofBase);
 
       const fenceMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8, roughness: 0.3 });
       const fenceN = new THREE.Mesh(new THREE.BoxGeometry(16, 1.3, 0.2), fenceMat);
-      fenceN.position.set(21, 8.25, -7);
+      fenceN.position.set(34, 7.85, -7);
       worldGroup.add(fenceN);
 
       const fenceS = new THREE.Mesh(new THREE.BoxGeometry(16, 1.3, 0.2), fenceMat);
-      fenceS.position.set(21, 8.25, 7);
+      fenceS.position.set(34, 7.85, 7);
       worldGroup.add(fenceS);
 
       const fenceE = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.3, 14), fenceMat);
-      fenceE.position.set(29, 8.25, 0);
+      fenceE.position.set(42, 7.85, 0);
       worldGroup.add(fenceE);
 
       // 水塔
       const tank = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 2.0, 3.2, 16), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.6 }));
-      tank.position.set(24.5, 9.2, 3.5);
+      tank.position.set(38, 8.8, 3.5);
       tank.castShadow = true;
       worldGroup.add(tank);
 
       // 排風箱（藏匿手機）
       const vent = new THREE.Mesh(new THREE.BoxGeometry(3.0, 1.6, 1.8), new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.7 }));
-      vent.position.set(20, 8.4, -3.5);
+      vent.position.set(34, 8.0, -3.5);
       vent.castShadow = true;
       worldGroup.add(vent);
 
-      // ==========================================
+      // =========================================================================================
       // 【物證與互動標記生成】
-      // ==========================================
+      // =========================================================================================
       // 1F: 體育更衣室霍展霆遺留物、榮譽櫃
-      spawnClueMarker('clue_gym_fok', -14, 1.25, 2.0);
-      spawnClueMarker('trophy_case', -3.0, 1.2, -3.4, true);
+      spawnClueMarker('clue_gym_fok', -20, 1.25, 2.0);
+      spawnClueMarker('trophy_case', -10.0, 1.2, -3.4, true);
 
       // 2F: 課桌、儲物櫃、水管夾層、化驗台
-      spawnClueMarker('clue_desk', -15, 5.05, -3.5);
-      spawnClueMarker('clue_corridor', -2, 5.05, -3.4);
-      spawnClueMarker('clue_pipe_stash', -3, 5.05, 5.5);
-      spawnClueMarker('clue_spot_plate', -3, 5.05, 12);
+      spawnClueMarker('clue_desk', 5.0, 4.85, -4.5);
+      spawnClueMarker('clue_corridor', 16.0, 4.85, -0.4);
+      spawnClueMarker('clue_pipe_stash', 10.0, 4.85, 5.6);
+      spawnClueMarker('clue_spot_plate', 10.0, 4.85, 11.5);
 
       // 2F 走廊非目標儲物櫃
-      spawnClueMarker('locker_11', -7.5, 5.0, -3.4, true);
-      spawnClueMarker('locker_14', -4.8, 5.0, -3.4, true);
-      spawnClueMarker('locker_20', 1.0, 5.0, -3.4, true);
-      spawnClueMarker('locker_23', 3.8, 5.0, -3.4, true);
+      spawnClueMarker('locker_11', 12.0, 4.8, -0.4, true);
+      spawnClueMarker('locker_14', 14.0, 4.8, -0.4, true);
+      spawnClueMarker('locker_20', 18.0, 4.8, -0.4, true);
+      spawnClueMarker('locker_23', 19.5, 4.8, -0.4, true);
 
       // 3F: 天台加密手機
-      spawnClueMarker('clue_rooftop_burner', 20, 8.85, -2.0);
+      spawnClueMarker('clue_rooftop_burner', 34.0, 8.45, -2.0);
     }
 
     buildSeamlessWorld();
@@ -1335,8 +1314,8 @@
         bag.position.set(0.4, 0.98, -0.05);
         this.mesh.add(bag);
 
-        // 【全新出生點】：1F 校門大堂中庭入口處（讓玩家自主由大堂展開探索）
-        this.mesh.position.set(-5.0, 0, 1.5);
+        // 1F 西翼大堂中庭入口處出生（上方毫無任何建築遮蔽！）
+        this.mesh.position.set(-16.0, 0, 1.5);
         scene.add(this.mesh);
       }
 
@@ -1391,29 +1370,29 @@
         const z = this.mesh.position.z;
         let targetY = 0;
 
-        // 3F 天台 (x >= 13.0)
-        if (x >= 13.0) {
-          targetY = 7.6;
+        // 3F 天台 (x >= 26.0)
+        if (x >= 26.0) {
+          targetY = 7.2;
           GAME_STATE.currentFloor = 3;
         } 
-        // 2F -> 3F 樓梯 B (x: 8.0 ~ 13.0, z: -1.7 ~ 1.7)
-        else if (x >= 8.0 && x < 13.0 && z >= -1.8 && z <= 1.8) {
-          const progress = (x - 8.0) / 5.0;
-          targetY = THREE.MathUtils.lerp(3.8, 7.6, Math.min(Math.max(progress, 0), 1));
+        // 2F -> 3F 階梯 B (x: 20.0 ~ 26.0, z: -2.2 ~ 2.2)
+        else if (x >= 20.0 && x < 26.0 && z >= -2.2 && z <= 2.2) {
+          const progress = (x - 20.0) / 6.0;
+          targetY = THREE.MathUtils.lerp(3.6, 7.2, Math.min(Math.max(progress, 0), 1));
           GAME_STATE.currentFloor = progress > 0.5 ? 3 : 2;
         }
-        // 1F -> 2F 樓梯 A (x: 4.0 ~ 8.0, z: -5.2 ~ -1.8)
-        else if (x >= 4.0 && x <= 8.0 && z >= -5.2 && z <= -1.8) {
-          const progress = (x - 4.0) / 4.0;
-          targetY = THREE.MathUtils.lerp(0, 3.8, Math.min(Math.max(progress, 0), 1));
-          GAME_STATE.currentFloor = progress > 0.5 ? 2 : 1;
-        }
-        // 2F 教學與實驗區
-        else if (x < 8.0 && GAME_STATE.currentFloor >= 2) {
-          targetY = 3.8;
+        // 2F 教學與實驗區 (x: 0.0 ~ 20.0)
+        else if (x > 0.0 && x < 20.0) {
+          targetY = 3.6;
           GAME_STATE.currentFloor = 2;
         }
-        // 1F 地面大堂
+        // 1F -> 2F 階梯 A (x: -6.0 ~ 0.0, z: -2.2 ~ 2.2)
+        else if (x >= -6.0 && x <= 0.0 && z >= -2.2 && z <= 2.2) {
+          const progress = (x - (-6.0)) / 6.0;
+          targetY = THREE.MathUtils.lerp(0, 3.6, Math.min(Math.max(progress, 0), 1));
+          GAME_STATE.currentFloor = progress > 0.5 ? 2 : 1;
+        }
+        // 1F 地面大堂 (x <= -6.0)
         else {
           targetY = 0;
           GAME_STATE.currentFloor = 1;
@@ -1426,21 +1405,18 @@
         const f = GAME_STATE.currentFloor;
 
         // 1F 區域邊界
-        const in1FFoyer = (f === 1 && x >= -19.5 && x <= 7.8 && z >= -6.5 && z <= 6.5);
-        const onStair1 = (x >= 3.8 && x <= 8.2 && z >= -5.2 && z <= -1.8);
+        const in1F = (f === 1 && x >= -25.5 && x <= -5.8 && z >= -6.5 && z <= 6.5);
+        const onStair1 = (x >= -6.2 && x <= 0.2 && z >= -2.2 && z <= 2.2);
 
         // 2F 區域邊界
-        const in2FClassroom = (f === 2 && x >= -21.5 && x <= -10 && z >= -5.5 && z <= 5.5);
-        const in2FClassDoor = (f === 2 && x >= -11 && x <= -9 && z >= -1.8 && z <= 1.8);
-        const in2FCorridor = (f === 2 && x >= -10 && x <= 8.5 && z >= -3.6 && z <= 3.6);
-        const in2FLabDoor = (f === 2 && x >= -4.5 && x <= -1.5 && z >= 3.0 && z <= 5.0);
-        const in2FLab = (f === 2 && x >= -8.5 && x <= 2.5 && z >= 4.5 && z <= 15.5);
-        const onStair2 = (x >= 7.8 && x <= 13.5 && z >= -1.8 && z <= 1.8);
+        const in2FClassCorridor = (f === 2 && x >= 0.0 && x <= 20.0 && z >= -6.5 && z <= 5.2);
+        const in2FLab = (f === 2 && x >= 5.5 && x <= 16.5 && z >= 4.8 && z <= 15.2);
+        const onStair2 = (x >= 19.8 && x <= 26.2 && z >= -2.2 && z <= 2.2);
 
         // 3F 天台邊界
-        const in3FRooftop = (f === 3 && x >= 13.0 && x <= 28.5 && z >= -6.5 && z <= 6.5);
+        const in3FRooftop = (f === 3 && x >= 25.8 && x <= 41.5 && z >= -6.5 && z <= 6.5);
 
-        const insideWalkable = in1FFoyer || onStair1 || in2FClassroom || in2FClassDoor || in2FCorridor || in2FLabDoor || in2FLab || onStair2 || in3FRooftop;
+        const insideWalkable = in1F || onStair1 || in2FClassCorridor || in2FLab || onStair2 || in3FRooftop;
         if (!insideWalkable) return false;
 
         // 實體障礙物碰撞
@@ -1451,13 +1427,11 @@
         }
 
         // 任務推進門禁鎖定
-        if (f === 1 && x > 4.5 && GAME_STATE.questStage < 2) {
-          // 未調查霍展霆遺留物前暫不上樓
-          return false;
+        if (f === 1 && x > -2.0 && GAME_STATE.questStage < 2) {
+          return false; // 未調查霍展霆遺留物前暫不上樓
         }
-        if (f === 2 && x >= 8.0 && GAME_STATE.questStage < 6) {
-          // 未完成實驗室快篩確診前天台防火門鎖閉
-          return false;
+        if (f === 2 && x >= 22.0 && GAME_STATE.questStage < 6) {
+          return false; // 未完成實驗室快篩前天台階梯鎖閉
         }
 
         return true;
@@ -1465,13 +1439,12 @@
 
       checkCurrentZone() {
         const x = this.mesh.position.x;
-        const z = this.mesh.position.z;
         const f = GAME_STATE.currentFloor;
         let zone = "1F 咪制書院 中庭大堂";
         let icon = "🏛️";
 
         if (f === 1) {
-          if (x < -8.0) {
+          if (x < -18.0) {
             zone = "1F 體育更衣室走廊";
             icon = "🏀";
           } else {
@@ -1479,10 +1452,10 @@
             icon = "🏛️";
           }
         } else if (f === 2) {
-          if (x < -10) {
+          if (x <= 10 && this.mesh.position.z < 0) {
             zone = "2F 中六B班房 (事發現場)";
             icon = "📚";
-          } else if (z > 4 && x <= 4) {
+          } else if (this.mesh.position.z > 5) {
             zone = "2F 理科綜合化學實驗室";
             icon = "🧪";
           } else {
@@ -1509,604 +1482,18 @@
 
     const player = new InvestigatorAvatar();
 
-    let spotStage = 0;
-    let lastFocusedElement = null;
-
-    function openModalWithA11y(modalEl, closeCallback) {
-      lastFocusedElement = document.activeElement;
-      modalEl.style.opacity = '1';
-      modalEl.style.pointerEvents = 'auto';
-      modalEl.setAttribute('aria-hidden', 'false');
-      
-      const mainContent = document.getElementById('main-content');
-      if (mainContent) mainContent.setAttribute('aria-hidden', 'true');
-
-      trapFocus(modalEl, closeCallback);
-    }
-
-    function closeModalWithA11y(modalEl) {
-      modalEl.style.opacity = '0';
-      modalEl.style.pointerEvents = 'none';
-      modalEl.setAttribute('aria-hidden', 'true');
-
-      const mainContent = document.getElementById('main-content');
-      if (mainContent) mainContent.setAttribute('aria-hidden', 'false');
-
-      if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-        lastFocusedElement.focus();
-      } else {
-        canvas.focus();
-      }
-    }
-
-    function trapFocus(modalEl, closeCallback) {
-      const focusableSelectors = 'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-      const focusable = modalEl.querySelectorAll(focusableSelectors);
-      if (focusable.length > 0) {
-        focusable[0].focus();
-      }
-
-      const keyHandler = (e) => {
-        if (e.key === 'Escape') {
-          modalEl.removeEventListener('keydown', keyHandler);
-          closeCallback();
-          return;
-        }
-        if (e.key === 'Tab') {
-          const freshFocusable = modalEl.querySelectorAll(focusableSelectors);
-          if (freshFocusable.length === 0) return;
-          const first = freshFocusable[0];
-          const last = freshFocusable[freshFocusable.length - 1];
-
-          if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      };
-      modalEl.addEventListener('keydown', keyHandler);
-    }
-
-    function openLabModal() {
-      GAME_STATE.isLabModalOpen = true;
-      const modal = document.getElementById('lab-modal');
-      resetSpotPlate();
-      openModalWithA11y(modal, closeLabModal);
-    }
-
-    function closeLabModal() {
-      GAME_STATE.isLabModalOpen = false;
-      const modal = document.getElementById('lab-modal');
-      closeModalWithA11y(modal);
-    }
-
-    function resetSpotPlate() {
-      spotStage = 0;
-
-      const tubeA = document.getElementById('tube-a-liquid');
-      const tubeB = document.getElementById('tube-b-liquid');
-      if (tubeA) {
-        tubeA.style.backgroundColor = 'rgba(168, 85, 247, 0.45)';
-        tubeA.style.filter = 'none';
-      }
-      if (tubeB) {
-        tubeB.style.backgroundColor = 'rgba(6, 182, 212, 0.45)';
-        tubeB.style.filter = 'none';
-      }
-
-      document.getElementById('spot-status-badge').textContent = "待化驗";
-      document.getElementById('spot-status-badge').className = "px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[10px]";
-      document.getElementById('spot-verdict-text').innerHTML = "請點擊下方 <strong class='text-cyan-400'>1️⃣ 滴入 K仔試劑</strong>，排查是否為氯胺酮。";
-
-      const bR1 = document.getElementById('btn-spot-reagent1');
-      bR1.disabled = false;
-      bR1.className = "flex-1 py-2 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md animate-pulse";
-
-      const bR2 = document.getElementById('btn-spot-reagent2');
-      bR2.disabled = true;
-      bR2.className = "flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 transition";
-
-      document.getElementById('btn-spot-submit').disabled = true;
-
-      updateSpotStepBadges();
-    }
-
-    function updateSpotStepBadges() {
-      const b1 = document.getElementById('spot-step-1');
-      const b2 = document.getElementById('spot-step-2');
-      if (!b1 || !b2) return;
-
-      if (spotStage >= 1) {
-        b1.className = "py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold";
-      } else {
-        b1.className = "py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600 animate-pulse font-bold";
-      }
-
-      if (spotStage >= 2) {
-        b2.className = "py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold";
-      } else if (spotStage === 1) {
-        b2.className = "py-1 rounded bg-purple-950 text-purple-300 border border-purple-600 animate-pulse font-bold";
-      } else {
-        b2.className = "py-1 rounded bg-slate-900 text-slate-500 border border-slate-800";
-      }
-    }
-
-    function spotStepApplyReagent1() {
-      sound.playPipetteDrop();
-      spotStage = 1;
-
-      document.getElementById('tube-a-liquid').style.backgroundColor = 'rgba(192, 132, 252, 0.4)';
-      document.getElementById('tube-b-liquid').style.backgroundColor = 'rgba(103, 232, 249, 0.4)';
-
-      document.getElementById('spot-status-badge').textContent = "❌ 排除K仔";
-      document.getElementById('spot-status-badge').className = "px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/50 text-[10px]";
-      
-      document.getElementById('spot-verdict-text').innerHTML = "<strong class='text-emerald-400'>【第一輪反應：陰性】</strong> 兩管皆未變藍，<strong>排除氯胺酮(K仔)</strong>！<br>請點擊 <strong class='text-purple-400'>2️⃣ 滴入 依托咪酯試劑</strong> 繼續檢驗。";
-
-      const bR1 = document.getElementById('btn-spot-reagent1');
-      bR1.disabled = true;
-      bR1.className = "flex-1 py-2 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
-
-      const bR2 = document.getElementById('btn-spot-reagent2');
-      bR2.disabled = false;
-      bR2.className = "flex-1 py-2 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs border border-purple-400 active:scale-95 transition shadow-md animate-pulse";
-
-      updateSpotStepBadges();
-    }
-
-    function spotStepApplyReagent2() {
-      sound.playPipetteDrop();
-      spotStage = 2;
-
-      const tubeA = document.getElementById('tube-a-liquid');
-      const tubeB = document.getElementById('tube-b-liquid');
-      tubeA.style.backgroundColor = 'rgba(88, 28, 135, 0.96)';
-      tubeB.style.backgroundColor = 'rgba(88, 28, 135, 0.96)';
-      tubeA.style.filter = 'drop-shadow(0 0 6px rgba(168, 85, 247, 0.8))';
-      tubeB.style.filter = 'drop-shadow(0 0 6px rgba(168, 85, 247, 0.8))';
-
-      sound.playClueFound();
-      document.getElementById('spot-status-badge').textContent = "⚠️ 陽性確診！";
-      document.getElementById('spot-status-badge').className = "px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600/60 text-[10px] animate-pulse";
-
-      document.getElementById('spot-verdict-text').innerHTML = "<strong class='text-rose-400 font-bold'>【第二輪反應：陽性 POSITIVE】</strong><br>兩試管同時劇烈變為<strong>深紫褐沉澱</strong>！確診課桌紫液與軟糖均含有危險藥物<strong>「依托咪酯 (Etomidate)」</strong>！";
-
-      const bR2 = document.getElementById('btn-spot-reagent2');
-      bR2.disabled = true;
-      bR2.className = "flex-1 py-2 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
-
-      const bSubmit = document.getElementById('btn-spot-submit');
-      bSubmit.disabled = false;
-      bSubmit.classList.add('animate-pulse');
-
-      updateSpotStepBadges();
-    }
-
-    function spotStepSubmitReport() {
-      sound.playClueFound();
-      GAME_STATE.hasIdentifiedEtomidate = true;
-      GAME_STATE.cluesFound.add('clue_spot_plate');
-      
-      if (GAME_STATE.questStage <= 5) {
-        GAME_STATE.questStage = 6;
-      }
-
-      updateCluesCount();
-      updateMissionObjective();
-
-      closeLabModal();
-
-      startDialogueQueue([
-        {
-          speaker: "梁澤銘",
-          role: "特約安全調查員",
-          text: "雙試管快篩結果確鑿！排除K仔，兩份樣品中均含有受管制的危險藥物——『依托咪酯』！"
-        },
-        {
-          speaker: "梁澤銘",
-          role: "循聲追查",
-          text: "這正是導致岑詠蕎和霍展霆全身肌陣攣抽搐休克的元兇！3F 天台方向傳來急促震動鈴聲，防火門已解鎖，立即登頂搜查！"
-        }
-      ]);
-    }
-
-    const promptUI = document.getElementById('interaction-prompt');
-    const promptText = document.getElementById('prompt-action-text');
-
-    function checkProximity() {
-      if (GAME_STATE.isDialogueOpen || GAME_STATE.isNotebookOpen || GAME_STATE.isLabModalOpen) {
-        promptUI.style.opacity = '0';
-        return;
-      }
-
-      let closest = null;
-      let minDist = 2.8;
-
-      interactableMeshes.forEach(m => {
-        const d = player.mesh.position.distanceTo(m.position);
-        if (d < minDist) {
-          minDist = d;
-          closest = m;
-        }
-      });
-
-      if (closest) {
-        GAME_STATE.activeInteractable = closest.userData.clueId;
-        const clueId = closest.userData.clueId;
-        
-        if (DUMMY_LOCKERS[clueId]) {
-          promptText.textContent = `搜查：${DUMMY_LOCKERS[clueId].name}`;
-        } else if (FOYER_INSPECTS[clueId]) {
-          promptText.textContent = `調查：${FOYER_INSPECTS[clueId].name}`;
-        } else {
-          const clue = CLUES_DATA[clueId];
-          promptText.textContent = `調查：${clue.name}`;
-        }
-
-        promptUI.style.opacity = '1';
-        promptUI.style.transform = 'translate(-50%, 0) scale(1)';
-        document.getElementById('mobile-interact-btn').classList.add('animate-bounce');
-      } else {
-        GAME_STATE.activeInteractable = null;
-        promptUI.style.opacity = '0';
-        promptUI.style.transform = 'translate(-50%, 0) scale(0.95)';
-        document.getElementById('mobile-interact-btn').classList.remove('animate-bounce');
-      }
-    }
-
-    function triggerInvestigation() {
-      if (GAME_STATE.isDialogueOpen) {
-        nextDialogue();
-        return;
-      }
-
-      if (!GAME_STATE.activeInteractable) return;
-
-      const clueId = GAME_STATE.activeInteractable;
-
-      // 1. 已採集物證（防倒退保護）
-      if (GAME_STATE.cluesFound.has(clueId)) {
-        sound.playDialogueBlip();
-        if (clueId === 'clue_gym_fok') {
-          startDialogueQueue([
-            {
-              speaker: "梁澤銘",
-              role: "物證已收錄",
-              text: "【霍展霆隨身物已收錄】奇異果糖包裝紙指向中六B班岑詠蕎處，應走上樓梯前往 2F 班房搜查。"
-            }
-          ]);
-        } else if (clueId === 'clue_desk') {
-          startDialogueQueue([
-            {
-              speaker: "梁澤銘",
-              role: "物證已收錄",
-              text: "【岑詠蕎課桌紫晶液已採樣】字條指示前往 2F 走廊儲物區排查 17 號儲物櫃。"
-            }
-          ]);
-        } else if (clueId === 'clue_corridor') {
-          startDialogueQueue([
-            {
-              speaker: "梁澤銘",
-              role: "物證已收錄",
-              text: "【17 號儲物櫃暗號單已收錄】指示前往【化學室外走廊水管夾層】起獲證物 B。"
-            }
-          ]);
-        } else if (clueId === 'clue_pipe_stash') {
-          startDialogueQueue([
-            {
-              speaker: "梁澤銘",
-              role: "物證已收錄",
-              text: "【水管夾層軟糖已起獲】兩份現場未知物證均已齊備，應進入化學實驗室進行雙試管快篩化驗。"
-            }
-          ]);
-        } else if (clueId === 'clue_spot_plate') {
-          openLabModal();
-        } else if (clueId === 'clue_rooftop_burner') {
-          startDialogueQueue([
-            {
-              speaker: "梁澤銘",
-              role: "鐵證已截獲",
-              text: "【暗夜調劑師通話錄音已截獲】所有關鍵物證全數齊備！請打開右上角【案件簿】在【思維宮殿】定案！"
-            }
-          ]);
-        }
-        return;
-      }
-
-      // 2. 1F 大堂榮譽陳列櫃
-      if (FOYER_INSPECTS[clueId]) {
-        sound.playDialogueBlip();
-        startDialogueQueue([
-          {
-            speaker: "梁澤銘",
-            role: "現場觀察",
-            text: FOYER_INSPECTS[clueId].desc
-          },
-          {
-            speaker: "梁澤銘",
-            role: "偵查思路",
-            text: "霍展霆倒在更衣室外，岑詠蕎倒在 2F 班房，這絕不是巧合！"
-          }
-        ]);
-        return;
-      }
-
-      // 3. 2F 走廊非目標儲物櫃排查
-      if (DUMMY_LOCKERS[clueId]) {
-        sound.playDialogueBlip();
-        startDialogueQueue([
-          {
-            speaker: "梁澤銘",
-            role: "現場排查",
-            text: DUMMY_LOCKERS[clueId].desc
-          },
-          {
-            speaker: "梁澤銘",
-            role: "排查思路",
-            text: "這不是便條上提及的 17 號儲物櫃，我需要繼續排查走廊的其他櫃子。"
-          }
-        ]);
-        return;
-      }
-
-      const clue = CLUES_DATA[clueId];
-
-      // 4. 有序推進任務門禁
-      if (clue.stage > GAME_STATE.questStage) {
-        sound.playDialogueBlip();
-        if (clueId === 'clue_desk') {
-          startDialogueQueue([{
-            speaker: "梁澤銘",
-            role: "搜查思路",
-            text: "我應先在 1F 更衣室外排查霍展霆遺留的物品，了解他是如何受害的。"
-          }]);
-        } else if (clueId === 'clue_corridor') {
-          startDialogueQueue([{
-            speaker: "梁澤銘",
-            role: "搜查思路",
-            text: "我應先搜查事發現場——中六B班岑詠蕎的課桌，採集第一道物證。"
-          }]);
-        } else if (clueId === 'clue_pipe_stash') {
-          startDialogueQueue([{
-            speaker: "梁澤銘",
-            role: "搜查思路",
-            text: "水管外露處有些凌亂。我需要先排查 17 號儲物櫃確認具體暗號。"
-          }]);
-        } else if (clueId === 'clue_spot_plate') {
-          startDialogueQueue([{
-            speaker: "梁澤銘",
-            role: "搜查思路",
-            text: "化驗需要同時比對兩份關鍵證物。起獲水管夾層軟糖前，無法展開檢驗。"
-          }]);
-        } else if (clueId === 'clue_rooftop_burner') {
-          startDialogueQueue([{
-            speaker: "梁澤銘",
-            role: "搜查思路",
-            text: "通往 3F 天台的防火門已鎖閉。我必須先在理科實驗室透過雙試管快篩確診致毒成分。"
-          }]);
-        }
-        return;
-      }
-
-      // 觸發雙試管快篩
-      if (clueId === 'clue_spot_plate') {
-        openLabModal();
-        return;
-      }
-
-      // 觸發 3F 天台毒販通聯手機
-      if (clueId === 'clue_rooftop_burner') {
-        sound.playPhoneRing();
-        GAME_STATE.cluesFound.add(clue.id);
-        
-        if (GAME_STATE.questStage <= 6) {
-          GAME_STATE.questStage = 7;
-        }
-
-        updateCluesCount();
-        updateMissionObjective();
-
-        startDialogueQueue([
-          {
-            speaker: "加密衛星手機",
-            role: "電話鈴聲",
-            text: "【排風箱後的加密通聯手機正持續響鈴！屏幕顯示『調劑師』來電，梁澤銘按下錄音接聽鍵……】"
-          },
-          {
-            speaker: "「暗夜調劑師」",
-            role: "通緝主謀 • 囂張通話",
-            text: "『喂？警告你們，依托咪酯軟糖與煙油已經補在水管夾層。誰敢向校方或警方舉報，你們發病抽搐的影片立刻傳遍全港！九點前把封口費打進暗網帳戶！』"
-          },
-          {
-            speaker: "梁澤銘",
-            role: "特約校園安全調查員",
-            text: "『我是特約校園安全調查員梁澤銘。你的通話已全程數位錄音存證！實驗室已確診依托咪酯毒物成分，執法部門正循訊號鎖定你的藏匿點！』"
-          },
-          {
-            speaker: "梁澤銘",
-            role: "調查告捷",
-            text: "全部關鍵法證齊備！立即打開右上角【案件簿】，進入【思維宮殿】完成全鏈條定案通報！"
-          }
-        ]);
-        return;
-      }
-
-      // 常規線索起獲
-      sound.playClueFound();
-      GAME_STATE.cluesFound.add(clue.id);
-
-      if (clue.stage === GAME_STATE.questStage) {
-        GAME_STATE.questStage = clue.stage + 1;
-      }
-
-      updateCluesCount();
-      updateMissionObjective();
-
-      const script = [
-        {
-          speaker: "梁澤銘",
-          role: "特約校園安全調查員",
-          text: `在【${clue.zone}】發現關鍵物證：${clue.name}。`
-        },
-        {
-          speaker: "物證偵查日誌",
-          role: "案卷記錄",
-          text: clue.shortDesc
-        }
-      ];
-
-      startDialogueQueue(script);
-    }
-
+    const minimapCanvas = document.getElementById('minimap-canvas');
+    const minimapCtx = minimapCanvas ? minimapCanvas.getContext('2d') : null;
     const dialogueBox = document.getElementById('dialogue-box');
     const dialogueSpeaker = document.getElementById('dialogue-speaker');
-    const dialogueRole = document.getElementById('dialogue-role-tag');
+    const dialogueRoleTag = document.getElementById('dialogue-role-tag');
     const dialogueText = document.getElementById('dialogue-text');
-
-    function startDialogueQueue(queue, callback) {
-      GAME_STATE.dialogueQueue = [...queue];
-      GAME_STATE.dialogueCallback = callback;
-      GAME_STATE.isDialogueOpen = true;
-      dialogueBox.classList.remove('pointer-events-none');
-      dialogueBox.classList.add('pointer-events-auto');
-      dialogueBox.style.opacity = '1';
-      dialogueBox.style.transform = 'translate(0, 0)';
-      nextDialogue();
-    }
-
-    function nextDialogue() {
-      if (GAME_STATE.dialogueQueue.length === 0) {
-        closeDialogue();
-        return;
-      }
-      sound.playDialogueBlip();
-      const current = GAME_STATE.dialogueQueue.shift();
-      dialogueSpeaker.textContent = current.speaker;
-      dialogueRole.textContent = current.role;
-      dialogueText.textContent = current.text;
-    }
-
-    function closeDialogue() {
-      GAME_STATE.isDialogueOpen = false;
-      dialogueBox.classList.remove('pointer-events-auto');
-      dialogueBox.classList.add('pointer-events-none');
-      dialogueBox.style.opacity = '0';
-      dialogueBox.style.transform = 'translate(0, 20px)';
-      if (GAME_STATE.dialogueCallback) {
-        GAME_STATE.dialogueCallback();
-        GAME_STATE.dialogueCallback = null;
-      }
-    }
-
-    function updateMissionObjective() {
-      const obj = document.getElementById('hud-current-objective');
-      if (GAME_STATE.questStage === 1) {
-        obj.textContent = "排查 1F 體育更衣室外霍展霆的遺留隨身物 (1/5)";
-      } else if (GAME_STATE.questStage === 2) {
-        obj.textContent = "登上 2F 搜查事發課桌，採集現場紫晶液 (2/5)";
-      } else if (GAME_STATE.questStage === 3) {
-        obj.textContent = "在 2F 走廊排查 17 號儲物櫃起獲暗號提貨單 (3/5)";
-      } else if (GAME_STATE.questStage === 4) {
-        obj.textContent = "依暗號單前往 2F 水管夾層起獲軟糖 (4/5)";
-      } else if (GAME_STATE.questStage === 5) {
-        obj.textContent = "進入 2F 理科實驗室，使用雙試管快篩化驗 (5/5)";
-      } else if (GAME_STATE.questStage === 6) {
-        obj.textContent = "登上 3F 暮光天台排風箱截獲通聯手機";
-      } else {
-        obj.textContent = "物證齊全！打開案件簿在思維宮殿定案！";
-      }
-    }
-
-    function updateCluesCount() {
-      const total = GAME_STATE.cluesFound.size;
-      const maxClues = Object.keys(CLUES_DATA).length;
-      document.getElementById('hud-clue-badge').textContent = `${total}/${maxClues}`;
-      document.getElementById('clue-count-text').textContent = total;
-      document.getElementById('minimap-clue-indicator').textContent = `物證: ${total}/${maxClues}`;
-      renderClueCards();
-    }
-
-    function renderClueCards() {
-      const container = document.getElementById('tab-content-clues');
-      container.innerHTML = "";
-
-      Object.values(CLUES_DATA).forEach(clue => {
-        const found = GAME_STATE.cluesFound.has(clue.id);
-        const card = document.createElement('div');
-        card.className = `p-1.5 rounded-xl border flex flex-col justify-between ${
-          found ? 'bg-slate-900/90 border-orange-500/50 shadow-md' : 'bg-slate-950/40 border-slate-800 opacity-40'
-        }`;
-        card.innerHTML = `
-          <div class="flex items-center gap-1 mb-0.5">
-            <span class="text-sm">${found ? clue.icon : '❓'}</span>
-            <span class="text-[10px] font-bold ${found ? 'text-amber-300' : 'text-slate-500'} truncate">
-              ${found ? clue.name.slice(0, 8) + '...' : '未知物證'}
-            </span>
-          </div>
-          <div class="text-[9px] text-slate-400 font-mono truncate">${found ? clue.zone.slice(0, 8) : '待調查'}</div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function toggleNotebook() {
-      GAME_STATE.isNotebookOpen = !GAME_STATE.isNotebookOpen;
-      const modal = document.getElementById('notebook-modal');
-      if (GAME_STATE.isNotebookOpen) {
-        renderClueCards();
-        openModalWithA11y(modal, toggleNotebook);
-      } else {
-        closeModalWithA11y(modal);
-      }
-    }
-
-    function switchNotebookTab(tab) {
-      ['clues', 'mindpalace', 'profiles'].forEach(t => {
-        const el = document.getElementById(`tab-content-${t}`);
-        if (el) el.classList.add('hidden');
-        const btn = document.getElementById(`tab-btn-${t}`);
-        if (btn) {
-          btn.classList.remove('bg-orange-500', 'text-white');
-          btn.classList.add('bg-slate-800', 'text-slate-300');
-        }
-      });
-      const activeContent = document.getElementById(`tab-content-${tab}`);
-      if (activeContent) activeContent.classList.remove('hidden');
-      const activeBtn = document.getElementById(`tab-btn-${tab}`);
-      if (activeBtn) {
-        activeBtn.classList.add('bg-orange-500', 'text-white');
-      }
-    }
-
-    function submitFinalDeduction() {
-      const v = document.getElementById('deduce-vector')?.value;
-      const s = document.getElementById('deduce-symptoms')?.value;
-      const a = document.getElementById('deduce-action')?.value;
-
-      if (v === 'correct' && s === 'correct' && a === 'correct') {
-        toggleNotebook();
-        const win = document.getElementById('victory-screen');
-        openModalWithA11y(win, () => {});
-        sound.playClueFound();
-      } else {
-        sound.playDialogueBlip();
-        const header = document.getElementById('deduce-header');
-        if (header) {
-          header.textContent = "⚠️ 推論存在漏洞：請核對快篩確診報告！";
-          header.className = "text-xs font-bold text-rose-400 mb-1";
-          setTimeout(() => {
-            header.textContent = "🔍 邏輯因果定案鏈：完成官方通報";
-            header.className = "text-xs font-bold text-amber-300 mb-1";
-          }, 2500);
-        }
-      }
-    }
-
-    const minimapCanvas = document.getElementById('minimap-canvas');
-    const minimapCtx = minimapCanvas.getContext('2d');
+    const dialogueAvatar = document.getElementById('dialogue-avatar');
+    const interactionPrompt = document.getElementById('interaction-prompt');
+    const promptActionText = document.getElementById('prompt-action-text');
+    const labModal = document.getElementById('lab-modal');
+    const notebookModal = document.getElementById('notebook-modal');
+    const victoryScreen = document.getElementById('victory-screen');
 
     function renderMinimap() {
       if (!minimapCtx) return;
@@ -2117,53 +1504,59 @@
       minimapCtx.fillStyle = "#070a14";
       minimapCtx.fillRect(0, 0, w, h);
 
-      const mapX = (wx) => ((wx + 22) / 52) * w;
-      const mapZ = (wz) => ((wz + 7) / 24) * h;
+      // 全局 X: -26 ~ 42 (跨度 68), Z: -8 ~ 16 (跨度 24)
+      const mapX = (wx) => ((wx + 26) / 68) * w;
+      const mapZ = (wz) => ((wz + 8) / 24) * h;
 
       const f = GAME_STATE.currentFloor;
 
-      // 1F 大堂
+      // 1F 大堂與更衣室
       if (f === 1) {
         minimapCtx.fillStyle = "#1e293b";
-        minimapCtx.fillRect(mapX(-20), mapZ(-6.5), mapX(7.5) - mapX(-20), mapZ(6.5) - mapZ(-6.5));
+        minimapCtx.fillRect(mapX(-26), mapZ(-7), mapX(-6) - mapX(-26), mapZ(7) - mapZ(-7));
         minimapCtx.strokeStyle = "#3b82f6";
-        minimapCtx.strokeRect(mapX(-20), mapZ(-6.5), mapX(7.5) - mapX(-20), mapZ(6.5) - mapZ(-6.5));
+        minimapCtx.strokeRect(mapX(-26), mapZ(-7), mapX(-6) - mapX(-26), mapZ(7) - mapZ(-7));
 
+        // 階梯 A
         minimapCtx.fillStyle = "#eab308";
-        minimapCtx.fillRect(mapX(4), mapZ(-5.0), mapX(8) - mapX(4), mapZ(-2.0) - mapZ(-5.0));
+        minimapCtx.fillRect(mapX(-6), mapZ(-2), mapX(0) - mapX(-6), mapZ(2) - mapZ(-2));
         minimapCtx.fillStyle = "#000";
         minimapCtx.font = "8px sans-serif";
-        minimapCtx.fillText("樓梯A", mapX(4.2), mapZ(-3.0));
+        minimapCtx.fillText("階梯A", mapX(-5.5), mapZ(0.5));
       } 
       // 2F 教學與化驗區
       else if (f === 2) {
+        // 班房
         minimapCtx.fillStyle = "#1e293b";
-        minimapCtx.fillRect(mapX(-21), mapZ(-5.5), mapX(-10) - mapX(-21), mapZ(5.5) - mapZ(-5.5));
+        minimapCtx.fillRect(mapX(0), mapZ(-7), mapX(10) - mapX(0), mapZ(0) - mapZ(-7));
 
+        // 長廊
         minimapCtx.fillStyle = "#172554";
-        minimapCtx.fillRect(mapX(-10), mapZ(-3.6), mapX(8) - mapX(-10), mapZ(3.6) - mapZ(-3.6));
+        minimapCtx.fillRect(mapX(0), mapZ(0), mapX(20) - mapX(0), mapZ(5.2) - mapZ(0));
 
+        // 化驗室
         minimapCtx.fillStyle = "#0c4a6e";
-        minimapCtx.fillRect(mapX(-8.5), mapZ(4.5), mapX(2.5) - mapX(-8.5), mapZ(15.5) - mapZ(4.5));
+        minimapCtx.fillRect(mapX(5.5), mapZ(5), mapX(16.5) - mapX(5.5), mapZ(15) - mapZ(5));
 
+        // 階梯 B
         minimapCtx.fillStyle = "#eab308";
-        minimapCtx.fillRect(mapX(8), mapZ(-1.8), mapX(13) - mapX(8), mapZ(1.8) - mapZ(-1.8));
+        minimapCtx.fillRect(mapX(20), mapZ(-2), mapX(26) - mapX(20), mapZ(2) - mapZ(-2));
         minimapCtx.fillStyle = "#000";
         minimapCtx.font = "8px sans-serif";
-        minimapCtx.fillText("樓梯B", mapX(8.6), mapZ(0.5));
+        minimapCtx.fillText("階梯B", mapX(20.5), mapZ(0.5));
       } 
       // 3F 天台
       else if (f === 3) {
         minimapCtx.fillStyle = "#3b0764";
-        minimapCtx.fillRect(mapX(13), mapZ(-6.5), mapX(28.5) - mapX(13), mapZ(6.5) - mapZ(-6.5));
+        minimapCtx.fillRect(mapX(26), mapZ(-7), mapX(42) - mapX(26), mapZ(7) - mapZ(-7));
         minimapCtx.strokeStyle = "#c084fc";
-        minimapCtx.strokeRect(mapX(13), mapZ(-6.5), mapX(28.5) - mapX(13), mapZ(6.5) - mapZ(-6.5));
+        minimapCtx.strokeRect(mapX(26), mapZ(-7), mapX(42) - mapX(26), mapZ(7) - mapZ(-7));
 
         minimapCtx.fillStyle = "#eab308";
-        minimapCtx.fillRect(mapX(8), mapZ(-1.8), mapX(13) - mapX(8), mapZ(1.8) - mapZ(-1.8));
+        minimapCtx.fillRect(mapX(20), mapZ(-2), mapX(26) - mapX(20), mapZ(2) - mapZ(-2));
       }
 
-      // 線索標記
+      // 物證標記
       Object.values(CLUES_DATA).forEach(clue => {
         const found = GAME_STATE.cluesFound.has(clue.id);
         if (clue.floor === f) {
@@ -2356,6 +1749,574 @@
         }
       }
     }, { passive: true });
+
+    function startDialogueQueue(lines, callback = null) {
+      GAME_STATE.dialogueQueue = lines.slice();
+      GAME_STATE.dialogueCallback = callback;
+      GAME_STATE.isDialogueOpen = true;
+      nextDialogue();
+    }
+
+    function nextDialogue() {
+      if (!GAME_STATE.dialogueQueue || GAME_STATE.dialogueQueue.length === 0) {
+        closeDialogue();
+        return;
+      }
+      const current = GAME_STATE.dialogueQueue.shift();
+      if (dialogueSpeaker) dialogueSpeaker.textContent = current.speaker;
+      if (dialogueRoleTag) dialogueRoleTag.textContent = current.role;
+      if (dialogueText) dialogueText.textContent = current.text;
+      if (dialogueAvatar) {
+        if (current.speaker && current.speaker.includes('通聯')) dialogueAvatar.textContent = '📱';
+        else if (current.role && (current.role.includes('物證') || current.role.includes('結論'))) dialogueAvatar.textContent = '🔬';
+        else dialogueAvatar.textContent = '🧑‍💼';
+      }
+
+      if (dialogueBox) {
+        dialogueBox.classList.remove('pointer-events-none', 'opacity-0', 'translate-y-6');
+        dialogueBox.classList.add('pointer-events-auto', 'opacity-100', 'translate-y-0');
+      }
+      sound.playDialogueBlip();
+    }
+
+    function closeDialogue() {
+      if (dialogueBox) {
+        dialogueBox.classList.remove('pointer-events-auto', 'opacity-100', 'translate-y-0');
+        dialogueBox.classList.add('pointer-events-none', 'opacity-0', 'translate-y-6');
+      }
+      GAME_STATE.isDialogueOpen = false;
+      if (GAME_STATE.dialogueCallback) {
+        const cb = GAME_STATE.dialogueCallback;
+        GAME_STATE.dialogueCallback = null;
+        cb();
+      }
+    }
+
+    function checkProximity() {
+      if (!GAME_STATE.started || GAME_STATE.isDialogueOpen || GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen) {
+        if (interactionPrompt) interactionPrompt.style.opacity = '0';
+        GAME_STATE.activeInteractable = null;
+        return;
+      }
+
+      const px = player.mesh.position.x;
+      const pz = player.mesh.position.z;
+      const currentFloor = GAME_STATE.currentFloor;
+
+      let closestObj = null;
+      let minDist = 3.2;
+
+      for (const clue of Object.values(CLUES_DATA)) {
+        if (clue.floor === currentFloor) {
+          const dist = Math.hypot(px - clue.pos.x, pz - clue.pos.z);
+          if (dist < minDist) {
+            minDist = dist;
+            closestObj = { type: 'clue', data: clue };
+          }
+        }
+      }
+
+      if (currentFloor === 2) {
+        for (const locker of Object.values(DUMMY_LOCKERS)) {
+          const dist = Math.hypot(px - locker.pos.x, pz - locker.pos.z);
+          if (dist < minDist) {
+            minDist = dist;
+            closestObj = { type: 'dummy_locker', data: locker };
+          }
+        }
+      }
+
+      if (currentFloor === 1) {
+        for (const insp of Object.values(FOYER_INSPECTS)) {
+          const dist = Math.hypot(px - insp.pos.x, pz - insp.pos.z);
+          if (dist < minDist) {
+            minDist = dist;
+            closestObj = { type: 'inspect', data: insp };
+          }
+        }
+      }
+
+      GAME_STATE.activeInteractable = closestObj;
+
+      if (closestObj && interactionPrompt && promptActionText) {
+        let actionLabel = "調查現場";
+        if (closestObj.type === 'clue') {
+          if (GAME_STATE.cluesFound.has(closestObj.data.id)) {
+            actionLabel = `覆盤：${closestObj.data.name.split(' ')[0]}`;
+          } else if (closestObj.data.stage === GAME_STATE.questStage) {
+            actionLabel = `搜查：${closestObj.data.name.split(' ')[0]}`;
+          } else {
+            actionLabel = `查看：${closestObj.data.name.split(' ')[0]}`;
+          }
+        } else if (closestObj.type === 'dummy_locker') {
+          actionLabel = `搜查：${closestObj.data.num} 號儲物櫃`;
+        } else if (closestObj.type === 'inspect') {
+          actionLabel = `檢視：${closestObj.data.name.split(' ')[0]}`;
+        }
+        promptActionText.textContent = actionLabel;
+        interactionPrompt.style.opacity = '1';
+        interactionPrompt.style.transform = 'translate(-50%, 0) scale(1)';
+      } else if (interactionPrompt) {
+        interactionPrompt.style.opacity = '0';
+        interactionPrompt.style.transform = 'translate(-50%, 0) scale(0.95)';
+      }
+    }
+
+    function updateObjective(text) {
+      const elem = document.getElementById('hud-current-objective');
+      if (elem) elem.textContent = text;
+    }
+
+    function collectClue(clueId) {
+      if (!GAME_STATE.cluesFound.has(clueId)) {
+        GAME_STATE.cluesFound.add(clueId);
+        sound.playClueFound();
+        updateClueBadges();
+      }
+    }
+
+    function updateClueBadges() {
+      const count = GAME_STATE.cluesFound.size;
+      const badge = document.getElementById('hud-clue-badge');
+      const ind = document.getElementById('minimap-clue-indicator');
+      const countText = document.getElementById('clue-count-text');
+      if (badge) badge.textContent = `${count}/5`;
+      if (ind) ind.textContent = `物證: ${count}/5`;
+      if (countText) countText.textContent = count;
+      renderNotebookClues();
+    }
+
+    function triggerInvestigation() {
+      if (GAME_STATE.isDialogueOpen) {
+        nextDialogue();
+        return;
+      }
+      if (GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen) {
+        return;
+      }
+
+      const target = GAME_STATE.activeInteractable;
+      if (!target) return;
+
+      sound.playDialogueBlip();
+
+      if (target.type === 'inspect') {
+        startDialogueQueue([
+          {
+            speaker: "梁澤銘",
+            role: "調查備忘",
+            text: target.data.desc
+          }
+        ]);
+        return;
+      }
+
+      if (target.type === 'dummy_locker') {
+        startDialogueQueue([
+          {
+            speaker: "梁澤銘",
+            role: "儲物櫃排查",
+            text: target.data.desc
+          }
+        ]);
+        return;
+      }
+
+      if (target.type === 'clue') {
+        const clue = target.data;
+
+        if (GAME_STATE.cluesFound.has(clue.id)) {
+          startDialogueQueue([
+            {
+              speaker: "梁澤銘",
+              role: "物證已記錄",
+              text: `此處物證【${clue.name}】已採集入卷宗。\n${clue.shortDesc}`
+            }
+          ]);
+          return;
+        }
+
+        if (clue.stage > GAME_STATE.questStage) {
+          let hint = "現場線索錯綜複雜，應先按照既定偵查方向逐步推進，請留意右上角當前目標。";
+          if (GAME_STATE.questStage === 1) hint = "更衣室外霍展霆的遺留物尚未查驗，先去更衣室排查！";
+          else if (GAME_STATE.questStage === 2) hint = "應先前往 2F 中六B班房搜查岑詠蕎的課桌！";
+          else if (GAME_STATE.questStage === 3) hint = "根據課桌字條，應先在 2F 走廊排查儲物櫃尋找暗號！";
+          else if (GAME_STATE.questStage === 4) hint = "提貨單指示毒物藏在化學室外走廊水管夾層，先取回軟糖樣品！";
+          else if (GAME_STATE.questStage === 5) hint = "已取回兩份樣品，先至化學實驗台完成雙試管快篩！";
+
+          startDialogueQueue([
+            {
+              speaker: "梁澤銘",
+              role: "偵查順序引導",
+              text: hint
+            }
+          ]);
+          return;
+        }
+
+        if (clue.stage === 1) {
+          collectClue(clue.id);
+          GAME_STATE.questStage = 2;
+          updateObjective("沿階梯 A 登上 2F，搜查中六B班房岑詠蕎的課桌 (2/5)");
+          startDialogueQueue([
+            {
+              speaker: "梁澤銘",
+              role: "現場物證起獲",
+              text: "在更衣室長椅拾獲霍展霆的護膝與撕開的奇異果糖包裝紙！包裝內殘留淡紫色微粒，便條寫著：『展霆，中六B班詠蕎那裡還有存貨……』"
+            },
+            {
+              speaker: "梁澤銘",
+              role: "下一步推論",
+              text: "籃球隊長與考場休克的中六生岑詠蕎均接觸過此物！我必須立即登上 2F 教學樓，搜查中六B班岑詠蕎的課桌！"
+            }
+          ]);
+        } else if (clue.stage === 2) {
+          collectClue(clue.id);
+          GAME_STATE.questStage = 3;
+          updateObjective("排查 2F 教學樓長廊儲物櫃，尋找 17 號暗號提貨單 (3/5)");
+          startDialogueQueue([
+            {
+              speaker: "梁澤銘",
+              role: "現場物證起獲",
+              text: "在岑詠蕎課桌上採集到深紫色未知液滴（證物 A）！桌面壓著撕碎的求助字條：『17 號儲物櫃留了新暗號……我和展霆吸了全身劇烈抽搐……』"
+            },
+            {
+              speaker: "梁澤銘",
+              role: "下一步推論",
+              text: "17 號儲物櫃！毒販利用校內櫃位進行無接觸交收。馬上前往 2F 走廊排查儲物櫃！"
+            }
+          ]);
+        } else if (clue.stage === 3) {
+          collectClue(clue.id);
+          GAME_STATE.questStage = 4;
+          updateObjective("搜查 2F 理科化學室外走廊水管夾層，取回可疑軟糖 (4/5)");
+          startDialogueQueue([
+            {
+              speaker: "梁澤銘",
+              role: "現場物證起獲",
+              text: "成功打開 17 號儲物櫃！夾層起獲暗號提貨單：『新一批特調奇異果軟糖已放置在【化學實驗室外走廊水管夾層】，速取。』"
+            },
+            {
+              speaker: "梁澤銘",
+              role: "下一步推論",
+              text: "化學室外走廊水管夾層……毒販藏毒手法隱蔽。立刻過去取獲毒物樣品！"
+            }
+          ]);
+        } else if (clue.stage === 4) {
+          collectClue(clue.id);
+          GAME_STATE.questStage = 5;
+          updateObjective("進入 2F 理科綜合化學實驗室，進行雙試管快篩確診 (5/5)");
+          startDialogueQueue([
+            {
+              speaker: "梁澤銘",
+              role: "現場物證起獲",
+              text: "在水管與牆壁縫隙中摸出一包真空密封的奇異果味軟糖（證物 B）！表面滲出與課桌相同的紫微光澤。"
+            },
+            {
+              speaker: "梁澤銘",
+              role: "下一步推論",
+              text: "兩份現場樣品（課桌紫晶液與夾層軟糖）均已齊備！立刻轉身進入理科化學實驗室，使用雙試管快速檢驗台進行定性比對！"
+            }
+          ]);
+        } else if (clue.stage === 5) {
+          openLabModal();
+        } else if (clue.stage === 6) {
+          sound.playPhoneRing();
+          collectClue(clue.id);
+          GAME_STATE.questStage = 7;
+          updateObjective("打開【案件手冊】進入【思維宮殿】，完成定案通報警方！");
+          startDialogueQueue([
+            {
+              speaker: "加密通聯",
+              role: "天台排風箱暗處",
+              text: "（按鍵接通錄音器）喂？！東西拿到了沒有？尾款今晚交不出來，就把你們吸食抽搐的影片傳給全校家長！"
+            },
+            {
+              speaker: "梁澤銘",
+              role: "鎖定主謀通聯",
+              text: "聲音已錄製！是黑市主謀『暗夜調劑師』的敲詐電話！通話基站與轉賬賬戶已全數鎖定！"
+            },
+            {
+              speaker: "梁澤銘",
+              role: "全鏈條告破",
+              text: "所有物證已齊備！立即點擊右上角【📋 案件簿】，進入【思維宮殿定案】，核實因果鏈後直接向警務處通報收網！"
+            }
+          ], () => {
+            toggleNotebook();
+            switchNotebookTab('mindpalace');
+          });
+        }
+      }
+    }
+
+    function openLabModal() {
+      if (labModal) {
+        labModal.classList.remove('pointer-events-none', 'opacity-0');
+        labModal.classList.add('pointer-events-auto', 'opacity-100');
+        GAME_STATE.isLabModalOpen = true;
+        resetSpotPlate();
+      }
+    }
+
+    function closeLabModal() {
+      if (labModal) {
+        labModal.classList.remove('pointer-events-auto', 'opacity-100');
+        labModal.classList.add('pointer-events-none', 'opacity-0');
+        GAME_STATE.isLabModalOpen = false;
+      }
+    }
+
+    function spotStepApplyReagent1() {
+      sound.playPipetteDrop();
+      const statusBadge = document.getElementById('spot-status-badge');
+      const verdictText = document.getElementById('spot-verdict-text');
+      const step1 = document.getElementById('spot-step-1');
+      const step2 = document.getElementById('spot-step-2');
+      const btn1 = document.getElementById('btn-spot-reagent1');
+      const btn2 = document.getElementById('btn-spot-reagent2');
+
+      if (statusBadge) {
+        statusBadge.textContent = "排除氯胺酮 (K仔)";
+        statusBadge.className = "px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/50 text-[10px]";
+      }
+      if (verdictText) {
+        verdictText.innerHTML = "兩支試管均無顯色反應，維持清澈！<strong class=\"text-emerald-400\">【陰性反應】</strong>排除常規氯胺酮。請點擊 <strong class=\"text-cyan-400\">2️⃣ 滴入 依托咪酯試劑</strong>！";
+      }
+      if (step1) {
+        step1.className = "py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-600";
+        step1.textContent = "步驟 1: 排除 K仔 ✓";
+      }
+      if (step2) {
+        step2.className = "py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600";
+      }
+      if (btn1) {
+        btn1.disabled = true;
+        btn1.className = "flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 cursor-not-allowed";
+      }
+      if (btn2) {
+        btn2.disabled = false;
+        btn2.className = "flex-1 py-2 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs border border-purple-400 active:scale-95 transition shadow-md";
+      }
+    }
+
+    function spotStepApplyReagent2() {
+      sound.playPipetteDrop();
+      const tubeA = document.getElementById('tube-a-liquid');
+      const tubeB = document.getElementById('tube-b-liquid');
+      const statusBadge = document.getElementById('spot-status-badge');
+      const verdictText = document.getElementById('spot-verdict-text');
+      const step2 = document.getElementById('spot-step-2');
+      const btn2 = document.getElementById('btn-spot-reagent2');
+      const submitBtn = document.getElementById('btn-spot-submit');
+
+      if (tubeA) {
+        tubeA.style.backgroundColor = '#701a75';
+        tubeA.style.filter = 'brightness(1.2) drop-shadow(0 0 6px rgba(192, 38, 211, 0.8))';
+      }
+      if (tubeB) {
+        tubeB.style.backgroundColor = '#581c87';
+        tubeB.style.filter = 'brightness(1.2) drop-shadow(0 0 6px rgba(168, 85, 247, 0.8))';
+      }
+
+      if (statusBadge) {
+        statusBadge.textContent = "確診 依托咪酯 (陽性)";
+        statusBadge.className = "px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600 text-[10px] font-black animate-pulse";
+      }
+      if (verdictText) {
+        verdictText.innerHTML = "<strong class=\"text-rose-400\">【陽性反應！】</strong>兩支試管均劇烈反應並生成深紫褐色沉澱！確診毒物為受管制的危險藥物<strong class=\"text-amber-300\">「依托咪酯 (Etomidate)」</strong>！";
+      }
+      if (step2) {
+        step2.className = "py-1 rounded bg-rose-950 text-rose-300 border border-rose-600";
+        step2.textContent = "步驟 2: 確診依托咪酯 ✓";
+      }
+      if (btn2) {
+        btn2.disabled = true;
+        btn2.className = "flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 cursor-not-allowed";
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.className = "flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg transition active:scale-95 animate-bounce";
+      }
+    }
+
+    function resetSpotPlate() {
+      const tubeA = document.getElementById('tube-a-liquid');
+      const tubeB = document.getElementById('tube-b-liquid');
+      const statusBadge = document.getElementById('spot-status-badge');
+      const verdictText = document.getElementById('spot-verdict-text');
+      const step1 = document.getElementById('spot-step-1');
+      const step2 = document.getElementById('spot-step-2');
+      const btn1 = document.getElementById('btn-spot-reagent1');
+      const btn2 = document.getElementById('btn-spot-reagent2');
+      const submitBtn = document.getElementById('btn-spot-submit');
+
+      if (tubeA) {
+        tubeA.style.backgroundColor = 'rgba(168, 85, 247, 0.4)';
+        tubeA.style.filter = 'none';
+      }
+      if (tubeB) {
+        tubeB.style.backgroundColor = 'rgba(6, 182, 212, 0.4)';
+        tubeB.style.filter = 'none';
+      }
+      if (statusBadge) {
+        statusBadge.textContent = "待化驗";
+        statusBadge.className = "px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[10px]";
+      }
+      if (verdictText) {
+        verdictText.innerHTML = "請點擊下方 <strong class=\"text-cyan-400\">1️⃣ 滴入 K仔試劑</strong>，排查是否為常規氯胺酮。";
+      }
+      if (step1) {
+        step1.className = "py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600";
+        step1.textContent = "步驟 1: 篩查 K仔";
+      }
+      if (step2) {
+        step2.className = "py-1 rounded bg-slate-900 text-slate-500 border border-slate-800";
+        step2.textContent = "步驟 2: 篩查 依托咪酯";
+      }
+      if (btn1) {
+        btn1.disabled = false;
+        btn1.className = "flex-1 py-2 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md";
+      }
+      if (btn2) {
+        btn2.disabled = true;
+        btn2.className = "flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 transition cursor-not-allowed";
+      }
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.className = "flex-1 py-2 rounded-xl bg-cyan-600 text-white font-bold text-xs shadow-lg transition active:scale-95 disabled:opacity-30 disabled:pointer-events-none";
+      }
+    }
+
+    function spotStepSubmitReport() {
+      closeLabModal();
+      collectClue('clue_spot_plate');
+      GAME_STATE.hasIdentifiedEtomidate = true;
+      GAME_STATE.questStage = 6;
+      updateObjective("循著震動鈴聲沿階梯 B 登上 3F 暮光天台，搜查排風箱 (5/5)");
+      sound.playPhoneRing();
+
+      startDialogueQueue([
+        {
+          speaker: "梁澤銘",
+          role: "法醫鑑證結論",
+          text: "雙試管交叉比對確診！岑詠蕎課桌紫液與水管軟糖均含有《危險藥物條例》（第134章）嚴格管制的【依托咪酯】！"
+        },
+        {
+          speaker: "梁澤銘",
+          role: "突發通聯追蹤",
+          text: "等等！東側 3F 天台方向傳來急促的手機震動鈴聲！是毒販留下的聯絡工具！沿階梯 B 立即登上 3F 天台！"
+        }
+      ]);
+    }
+
+    function toggleNotebook() {
+      if (!notebookModal) return;
+      const isOpen = !notebookModal.classList.contains('pointer-events-none');
+      if (isOpen) {
+        notebookModal.classList.remove('pointer-events-auto', 'opacity-100');
+        notebookModal.classList.add('pointer-events-none', 'opacity-0');
+        GAME_STATE.isNotebookOpen = false;
+      } else {
+        notebookModal.classList.remove('pointer-events-none', 'opacity-0');
+        notebookModal.classList.add('pointer-events-auto', 'opacity-100');
+        GAME_STATE.isNotebookOpen = true;
+        renderNotebookClues();
+        sound.playDialogueBlip();
+      }
+    }
+
+    function switchNotebookTab(tab) {
+      const btnClues = document.getElementById('tab-btn-clues');
+      const btnMind = document.getElementById('tab-btn-mindpalace');
+      const btnProfiles = document.getElementById('tab-btn-profiles');
+      const tabClues = document.getElementById('tab-content-clues');
+      const tabMind = document.getElementById('tab-content-mindpalace');
+      const tabProfiles = document.getElementById('tab-content-profiles');
+
+      [btnClues, btnMind, btnProfiles].forEach(b => {
+        if (b) b.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition";
+      });
+      [tabClues, tabMind, tabProfiles].forEach(t => {
+        if (t) t.classList.add('hidden');
+      });
+
+      if (tab === 'clues') {
+        if (btnClues) btnClues.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-500 text-white transition";
+        if (tabClues) tabClues.classList.remove('hidden');
+      } else if (tab === 'mindpalace') {
+        if (btnMind) btnMind.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-500 text-white transition";
+        if (tabMind) tabMind.classList.remove('hidden');
+      } else if (tab === 'profiles') {
+        if (btnProfiles) btnProfiles.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-500 text-white transition";
+        if (tabProfiles) tabProfiles.classList.remove('hidden');
+      }
+      sound.playDialogueBlip();
+    }
+
+    function renderNotebookClues() {
+      const container = document.getElementById('tab-content-clues');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const cluesList = [
+        CLUES_DATA.clue_gym_fok,
+        CLUES_DATA.clue_desk,
+        CLUES_DATA.clue_corridor,
+        CLUES_DATA.clue_pipe_stash,
+        CLUES_DATA.clue_spot_plate,
+        CLUES_DATA.clue_rooftop_burner
+      ];
+
+      cluesList.forEach((c) => {
+        const isFound = GAME_STATE.cluesFound.has(c.id);
+        const card = document.createElement('div');
+        card.className = `p-1.5 rounded-xl border flex flex-col justify-between ${
+          isFound 
+            ? 'bg-slate-900/90 border-amber-500/50 text-amber-200' 
+            : 'bg-slate-950/60 border-slate-800 text-slate-600'
+        }`;
+        card.innerHTML = `
+          <div class="flex items-center gap-1">
+            <span class="text-sm">${isFound ? c.icon : '🔒'}</span>
+            <span class="text-[10px] font-bold truncate">${isFound ? (c.zone.split(' ')[1] || c.zone) : '未解鎖'}</span>
+          </div>
+          <p class="text-[9px] leading-tight mt-1 line-clamp-3 ${isFound ? 'text-slate-300' : 'text-slate-600'}">
+            ${isFound ? c.shortDesc : '沿線索推進指引前往搜查採集...'}
+          </p>
+          <div class="text-[8px] font-mono mt-1 ${isFound ? 'text-orange-400 font-bold' : 'text-slate-600'}">
+            ${isFound ? '✓ 已採集入卷宗' : '待搜查'}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function submitFinalDeduction() {
+      const v1 = document.getElementById('deduce-vector')?.value;
+      const v2 = document.getElementById('deduce-symptoms')?.value;
+      const v3 = document.getElementById('deduce-action')?.value;
+
+      if (v1 === 'correct' && v2 === 'correct' && v3 === 'correct') {
+        if (notebookModal) {
+          notebookModal.classList.remove('pointer-events-auto', 'opacity-100');
+          notebookModal.classList.add('pointer-events-none', 'opacity-0');
+        }
+        GAME_STATE.isNotebookOpen = false;
+
+        if (victoryScreen) {
+          victoryScreen.classList.remove('pointer-events-none', 'opacity-0');
+          victoryScreen.classList.add('pointer-events-auto', 'opacity-100');
+        }
+        sound.playClueFound();
+      } else {
+        sound.playDialogueBlip();
+        const deduceHeader = document.getElementById('deduce-header');
+        if (deduceHeader) {
+          deduceHeader.textContent = "❌ 定案鏈存在漏洞，請根據雙試管報告與特區法規核對！";
+          deduceHeader.className = "text-xs font-bold text-rose-400 mb-1.5 animate-pulse";
+        }
+      }
+    }
 
     function setupEventListeners() {
       document.getElementById('btn-cam-cycle')?.addEventListener('click', cycleCameraPreset);
