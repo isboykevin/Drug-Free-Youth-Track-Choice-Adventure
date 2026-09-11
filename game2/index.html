@@ -381,7 +381,7 @@
         </button>
         <button id="btn-spot-reset" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold active:scale-95 transition">🔄 重置</button>
         <button id="btn-spot-submit" class="flex-1 py-2 rounded-xl bg-cyan-600 text-white font-bold text-xs shadow-lg transition active:scale-95 disabled:opacity-30 disabled:pointer-events-none" disabled>
-          確認報告通報天台
+          確認檢驗報告
         </button>
       </div>
     </div>
@@ -584,12 +584,12 @@
             </div>
             <div class="text-[11px] text-slate-200 space-y-1 pl-1">
               <div>• 毒品舉報熱線：<strong class="text-white font-mono bg-slate-800 px-1.5 py-0.5 rounded">2527-1234</strong></div>
-              <div>• 打擊依托咪酯舉報專線：<strong class="text-rose-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">6629-2966</strong><span class="text-[9px] text-slate-400"> (含 WhatsApp/WeChat)</span></div>
+              <div>• 打擊依托咪酯舉報專線：<strong class="text-rose-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">6629-2966</strong></div>
             </div>
           </div>
 
           <div class="text-[10px] text-orange-300 bg-orange-950/30 p-1.5 rounded-lg border border-orange-500/30 leading-tight">
-            依托咪酯受《危險藥物條例》（第134章）嚴格規管！齊心守護無毒校園，時刻牢記<strong>【毒品咪制！】</strong>！
+            依托咪酯受《危險藥物條例》嚴格規管！齊心守護無毒校園，時刻牢記<strong>【毒品咪制！】</strong>！
           </div>
         </div>
       </div>
@@ -792,13 +792,13 @@
       clue_desk: {
         id: "clue_desk",
         stage: 2,
-        name: "2F 中六B班 岑詠蕎抽屜今晨急寫之求助便條與紫晶液",
+        name: "2F 中六B班 岑詠蕎抽屜的事前日記本與紫晶液",
         zone: "2F 中六B班房",
         icon: "📝",
         pos: { x: -8.5, y: 5.05, z: -7.5 },
         floor: 2,
-        shortDesc: "考場 2 號桌抽屜起獲今晨 07:45 揉皺的求助字條與深紫色未知液滴（證物 A）。字條記錄詠蕎今早已手抖失常，警告展霆別拿 17 號櫃提貨單！",
-        fullDesc: "在 2 號課桌提取到深紫色未知液滴（證物 A）。抽屜內壓著今晨 07:45 揉皺的草稿紙，字跡顫抖：『展霆，這東西根本不是提神神藥！我昨晚吸了兩口全身劇烈抽搐、記憶斷片……你千萬別去拿 17 號儲物櫃暗號提貨單！』詠蕎在考前試圖求助，但積聚毒性在模擬考中全面爆發休克！",
+        shortDesc: "考場 2 號桌抽屜起獲詠蕎的事前日記本與深紫色未知液滴（證物 A）。日記揭露她事前嘗試所謂『提神糖』後出現抽搐與斷片，並記載了 17 號儲物櫃暗號！",
+        fullDesc: "在 2 號課桌提取到深紫色未知液滴（證物 A）。抽屜內起獲詠蕎的事前日記本，上面記錄著她日前的痛苦經歷：『這東西根本不是提神藥！吸食後全身劇烈抽搐、記憶斷片……甚至有人留下紙條要我去 17 號儲物櫃取貨！』詠蕎事前已深受其害，最終在模擬考中體內積聚毒性爆發休克！",
         forensic: "液滴呈現淡紫晶瑩狀，pH 約 6.8，非一般果汁或墨水。提取為現場【證物 A】送檢。"
       },
       clue_corridor: {
@@ -834,7 +834,7 @@
         pos: { x: 9.0, y: 5.05, z: 7.0 },
         floor: 2,
         shortDesc: "排除氯胺酮，確診兩份樣品均含有受管制的危險藥物「依托咪酯」！此時 3F 天台方向傳來急促震動鈴聲！",
-        fullDesc: "雙試管交叉顯色試驗完成！排除氯胺酮（K仔），確診證物 A 與證物 B 皆為受香港特區《危險藥物條例》（第134章）嚴格管制的【依托咪酯 (Etomidate)】！",
+        fullDesc: "雙試管交叉顯色試驗完成！排除氯胺酮（K仔），確診證物 A 與證物 B 皆為受香港特區《危險藥物條例》嚴格管制的【依托咪酯 (Etomidate)】！",
         forensic: "咪唑羧酸酯特異性顯色反應呈強陽性（深紫褐色沉澱），確診為高濃度依托咪酯。"
       },
       clue_rooftop_burner: {
@@ -852,7 +852,7 @@
     };
 
     const DUMMY_LOCKERS = {
-      locker_11: { id: "locker_11", num: 11, name: "2F 走廊 11 號靠牆儲物櫃", pos: { x: -2.0, y: 5.0, z: 0.1 }, desc: "這是 11 號靠牆儲物櫃。裡面整齊疊放著校服與幾本 DSE 歷屆試題，未發現可疑暗號。" },
+      locker_11: { id: "locker_11", num: 11, name: "2F 走廊 11 號靠牆儲物櫃", pos: { x: -2.0, y: 5.0, z: 0.1 }, desc: "這是 11 號靠牆儲物櫃。裡面整齊疊放著校服與幾本歷屆試題，未發現可疑暗號。" },
       locker_14: { id: "locker_14", num: 14, name: "2F 走廊 14 號靠牆儲物櫃", pos: { x: 0.5, y: 5.0, z: 0.1 }, desc: "這是 14 號靠牆儲物櫃。門外貼著學界籃球錦標賽賽程表，鎖具完好，無異常夾層。" },
       locker_20: { id: "locker_20", num: 20, name: "2F 走廊 20 號靠牆儲物櫃", pos: { x: 5.5, y: 5.0, z: 0.1 }, desc: "這是 20 號靠牆儲物櫃。裡面放置著雨傘與水樽，縫隙乾淨，不是藏匿地點。" },
       locker_23: { id: "locker_23", num: 23, name: "2F 走廊 23 號靠牆儲物櫃", pos: { x: 7.5, y: 5.0, z: 0.1 }, desc: "這是 23 號靠牆儲物櫃。鎖頭有些許鏽蝕，顯然近期無人動過。" }
@@ -861,12 +861,12 @@
     const EASTER_EGGS = {
       trophy_case: {
         id: "trophy_case", name: "1F 大堂學界榮譽陳列櫃", pos: { x: 0.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🏆",
-        desc: "陳列櫃擺放著咪制書院的銀禧獎盃。其中『全港學界男子組 MVP 霍展霆』與『文憑試傑出特許生 岑詠蕎』的照片格外耀眼……兩人本應前途似錦，卻被毒販的偽裝話術拖入深淵！",
+        desc: "陳列櫃擺放著咪制書院的銀禧獎盃。其中『全港學界男子組 MVP 霍展霆』與『傑出學生 岑詠蕎』的照片格外耀眼……兩人本應前途似錦，卻被毒販的偽裝話術拖入深淵！",
         monologue: "（展霆是球隊靈魂，詠蕎是全校的驕傲……這場悲劇絕不能再次在咪制書院上演。）"
       },
       vending_machine: {
         id: "vending_machine", name: "1F 小食部自動販賣機", pos: { x: 8.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🥤",
-        desc: "販賣機亮著微弱黃光，陳列著港式凍檸茶、維他奶和能量飲料。機身側面貼滿了學生手寫的塗鴉貼紙：『DSE 祈福：科科 5 星星！數學卷二求穩！』",
+        desc: "販賣機亮著微弱黃光，陳列著港式凍檸茶、維他奶和能量飲料。機身側面貼滿了學生手寫的塗鴉貼紙：『DSE 祈福：科科 5 星星！』",
         monologue: "（中六考生的焦慮與疲憊全寫在上面了……毒販正是利用這種想走捷徑的心態乘虛而入。）"
       },
       notice_board: {
@@ -881,7 +881,7 @@
       },
       lab_microscope: {
         id: "lab_microscope", name: "2F 理科實驗室高倍顯微鏡與安全指引", pos: { x: 12.0, y: 5.0, z: 7.0 }, floor: 2, icon: "🔬",
-        desc: "實驗桌上的雙目顯微鏡旁壓著《特區政府危險品條例校內貯存指引》。載玻片上仍殘留著常規植物細胞切片，一切秩序井然，卻被外來的毒物打破了寧靜。",
+        desc: "實驗桌上的雙目顯微鏡旁壓著《實驗室指引》。載玻片上仍殘留著常規植物細胞切片，一切秩序井然，卻被外來的毒物打破了寧靜。",
         monologue: "（化學本是用於探索真理的工具，卻被校外黑心之徒用來調配摧毀神經的非法試劑。）"
       },
       rooftop_telescope: {
@@ -897,7 +897,7 @@
     };
 
     // ==========================================
-    // 3. 3D 場景與實體幾何碰撞庫 (全面杜絕穿模與死角)
+    // 3. 3D 場景與實體幾何碰撞庫
     // ==========================================
     let renderer, scene, camera, player;
     let floor1Group, floor2Group, floor3Group;
@@ -906,24 +906,23 @@
     let stairABarrierMesh = null;
     let stairBBarrierMesh = null;
 
-    // 嚴密定義實體碰撞體積 (AABB)
     const SOLID_OBSTACLES = [
       // 1F
-      { minX: -2.2, maxX: 2.2, minZ: -8.5, maxZ: -6.5, floor: 1 }, // 榮譽陳列櫃
-      { minX: 6.8, maxX: 9.2, minZ: -8.5, maxZ: -6.5, floor: 1 },  // 自動販賣機
-      { minX: -12.2, maxX: -6.8, minZ: 3.2, maxZ: 4.8, floor: 1 }, // 更衣室長椅
-      { minX: 4.2, maxX: 6.8, minZ: -8.9, maxZ: -8.1, floor: 1 },  // 願望牆告示板
+      { minX: -2.2, maxX: 2.2, minZ: -8.5, maxZ: -6.5, floor: 1 },
+      { minX: 6.8, maxX: 9.2, minZ: -8.5, maxZ: -6.5, floor: 1 },
+      { minX: -12.2, maxX: -6.8, minZ: 3.2, maxZ: 4.8, floor: 1 },
+      { minX: 4.2, maxX: 6.8, minZ: -8.9, maxZ: -8.1, floor: 1 },
 
       // 2F (徹底杜絕玩家繞入儲物櫃後方虛空)
-      { minX: -3.0, maxX: 9.0, minZ: -9.0, maxZ: -0.1, floor: 2 }, // 儲物櫃後側空間全面剛體阻擋！
-      { minX: -3.0, maxX: 8.5, minZ: -0.4, maxZ: 0.6, floor: 2 },  // 儲物櫃本體碰撞
-      { minX: -2.7, maxX: -2.3, minZ: -9.0, maxZ: 1.0, floor: 2 }, // 教室隔牆
-      { minX: 5.5, maxX: 12.5, minZ: 5.8, maxZ: 8.2, floor: 2 },  // 2F 化驗實驗大桌
+      { minX: -3.0, maxX: 9.0, minZ: -9.0, maxZ: -0.1, floor: 2 },
+      { minX: -3.0, maxX: 8.5, minZ: -0.4, maxZ: 0.6, floor: 2 },
+      { minX: -2.7, maxX: -2.3, minZ: -9.0, maxZ: 1.0, floor: 2 },
+      { minX: 5.5, maxX: 12.5, minZ: 5.8, maxZ: 8.2, floor: 2 },
 
       // 3F
-      { minX: 5.8, maxX: 10.2, minZ: 1.8, maxZ: 6.2, floor: 3 },   // 天台巨型水塔
-      { minX: -7.0, maxX: -3.0, minZ: -4.8, maxZ: -2.2, floor: 3 }, // 天台排風機組
-      { minX: 6.8, maxX: 9.2, minZ: -7.5, maxZ: -5.5, floor: 3 }   // 觀星折射鏡台
+      { minX: 5.8, maxX: 10.2, minZ: 1.8, maxZ: 6.2, floor: 3 },
+      { minX: -7.0, maxX: -3.0, minZ: -4.8, maxZ: -2.2, floor: 3 },
+      { minX: 6.8, maxX: 9.2, minZ: -7.5, maxZ: -5.5, floor: 3 }
     ];
 
     const CAMERA_PRESETS = [
@@ -939,11 +938,10 @@
     let interactionPrompt, promptActionText, promptInputBadge;
     let labModal, notebookModal, victoryScreen;
 
-    // 動態偵測行動觸控設備
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
     // ==========================================
-    // 4. 動態生成高辨識度 3D Billboard 圖示 (解決藍球意義不明問題)
+    // 4. 動態生成高辨識度 3D Billboard 圖示
     // ==========================================
     function createIconSprite(emoji, bgColor = 'rgba(15, 23, 42, 0.92)', borderColor = '#fb923c') {
       const c = document.createElement('canvas');
@@ -952,7 +950,6 @@
       const ctx = c.getContext('2d');
       ctx.clearRect(0, 0, 128, 128);
 
-      // 外光環
       ctx.beginPath();
       ctx.arc(64, 64, 52, 0, Math.PI * 2);
       ctx.fillStyle = bgColor;
@@ -961,14 +958,12 @@
       ctx.strokeStyle = borderColor;
       ctx.stroke();
 
-      // 內圈金屬線
       ctx.beginPath();
       ctx.arc(64, 64, 46, 0, Math.PI * 2);
       ctx.lineWidth = 2;
       ctx.strokeStyle = '#ffffff';
       ctx.stroke();
 
-      // 居中文字
       ctx.font = '54px "Noto Sans TC", "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -1121,14 +1116,12 @@
         const f = GAME_STATE.currentFloor;
         if (x < -13.5 || x > 13.5 || z < -8.5 || z > 8.5) return false;
 
-        // 剛體障礙檢測
         for (const obs of SOLID_OBSTACLES) {
           if (obs.floor === f && x >= obs.minX && x <= obs.maxX && z >= obs.minZ && z <= obs.maxZ) {
             return false;
           }
         }
 
-        // 階梯實體封鎖帶阻擋
         if (f === 1 && x > 8.5 && z >= -1.0 && z <= 3.0 && GAME_STATE.questStage < 2) {
           return false;
         }
@@ -1148,12 +1141,12 @@
 
         if (f === 1) {
           if (x < -4.0) { zone = "1F 體育更衣室走廊"; icon = "🏀"; }
-          else if (x > 8.0) { zone = "1F 景觀階梯間 A"; icon = "🪜"; }
+          else if (x > 8.0) { zone = "1F 景觀階梯 A"; icon = "🪜"; }
           else { zone = "1F 中庭接待大堂"; icon = "🏛️"; }
         } else if (f === 2) {
           if (x < -2.5) { zone = "2F 中六B班房 (事發現場)"; icon = "📚"; }
           else if (z > 5.0 && x > 2.0) { zone = "2F 理科綜合化學實驗室"; icon = "🧪"; }
-          else if (x < -8.0 && z > 5.0) { zone = "2F 天台階梯間 B"; icon = "🪜"; }
+          else if (x < -8.0 && z > 5.0) { zone = "2F 天台階梯 B"; icon = "🪜"; }
           else { zone = "2F 教學樓靠牆儲物長廊"; icon = "🚪"; }
         } else if (f === 3) {
           zone = "3F 教學樓暮光天台";
@@ -1187,7 +1180,7 @@
       try {
         renderer = new THREE.WebGLRenderer({ canvas: canvasElem, antialias: false, powerPreference: "high-performance" });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        const dpr = Math.min(window.devicePixelRatio || 1, 2.0); // 確保高清並限制能耗
+        const dpr = Math.min(window.devicePixelRatio || 1, 2.0);
         renderer.setPixelRatio(dpr);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.BasicShadowMap;
@@ -1220,7 +1213,6 @@
       roofPointLight.position.set(-5, 11, -2);
       scene.add(roofPointLight);
 
-      // 黃昏漂浮微塵
       const particleGeo = new THREE.BufferGeometry();
       const posArr = new Float32Array(50 * 3);
       for(let i=0; i<150; i+=3) {
@@ -1232,7 +1224,6 @@
       duskParticles = new THREE.Points(particleGeo, new THREE.PointsMaterial({ color: 0xf59e0b, size: 0.16, transparent: true, opacity: 0.55 }));
       scene.add(duskParticles);
 
-      // 九龍遠景剪影
       const skylineGroup = new THREE.Group();
       const bldgMat = new THREE.MeshBasicMaterial({ color: 0x090d18 });
       const bldgHeights = [14, 22, 18, 28, 16, 24, 32, 20, 15, 26, 19];
@@ -1277,7 +1268,7 @@
         tapeYellow: new THREE.MeshBasicMaterial({ color: 0xfacc15, side: THREE.DoubleSide })
       };
 
-      // ----------------- 1F 大堂 -----------------
+      // 1F 大堂
       const f1Floor = new THREE.Mesh(new THREE.PlaneGeometry(28, 18), mats.foyerFloor);
       f1Floor.rotation.x = -Math.PI / 2;
       floor1Group.add(f1Floor);
@@ -1327,7 +1318,6 @@
         floor1Group.add(step);
       }
 
-      // 1F 階梯口封鎖線 (可視化引導)
       stairABarrierMesh = new THREE.Group();
       const postA1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal);
       postA1.position.set(8.1, 0.6, -0.7);
@@ -1338,7 +1328,7 @@
       stairABarrierMesh.add(postA1, postA2, tapeA);
       floor1Group.add(stairABarrierMesh);
 
-      // ----------------- 2F 教學與化驗區 -----------------
+      // 2F 教學與化驗區
       const f2West = new THREE.Mesh(new THREE.PlaneGeometry(21.5, 18), mats.corridorFloor);
       f2West.rotation.x = -Math.PI / 2;
       f2West.position.set(-3.25, 3.8, 0);
@@ -1377,7 +1367,6 @@
       f2WallE.position.set(14, 5.4, 0);
       floor2Group.add(f2WallE);
 
-      // 【修復核心】：2F 儲物櫃背面延伸實體牆，並銜接東側通道，徹底杜絕穿透死角！
       const f2BackWall = new THREE.Mesh(new THREE.BoxGeometry(16.0, 3.2, 0.4), mats.wallMat);
       f2BackWall.position.set(2.5, 5.4, -0.3);
       floor2Group.add(f2BackWall);
@@ -1386,7 +1375,6 @@
       f2StairPartition.position.set(8.5, 5.4, -4.6);
       floor2Group.add(f2StairPartition);
 
-      // 班房隔牆
       const f2Divider = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 10), mats.wallMat);
       f2Divider.position.set(-2.5, 5.4, -4.0);
       floor2Group.add(f2Divider);
@@ -1454,7 +1442,6 @@
         floor2Group.add(step);
       }
 
-      // 2F 階梯口封鎖線 (可視化引導)
       stairBBarrierMesh = new THREE.Group();
       const postB1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal);
       postB1.position.set(-8.0, 4.4, 5.3);
@@ -1465,7 +1452,7 @@
       stairBBarrierMesh.add(postB1, postB2, tapeB);
       floor2Group.add(stairBBarrierMesh);
 
-      // ----------------- 3F 天台 -----------------
+      // 3F 天台
       const roofMain = new THREE.Mesh(new THREE.PlaneGeometry(21.5, 18), mats.rooftopFloor);
       roofMain.rotation.x = -Math.PI / 2;
       roofMain.position.set(3.25, 7.6, 0);
@@ -1498,7 +1485,7 @@
       vent.position.set(-5.0, 8.4, -3.5);
       floor3Group.add(vent);
 
-      // ----------------- 生成高辨識度互動標記 -----------------
+      // 互動標記
       // 1F
       spawnMarker('clue_gym_fok', -9.5, 1.25, 4.0, 1, 'clue', '🩹');
       spawnMarker('trophy_case', 0.0, 1.2, -7.5, 1, 'egg', '🏆');
@@ -1525,32 +1512,27 @@
       spawnMarker('rooftop_guitar', -8.0, 8.8, 4.5, 3, 'egg', '🎸');
     }
 
-    // 統一建立 3D 動態標記：徹底取代無意義藍球
     function spawnMarker(key, x, y, z, targetFloor, type = 'clue', symbol = '🔍') {
       const g = new THREE.Group();
       g.position.set(x, y, z);
 
       if (type === 'clue') {
-        // 金色多面結晶
         const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.32, 0), new THREE.MeshStandardMaterial({
           color: 0xf59e0b, emissive: 0xff6600, emissiveIntensity: 1.1, roughness: 0.1
         }));
         g.add(gem);
 
-        // 地面光圈
         const ring = new THREE.Mesh(new THREE.RingGeometry(0.45, 0.65, 16), new THREE.MeshBasicMaterial({ color: 0xf59e0b, side: THREE.DoubleSide, transparent: true, opacity: 0.75 }));
         ring.rotateX(-Math.PI / 2);
         ring.position.y = -1.1;
         g.add(ring);
 
-        // 浮空告示牌
         const sprite = createIconSprite(symbol, 'rgba(30, 27, 75, 0.95)', '#f59e0b');
         sprite.position.y = 0.6;
         g.add(sprite);
 
         g.userData = { clueId: key, floor: targetFloor, gemMesh: gem, ringMesh: ring, spriteMesh: sprite, initialY: y, type };
       } else if (type === 'egg') {
-        // 藍色偵查小稜鏡 + 浮空對話/探索標牌
         const prism = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.28, 6), new THREE.MeshStandardMaterial({
           color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.8, roughness: 0.2
         }));
@@ -1567,7 +1549,6 @@
 
         g.userData = { clueId: key, floor: targetFloor, gemMesh: prism, ringMesh: ring, spriteMesh: sprite, initialY: y, type };
       } else {
-        // 儲物櫃小標牌
         const sprite = createIconSprite(symbol, 'rgba(15, 23, 42, 0.95)', '#94a3b8');
         sprite.scale.set(0.65, 0.65, 1.0);
         sprite.position.y = 0.4;
@@ -1589,7 +1570,6 @@
       floor3Group.visible = (f >= 3);
     }
 
-    // 更新樓梯封鎖線狀態
     function updateStairBarriers() {
       if (stairABarrierMesh) {
         stairABarrierMesh.visible = (GAME_STATE.questStage < 2);
@@ -1914,7 +1894,7 @@
           let hint = "應先留意右上角當前偵查目標。";
           if (GAME_STATE.questStage === 1) hint = "更衣室外霍展霆的遺留物尚未查驗，先去西側排查！";
           else if (GAME_STATE.questStage === 2) hint = "應先登上 2F 中六B班房搜查岑詠蕎的課桌！";
-          else if (GAME_STATE.questStage === 3) hint = "根據課桌草稿，應先排查 2F 長廊靠牆儲物櫃！";
+          else if (GAME_STATE.questStage === 3) hint = "根據課桌日記，應先排查 2F 長廊靠牆儲物櫃！";
           else if (GAME_STATE.questStage === 4) hint = "先在化學室外走廊水管夾層取回軟糖樣品！";
           else if (GAME_STATE.questStage === 5) hint = "已取回兩份樣品，先至化學實驗台完成快篩！";
 
@@ -1938,8 +1918,8 @@
           GAME_STATE.questStage = 3;
           updateObjective("排查 2F 長廊靠牆儲物櫃，尋找 17 號暗號提貨單 (3/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "事發課桌起獲物證", text: "在 2 號課桌提取到深紫色未知液滴（證物 A）！抽屜內起獲今晨 07:45 揉皺的求助便條：『展霆，這提神油有古怪！我昨晚吸了手臂劇烈抽搐、心跳失常……千萬別去拿 17 號儲物櫃暗號提貨單！』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（原來詠蕎今早在考前就已經出現肌陣攣前期中毒症狀，並試圖阻止展霆！可惜毒性在考場中全面爆發！我得立即排查靠牆的 17 號儲物櫃！）" }
+            { type: "narration", speaker: "現場物證紀錄", role: "事發課桌起獲物證", text: "在 2 號課桌提取到深紫色未知液滴（證物 A）！抽屜內起獲詠蕎的事前日記本：『這提神物有古怪……試過後手臂劇烈抽搐、心跳失常，甚至記憶斷片！還有人塞字條要我去 17 號儲物櫃拿新貨……』" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（原來詠蕎事前就已經在日記記錄了肌陣攣前期中毒症狀！毒性積聚最終在考場全面爆發！日記提及的 17 號儲物櫃必定是關鍵，我得立即前去排查！）" }
           ]);
         } else if (clue.stage === 3) {
           collectClue(clue.id);
@@ -2119,7 +2099,7 @@
       sound.playPhoneRing();
 
       startDialogueQueue([
-        { type: "narration", speaker: "毒理檢驗報告", role: "定性鑑證結論", text: "雙試管交叉比對確診！岑詠蕎課桌紫液與水管軟糖均含有《危險藥物條例》（第134章）嚴格管制的【依托咪酯】！" },
+        { type: "narration", speaker: "毒理檢驗報告", role: "定性鑑證結論", text: "雙試管交叉比對確診！岑詠蕎課桌紫液與水管軟糖均含有《危險藥物條例》嚴格管制的【依托咪酯】！" },
         { type: "monologue", speaker: "梁澤銘（心想）", role: "突發警覺", text: "（等等！頭頂 3F 天台方向傳來急促的手機震動鈴聲！天台階梯封鎖已解開，立刻登上 3F 天台截獲通聯訊號！）" }
       ]);
     }
@@ -2361,7 +2341,6 @@
         if (overlay) overlay.style.display = 'none';
       });
 
-      // 鍵盤操作
       window.addEventListener('keydown', (e) => {
         keys[e.code] = true;
         if (e.code === 'KeyE' || e.code === 'Space') {
@@ -2380,7 +2359,6 @@
         keys[e.code] = false;
       });
 
-      // 視窗自適應
       window.addEventListener('resize', () => {
         if (!renderer || !camera) return;
         camera.aspect = window.innerWidth / window.innerHeight;
@@ -2391,7 +2369,6 @@
         updateJoystickCenter();
       }, { passive: true });
 
-      // 搖桿觸摸
       const jContainer = document.getElementById('touch-joystick-container');
       const jThumb = document.getElementById('joystick-thumb');
 
@@ -2444,7 +2421,6 @@
         window.addEventListener('touchcancel', endJoystick, { passive: false });
       }
 
-      // 右半屏旋轉視角
       window.addEventListener('touchstart', (e) => {
         for (let i = 0; i < e.changedTouches.length; i++) {
           const t = e.changedTouches[i];
