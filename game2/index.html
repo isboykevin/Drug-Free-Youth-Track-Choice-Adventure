@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>暮光迴響：沉淪之霧 - 咪制書院校園禁毒特約調查專案</title>
+  <title>暮光迴響：沉淪之霧 - 咪制書院校園禁毒特約調查專案旗艦版</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -13,11 +13,10 @@
   
   <!-- Google 字體預加載與優化字體呈現 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
 
   <style>
-    /* 基礎字體與全域排版 */
     :root {
       --sab: env(safe-area-inset-bottom, 0px);
       --sat: env(safe-area-inset-top, 0px);
@@ -31,34 +30,25 @@
       box-sizing: inherit;
     }
     
-    /* 改善手機視窗：使用 min-height 與 relative 確保工具列相容性 */
     body, html {
       margin: 0;
       padding: 0;
       width: 100%;
+      height: 100%;
       min-height: 100vh;
-      min-height: -webkit-fill-available;
       position: relative;
-      overflow-x: hidden;
-      background-color: #060813;
+      overflow: hidden;
+      background-color: #050711;
       color: #f8fafc;
     }
 
-    /* 安全邊界定位支援 (防範 iPhone 橫屏/豎屏底部瀏海遮擋按鈕) */
-    .safe-bottom {
-      bottom: calc(1rem + var(--sab));
-    }
-    .safe-left {
-      left: calc(1rem + var(--sal));
-    }
-    .safe-right {
-      right: calc(1rem + var(--sar));
-    }
-    .safe-top {
-      top: calc(0.75rem + var(--sat));
-    }
+    /* 安全邊界定位支援 (防範 iPhone 橫屏/豎屏邊界瀏海遮擋) */
+    .safe-bottom { bottom: calc(0.85rem + var(--sab)); }
+    .safe-left { left: calc(0.85rem + var(--sal)); }
+    .safe-right { right: calc(0.85rem + var(--sar)); }
+    .safe-top { top: calc(0.6rem + var(--sat)); }
 
-    /* 僅針對遊戲主畫布與虛擬操作元件限制手勢，避免破壞全域文字選取 */
+    /* 限制特定互動元件手勢，避免破壞全域選取 */
     .game-interactive,
     #joystick-base,
     #joystick-thumb,
@@ -69,7 +59,6 @@
       -webkit-touch-callout: none;
     }
 
-    /* STREAMING_CHUNK:Styling visual layers and glassmorphism panels -->
     #joystick-base,
     #joystick-thumb {
       touch-action: none;
@@ -83,7 +72,7 @@
 
     /* 維多利亞港夕照電影感濾鏡 */
     .twilight-vignette {
-      background: radial-gradient(circle at 50% 45%, rgba(251, 146, 60, 0.08) 15%, rgba(6, 8, 19, 0.94) 100%);
+      background: radial-gradient(circle at 50% 45%, rgba(251, 146, 60, 0.08) 15%, rgba(5, 7, 17, 0.94) 100%);
       pointer-events: none;
     }
 
@@ -97,33 +86,54 @@
     /* 高級磨砂玻璃擬態 */
     .glass-panel {
       background: rgba(13, 17, 32, 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(251, 146, 60, 0.3);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(251, 146, 60, 0.35);
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
     }
 
     .glass-btn {
-      background: linear-gradient(135deg, rgba(249, 115, 22, 0.5), rgba(225, 29, 72, 0.4));
-      border: 1.5px solid rgba(251, 146, 60, 0.65);
-      transition: transform 0.15s ease, background 0.15s ease;
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.6), rgba(225, 29, 72, 0.45));
+      border: 1.5px solid rgba(251, 146, 60, 0.75);
+      transition: transform 0.12s ease, background 0.12s ease;
     }
     .glass-btn:active {
       transform: scale(0.94);
-      background: linear-gradient(135deg, rgba(249, 115, 22, 0.8), rgba(225, 29, 72, 0.65));
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.85), rgba(225, 29, 72, 0.7));
     }
 
     .cinematic-serif {
       font-family: 'Noto Serif TC', serif;
     }
 
-    /* STREAMING_CHUNK:Defining animations and accessibility reduction rules -->
-    @keyframes uvGlow {
-      0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.5); }
-      50% { box-shadow: 0 0 40px rgba(34, 211, 238, 0.95); }
+    /* 橫屏強烈建議遮罩：當手機處於直屏模式時顯示 */
+    #landscape-orientation-overlay {
+      display: none;
     }
-    .uv-glow-active {
-      animation: uvGlow 1.4s infinite;
+    @media screen and (orientation: portrait) and (max-width: 900px) {
+      #landscape-orientation-overlay {
+        display: flex !important;
+      }
+    }
+
+    /* 6孔點滴板凹槽專用樣式 */
+    .spot-well {
+      aspect-ratio: 1 / 1;
+      border-radius: 9999px;
+      background: radial-gradient(circle at 35% 35%, #1e293b 0%, #090d16 100%);
+      box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.9), 0 2px 5px rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(148, 163, 184, 0.3);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .well-liquid {
+      position: absolute;
+      inset: 8%;
+      border-radius: 9999px;
+      transition: background-color 0.6s ease, transform 0.4s ease;
+      opacity: 0.92;
     }
 
     /* 虛擬操作桿樣式 */
@@ -137,22 +147,17 @@
       box-shadow: 0 4px 18px rgba(249, 115, 22, 0.85);
     }
 
-    /* 支援偏好減少動態無障礙 (prefers-reduced-motion) */
     @media (prefers-reduced-motion: reduce) {
-      .film-grain,
-      .animate-ping,
-      .animate-bounce,
-      .uv-glow-active,
-      .animate-pulse {
+      .film-grain, .animate-ping, .animate-bounce, .animate-pulse {
         animation: none !important;
         transition: none !important;
       }
     }
   </style>
 </head>
-<body class="relative w-full h-full bg-slate-950">
+<body class="relative w-full h-full bg-slate-950 overflow-hidden">
 
-  <!-- 無障礙跳至主要互動區按鈕 (螢幕閱讀器與鍵盤友善) -->
+  <!-- 無障礙跳至主要互動區按鈕 -->
   <a href="#game-canvas" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-orange-600 focus:text-white focus:rounded-xl focus:font-bold">
     跳至主要校園搜查區域
   </a>
@@ -160,13 +165,27 @@
   <!-- 螢幕閱讀器專用無障礙即時播報區域 -->
   <div id="screen-reader-announcer" class="sr-only" aria-live="polite"></div>
 
+  <!-- 手機豎屏轉橫屏強烈提示覆蓋層 (提升橫屏沉浸感與適配度) -->
+  <div id="landscape-orientation-overlay" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center" role="alert">
+    <div class="max-w-xs p-6 glass-panel rounded-3xl border-orange-500/60 flex flex-col items-center gap-4">
+      <div class="text-5xl animate-bounce">📱 🔄</div>
+      <h2 class="text-lg font-black text-white">請將手機旋轉為橫屏</h2>
+      <p class="text-xs text-slate-300 leading-relaxed">
+        《暮光迴響》採用主機級 16:9 電影景深與雙手握持操控。請旋轉手機螢幕並開啟「自動旋轉」以解鎖完整視角與最佳遊戲體驗！
+      </p>
+      <button id="btn-force-portrait-continue" class="text-[11px] text-orange-400 underline underline-offset-4 pt-2">
+        仍要在豎屏下強制繼續遊玩
+      </button>
+    </div>
+  </div>
+
   <!-- WebGL 友善退場降級提示介面 -->
   <div id="webgl-fallback" class="hidden fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center p-6 text-center" role="alert">
     <div class="max-w-md p-6 glass-panel rounded-3xl border-rose-500/50">
       <div class="text-4xl mb-3">⚠️</div>
       <h2 class="text-lg font-black text-white mb-2">瀏覽器硬體加速或 WebGL 尚未啟用</h2>
       <p class="text-xs text-slate-300 leading-relaxed mb-4">
-        您的裝置或瀏覽器目前無法載入 3D WebGL 渲染環境。建議使用最新版本 Chrome、Safari 或 Firefox，並確認已開啟硬體加速支援。
+        您的裝置或瀏覽器目前無法載入 3D 渲染環境。建議使用最新版本 Chrome、Safari 或 Firefox，並確認已開啟硬體加速支援。
       </p>
       <button id="btn-webgl-reload" class="glass-btn px-4 py-2 rounded-xl text-xs font-bold text-white">
         重新整理嘗試連線
@@ -185,73 +204,73 @@
     <div class="film-grain fixed inset-0 z-10 pointer-events-none"></div>
   </main>
 
-  <!-- 頂部 HUD 狀態列 -->
-  <header class="fixed safe-top left-0 right-0 z-20 flex items-start justify-between px-3 md:px-5 pointer-events-none">
+  <!-- 頂部 HUD 狀態列 (橫屏優化、字體加大) -->
+  <header class="fixed safe-top left-0 right-0 z-20 flex items-start justify-between px-3 md:px-6 pointer-events-none">
     
-    <!-- 左上：調查員身分、校園區域與當前任務目標 -->
-    <div class="pointer-events-auto flex flex-col gap-1.5 max-w-[60%] sm:max-w-md">
-      <div class="glass-panel px-3 py-1.5 rounded-xl flex items-center gap-2">
-        <span class="relative flex h-2.5 w-2.5">
+    <!-- 左上：調查員身分、校園區域與當前主線目標 -->
+    <div class="pointer-events-auto flex flex-col gap-1.5 max-w-[55%] sm:max-w-lg">
+      <div class="glass-panel px-3.5 py-1.5 rounded-2xl flex items-center gap-2.5">
+        <span class="relative flex h-3 w-3">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
         </span>
         <div class="truncate">
-          <div class="text-[11px] font-black text-orange-400 flex items-center gap-1.5">
+          <div class="text-xs sm:text-sm font-black text-orange-400 flex items-center gap-1.5">
             <span id="hud-location-icon">🏫</span>
             <span id="hud-location-name">1F 咪制書院 中六B班房（事發現場）</span>
           </div>
         </div>
       </div>
 
-      <!-- 動態任務目標標籤 -->
-      <div class="glass-panel px-3 py-1.5 rounded-xl text-[11px] text-amber-200/90 flex items-center gap-1.5 shadow-md border-l-4 border-l-orange-500">
-        <span class="text-xs">🎯</span>
-        <div class="truncate">任務：<span id="hud-current-objective" class="text-white font-medium">搜查岑詠蕎課桌，尋找導致考生抽搐的未知可疑物證</span></div>
+      <!-- 動態任務目標標籤 (顯眼大字) -->
+      <div class="glass-panel px-3.5 py-1.5 rounded-2xl text-xs sm:text-sm text-amber-100 flex items-center gap-2 shadow-md border-l-4 border-l-orange-500">
+        <span class="text-sm">🎯</span>
+        <div class="truncate">目標：<span id="hud-current-objective" class="text-amber-300 font-bold">搜查岑詠蕎課桌，採樣紫晶液滴與字條 (Step 1/5)</span></div>
       </div>
     </div>
 
     <!-- 右上：2D 即時雙層雷達小地圖、視角切換器、案件簿與音效控制 -->
-    <div class="pointer-events-auto flex items-center gap-2">
-      <!-- 2D 懸浮雷達小地圖 (支援 1F/2F 切換與動態方位指針) -->
+    <div class="pointer-events-auto flex items-center gap-2.5">
+      <!-- 2D 懸浮雷達小地圖 -->
       <div class="glass-panel p-1 rounded-2xl flex flex-col items-center shadow-2xl border-orange-500/40 relative">
-        <div class="flex items-center justify-between w-full px-1.5 py-0.5 text-[9px] font-mono">
-          <span class="text-amber-400 font-bold flex items-center gap-0.5">
+        <div class="flex items-center justify-between w-full px-2 py-0.5 text-[10px] font-mono">
+          <span class="text-amber-400 font-bold flex items-center gap-1">
             <span>🧭</span>
             <span id="minimap-floor-label">1F 校舍教學區</span>
           </span>
-          <span class="text-slate-400 text-[8px]" id="minimap-clue-indicator">線索: 0/5</span>
+          <span class="text-slate-300 text-[10px]" id="minimap-clue-indicator">線索: 0/5</span>
         </div>
-        <canvas id="minimap-canvas" width="96" height="70" class="rounded-xl bg-slate-950/90 border border-slate-800" aria-label="校舍雷達地圖"></canvas>
+        <canvas id="minimap-canvas" width="108" height="74" class="rounded-xl bg-slate-950/90 border border-slate-800" aria-label="校舍雷達地圖"></canvas>
       </div>
 
       <!-- 快捷視角切換器 -->
-      <button id="btn-cam-cycle" class="glass-panel px-2.5 py-2 rounded-xl text-[11px] font-bold text-orange-300 active:scale-95 flex items-center gap-1 shadow-lg" aria-label="切換鏡頭視角">
+      <button id="btn-cam-cycle" class="glass-panel px-3 py-2 rounded-2xl text-xs font-bold text-orange-200 active:scale-95 flex items-center gap-1.5 shadow-lg" aria-label="切換鏡頭視角">
         <span>🎥</span>
-        <span id="cam-mode-text" class="hidden sm:inline">視角：斜角俯視</span>
+        <span id="cam-mode-text" class="hidden md:inline">視角：斜角俯視</span>
       </button>
 
-      <!-- 案件手冊按鈕 -->
-      <button id="btn-open-notebook" class="glass-btn px-3 py-2 rounded-xl flex items-center gap-1.5 text-xs font-bold text-orange-100 shadow-xl active:scale-95" aria-label="打開案件手冊與物證日誌">
+      <!-- 案件手冊按鈕 (加大字體) -->
+      <button id="btn-open-notebook" class="glass-btn px-3.5 py-2 rounded-2xl flex items-center gap-1.5 text-xs sm:text-sm font-black text-white shadow-xl active:scale-95" aria-label="打開案件手冊與物證日誌">
         <span>📋 案件簿</span>
-        <span id="hud-clue-badge" class="bg-orange-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-black">0/5</span>
+        <span id="hud-clue-badge" class="bg-orange-600 text-white text-[11px] px-1.5 py-0.2 rounded-full font-black">0/5</span>
       </button>
 
       <!-- 靜音開關 -->
-      <button id="btn-toggle-sound" class="glass-panel p-2 rounded-xl text-slate-300 hover:text-white active:scale-95 transition" aria-label="切換靜音狀態">
+      <button id="btn-toggle-sound" class="glass-panel p-2 rounded-2xl text-slate-300 hover:text-white active:scale-95 transition" aria-label="切換靜音狀態">
         <svg id="icon-sound-on" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
       </button>
     </div>
   </header>
 
-  <!-- 手機專用虛擬方向搖桿 (左下角，包含 safe-area 邊界計算，確保豎屏與橫屏皆不被遮擋) -->
+  <!-- 手機專用虛擬方向搖桿 (左下角，橫屏寬裕佈局) -->
   <div id="touch-joystick-container" class="fixed safe-bottom safe-left z-30 pointer-events-auto touch-none">
     <div id="joystick-base" class="w-28 h-28 sm:w-32 sm:h-32 rounded-full joystick-base relative flex items-center justify-center">
       <div id="joystick-thumb" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full joystick-thumb absolute pointer-events-none transition-transform duration-75"></div>
     </div>
   </div>
 
-  <!-- 手機專用操作與視角微調鍵 (右下角，具備 safe-area 邊界保護，修復橫屏與豎屏點擊無效) -->
-  <div id="mobile-controls-cluster" class="fixed safe-bottom safe-right z-30 pointer-events-auto flex flex-col items-end gap-3 touch-none">
+  <!-- 手機專用操作與視角微調鍵 (右下角加大，橫屏右手拇指人體工學) -->
+  <div id="mobile-controls-cluster" class="fixed safe-bottom safe-right z-30 pointer-events-auto flex flex-col items-end gap-2.5 touch-none">
     <div class="flex items-center gap-2">
       <button id="btn-rotate-left" class="glass-panel w-11 h-11 sm:w-12 sm:h-12 rounded-full text-orange-300 font-black text-sm flex items-center justify-center active:scale-90 shadow-lg" title="向左旋轉鏡頭" aria-label="向左旋轉視角 45 度">
         ⟲
@@ -261,249 +280,266 @@
       </button>
     </div>
 
-    <!-- 核心搜查互動按鈕 (加強觸控感應與尺寸，支援 touchstart/pointerdown 即時觸發) -->
-    <button id="mobile-interact-btn" class="glass-btn w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex flex-col items-center justify-center text-white font-black shadow-[0_0_25px_rgba(249,115,22,0.6)] active:scale-90 border-2 border-orange-400 cursor-pointer" aria-label="執行現場調查或推進劇情">
-      <span class="text-2xl sm:text-3xl pointer-events-none">🔍</span>
-      <span class="text-[11px] sm:text-xs font-bold tracking-wider mt-0.5 pointer-events-none">搜查</span>
+    <!-- 核心搜查互動按鈕 (加大超大按鍵，字體放大) -->
+    <button id="mobile-interact-btn" class="glass-btn w-20 h-20 sm:w-24 sm:h-24 rounded-3xl flex flex-col items-center justify-center text-white font-black shadow-[0_0_25px_rgba(249,115,22,0.65)] active:scale-90 border-2 border-orange-400 cursor-pointer" aria-label="執行現場調查或推進劇情">
+      <span class="text-3xl sm:text-4xl pointer-events-none">🔍</span>
+      <span class="text-xs sm:text-sm font-black tracking-wider mt-0.5 pointer-events-none">搜查</span>
     </button>
   </div>
 
-  <!-- 滑動操作提示標籤 -->
-  <div id="swipe-hint" class="fixed top-20 right-4 z-20 pointer-events-none opacity-80 text-[10px] text-orange-300/90 bg-slate-900/70 px-2.5 py-1 rounded-full border border-orange-500/30">
-    👉 螢幕右半部空處滑動可 360° 旋轉視角
-  </div>
-
   <!-- 物證接近浮動提示 -->
-  <div id="interaction-prompt" class="fixed bottom-28 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 transition-all duration-300 transform scale-95 flex items-center gap-2 glass-panel px-4 py-2 rounded-full border-orange-500/60 shadow-xl">
+  <div id="interaction-prompt" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 transition-all duration-300 transform scale-95 flex items-center gap-2 glass-panel px-4 py-2 rounded-full border-orange-500/60 shadow-xl">
     <span class="w-6 h-6 rounded-full bg-orange-600 flex items-center justify-center font-black text-white text-xs animate-pulse">E</span>
-    <span id="prompt-action-text" class="text-xs font-bold text-slate-100">調查未知物品</span>
+    <span id="prompt-action-text" class="text-xs sm:text-sm font-bold text-slate-100">調查未知物品</span>
   </div>
 
-  <!-- 劇情對話介面 (關鍵修復：預設為 pointer-events-none，防止隱藏時遮蔽整個底部觸控點) -->
-  <div id="dialogue-box" class="fixed safe-bottom left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-2xl z-40 pointer-events-none opacity-0 translate-y-6 transition-all duration-300" role="region" aria-label="情境劇情對話框">
-    <div class="glass-panel p-4 sm:p-6 rounded-3xl border-orange-400/40 relative shadow-2xl">
+  <!-- 劇情對話介面 (預設 pointer-events-none，字體加大便於閱讀) -->
+  <div id="dialogue-box" class="fixed safe-bottom left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-3xl z-40 pointer-events-none opacity-0 translate-y-6 transition-all duration-300" role="region" aria-label="情境劇情對話框">
+    <div class="glass-panel p-4 sm:p-5 rounded-3xl border-orange-400/40 relative shadow-2xl">
       <!-- 說話者資訊 -->
-      <div class="flex items-center justify-between mb-2.5 border-b border-slate-700/60 pb-2">
+      <div class="flex items-center justify-between mb-2 border-b border-slate-700/60 pb-2">
         <div class="flex items-center gap-2.5">
-          <div id="dialogue-avatar" class="w-10 h-10 rounded-2xl bg-orange-600/20 border border-orange-400/60 flex items-center justify-center text-xl shadow-inner">
+          <div id="dialogue-avatar" class="w-11 h-11 rounded-2xl bg-orange-600/20 border border-orange-400/60 flex items-center justify-center text-2xl shadow-inner">
             🧑‍💼
           </div>
           <div>
             <div class="flex items-center gap-2">
               <span id="dialogue-speaker" class="font-black text-amber-300 text-sm sm:text-base">梁澤銘</span>
-              <span id="dialogue-role-tag" class="text-[10px] bg-slate-800 text-orange-300 px-2 py-0.5 rounded-full border border-orange-500/30 font-bold">青少年健康保護協進會 特約校園安全調查員</span>
+              <span id="dialogue-role-tag" class="text-[11px] bg-slate-800 text-orange-300 px-2 py-0.5 rounded-full border border-orange-500/30 font-bold">青少年健康保護協進會 特約校園安全調查員</span>
             </div>
           </div>
         </div>
         <div class="text-[10px] text-slate-400 font-mono">CASE: SEC-EDU-2026-09</div>
       </div>
       
-      <!-- 對話文字內容 -->
+      <!-- 對話文字內容 (加大字體 15px-17px) -->
       <p id="dialogue-text" class="text-slate-100 text-sm sm:text-base leading-relaxed min-h-[3.6rem] cinematic-serif">
         我是青少年健康保護協進會特約校園安全調查員梁澤銘。咪制書院模擬考場上，中六生岑詠蕎突然全身強直痙攣抽搐倒地。我必須在放學後的校舍內查出致毒源頭，阻截毒販黑手！
       </p>
 
       <!-- 繼續按鈕提示 -->
-      <div class="flex justify-between items-center mt-3 pt-2 border-t border-slate-800/80 text-[11px] text-slate-400">
-        <span class="text-amber-300/80">點擊對話框或按「搜查」按鈕繼續</span>
+      <div class="flex justify-between items-center mt-2.5 pt-2 border-t border-slate-800/80 text-xs text-slate-400">
+        <span class="text-amber-300/90 font-medium">點擊對話框或按「搜查」按鈕推進劇情</span>
         <span class="text-orange-400 font-bold flex items-center gap-1">
           <span>繼續</span>
-          <svg class="w-3.5 h-3.5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
         </span>
       </div>
     </div>
   </div>
 
-  <!-- 法醫化學檢驗台（清晰 5 步流程、無 inline onclick，具備無障礙 aria-modal 與焦點鎖定） -->
-  <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="lab-modal-title" tabindex="-1">
-    <div class="glass-panel w-full max-w-2xl rounded-3xl p-4 sm:p-6 relative border-cyan-500/40 max-h-[96vh] flex flex-col justify-between overflow-y-auto">
+  <!-- 學生標準 6孔點滴板雙重交叉檢驗台（直觀、有深度、邏輯自洽） -->
+  <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="lab-modal-title" tabindex="-1">
+    <div class="glass-panel w-full max-w-3xl rounded-3xl p-4 sm:p-5 relative border-cyan-500/50 max-h-[96vh] flex flex-col justify-between overflow-y-auto">
       
-      <!-- 實驗台頂部標題與待檢樣品切換 -->
+      <!-- 實驗台頂部 -->
       <div>
-        <div class="flex items-center justify-between pb-2 border-b border-slate-700/80 mb-3">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-700/80 mb-2.5">
           <div class="flex items-center gap-2.5">
             <div class="p-2 rounded-xl bg-cyan-600/20 border border-cyan-500/40 text-cyan-400 text-xl">
               🧪
             </div>
             <div>
               <h3 id="lab-modal-title" class="text-base sm:text-lg font-black text-white flex items-center gap-2">
-                <span>理化快速定性鑑驗台（校園法證快速篩查）</span>
-                <span class="text-[10px] px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-800">5步標準法證流程</span>
+                <span>法醫微量快速定性：6 孔點滴板雙重交叉盲測</span>
+                <span class="text-[10px] px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700 font-mono">盲測對照體系</span>
               </h3>
-              <p class="text-[11px] text-cyan-400">鑑定導致岑詠蕎等學生神經抽搐的未知化學毒物成分</p>
+              <p class="text-xs text-cyan-400">嚴謹排除常規毒品假陽性，交叉確診岑詠蕎抽搐的化學毒物成分</p>
             </div>
           </div>
           <button id="btn-close-lab" class="p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95" aria-label="關閉鑑驗台">✕</button>
         </div>
 
-        <!-- 待檢樣品切換按鈕 -->
-        <div class="flex flex-wrap items-center gap-1.5 mb-2.5">
-          <span class="text-[11px] text-slate-400 font-bold">待檢樣品：</span>
-          <button id="tab-sample-etomidate" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-cyan-600 text-white border border-cyan-400 transition" aria-label="選取樣品1：紫晶液">
-            樣品 1：岑詠蕎課桌遺留的未知紫晶液
-          </button>
-          <button id="tab-sample-candy" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 transition" aria-label="選取樣品2：軟糖">
-            樣品 2：霍展霆儲物櫃的提神鎮痛軟糖
-          </button>
-          <button id="tab-sample-control" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 transition" aria-label="選取樣品3：對照組">
-            樣品 3：標準無毒甘油對照組（陰性標準）
-          </button>
-        </div>
-
-        <!-- 5 步標準流程狀態指引徽章列 -->
-        <div class="grid grid-cols-5 gap-1 text-[10px] text-center font-mono py-1.5 px-2 rounded-xl bg-slate-950/70 border border-slate-800 mb-2">
-          <div id="step-badge-1" class="py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-700">1. 取樣加注</div>
-          <div id="step-badge-2" class="py-1 rounded bg-slate-900 text-slate-500">2. 試劑甲</div>
-          <div id="step-badge-3" class="py-1 rounded bg-slate-900 text-slate-500">3. 試劑乙</div>
-          <div id="step-badge-4" class="py-1 rounded bg-slate-900 text-slate-500">4. 離心分層</div>
-          <div id="step-badge-5" class="py-1 rounded bg-slate-900 text-slate-500">5. UV螢光</div>
+        <!-- 4 步標準點滴板交叉檢定流程 -->
+        <div class="grid grid-cols-4 gap-1.5 text-xs text-center font-mono py-1.5 px-2 rounded-xl bg-slate-950/70 border border-slate-800 mb-2.5">
+          <div id="spot-step-1" class="py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-700 font-bold">1. 分注三份證物</div>
+          <div id="spot-step-2" class="py-1 rounded bg-slate-900 text-slate-500">2. 滴管① 篩查K仔</div>
+          <div id="spot-step-3" class="py-1 rounded bg-slate-900 text-slate-500">3. 滴管② 篩查依托咪酯</div>
+          <div id="spot-step-4" class="py-1 rounded bg-slate-900 text-slate-500">4. 比色確診定案</div>
         </div>
       </div>
 
-      <!-- 試管反應槽與理化檢驗原理 -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-1">
-        <!-- 試管視覺呈現區 -->
-        <div class="bg-slate-950/90 p-3 rounded-2xl border border-slate-800 flex flex-col items-center justify-center relative min-h-[175px]">
-          <div class="absolute top-2 left-3 text-[10px] text-slate-400 font-mono flex items-center gap-1.5">
-            <span id="tube-pulse-dot" class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-            <span id="tube-title-text">反應試管：待注入樣品</span>
+      <!-- 核心點滴板反應區與檢驗記錄表 -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 my-1">
+        
+        <!-- 左側：6孔瓷質點滴板實物視覺 (橫屏佔 7 欄) -->
+        <div class="md:col-span-7 bg-slate-950/90 p-3.5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+          <div class="flex items-center justify-between text-xs text-slate-400 font-bold pb-2 border-b border-slate-800">
+            <span>標準白色瓷點滴板（Spot Plate）</span>
+            <span id="spot-status-tag" class="text-amber-400 font-mono text-[11px]">步驟 1：請點擊分注三份證物</span>
           </div>
 
-          <!-- 試管主體 -->
-          <div id="chem-tube" class="w-20 h-32 rounded-b-3xl rounded-t-lg border-4 border-slate-600/80 bg-slate-900/60 flex flex-col items-center justify-end p-1.5 transition-all duration-500 relative overflow-hidden shadow-2xl mt-3">
-            <div id="chem-precipitate-layer" class="w-full h-0 bg-rose-700 rounded-b-2xl transition-all duration-700 opacity-0"></div>
-            <div id="chem-liquid-level" class="w-full h-0 bg-amber-400/30 rounded-b-xl transition-all duration-700"></div>
-            <div id="chem-fluorescence-ring" class="absolute inset-0 flex items-center justify-center text-cyan-300 font-bold text-xs opacity-0 transition-opacity">
-              ✨ 435nm 青光激發環
+          <!-- 6 個凹槽網格 (3 列 x 2 欄) -->
+          <div class="grid grid-cols-2 gap-3 p-3 bg-slate-900/60 rounded-2xl border border-slate-800 my-2">
+            
+            <!-- 凹槽 1 & 2：證物 A -->
+            <div class="flex flex-col items-center">
+              <div class="text-[11px] text-amber-300 font-bold mb-1">凹槽 1（滴管① 測試）</div>
+              <div class="spot-well w-16 sm:w-20">
+                <div id="well-1-liquid" class="well-liquid bg-transparent"></div>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-1">證物 A：課桌紫晶液</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[11px] text-amber-300 font-bold mb-1">凹槽 2（滴管② 測試）</div>
+              <div class="spot-well w-16 sm:w-20">
+                <div id="well-2-liquid" class="well-liquid bg-transparent"></div>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-1">證物 A：課桌紫晶液</div>
+            </div>
+
+            <!-- 凹槽 3 & 4：證物 B -->
+            <div class="flex flex-col items-center">
+              <div class="text-[11px] text-blue-300 font-bold mb-1">凹槽 3（滴管① 測試）</div>
+              <div class="spot-well w-16 sm:w-20">
+                <div id="well-3-liquid" class="well-liquid bg-transparent"></div>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-1">證物 B：水管軟糖萃取</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[11px] text-blue-300 font-bold mb-1">凹槽 4（滴管② 測試）</div>
+              <div class="spot-well w-16 sm:w-20">
+                <div id="well-4-liquid" class="well-liquid bg-transparent"></div>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-1">證物 B：水管軟糖萃取</div>
+            </div>
+
+            <!-- 凹槽 5 & 6：證物 C 對照組 -->
+            <div class="flex flex-col items-center">
+              <div class="text-[11px] text-emerald-300 font-bold mb-1">凹槽 5（滴管① 測試）</div>
+              <div class="spot-well w-16 sm:w-20">
+                <div id="well-5-liquid" class="well-liquid bg-transparent"></div>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-1">證物 C：純水空白對照</div>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <div class="text-[11px] text-emerald-300 font-bold mb-1">凹槽 6（滴管② 測試）</div>
+              <div class="spot-well w-16 sm:w-20">
+                <div id="well-6-liquid" class="well-liquid bg-transparent"></div>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-1">證物 C：純水空白對照</div>
+            </div>
+
+          </div>
+
+          <div id="spot-detail-desc" class="text-xs text-slate-300 leading-snug p-2 rounded-xl bg-slate-950 border border-slate-800">
+            <strong>雙重交叉驗證原理：</strong>將樣品同時進行兩組不同試劑的比對測試。若只單測一種，無法排除市面上常見摻雜物。
+          </div>
+        </div>
+
+        <!-- 右側：比色參考標準與分析結論表 (橫屏佔 5 欄) -->
+        <div class="md:col-span-5 bg-slate-900/80 p-3.5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-2.5">
+          <div class="text-xs font-bold text-slate-200 border-b border-slate-800 pb-1.5 flex items-center justify-between">
+            <span>顯色標準對照表</span>
+            <span class="text-[10px] text-cyan-400">標準光學對比</span>
+          </div>
+
+          <!-- 比色卡 -->
+          <div class="space-y-1.5 text-xs">
+            <div class="p-2 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+              <span class="font-bold text-slate-300">滴管①（氯胺酮/K仔試劑）：</span>
+              <span class="text-[11px] text-sky-400">遇K仔轉湛藍色</span>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+              <span class="font-bold text-slate-300">滴管②（依托咪酯專屬試劑）：</span>
+              <span class="text-[11px] text-purple-400">遇依托咪酯轉深紫褐色</span>
+            </div>
+            <div class="p-2 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+              <span class="font-bold text-slate-300">陰性反應（無毒/對照組）：</span>
+              <span class="text-[11px] text-emerald-400">保持透明澄澈無色</span>
             </div>
           </div>
 
-          <div id="chem-reaction-desc" class="mt-2 text-[11px] text-amber-300 font-medium text-center px-1">
-            步驟 1：請點擊下方「提取注入樣品原液」開始實驗。
+          <!-- 交叉判定結論卡 -->
+          <div id="spot-verdict-box" class="p-3 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col gap-1.5">
+            <div class="text-xs font-bold text-amber-300 flex items-center gap-1">
+              <span>📋 實驗室毒理確診：</span>
+            </div>
+            <div id="spot-verdict-text" class="text-xs text-slate-300 leading-relaxed min-h-[3rem]">
+              等待完成雙重交叉滴加……
+            </div>
           </div>
         </div>
 
-        <!-- 檢驗標準說明與 365nm UV 燈控制 -->
-        <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800 flex flex-col justify-between text-xs space-y-2">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
-            <span class="font-bold text-slate-200 text-[11px]">定性化學檢驗標準規範：</span>
-            <button id="btn-uv-lamp" class="px-2.5 py-1 rounded-lg bg-purple-950/80 border border-purple-500/50 text-purple-300 font-bold text-[10px] active:scale-95 transition disabled:opacity-40" disabled aria-label="開關365nm紫外線燈">
-              🔦 365nm UV紫外燈：關
-            </button>
-          </div>
-
-          <div class="space-y-1.5 text-slate-300 text-[10px] leading-snug">
-            <div>💧 <strong>1 號試劑（咪唑顯色劑）</strong>：遇咪唑環結構時溶液迅速轉化為深紫褐色濁液。</div>
-            <div>🧪 <strong>2 號試劑（酯類螯合劑）</strong>：遇麻醉酯類結構將引發強烈螯合，形成大量懸浮絮狀物。</div>
-            <div>🌀 <strong>3200 RPM 離心沉降</strong>：促使重質螯合物沉降於管底，形成明顯紅棕色沉澱層。</div>
-            <div>✨ <strong>365nm UV螢光環</strong>：受管制麻醉藥分子在特定紫外波長下顯現特徵青光螢光帶。</div>
-          </div>
-
-          <div class="p-2 rounded-xl bg-slate-950 border border-slate-800 text-[10px] text-cyan-300 flex items-center gap-1.5">
-            <span>💡</span>
-            <span>依序執行步驟以確保定性數據符合法庭採證標準。可隨時按「清空重置」重做。</span>
-          </div>
-        </div>
       </div>
 
-      <!-- 操作面板：依序引導按鈕與離心控制 -->
-      <div class="space-y-2 pt-1.5">
+      <!-- 操作面板按鈕列 (加大、清晰明確、按順序引導) -->
+      <div class="space-y-2 pt-2 border-t border-slate-800">
         <div class="grid grid-cols-3 gap-2">
-          <button id="btn-lab-load" class="py-2.5 px-2 rounded-xl bg-cyan-700 hover:bg-cyan-600 text-xs font-bold text-white border border-cyan-500 active:scale-95 transition flex items-center justify-center gap-1 shadow-md">
-            <span>💧</span>
-            <span>1. 提取注入樣品</span>
+          <!-- 步驟 1 按鈕 -->
+          <button id="btn-spot-load" class="py-2.5 px-2 rounded-2xl bg-cyan-700 hover:bg-cyan-600 text-xs sm:text-sm font-bold text-white border border-cyan-500 active:scale-95 transition shadow-md flex items-center justify-center gap-1">
+            <span>1️⃣ 取樣分注入 6 槽</span>
           </button>
-          <button id="btn-lab-reagent1" class="py-2.5 px-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-400 border border-slate-700 active:scale-95 transition flex items-center justify-center gap-1 disabled:opacity-40" disabled>
-            <span>🟣</span>
-            <span>2. 滴加 1 號顯色劑</span>
+          
+          <!-- 步驟 2 按鈕 -->
+          <button id="btn-spot-reagent1" class="py-2.5 px-2 rounded-2xl bg-slate-800 text-xs sm:text-sm font-bold text-slate-400 border border-slate-700 active:scale-95 transition flex items-center justify-center gap-1 disabled:opacity-40" disabled>
+            <span>2️⃣ 滴管① 測 1, 3, 5 槽</span>
           </button>
-          <button id="btn-lab-reagent2" class="py-2.5 px-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-400 border border-slate-700 active:scale-95 transition flex items-center justify-center gap-1 disabled:opacity-40" disabled>
-            <span>🔴</span>
-            <span>3. 滴加 2 號螯合劑</span>
+          
+          <!-- 步驟 3 按鈕 -->
+          <button id="btn-spot-reagent2" class="py-2.5 px-2 rounded-2xl bg-slate-800 text-xs sm:text-sm font-bold text-slate-400 border border-slate-700 active:scale-95 transition flex items-center justify-center gap-1 disabled:opacity-40" disabled>
+            <span>3️⃣ 滴管② 測 2, 4, 6 槽</span>
           </button>
         </div>
 
-        <!-- 離心機操作區（一鍵啟動 3200 RPM 標準分離） -->
-        <div class="flex items-center justify-between gap-2 p-2 rounded-xl bg-slate-950/80 border border-slate-800">
-          <div class="text-[11px] text-slate-300 font-bold flex items-center gap-1">
-            <span>🌀</span>
-            <span>微型離心機分離沉降：</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span id="centrifuge-status" class="text-[10px] font-mono text-slate-400">待機中 (0 RPM)</span>
-            <button id="btn-start-centrifuge" class="py-1.5 px-3 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700 active:scale-95 disabled:opacity-40 transition" disabled>
-              啟動 3200 RPM 離心
-            </button>
-          </div>
-        </div>
-
-        <!-- 重置與定性結論按鈕 -->
-        <div class="flex gap-2 pt-1">
-          <button id="btn-reset-lab" class="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold active:scale-95 transition flex items-center gap-1">
-            <span>🔄</span>
-            <span>清空重置檢驗台</span>
+        <div class="flex gap-2">
+          <button id="btn-spot-reset" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold active:scale-95 transition flex items-center gap-1">
+            <span>🔄 重置點滴板</span>
           </button>
-          <button id="btn-lab-submit" class="flex-1 py-2.5 rounded-xl bg-cyan-600 text-white font-bold text-xs tracking-wider shadow-lg transition active:scale-95 disabled:opacity-40 disabled:pointer-events-none" disabled>
-            出具理化定性報告
+          <button id="btn-spot-submit" class="flex-1 py-2.5 rounded-xl bg-cyan-600 text-white font-bold text-xs sm:text-sm tracking-wider shadow-lg transition active:scale-95 disabled:opacity-40 disabled:pointer-events-none" disabled>
+            確認化學交叉定性結論並發出通報
           </button>
         </div>
       </div>
 
-      <!-- 法醫鑑驗結論卡 -->
-      <div id="lab-diagnostic-card" class="mt-2 p-3 rounded-2xl bg-rose-950/80 border border-rose-500/50 hidden">
-        <div class="flex items-center justify-between text-rose-300 font-bold text-xs mb-1">
-          <span id="diag-title">⚡ 鑑驗結果確診：檢驗物為受政府嚴格管制的危險藥物「依托咪酯（Etomidate）」！</span>
-          <span id="diag-badge" class="text-[9px] font-mono bg-rose-900 px-1.5 py-0.5 rounded text-white font-black">POSITIVE</span>
-        </div>
-        <p id="diag-content" class="text-[11px] text-slate-200 leading-relaxed">
-          毒理學鑑驗結論：該樣品並非普通提神精油，而是被非法添加了受香港特區政府《危險藥物條例》（第134章）嚴格管制的醫用靜脈麻醉藥「依托咪酯」。濫用後會迅速阻斷大腦突觸傳導，引發肌陣攣全身劇烈抽搐、意識記憶斷片、急性腎上腺皮質功能受損及呼吸衰竭猝死！
-        </p>
-      </div>
     </div>
   </div>
 
-  <!-- 調查員案件手冊與思維宮殿（校園安全專案與官方防毒途徑） -->
+  <!-- 調查員案件手冊與思維宮殿（字體加大、自洽閉環） -->
   <div id="notebook-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="notebook-modal-title" tabindex="-1">
     <div class="glass-panel w-full max-w-3xl h-[90vh] rounded-3xl p-4 sm:p-6 flex flex-col relative border-amber-500/40">
       
       <!-- 手冊頂部 -->
       <div class="flex items-center justify-between pb-2.5 border-b border-slate-700">
         <div class="flex items-center gap-2">
-          <div class="p-2 rounded-xl bg-orange-600/20 border border-orange-500/40 text-orange-400 text-lg">
+          <div class="p-2 rounded-xl bg-orange-600/20 border border-orange-500/40 text-orange-400 text-xl">
             📋
           </div>
           <div>
             <h2 id="notebook-modal-title" class="text-base sm:text-lg font-black text-white">咪制書院校園安全事件專案卷宗</h2>
-            <p class="text-[10px] text-orange-400">專案：咪制書院學生抽搐昏迷調查 • 涉案毒物：依托咪酯</p>
+            <p class="text-xs text-orange-400">專案：咪制書院學生抽搐昏迷調查 • 涉案毒物：依托咪酯</p>
           </div>
         </div>
         <button id="btn-close-notebook" class="p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95" aria-label="關閉案件手冊">✕</button>
       </div>
 
       <!-- 分頁標籤 -->
-      <div class="flex gap-1.5 my-2.5">
-        <button id="tab-btn-clues" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-orange-500 text-white transition">現場物證 (<span id="clue-count-text">0</span>/5)</button>
-        <button id="tab-btn-mindpalace" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition">思維宮殿（案情閉環定案）</button>
-        <button id="tab-btn-profiles" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300 transition">涉案人員與通緝網絡</button>
+      <div class="flex gap-2 my-2.5">
+        <button id="tab-btn-clues" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-orange-500 text-white transition">現場物證 (<span id="clue-count-text">0</span>/5)</button>
+        <button id="tab-btn-mindpalace" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 transition">思維宮殿（因果定案鏈）</button>
+        <button id="tab-btn-profiles" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 transition">涉案名單與通緝網絡</button>
       </div>
 
       <!-- 分頁 1：物證卡清單 -->
       <div id="tab-content-clues" class="flex-1 overflow-y-auto pr-1 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-        <!-- 動態渲染物證 -->
+        <!-- 動態渲染物證卡 -->
       </div>
 
       <!-- 分頁 2：思維宮殿推理鏈 -->
       <div id="tab-content-mindpalace" class="flex-1 overflow-y-auto hidden pr-1 flex flex-col justify-between">
-        <div class="bg-slate-900/90 p-3 sm:p-4 rounded-2xl border border-slate-800 mb-2">
-          <h3 id="deduce-header" class="text-sm font-bold text-amber-300 mb-1">🔍 邏輯因果定案鏈</h3>
-          <p class="text-[11px] text-slate-400 mb-3 leading-relaxed">
-            綜合班房便條、化學實驗室定性鑑驗報告與天台涉案手機通聯記錄，確認毒物性質與法律依據，完成校園防護通報。
+        <div class="bg-slate-900/90 p-3.5 sm:p-4 rounded-2xl border border-slate-800 mb-2">
+          <h3 id="deduce-header" class="text-sm sm:text-base font-bold text-amber-300 mb-1">🔍 邏輯因果定案鏈</h3>
+          <p class="text-xs text-slate-400 mb-3 leading-relaxed">
+            綜合班房便條、水管夾層軟糖、點滴板雙重交叉檢驗報告與天台毒販通聯錄音，完成校園防護通報。
           </p>
 
-          <div class="space-y-2 text-xs">
+          <div class="space-y-2.5 text-xs sm:text-sm">
             <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-vector" class="text-[11px] text-slate-300 font-bold">1. 經理化檢驗確診的致毒化合物本質與法定身分：</label>
-              <select id="deduce-vector" class="bg-slate-900 text-xs text-orange-300 px-2 py-1.5 rounded-lg border border-slate-700 outline-none">
+              <label for="deduce-vector" class="text-xs sm:text-sm text-slate-200 font-bold">1. 經 6 孔點滴板交叉檢驗確診的致毒化學物質法定身分：</label>
+              <select id="deduce-vector" class="bg-slate-900 text-xs sm:text-sm text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
                 <option value="none">-- 請選擇鑑驗推論 --</option>
                 <option value="wrong1">普通未過期的濃縮葡萄運動飲料</option>
                 <option value="correct">受香港特區政府《危險藥物條例》（第134章）嚴格管制的危險藥物「依托咪酯（Etomidate）」</option>
@@ -512,27 +548,27 @@
             </div>
 
             <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-symptoms" class="text-[11px] text-slate-300 font-bold">2. 岑詠蕎等受害學生的典型神經毒性臨床症狀：</label>
-              <select id="deduce-symptoms" class="bg-slate-900 text-xs text-orange-300 px-2 py-1.5 rounded-lg border border-slate-700 outline-none">
+              <label for="deduce-symptoms" class="text-xs sm:text-sm text-slate-200 font-bold">2. 岑詠蕎等受害同學突發的典型中樞神經毒理症狀：</label>
+              <select id="deduce-symptoms" class="bg-slate-900 text-xs sm:text-sm text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
                 <option value="none">-- 請選擇臨床症狀 --</option>
                 <option value="wrong1">短暫眼睛乾澀與偶爾打哈欠</option>
-                <option value="correct">肌陣攣全身劇烈抽搐、意識記憶斷片、急性腎上腺皮質抑制與呼吸抑制</option>
+                <option value="correct">肌陣攣全身劇烈抽搐、意識記憶斷片、急性腎上腺皮質抑制與呼吸衰竭</option>
                 <option value="wrong2">大腦專注力大幅提升且毫無毒副反應</option>
               </select>
             </div>
 
             <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-source" class="text-[11px] text-slate-300 font-bold">3. 毒販侵蝕校園的偽裝誘騙話術：</label>
-              <select id="deduce-source" class="bg-slate-900 text-xs text-orange-300 px-2 py-1.5 rounded-lg border border-slate-700 outline-none">
+              <label for="deduce-source" class="text-xs sm:text-sm text-slate-200 font-bold">3. 毒販「暗夜調劑師」侵蝕校園的偽裝誘騙手法：</label>
+              <select id="deduce-source" class="bg-slate-900 text-xs sm:text-sm text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
                 <option value="none">-- 請選擇犯罪手法 --</option>
-                <option value="correct">偽裝成『無毒提神、DSE考前專注水果油』，利用升學焦慮與運動傷痛實施誘騙</option>
+                <option value="correct">將毒品偽裝成『無毒提神果味煙油』與『速效止痛軟糖』，藏於水管夾層，利用升學焦慮與運動傷痛實施誘騙勒索</option>
                 <option value="wrong1">在校舍正門公開設攤分發印刷傳單促銷</option>
               </select>
             </div>
 
             <div class="p-2.5 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-action" class="text-[11px] text-slate-300 font-bold">4. 禁毒核心守則與官方舉報途徑：</label>
-              <select id="deduce-action" class="bg-slate-900 text-xs text-orange-300 px-2 py-1.5 rounded-lg border border-slate-700 outline-none">
+              <label for="deduce-action" class="text-xs sm:text-sm text-slate-200 font-bold">4. 禁毒核心守則與官方舉報途徑：</label>
+              <select id="deduce-action" class="bg-slate-900 text-xs sm:text-sm text-orange-300 p-2 rounded-lg border border-slate-700 outline-none">
                 <option value="none">-- 請選擇防毒守則 --</option>
                 <option value="correct">牢記【毒品咪制！】口號！對不明特調煙油零容忍，即打警務處毒品舉報熱線 2527-1234 或警方依托咪酯專線 6629-2966！</option>
                 <option value="wrong1">只要吸食間隔時間長就不會成癮，無需通報官方機構</option>
@@ -541,51 +577,46 @@
           </div>
         </div>
 
-        <button id="btn-submit-deduction" class="w-full py-3 rounded-2xl glass-btn font-black text-amber-200 text-xs tracking-wider flex items-center justify-center gap-1.5 active:scale-95 shadow-lg">
+        <button id="btn-submit-deduction" class="w-full py-3.5 rounded-2xl glass-btn font-black text-amber-200 text-xs sm:text-sm tracking-wider flex items-center justify-center gap-1.5 active:scale-95 shadow-lg">
           <span>完成邏輯閉環並發出全港預警與通報</span>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
         </button>
       </div>
 
-      <!-- 分頁 3：涉案人員檔案（明確區分受害學生與幕後通緝罪犯） -->
+      <!-- 分頁 3：涉案人員檔案 -->
       <div id="tab-content-profiles" class="flex-1 overflow-y-auto hidden pr-1 space-y-3">
-        <!-- 區塊一：專案調查人員資料 -->
+        <!-- 調查人員 -->
         <div>
           <div class="flex items-center gap-2 mb-2 pb-1 border-b border-slate-800">
             <span class="text-xs font-black text-cyan-400">🛡️ 專案調查人員</span>
-            <span class="text-[9px] bg-cyan-950 text-cyan-300 px-2 py-0.5 rounded-full border border-cyan-800">義務法證調查</span>
           </div>
           <div class="glass-panel p-3 rounded-2xl border-cyan-500/40 flex gap-3 items-center">
             <div class="w-12 h-12 rounded-xl bg-cyan-900/50 flex items-center justify-center text-2xl border border-cyan-400 shrink-0">🧑‍💼</div>
             <div>
               <div class="flex items-center gap-1.5">
                 <span class="font-bold text-white text-sm">梁澤銘（Investigator Leung）</span>
-                <span class="text-[9px] bg-cyan-950 text-cyan-200 px-1.5 py-0.5 rounded">青少年法證安全專案特約調查員</span>
+                <span class="text-[9px] bg-cyan-950 text-cyan-200 px-1.5 py-0.5 rounded">特約校園安全調查員</span>
               </div>
-              <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">
-                專責青少年校園毒物鑑識與危害防護調查。應校方及家長會緊急委託進入咪制書院，採集化驗微量物證，誓要揭穿利用偽裝毒品侵蝕校園的犯罪集團。
+              <p class="text-xs text-slate-300 mt-0.5 leading-snug">
+                青少年健康保護協進會特約調查員。具備法醫毒理鑑識背景，受託進入咪制書院採集化驗微量物證，誓要阻截毒販黑手！
               </p>
             </div>
           </div>
         </div>
 
-        <!-- 區塊二：校園受害同學檔案 -->
+        <!-- 受害學生 -->
         <div>
           <div class="flex items-center gap-2 mb-2 pb-1 border-b border-slate-800">
-            <span class="text-xs font-black text-amber-400">🎓 受害學生檔案</span>
-            <span class="text-[9px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded-full">急需醫療急救與心理支援</span>
+            <span class="text-xs font-black text-amber-400">🎓 受害學生檔案（急需救治）</span>
           </div>
-
           <div class="space-y-2">
             <div class="glass-panel p-3 rounded-2xl border-slate-700 flex gap-3 items-center">
               <div class="w-12 h-12 rounded-xl bg-purple-900/50 flex items-center justify-center text-2xl border border-purple-400 shrink-0">👩‍🎓</div>
               <div>
-                <div class="flex items-center gap-1.5">
-                  <span class="font-bold text-white text-sm">岑詠蕎</span>
-                  <span class="text-[9px] bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded">中六B班班長 • 受害學生</span>
-                </div>
-                <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">
-                  面對 DSE 文憑試的巨大升學壓力，因嚴重焦慮失眠，誤信「純天然無毒提神果味精油能提升專注力」的虛假話術，吸食了含高濃度依托咪酯的特調煙油，於模擬試場突發肌陣攣劇烈抽搐休克送院。
+                <span class="font-bold text-white text-sm">岑詠蕎</span>
+                <span class="text-[10px] bg-purple-950 text-purple-300 px-1.5 py-0.5 rounded ml-1">中六B班班長 • 受害者</span>
+                <p class="text-xs text-slate-300 mt-0.5 leading-snug">
+                  面臨 DSE 巨大壓力誤信「無毒提神果味煙油」謊言，吸食含高濃度依托咪酯煙油，於模擬試場突發肌陣攣劇烈抽搐休克送院。
                 </p>
               </div>
             </div>
@@ -593,34 +624,27 @@
             <div class="glass-panel p-3 rounded-2xl border-slate-700 flex gap-3 items-center">
               <div class="w-12 h-12 rounded-xl bg-blue-900/50 flex items-center justify-center text-2xl border border-blue-400 shrink-0">🏃‍♂️</div>
               <div>
-                <div class="flex items-center gap-1.5">
-                  <span class="font-bold text-white text-sm">霍展霆</span>
-                  <span class="text-[9px] bg-blue-950 text-blue-300 px-1.5 py-0.5 rounded">校田徑隊隊長 • 受害學生</span>
-                </div>
-                <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">
-                  因腳踝韌帶嚴重挫傷劇痛，誤信校外不良人員提供號稱「秒速止痛、不含禁藥成分」的特調軟糖與煙彈。依托咪酯毒素對其神經傳導造成不可逆傷害，雙手持續出現無法自主的強烈震顫。
+                <span class="font-bold text-white text-sm">霍展霆</span>
+                <span class="text-[10px] bg-blue-950 text-blue-300 px-1.5 py-0.5 rounded ml-1">校田徑隊隊長 • 受害者</span>
+                <p class="text-xs text-slate-300 mt-0.5 leading-snug">
+                  因腳踝韌帶挫傷劇痛誤信「秒速止痛無毒軟糖」，吸入依托咪酯導致中樞運動神經受損，雙手持續無法自主劇烈震顫。
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 區塊三：重大通緝犯罪嫌疑人 -->
+        <!-- 通緝主謀 -->
         <div>
           <div class="flex items-center gap-2 mb-2 pb-1 border-b border-rose-900/60">
-            <span class="text-xs font-black text-rose-400">🚨 涉案重大通緝犯罪嫌疑人（警方追捕目標）</span>
-            <span class="text-[9px] bg-rose-950 text-rose-300 px-2 py-0.5 rounded-full font-bold">幕後罪犯 • 非受害者</span>
+            <span class="text-xs font-black text-rose-400">🚨 涉案重大通緝嫌疑人（警方追緝主謀）</span>
           </div>
-
           <div class="glass-panel p-3 rounded-2xl border-rose-600/50 bg-rose-950/20 flex gap-3 items-center">
             <div class="w-12 h-12 rounded-xl bg-rose-950/80 flex items-center justify-center text-2xl border border-rose-500 shrink-0 shadow-lg">⚠️</div>
             <div>
-              <div class="flex items-center gap-1.5">
-                <span class="font-bold text-rose-400 text-sm">「暗夜調劑師」及其校外滲透團伙</span>
-                <span class="text-[9px] bg-rose-900 text-rose-200 px-1.5 py-0.5 rounded font-black">通緝主謀</span>
-              </div>
-              <p class="text-[11px] text-slate-300 mt-0.5 leading-snug">
-                專門瞄準九龍名校學生的非法涉毒犯罪團伙。將受政府嚴格管制的危險藥物「依托咪酯」偽裝調配成果味煙油與提神軟糖，以免費試用誘騙學生上癮後實施勒索，更逼迫學生在校內私藏交易！
+              <span class="font-bold text-rose-400 text-sm">「暗夜調劑師」及其校外黑市團伙</span>
+              <p class="text-xs text-slate-300 mt-0.5 leading-snug">
+                將受管制的麻醉藥「依托咪酯」偽裝成果味煙油與止痛糖，利用社交暗號與校園隱蔽夾層交收，上癮後威脅學生繳交巨額封口費。
               </p>
             </div>
           </div>
@@ -629,82 +653,79 @@
     </div>
   </div>
 
-  <!-- 遊戲開場沉浸式前導畫面 (咪制書院背景) -->
-  <div id="title-screen" class="fixed inset-0 z-50 bg-[#060813] flex flex-col items-center justify-center p-5 text-center">
-    <div class="max-w-md mx-auto flex flex-col items-center">
-      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-950/80 border border-orange-500/50 text-orange-400 text-[10px] font-bold uppercase tracking-widest mb-3 shadow-lg">
+  <!-- 遊戲開場沉浸式前導畫面 (橫屏電影級排版) -->
+  <div id="title-screen" class="fixed inset-0 z-50 bg-[#050711] flex flex-col items-center justify-center p-4 text-center">
+    <div class="max-w-xl mx-auto flex flex-col items-center">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-950/80 border border-orange-500/50 text-orange-400 text-xs font-bold uppercase tracking-widest mb-2 shadow-lg">
         <span class="w-2 h-2 rounded-full bg-orange-400 animate-ping"></span>
         咪制書院校園安全特別專案
       </div>
-      <h1 class="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-rose-400 tracking-tight leading-tight mb-2" style="font-family: 'Cinzel', serif;">
+      <h1 class="text-3xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-rose-400 tracking-tight leading-tight mb-1" style="font-family: 'Cinzel', serif;">
         暮光迴響
       </h1>
-      <h2 class="text-base sm:text-lg font-bold text-slate-300 mb-3 tracking-wide cinematic-serif">
-        Twilight Echoes: 沉淪之霧
+      <h2 class="text-sm sm:text-base font-bold text-slate-300 mb-2.5 tracking-wide cinematic-serif">
+        Twilight Echoes: 沉淪之霧 • 香港校園禁毒旗艦版
       </h2>
-      <p class="text-xs text-slate-400 leading-relaxed mb-6 text-left bg-slate-900/60 p-3.5 rounded-2xl border border-slate-800">
-        香港九龍「咪制書院」DSE 模擬考場內，模範生岑詠蕎突發嚴重肌陣攣抽搐昏迷送院。特約校園安全調查員梁澤銘奉命進入校舍，穿梭於班房、儲物櫃、理科實驗室與天台，親自操作法醫快篩，揭穿醫用麻醉藥「依托咪酯」侵蝕校園的真相！
+      <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4 text-left bg-slate-900/70 p-3.5 rounded-2xl border border-slate-800">
+        香港「咪制書院」中六考場上，岑詠蕎突發全身劇烈肌陣攣抽搐昏迷。特約校園安全調查員梁澤銘奉命進入校舍，依序追查課桌殘留液、儲物櫃字條、外露水管夾層，親自完成 6 孔點滴板交叉檢測，並在天台截獲毒販通聯錄音！
       </p>
 
-      <button id="btn-start-game" class="w-full max-w-xs py-3.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 text-white font-black text-sm tracking-wider shadow-[0_0_30px_rgba(249,115,22,0.45)] active:scale-95 transition">
+      <button id="btn-start-game" class="w-full max-w-sm py-3.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 text-white font-black text-sm tracking-wider shadow-[0_0_30px_rgba(249,115,22,0.5)] active:scale-95 transition">
         進入咪制書院展開搜查
       </button>
 
-      <div class="mt-5 flex flex-wrap items-center justify-center gap-2 text-[10px] text-slate-400 font-mono">
+      <div class="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-400 font-mono">
         <span>左下搖桿移動</span>
         <span>•</span>
-        <span>螢幕空處滑動轉向</span>
+        <span>右半部螢幕滑動轉向</span>
         <span>•</span>
-        <span>右下搜查按鈕</span>
+        <span>右下超大搜查鍵</span>
       </div>
     </div>
   </div>
 
   <!-- 案件告破結案畫面 (完整包含官方熱線與毒品咪制口號) -->
   <div id="victory-screen" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-2xl flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-700" role="dialog" aria-modal="true">
-    <div class="glass-panel max-w-lg w-full rounded-3xl p-5 sm:p-7 border-emerald-500/50 text-center relative overflow-hidden">
-      <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-3xl mb-3 shadow-[0_0_35px_rgba(16,185,129,0.35)]">
+    <div class="glass-panel max-w-xl w-full rounded-3xl p-5 sm:p-6 border-emerald-500/50 text-center relative overflow-hidden">
+      <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-3xl mb-2 shadow-[0_0_35px_rgba(16,185,129,0.35)]">
         🏆
       </div>
       <h2 class="text-xl sm:text-2xl font-black text-white mb-1">案情終極告破：校園迷霧散盡！</h2>
-      <div class="inline-block px-3 py-1 rounded-full bg-rose-950 border border-rose-500 text-rose-300 text-xs font-black tracking-wider mb-3">
+      <div class="inline-block px-3 py-1 rounded-full bg-rose-950 border border-rose-500 text-rose-300 text-xs font-black tracking-wider mb-2.5">
         🛑 禁毒核心口號：【毒品咪制！】
       </div>
       
-      <div class="text-left bg-slate-900/90 p-4 rounded-2xl border border-slate-800 text-xs text-slate-300 space-y-2.5 mb-4 leading-relaxed">
+      <div class="text-left bg-slate-900/90 p-3.5 rounded-2xl border border-slate-800 text-xs sm:text-sm text-slate-300 space-y-2 mb-3 leading-relaxed">
         <p>
-          <strong class="text-amber-300">雷霆出擊：</strong>依據調查員梁澤銘於校舍搜集之關鍵物證，以及化驗所定性確診之<strong>「依托咪酯」</strong>檢驗報告，執法機關與教育專案組迅速收網，將「暗夜調劑師」及其校外黑市分銷網絡連根拔起！
+          <strong class="text-amber-300">雷霆收網：</strong>依據梁澤銘於化學室水管夾層搜出之軟糖、點滴板交叉檢測確診之<strong>「依托咪酯」</strong>報告，以及天台截獲的毒販勒索通聯錄音，警方專案組已將「暗夜調劑師」及其校外黑市分銷網絡連根拔起！
         </p>
         <p>
-          <strong class="text-cyan-300">救治學生：</strong>岑詠蕎與霍展霆因及時確診為依托咪酯急性中毒，醫院針對性採取中樞神經調節與腎上腺機能支持療法，現已完全脫離生命危險。
+          <strong class="text-cyan-300">及時救治：</strong>岑詠蕎與霍展霆因第一時間確診為依托咪酯急性中毒，醫院針對性採取中樞神經調節與腎上腺機能支持療法，現已完全脫離生命危險。
         </p>
         
         <!-- 香港官方舉報熱線專區 -->
-        <div class="p-3 rounded-xl bg-slate-950 border border-amber-500/40 space-y-1.5">
-          <div class="text-amber-300 font-bold text-xs flex items-center gap-1.5">
+        <div class="p-3 rounded-xl bg-slate-950 border border-amber-500/40 space-y-1">
+          <div class="text-amber-300 font-bold text-xs sm:text-sm flex items-center gap-1.5">
             <span>📞</span>
             <span>香港特區政府 官方禁毒與依托咪酯舉報途徑：</span>
           </div>
-          <div class="text-[11px] text-slate-200 pl-4 space-y-1">
+          <div class="text-xs text-slate-200 pl-4 space-y-1">
             <div>• 警務處毒品舉報熱線：<strong class="text-white font-mono bg-slate-800 px-1.5 py-0.5 rounded">2527-1234</strong></div>
             <div>• 警方打擊依托咪酯24小時舉報專線：<strong class="text-rose-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">6629-2966</strong>（支援 WhatsApp 及 WeChat）</div>
           </div>
-          <div class="text-[10px] text-orange-400 font-medium pt-1">
+          <div class="text-[11px] text-orange-400 font-medium pt-1">
             依托咪酯受《危險藥物條例》（第134章）嚴格規管！齊心守護無毒校園，時刻牢記【毒品咪制！】！
           </div>
         </div>
       </div>
 
-      <button id="btn-restart-game" class="py-2.5 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wider shadow-lg active:scale-95 transition">
+      <button id="btn-restart-game" class="py-2.5 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm tracking-wider shadow-lg active:scale-95 transition">
         重新啟動調查複盤
       </button>
     </div>
   </div>
 
   <script>
-    /* =========================================================================
-     * 1. 內建 Web Audio API 合成音效引擎（支援手勢喚醒解鎖，零 Autoplay 警報）
-     * ========================================================================= */
     class RetroSoundEngine {
       constructor() {
         this.ctx = null;
@@ -767,8 +788,8 @@
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'sine';
-          osc.frequency.setValueAtTime(1200, this.ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(320, this.ctx.currentTime + 0.09);
+          osc.frequency.setValueAtTime(1400, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(420, this.ctx.currentTime + 0.09);
           gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
           gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.09);
           osc.connect(gain);
@@ -778,22 +799,20 @@
         } catch(e){}
       }
 
-      playCentrifugeMotor() {
+      playPhoneRing() {
         if (this.isMuted || !this.ctx) return;
         try {
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          osc.type = 'sawtooth';
-          osc.frequency.setValueAtTime(100, this.ctx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 1.2);
-          osc.frequency.exponentialRampToValueAtTime(120, this.ctx.currentTime + 2.5);
-          gain.gain.setValueAtTime(0.01, this.ctx.currentTime);
-          gain.gain.linearRampToValueAtTime(0.04, this.ctx.currentTime + 1.0);
-          gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 2.5);
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          osc.start();
-          osc.stop(this.ctx.currentTime + 2.5);
+          [853, 960].forEach(f => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.frequency.setValueAtTime(f, this.ctx.currentTime);
+            gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.6);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.6);
+          });
         } catch(e){}
       }
 
@@ -816,10 +835,10 @@
       startTwilightSoundscape() {
         if (this.bgmTimer) return;
         const progression = [
-          [220, 261.63, 329.63, 392],    // Am7
-          [174.61, 220, 261.63, 329.63], // Fmaj7
-          [196, 246.94, 293.66, 392],    // G7
-          [164.81, 196, 246.94, 293.66]  // Em7
+          [220, 261.63, 329.63, 392],
+          [174.61, 220, 261.63, 329.63],
+          [196, 246.94, 293.66, 392],
+          [164.81, 196, 246.94, 293.66]
         ];
         let step = 0;
 
@@ -854,7 +873,6 @@
 
     const sound = new RetroSoundEngine();
 
-    // 延遲音訊初始化：待使用者首次手勢點擊後再喚醒 AudioContext
     const unlockAudioContext = () => {
       sound.init();
       window.removeEventListener('pointerdown', unlockAudioContext);
@@ -863,11 +881,11 @@
     window.addEventListener('pointerdown', unlockAudioContext, { once: true });
     window.addEventListener('keydown', unlockAudioContext, { once: true });
 
-    /* =========================================================================
-     * 2. 全域遊戲狀態與咪制書院案卷資料庫
-     * ========================================================================= */
+    // 嚴格有序的任務階段限制（不可跳關）
+    // 順序：1. 課桌紫晶液 -> 2. 走廊儲物櫃與販賣機 -> 3. 化學室外露水管夾層軟糖 -> 4. 點滴板雙重交叉檢驗 -> 5. 天台毒販通聯手機
     const GAME_STATE = {
       started: false,
+      questStage: 1, // 1: 課桌, 2: 儲物櫃與販賣機, 3: 水管夾層, 4: 點滴板檢驗, 5: 天台錄音, 6: 結案推理
       currentZone: 'classroom',
       cluesFound: new Set(),
       isDialogueOpen: false,
@@ -885,59 +903,72 @@
     const CLUES_DATA = {
       clue_desk: {
         id: "clue_desk",
-        name: "中六B班 岑詠蕎課桌上的撕碎便條",
+        stage: 1,
+        name: "中六B班 岑詠蕎課桌上的撕碎字條與未知紫晶液",
         zone: "1F 咪制書院 班房",
         icon: "📝",
         pos: { x: -17, y: 1.25, z: -2 },
         floor: 1,
-        shortDesc: "課桌上殘留著深紫晶色透明特調液滴。便條紙寫著：『頭痛欲裂，無法專注DSE複習……校外人給的提神果味煙油真的有效嗎？吸了兩口全身劇烈發抖無法自主……』",
-        fullDesc: "中六生岑詠蕎在文憑試重壓下誤入毒品陷阱。案發現場遺留的紫晶液體散發怪異果香，正是導致她在考場上肌陣攣強直抽搐的直接物證，需送往理科化學室定性檢驗。"
+        shortDesc: "課桌上殘留著深紫色未知液滴（證物 A）。字條寫著：『頭痛欲裂，無法專注DSE複習……校外人給的提神果味煙油真的有效嗎？吸了兩口全身劇烈發抖無法自主……』",
+        fullDesc: "採集到證物 A（紫晶液滴）。字條證明受害同學誤信宣傳，需送交理科化學室作交叉比對。"
       },
       clue_locker: {
         id: "clue_locker",
-        name: "17號走廊儲物櫃內的特調煙彈與止痛軟糖",
+        stage: 2,
+        name: "17號走廊儲物櫃內的霍展霆病歷字條",
         zone: "1F 教學樓中央長廊",
-        icon: "🔋",
+        icon: "📋",
         pos: { x: -2, y: 1.25, z: -3.5 },
         floor: 1,
-        shortDesc: "田徑隊長霍展霆的儲物櫃內搜出一包無任何成分標示的奇異果味軟糖與深紫色煙彈。展霆的字條：『踝關節撕裂劇痛……他說這能秒速止痛……但我手抖得連筆都拿不穩……』",
-        fullDesc: "霍展霆為緩解關節傷痛，聽信毒販『無害速效止痛』誘騙。此未知成分雖有短暫麻痺作用，卻嚴重損害運動神經傳導與小腦平衡功能。"
+        shortDesc: "田徑隊長霍展霆儲物櫃內的字條：『踝關節撕裂劇痛……他說在販賣機投幣口有暗號，能取到秒速止痛神油與軟糖……但我手抖得連筆都拿不穩……』",
+        fullDesc: "揭示霍展霆因傷受誘騙。字條直接指向了自動販賣機的投幣口秘密！"
       },
       clue_vending: {
         id: "clue_vending",
-        name: "走廊自動販賣機投幣口底部的暗號提貨單",
+        stage: 2,
+        name: "自動販賣機投幣口底部的暗號提貨單",
         zone: "1F 教學樓中央長廊",
         icon: "🏷️",
         pos: { x: 5, y: 1.25, z: 2.5 },
         floor: 1,
-        shortDesc: "一張摺疊隱蔽的黑色暗號紙條：『新批次到貨，純天然放鬆神油，考DSE開智專用，化學室走廊水管夾層取貨，暗號：暮光。』",
-        fullDesc: "鐵證揭露了校園黑市毒販的欺瞞話術！刻意利用『純天然神油』、『DSE開智果味糖』等幌子包裝受政府嚴格管制的危險藥物，令無知青少年放下戒心。"
+        shortDesc: "一張隱蔽摺疊的紙條：『新批次到貨，純天然放鬆專注果味糖，【化學室外走廊水管夾層】自取，暗號：暮光。』",
+        fullDesc: "關鍵線索自洽！販賣機紙條明確指引毒品實際藏匿地點在「化學室外露水管夾層」！"
       },
-      clue_centrifuge: {
-        id: "clue_centrifuge",
-        name: "理化快速檢驗儀操作台",
+      clue_pipe_stash: {
+        id: "clue_pipe_stash",
+        stage: 3,
+        name: "化學室外露水管夾層內的特調奇異果軟糖",
+        zone: "1F 理科化學室外廊水管夾層",
+        icon: "🍬",
+        pos: { x: -3, y: 1.25, z: 5.5 },
+        floor: 1,
+        shortDesc: "在化學室水管夾層搜獲一包無成分標示的綠色果味軟糖（證物 B）！散發奇異化學甜味。現在兩份證物皆齊全，可進入化學室進行點滴板雙重交叉盲測！",
+        fullDesc: "起獲證物 B（軟糖）。與班房提取的紫晶液（證物 A）一同放入 6 孔點滴板進行交叉鑑驗。"
+      },
+      clue_spot_plate: {
+        id: "clue_spot_plate",
+        stage: 4,
+        name: "理科實驗室 6 孔瓷質點滴板交叉檢定台",
         zone: "1F 理科綜合化學實驗室",
-        icon: "🔬",
+        icon: "🧪",
         pos: { x: -3, y: 1.25, z: 12 },
         floor: 1,
-        shortDesc: "配備比色試管、離心機與 365nm UV 螢光激發燈的法醫鑑驗台，可對現場提取的紫晶煙油進行 5 步定性檢驗，確認致毒成分！",
-        fullDesc: "透過樣品注入、滴加顯色劑、螯合沉澱劑、3200 RPM 標準離心分層及 365nm UV 激發，正式定性岑詠蕎所吸食的物質為受政府嚴格管制的危險藥物——依托咪酯！"
+        shortDesc: "配備滴管①（K仔試劑）與滴管②（依托咪酯試劑）的 6 孔盲測點滴板，可同時驗證證物 A、證物 B 與空白對照 C，排查致毒成分！",
+        fullDesc: "透過交叉顯色實驗，排除常規氯胺酮，正式確診兩份證物皆含受特區政府嚴格管制的危險藥物「依托咪酯」！"
       },
-      clue_rooftop_deal: {
-        id: "clue_rooftop_deal",
-        name: "天台排風箱後的涉案聯絡手機",
+      clue_rooftop_burner: {
+        id: "clue_rooftop_burner",
+        stage: 5,
+        name: "天台排風箱後響鈴震動的毒販加密通聯機",
         zone: "2F 教學樓暮光天台",
         icon: "📱",
         pos: { x: 19, y: 5.75, z: -2 },
         floor: 2,
-        shortDesc: "一部持續震動的暗網通聯手機，螢幕上記錄著『暗夜調劑師』向多名學生發出的威脅訊息：『不准通知校方或向官方舉報，否則立即斷供讓你生不如死……』",
-        fullDesc: "完整揭示了毒販先以免費或低價『體驗提神』誘惑學生上癮，隨後勒索甚至逼迫學生在校內轉賣下線的犯罪證據，為警方打擊涉毒網絡提供核心線索。"
+        shortDesc: "排風箱後藏著一部正在持續震動的加密手機！按下接聽，截獲毒販頭目「暗夜調劑師」囂張的勒索語音：『不准向警方或學校舉報，否則立即斷供公開你們的隱私！』",
+        fullDesc: "定罪鐵證！截獲暗夜調劑師威脅學生的通聯錄音與名冊，警方雷霆收網的最後一塊拼圖完成！"
       }
     };
 
-    /* =========================================================================
-     * 3. 3D WebGL 渲染環境與效能調整 (包含行動裝置陰影優化)
-     * ========================================================================= */
     const canvas = document.getElementById('game-canvas');
     let renderer = null;
 
@@ -955,8 +986,8 @@
     }
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x0a0d1a);
-    scene.fog = new THREE.FogExp2(0x0e1326, 0.024);
+    scene.background = new THREE.Color(0x060814);
+    scene.fog = new THREE.FogExp2(0x0b1022, 0.024);
 
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: "high-performance" });
@@ -968,9 +999,8 @@
     const ambientLight = new THREE.AmbientLight(0xdba686, 0.9);
     scene.add(ambientLight);
 
-    // 行動端調優陰影貼圖解析度
     const isMobileDevice = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
-    const sunLight = new THREE.DirectionalLight(0xfb923c, 1.4);
+    const sunLight = new THREE.DirectionalLight(0xfb923c, 1.45);
     sunLight.position.set(-25, 20, -15);
     sunLight.castShadow = true;
     sunLight.shadow.mapSize.width = isMobileDevice ? 512 : 1024;
@@ -983,7 +1013,7 @@
     sunLight.shadow.camera.bottom = -25;
     scene.add(sunLight);
 
-    const roofPointLight = new THREE.PointLight(0xa855f7, 1.2, 25);
+    const roofPointLight = new THREE.PointLight(0xa855f7, 1.3, 25);
     roofPointLight.position.set(21, 8, 0);
     scene.add(roofPointLight);
 
@@ -1025,22 +1055,44 @@
       keys[e.code] = false;
     });
 
-    /* =========================================================================
-     * 4. 3D 校舍幾何結構與雙層樓梯建造
-     * ========================================================================= */
     const worldGroup = new THREE.Group();
     scene.add(worldGroup);
     const interactableMeshes = [];
 
+    // 實體碰撞箱清單 (Obstacle AABB Boxes)
+    // 徹底解決穿過儲物櫃、課桌、販賣機與實驗桌的 Bug！
+    const SOLID_OBSTACLES = [
+      // 走廊北側整排儲物櫃 (x: -9 ~ 7, z: -3.8 ~ -3.0)
+      { minX: -9.0, maxX: 7.0, minZ: -4.0, maxZ: -2.9 },
+      // 自動販賣機 (x: 4.0 ~ 6.0, z: 2.0 ~ 3.3)
+      { minX: 4.0, maxX: 6.0, minZ: 2.0, maxZ: 3.4 },
+      // 班房第一排桌椅 (x: -19 ~ -13, z: -2.6 ~ -1.4)
+      { minX: -19.0, maxX: -13.0, minZ: -2.6, maxZ: -1.4 },
+      // 班房第二排桌椅
+      { minX: -19.0, maxX: -13.0, minZ: 0.0, maxZ: 1.2 },
+      // 班房第三排桌椅
+      { minX: -19.0, maxX: -13.0, minZ: 2.6, maxZ: 3.8 },
+      // 班房講台與黑板牆 (x: -19 ~ -13, z: -6.0 ~ -4.8)
+      { minX: -19.0, maxX: -13.0, minZ: -6.0, maxZ: -4.8 },
+      // 化學實驗台 1 (x: -7.0 ~ 1.0, z: 7.2 ~ 8.8)
+      { minX: -7.0, maxX: 1.0, minZ: 7.2, maxZ: 8.8 },
+      // 化學實驗台 2 (x: -7.0 ~ 1.0, z: 11.2 ~ 12.8)
+      { minX: -7.0, maxX: 1.0, minZ: 11.2, maxZ: 12.8 },
+      // 天台大水塔 (x: 23.0 ~ 27.0, z: 1.5 ~ 5.5)
+      { minX: 23.0, maxX: 27.0, minZ: 1.5, maxZ: 5.5 },
+      // 天台排風箱 (x: 17.5 ~ 20.5, z: -4.5 ~ -2.5)
+      { minX: 17.5, maxX: 20.5, minZ: -4.5, maxZ: -2.5 }
+    ];
+
     const materials = {
       woodFloor: new THREE.MeshStandardMaterial({ color: 0x5a3420, roughness: 0.6 }),
-      corridorFloor: new THREE.MeshStandardMaterial({ color: 0x2c3345, roughness: 0.45 }),
-      labFloor: new THREE.MeshStandardMaterial({ color: 0x1b2432, roughness: 0.25 }),
-      rooftopFloor: new THREE.MeshStandardMaterial({ color: 0x27242e, roughness: 0.85 }),
-      stairMat: new THREE.MeshStandardMaterial({ color: 0x3b4252, roughness: 0.5, metalness: 0.2 }),
+      corridorFloor: new THREE.MeshStandardMaterial({ color: 0x242b3b, roughness: 0.45 }),
+      labFloor: new THREE.MeshStandardMaterial({ color: 0x18202c, roughness: 0.25 }),
+      rooftopFloor: new THREE.MeshStandardMaterial({ color: 0x221f28, roughness: 0.85 }),
+      stairMat: new THREE.MeshStandardMaterial({ color: 0x333b4d, roughness: 0.5, metalness: 0.2 }),
       wallMat: new THREE.MeshStandardMaterial({ color: 0xdfd3c5, roughness: 0.85 }),
-      darkMetal: new THREE.MeshStandardMaterial({ color: 0x252a38, metalness: 0.7, roughness: 0.35 }),
-      deskWood: new THREE.MeshStandardMaterial({ color: 0xaa6333, roughness: 0.5 }),
+      darkMetal: new THREE.MeshStandardMaterial({ color: 0x222733, metalness: 0.7, roughness: 0.35 }),
+      deskWood: new THREE.MeshStandardMaterial({ color: 0xa35e30, roughness: 0.5 }),
       chalkboard: new THREE.MeshStandardMaterial({ color: 0x143121, roughness: 0.8 })
     };
 
@@ -1071,7 +1123,7 @@
     }
 
     function buildSeamlessWorld() {
-      // 1F 班房（中六B班）
+      // 1F 班房
       const classFloor = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), materials.woodFloor);
       classFloor.rotation.x = -Math.PI / 2;
       classFloor.position.set(-16, 0, 0);
@@ -1098,7 +1150,6 @@
       wallE2.position.set(-10, 1.3, 3.75);
       worldGroup.add(wallE2);
 
-      // 黑板 (註明 2026 DSE 模擬試)
       const board = new THREE.Mesh(new THREE.BoxGeometry(6, 1.8, 0.1), materials.chalkboard);
       board.position.set(-16, 1.6, -5.75);
       worldGroup.add(board);
@@ -1131,7 +1182,7 @@
       corrWallS2.position.set(3.25, 1.3, 4);
       worldGroup.add(corrWallS2);
 
-      // 走廊儲物櫃
+      // 走廊儲物櫃 (實體化)
       for (let i = -8; i <= 6; i += 1.8) {
         const locker = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.4, 0.8), materials.darkMetal);
         locker.position.set(i, 1.2, -3.4);
@@ -1144,6 +1195,13 @@
       vending.position.set(5, 1.3, 2.6);
       vending.castShadow = true;
       worldGroup.add(vending);
+
+      // 1F 化學室外露水管（藏匿軟糖之處）
+      const pipeGeo = new THREE.CylinderGeometry(0.18, 0.18, 3.2, 16);
+      const pipeMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8, roughness: 0.2 });
+      const pipe1 = new THREE.Mesh(pipeGeo, pipeMat);
+      pipe1.position.set(-3, 1.6, 5.8);
+      worldGroup.add(pipe1);
 
       // 1F 理科綜合化學實驗室
       const labFloor = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), materials.labFloor);
@@ -1171,7 +1229,7 @@
         worldGroup.add(labTable);
       }
 
-      // 實體樓梯間（連接 1F 與 2F 天台，x: 8 ~ 13.5）
+      // 實體樓梯間（連接 1F 與 2F 天台）
       const numSteps = 12;
       const stepWidth = 3.6;
       const stepRise = 4.5 / numSteps;
@@ -1180,7 +1238,6 @@
 
       for (let s = 0; s < numSteps; s++) {
         const stepX = startX + s * stepRun + stepRun / 2;
-        const stepY = (s * stepRise) / 2;
         const stepH = (s + 1) * stepRise;
         const stepMesh = new THREE.Mesh(
           new THREE.BoxGeometry(stepRun * 1.02, stepH, stepWidth),
@@ -1191,18 +1248,6 @@
         worldGroup.add(stepMesh);
       }
 
-      const stairRailGeo = new THREE.BoxGeometry(5.4, 0.1, 0.1);
-      const stairRailMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.8 });
-      const rail1 = new THREE.Mesh(stairRailGeo, stairRailMat);
-      rail1.position.set(10.5, 3.2, -1.8);
-      rail1.rotation.z = Math.atan2(4.5, 5.0);
-      worldGroup.add(rail1);
-
-      const rail2 = new THREE.Mesh(stairRailGeo, stairRailMat);
-      rail2.position.set(10.5, 3.2, 1.8);
-      rail2.rotation.z = Math.atan2(4.5, 5.0);
-      worldGroup.add(rail2);
-
       // 2F 暮光天台
       const rooftopFloor = new THREE.Mesh(new THREE.PlaneGeometry(16, 14), materials.rooftopFloor);
       rooftopFloor.rotation.x = -Math.PI / 2;
@@ -1210,7 +1255,7 @@
       rooftopFloor.receiveShadow = true;
       worldGroup.add(rooftopFloor);
 
-      const roofBase = new THREE.Mesh(new THREE.BoxGeometry(16, 4.5, 14), new THREE.MeshStandardMaterial({ color: 0x1e222d }));
+      const roofBase = new THREE.Mesh(new THREE.BoxGeometry(16, 4.5, 14), new THREE.MeshStandardMaterial({ color: 0x1a1d26 }));
       roofBase.position.set(21, 2.25, 0);
       worldGroup.add(roofBase);
 
@@ -1227,14 +1272,6 @@
       fenceE.position.set(29, 5.2, 0);
       worldGroup.add(fenceE);
 
-      const fenceW1 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.4, 5.0), fenceMat);
-      fenceW1.position.set(13, 5.2, -4.5);
-      worldGroup.add(fenceW1);
-
-      const fenceW2 = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.4, 5.0), fenceMat);
-      fenceW2.position.set(13, 5.2, 4.5);
-      worldGroup.add(fenceW2);
-
       const tank = new THREE.Mesh(new THREE.CylinderGeometry(2, 2, 3.4, 16), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.6 }));
       tank.position.set(25, 6.2, 3.5);
       tank.castShadow = true;
@@ -1245,19 +1282,17 @@
       vent.castShadow = true;
       worldGroup.add(vent);
 
-      // 放置 5 大物證標記
+      // 放置 5 大主線物證（包含化學室水管夾層）
       spawnClueMarker('clue_desk', -17, 1.25, -2);
       spawnClueMarker('clue_locker', -2, 1.25, -3.5);
       spawnClueMarker('clue_vending', 5, 1.25, 2.5);
-      spawnClueMarker('clue_centrifuge', -3, 1.25, 12);
-      spawnClueMarker('clue_rooftop_deal', 19, 5.75, -2);
+      spawnClueMarker('clue_pipe_stash', -3, 1.25, 5.5);
+      spawnClueMarker('clue_spot_plate', -3, 1.25, 12);
+      spawnClueMarker('clue_rooftop_burner', 19, 5.75, -2);
     }
 
     buildSeamlessWorld();
 
-    /* =========================================================================
-     * 5. 調查員人物骨架與雙層物理運動邏輯
-     * ========================================================================= */
     class InvestigatorAvatar {
       constructor() {
         this.mesh = new THREE.Group();
@@ -1274,7 +1309,6 @@
         this.torso.castShadow = true;
         this.mesh.add(this.torso);
 
-        // 安全調查證件掛帶
         const badgeMesh = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.28, 0.05), inspectorBadge);
         badgeMesh.position.set(0, 1.15, 0.24);
         this.mesh.add(badgeMesh);
@@ -1299,7 +1333,6 @@
         this.rightLeg.castShadow = true;
         this.mesh.add(this.rightLeg);
 
-        // 調查員採樣包
         const bag = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.45, 0.42), new THREE.MeshStandardMaterial({ color: 0x9a3412 }));
         bag.position.set(0.4, 0.98, -0.05);
         this.mesh.add(bag);
@@ -1373,7 +1406,9 @@
         this.mesh.position.y = THREE.MathUtils.lerp(this.mesh.position.y, targetY, 15 * delta);
       }
 
+      // 精準實體碰撞箱檢驗：阻擋玩家穿透走廊儲物櫃、課桌與販賣機
       canWalk(x, z) {
+        // 1. 建築可通行區域檢測
         const inClassroom = (x >= -21.5 && x <= -10 && z >= -5.5 && z <= 5.5);
         const inClassDoor = (x >= -11 && x <= -9 && z >= -1.8 && z <= 1.8);
         const inCorridor = (x >= -10 && x <= 8.5 && z >= -3.6 && z <= 3.6);
@@ -1382,7 +1417,23 @@
         const inStairway = (x >= 8.0 && x <= 13.5 && z >= -1.7 && z <= 1.7);
         const inRooftop = (x >= 13.0 && x <= 28.5 && z >= -6.5 && z <= 6.5);
 
-        return inClassroom || inClassDoor || inCorridor || inLabDoor || inLab || inStairway || inRooftop;
+        const insideNavMesh = inClassroom || inClassDoor || inCorridor || inLabDoor || inLab || inStairway || inRooftop;
+        if (!insideNavMesh) return false;
+
+        // 2. 實體障礙物 AABB 碰撞阻擋
+        for (const obs of SOLID_OBSTACLES) {
+          if (x >= obs.minX && x <= obs.maxX && z >= obs.minZ && z <= obs.maxZ) {
+            return false; // 撞到障礙物，禁止穿透
+          }
+        }
+
+        // 3. 主線任務階級門禁（防止未完成化學定性即闖入天台）
+        if (x >= 8.0 && GAME_STATE.questStage < 5) {
+          // 未完成化學鑑驗，天台防火門鎖閉
+          return false;
+        }
+
+        return true;
       }
 
       checkCurrentZone() {
@@ -1416,46 +1467,8 @@
 
     const player = new InvestigatorAvatar();
 
-    /* =========================================================================
-     * 6. 理化鑑驗邏輯（5步流程、多樣品對照組與離心機防重複防抖）
-     * ========================================================================= */
-    let labCurrentSample = 'sample_etomidate';
-    let labStep = 0;
-    let labCentrifuging = false;
-    let labUV = false;
-
-    const SAMPLES_CONFIG = {
-      sample_etomidate: {
-        name: "岑詠蕎課桌遺留的未知紫晶液",
-        positive: true,
-        reagent1Color: 'rgba(147, 51, 234, 0.85)',
-        reagent2Color: 'rgba(225, 29, 72, 0.9)',
-        precipitateColor: 'rgba(185, 28, 28, 0.95)',
-        supernatantColor: 'rgba(254, 205, 211, 0.25)',
-        diagTitle: "⚡ 鑑驗結果確診：未知成分為受政府嚴格管制的危險藥物「依托咪酯（Etomidate）」！",
-        diagContent: "法醫病理結論：該紫晶煙油非法添加了高濃度受香港特區政府《危險藥物條例》（第134章）嚴格管制的醫用靜脈麻醉藥「依托咪酯」。吸食後能迅速抑制大腦突觸並阻斷神經傳導，引發肌陣攣全身強直抽搐、意識記憶斷片、急性腎上腺皮質功能衰竭與窒息休克！"
-      },
-      sample_candy: {
-        name: "霍展霆儲物櫃的提神鎮痛軟糖",
-        positive: true,
-        reagent1Color: 'rgba(126, 34, 206, 0.8)',
-        reagent2Color: 'rgba(239, 68, 68, 0.85)',
-        precipitateColor: 'rgba(153, 27, 27, 0.95)',
-        supernatantColor: 'rgba(254, 205, 211, 0.2)',
-        diagTitle: "⚡ 鑑驗結果確診：軟糖浸提物含受政府嚴格管制的危險藥物「依托咪酯」！",
-        diagContent: "法醫病理結論：毒販將液態依托咪酯浸透滲入日常果味軟糖中，偽裝成『無害速效止痛劑』誘騙體育生。依托咪酯毒素嚴重損害其運動神經傳導，引發強烈肌顫與平衡失調。"
-      },
-      sample_control: {
-        name: "標準無毒甘油對照組（陰性標準）",
-        positive: false,
-        reagent1Color: 'rgba(254, 240, 138, 0.3)',
-        reagent2Color: 'rgba(254, 240, 138, 0.3)',
-        precipitateColor: 'transparent',
-        supernatantColor: 'rgba(254, 240, 138, 0.3)',
-        diagTitle: "✅ 陰性對照完成：空白對照組符合標準",
-        diagContent: "化驗結論：各項指標均呈陰性，無任何沉澱與螢光反應，證明本鑑驗台各批次顯色試劑與儀器運作正常，無交叉污染。"
-      }
-    };
+    // 點滴板實驗狀態
+    let spotStage = 0; // 0: 待取樣, 1: 已分注, 2: 已加滴管1, 3: 已加滴管2, 4: 完成出具報告
 
     let lastFocusedElement = null;
 
@@ -1520,7 +1533,7 @@
     function openLabModal() {
       GAME_STATE.isLabModalOpen = true;
       const modal = document.getElementById('lab-modal');
-      resetLabStation();
+      resetSpotPlate();
       openModalWithA11y(modal, closeLabModal);
     }
 
@@ -1530,28 +1543,47 @@
       closeModalWithA11y(modal);
     }
 
-    function switchLabSample(sampleKey) {
-      sound.playPipetteDrop();
-      labCurrentSample = sampleKey;
-      ['sample_etomidate', 'sample_candy', 'sample_control'].forEach(k => {
-        const btn = document.getElementById(`tab-${k.replace('_', '-')}`);
-        if (!btn) return;
-        if (k === sampleKey) {
-          btn.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-cyan-600 text-white border border-cyan-400 transition";
-        } else {
-          btn.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 transition";
+    function resetSpotPlate() {
+      spotStage = 0;
+
+      // 清空 6 個凹槽的顏色
+      for (let i = 1; i <= 6; i++) {
+        const well = document.getElementById(`well-${i}-liquid`);
+        if (well) {
+          well.style.backgroundColor = 'transparent';
+          well.style.transform = 'scale(0)';
         }
-      });
-      resetLabStation();
+      }
+
+      document.getElementById('spot-status-tag').textContent = "步驟 1：請點擊分注三份證物";
+      document.getElementById('spot-detail-desc').innerHTML = "<strong>雙重交叉驗證原理：</strong>點滴板孔 1、2 注入證物 A；孔 3、4 注入證物 B；孔 5、6 注入空白純水對照組 C。";
+      document.getElementById('spot-verdict-text').textContent = "等待完成雙重交叉滴加……";
+
+      // 按鈕狀態重置
+      const bLoad = document.getElementById('btn-spot-load');
+      bLoad.disabled = false;
+      bLoad.className = "py-2.5 px-2 rounded-2xl bg-cyan-700 hover:bg-cyan-600 text-xs sm:text-sm font-bold text-white border border-cyan-500 active:scale-95 transition shadow-md flex items-center justify-center gap-1";
+
+      const bR1 = document.getElementById('btn-spot-reagent1');
+      bR1.disabled = true;
+      bR1.className = "py-2.5 px-2 rounded-2xl bg-slate-800 text-xs sm:text-sm font-bold text-slate-400 border border-slate-700 active:scale-95 transition flex items-center justify-center gap-1 disabled:opacity-40";
+
+      const bR2 = document.getElementById('btn-spot-reagent2');
+      bR2.disabled = true;
+      bR2.className = "py-2.5 px-2 rounded-2xl bg-slate-800 text-xs sm:text-sm font-bold text-slate-400 border border-slate-700 active:scale-95 transition flex items-center justify-center gap-1 disabled:opacity-40";
+
+      document.getElementById('btn-spot-submit').disabled = true;
+
+      updateSpotStepBadges();
     }
 
-    function updateStepBadges() {
-      for (let i = 1; i <= 5; i++) {
-        const badge = document.getElementById(`step-badge-${i}`);
+    function updateSpotStepBadges() {
+      for (let i = 1; i <= 4; i++) {
+        const badge = document.getElementById(`spot-step-${i}`);
         if (!badge) continue;
-        if (i <= labStep) {
+        if (i <= spotStage) {
           badge.className = "py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold";
-        } else if (i === labStep + 1) {
+        } else if (i === spotStage + 1) {
           badge.className = "py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600 animate-pulse font-bold";
         } else {
           badge.className = "py-1 rounded bg-slate-900 text-slate-500 border border-slate-800";
@@ -1559,245 +1591,124 @@
       }
     }
 
-    function resetLabStation() {
-      labStep = 0;
-      labCentrifuging = false;
-      labUV = false;
-
-      const liquid = document.getElementById('chem-liquid-level');
-      liquid.style.backgroundColor = 'transparent';
-      liquid.style.height = '0%';
-
-      const precipitate = document.getElementById('chem-precipitate-layer');
-      precipitate.style.height = '0%';
-      precipitate.style.opacity = '0';
-
-      const ring = document.getElementById('chem-fluorescence-ring');
-      ring.style.opacity = '0';
-
-      document.getElementById('tube-title-text').textContent = `反應試管：待注入樣品`;
-      document.getElementById('tube-pulse-dot').className = "w-2 h-2 rounded-full bg-cyan-400 animate-pulse";
-
-      const desc = document.getElementById('chem-reaction-desc');
-      desc.textContent = `步驟 1：待檢樣品【${SAMPLES_CONFIG[labCurrentSample].name}】已就緒，請點擊「提取注入樣品」。`;
-      desc.className = "mt-2 text-[11px] text-amber-300 font-medium text-center px-1";
-
-      document.getElementById('btn-uv-lamp').innerHTML = "🔦 365nm UV紫外燈：關";
-      document.getElementById('btn-uv-lamp').disabled = true;
-      document.getElementById('chem-tube').classList.remove('uv-glow-active');
-
-      const bLoad = document.getElementById('btn-lab-load');
-      bLoad.disabled = false;
-      bLoad.className = "py-2.5 px-2 rounded-xl bg-cyan-700 hover:bg-cyan-600 text-xs font-bold text-white border border-cyan-500 active:scale-95 transition flex items-center justify-center gap-1 shadow-md";
-
-      const bR1 = document.getElementById('btn-lab-reagent1');
-      bR1.disabled = true;
-      bR1.className = "py-2.5 px-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-400 border border-slate-700 active:scale-95 transition flex items-center justify-center gap-1 disabled:opacity-40";
-
-      const bR2 = document.getElementById('btn-lab-reagent2');
-      bR2.disabled = true;
-      bR2.className = "py-2.5 px-2 rounded-xl bg-slate-800 text-xs font-bold text-slate-400 border border-slate-700 active:scale-95 transition flex items-center justify-center gap-1 disabled:opacity-40";
-
-      const bCent = document.getElementById('btn-start-centrifuge');
-      bCent.disabled = true;
-      bCent.className = "py-1.5 px-3 rounded-lg text-xs font-bold bg-slate-800 text-slate-400 border border-slate-700 active:scale-95 disabled:opacity-40 transition";
-      document.getElementById('centrifuge-status').textContent = "待機中 (0 RPM)";
-
-      document.getElementById('btn-lab-submit').disabled = true;
-      document.getElementById('lab-diagnostic-card').classList.add('hidden');
-
-      updateStepBadges();
-    }
-
-    function labStepLoadSample() {
+    // 步驟 1：分注樣品到 6 個凹槽
+    function spotStepLoadSamples() {
       sound.playPipetteDrop();
-      labStep = 1;
+      spotStage = 1;
 
-      const liquid = document.getElementById('chem-liquid-level');
-      liquid.style.height = '35%';
-      liquid.style.backgroundColor = 'rgba(251, 191, 36, 0.3)';
+      // 孔 1, 2 (證物 A)：淺紫微濁液
+      ['well-1-liquid', 'well-2-liquid'].forEach(id => {
+        const el = document.getElementById(id);
+        el.style.backgroundColor = 'rgba(192, 132, 252, 0.4)';
+        el.style.transform = 'scale(1)';
+      });
 
-      document.getElementById('tube-title-text').textContent = `反應試管：樣品已注入 (3.0 mL)`;
-      document.getElementById('chem-reaction-desc').textContent = `步驟 2：樣品已注入。請點擊「滴加 1 號顯色劑」進行咪唑生物鹼顯色反應。`;
+      // 孔 3, 4 (證物 B)：淺黃綠色果味軟糖萃取液
+      ['well-3-liquid', 'well-4-liquid'].forEach(id => {
+        const el = document.getElementById(id);
+        el.style.backgroundColor = 'rgba(250, 204, 21, 0.4)';
+        el.style.transform = 'scale(1)';
+      });
 
-      const bLoad = document.getElementById('btn-lab-load');
+      // 孔 5, 6 (證物 C)：透明純水
+      ['well-5-liquid', 'well-6-liquid'].forEach(id => {
+        const el = document.getElementById(id);
+        el.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+        el.style.transform = 'scale(1)';
+      });
+
+      document.getElementById('spot-status-tag').textContent = "步驟 2：請點擊「滴管① 篩查K仔」";
+      document.getElementById('spot-detail-desc').innerHTML = "證物已就緒！請使用滴管①向 <strong>1、3、5 號凹槽</strong> 各滴入 2 滴「氯胺酮顯色試劑」，觀察是否呈現湛藍色。";
+
+      const bLoad = document.getElementById('btn-spot-load');
       bLoad.disabled = true;
-      bLoad.className = "py-2.5 px-2 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
+      bLoad.className = "py-2.5 px-2 rounded-2xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
 
-      const bR1 = document.getElementById('btn-lab-reagent1');
+      const bR1 = document.getElementById('btn-spot-reagent1');
       bR1.disabled = false;
-      bR1.className = "py-2.5 px-2 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs border border-purple-400 active:scale-95 transition flex items-center justify-center gap-1 shadow-md animate-pulse";
+      bR1.className = "py-2.5 px-2 rounded-2xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs sm:text-sm border border-sky-400 active:scale-95 transition flex items-center justify-center gap-1 shadow-md animate-pulse";
 
-      updateStepBadges();
+      updateSpotStepBadges();
     }
 
-    function labStepApplyReagent1() {
+    // 步驟 2：第一輪測試——用滴管 1 在 1, 3, 5 號凹槽滴入 K 仔試劑
+    function spotStepApplyReagent1() {
       sound.playPipetteDrop();
-      labStep = 2;
-      const cfg = SAMPLES_CONFIG[labCurrentSample];
+      spotStage = 2;
 
-      const liquid = document.getElementById('chem-liquid-level');
-      liquid.style.height = '50%';
-      liquid.style.backgroundColor = cfg.reagent1Color;
+      // 1、3、5 號槽均不變為湛藍色（維持透明澄清），確鑿排除氯胺酮！
+      document.getElementById('well-1-liquid').style.backgroundColor = 'rgba(216, 180, 254, 0.35)';
+      document.getElementById('well-3-liquid').style.backgroundColor = 'rgba(253, 224, 71, 0.35)';
+      document.getElementById('well-5-liquid').style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
 
-      const desc = document.getElementById('chem-reaction-desc');
-      if (cfg.positive) {
-        desc.textContent = "顯色反應：試劑甲接觸樣品，溶液瞬間轉化為深紫褐色混濁液！檢測出特徵咪唑生物鹼結構！";
-      } else {
-        desc.textContent = "顯色反應：對照組維持透明澄清，未發生生物鹼反應。";
-      }
+      document.getElementById('spot-status-tag').textContent = "步驟 3：請點擊「滴管② 篩查依托咪酯」";
+      document.getElementById('spot-detail-desc').innerHTML = "<strong>第一輪結果：</strong>凹槽 1、3、5 均未變為湛藍色，<strong>陰性排除氯胺酮（K仔）</strong>！請用滴管② 向 <strong>2、4、6 號凹槽</strong> 滴入「依托咪酯專屬試劑」。";
 
-      const bR1 = document.getElementById('btn-lab-reagent1');
+      const bR1 = document.getElementById('btn-spot-reagent1');
       bR1.disabled = true;
-      bR1.className = "py-2.5 px-2 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
+      bR1.className = "py-2.5 px-2 rounded-2xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
 
-      const bR2 = document.getElementById('btn-lab-reagent2');
+      const bR2 = document.getElementById('btn-spot-reagent2');
       bR2.disabled = false;
-      bR2.className = "py-2.5 px-2 rounded-xl bg-rose-700 hover:bg-rose-600 text-white font-bold text-xs border border-rose-400 active:scale-95 transition flex items-center justify-center gap-1 shadow-md animate-pulse";
+      bR2.className = "py-2.5 px-2 rounded-2xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs sm:text-sm border border-purple-400 active:scale-95 transition flex items-center justify-center gap-1 shadow-md animate-pulse";
 
-      updateStepBadges();
+      updateSpotStepBadges();
     }
 
-    function labStepApplyReagent2() {
+    // 步驟 3：第二輪測試——用滴管 2 在 2, 4, 6 號凹槽滴入依托咪酯專屬顯色試劑
+    function spotStepApplyReagent2() {
       sound.playPipetteDrop();
-      labStep = 3;
-      const cfg = SAMPLES_CONFIG[labCurrentSample];
+      spotStage = 3;
 
-      const liquid = document.getElementById('chem-liquid-level');
-      liquid.style.height = '65%';
-      liquid.style.backgroundColor = cfg.reagent2Color;
+      // 2 號槽 (紫晶液) 與 4 號槽 (軟糖)：迅速轉化為深紫褐色沉澱！
+      // 6 號槽 (對照組)：維持清澈透明無色！
+      document.getElementById('well-2-liquid').style.backgroundColor = 'rgba(112, 26, 117, 0.95)';
+      document.getElementById('well-4-liquid').style.backgroundColor = 'rgba(134, 25, 143, 0.95)';
+      document.getElementById('well-6-liquid').style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
 
-      const desc = document.getElementById('chem-reaction-desc');
-      if (cfg.positive) {
-        desc.textContent = "螯合反應：試劑乙引發劇烈沉澱！析出大量磚紅色懸浮絮狀物！請啟動離心機進行沉降分層。";
-      } else {
-        desc.textContent = "螯合反應：對照組無沉澱析出，液體保持清澈。";
-      }
-
-      const bR2 = document.getElementById('btn-lab-reagent2');
-      bR2.disabled = true;
-      bR2.className = "py-2.5 px-2 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
-
-      const bCent = document.getElementById('btn-start-centrifuge');
-      bCent.disabled = false;
-      bCent.className = "py-1.5 px-3 rounded-lg text-xs font-bold bg-cyan-600 hover:bg-cyan-500 text-white border border-cyan-400 active:scale-95 transition animate-pulse";
-
-      updateStepBadges();
-    }
-
-    function labStepCentrifuge() {
-      if (labCentrifuging) return;
-      labCentrifuging = true;
-      sound.playCentrifugeMotor();
-
-      const bCent = document.getElementById('btn-start-centrifuge');
-      bCent.disabled = true;
-      const status = document.getElementById('centrifuge-status');
-      const desc = document.getElementById('chem-reaction-desc');
-
-      status.textContent = "高速旋轉中 (3200 RPM)...";
-      status.className = "text-[10px] font-mono text-cyan-300 animate-pulse font-bold";
-      desc.textContent = "微型離心機以 3200 RPM 分離沉降中，重質螯合物正向試管底部聚集……";
-
-      setTimeout(() => {
-        labCentrifuging = false;
-        labStep = 4;
-        sound.playClueFound();
-
-        status.textContent = "分層完成 (0 RPM)";
-        status.className = "text-[10px] font-mono text-emerald-400 font-bold";
-
-        const cfg = SAMPLES_CONFIG[labCurrentSample];
-        const liquid = document.getElementById('chem-liquid-level');
-        const precipitate = document.getElementById('chem-precipitate-layer');
-
-        if (cfg.positive) {
-          precipitate.style.backgroundColor = cfg.precipitateColor;
-          precipitate.style.height = '25%';
-          precipitate.style.opacity = '1';
-          liquid.style.height = '42%';
-          liquid.style.backgroundColor = cfg.supernatantColor;
-          desc.textContent = "離心分層成功！管底析出緻密磚紅色藥物沉澱層，上層為澄清液！請開啟 365nm UV 燈驗證。";
-        } else {
-          desc.textContent = "離心完成：對照組無任何沉澱分層現象。";
-        }
-
-        document.getElementById('btn-uv-lamp').disabled = false;
-        document.getElementById('btn-lab-submit').disabled = false;
-        document.getElementById('btn-lab-submit').classList.add('animate-pulse');
-
-        updateStepBadges();
-      }, 2400);
-    }
-
-    function toggleUVLamp() {
-      labUV = !labUV;
-      const btn = document.getElementById('btn-uv-lamp');
-      const tube = document.getElementById('chem-tube');
-      const ring = document.getElementById('chem-fluorescence-ring');
-      const desc = document.getElementById('chem-reaction-desc');
-      const cfg = SAMPLES_CONFIG[labCurrentSample];
-
-      if (labUV) {
-        labStep = 5;
-        btn.innerHTML = "🔦 365nm UV紫外燈：開啟";
-        btn.className = "px-2.5 py-1 rounded-lg bg-cyan-600 border border-cyan-300 text-white font-bold text-[10px] active:scale-95 transition shadow-lg";
-        tube.classList.add('uv-glow-active');
-
-        if (cfg.positive) {
-          ring.style.opacity = '1';
-          desc.textContent = "UV激發確認！在 365nm 紫外線照射下激發出特徵青色螢光環（435nm）！確鑿證實受管制麻醉藥分子！";
-        } else {
-          desc.textContent = "UV照射確認：對照組在 365nm 下無螢光激發特徵。";
-        }
-      } else {
-        btn.innerHTML = "🔦 365nm UV紫外燈：關";
-        btn.className = "px-2.5 py-1 rounded-lg bg-purple-950/80 border border-purple-500/50 text-purple-300 font-bold text-[10px] active:scale-95 transition";
-        tube.classList.remove('uv-glow-active');
-        ring.style.opacity = '0';
-      }
-      updateStepBadges();
-    }
-
-    function generateLabDiagnosis() {
       sound.playClueFound();
-      const card = document.getElementById('lab-diagnostic-card');
-      const title = document.getElementById('diag-title');
-      const content = document.getElementById('diag-content');
-      const badge = document.getElementById('diag-badge');
-      const cfg = SAMPLES_CONFIG[labCurrentSample];
+      document.getElementById('spot-status-tag').textContent = "步驟 4：確診完成！點擊下方出具定案報告";
+      document.getElementById('spot-detail-desc').innerHTML = "<strong>第二輪結果：</strong>凹槽 2 與 4 瞬間析出<strong>深紫褐色緻密沉澱</strong>！凹槽 6 Blank 保持透明，排除儀器污染！確鑿證實受特區政府管制的麻醉藥<strong>「依托咪酯」</strong>！";
 
-      title.textContent = cfg.diagTitle;
-      content.textContent = cfg.diagContent;
-      badge.textContent = cfg.positive ? "POSITIVE" : "NEGATIVE";
-      badge.className = cfg.positive ? "text-[9px] font-mono bg-rose-900 px-1.5 py-0.5 rounded text-white font-black" : "text-[9px] font-mono bg-emerald-900 px-1.5 py-0.5 rounded text-white font-black";
-      card.classList.remove('hidden');
+      document.getElementById('spot-verdict-text').innerHTML = "<strong class='text-rose-400 font-bold'>⚡ 確診：陽性（POSITIVE）</strong><br>證物 A（紫晶液滴）與證物 B（水管夾層軟糖）均含高濃度受香港《危險藥物條例》嚴格規管的<strong>依托咪酯（Etomidate）</strong>！";
 
+      const bR2 = document.getElementById('btn-spot-reagent2');
+      bR2.disabled = true;
+      bR2.className = "py-2.5 px-2 rounded-2xl bg-emerald-950 text-emerald-300 border border-emerald-700 font-bold text-xs";
+
+      const bSubmit = document.getElementById('btn-spot-submit');
+      bSubmit.disabled = false;
+      bSubmit.classList.add('animate-pulse');
+
+      updateSpotStepBadges();
+    }
+
+    // 步驟 4：出具報告並解鎖天台大門
+    function spotStepSubmitReport() {
+      sound.playClueFound();
+      spotStage = 4;
       GAME_STATE.hasIdentifiedEtomidate = true;
-      GAME_STATE.cluesFound.add('clue_centrifuge');
+      GAME_STATE.cluesFound.add('clue_spot_plate');
+      GAME_STATE.questStage = 5; // 解鎖第 5 階段：天台毒販通聯機
       updateCluesCount();
       updateMissionObjective();
 
-      setTimeout(() => {
-        closeLabModal();
-        startDialogueQueue([
-          {
-            speaker: "梁澤銘",
-            role: "青少年法證安全專案特約調查員",
-            text: "化學定性反應與離心分層鐵證如山……這絕非什麼提神果味精油，而是受香港特區政府《危險藥物條例》（第134章）嚴格管制的危險藥物——『依托咪酯』！"
-          },
-          {
-            speaker: "梁澤銘",
-            role: "毒理定案",
-            text: "這正能解釋詠蕎為何會在考場突然發生全身肌陣攣劇烈抽搐！毒販利用考前焦慮將依托咪酯包裝成水果煙油誘騙學生！我必須立即前往天台，截獲排風箱後的涉案手機！"
-          }
-        ]);
-      }, 1600);
+      closeLabModal();
+
+      startDialogueQueue([
+        {
+          speaker: "梁澤銘",
+          role: "特約校園安全調查員",
+          text: "點滴板 6 孔雙重交叉盲測鐵證如山！排除常規氯胺酮，班房紫晶液與水管夾層的軟糖，均被非法添加了受政府嚴格管制的危險藥物——『依托咪酯』！"
+        },
+        {
+          speaker: "梁澤銘",
+          role: "毒理定案",
+          text: "這就是岑詠蕎在考場突然全身劇烈強直肌陣攣抽搐、霍展霆手指劇烈震顫的罪魁禍首！毒販將其偽裝成果味糖和專注油！現在東側天台防火門已解除封鎖，我必須立即登上天台，截獲暗夜調劑師的通聯通訊！"
+        }
+      ]);
     }
 
-    /* =========================================================================
-     * 7. 現場搜查與劇情推進觸發
-     * ========================================================================= */
     const promptUI = document.getElementById('interaction-prompt');
     const promptText = document.getElementById('prompt-action-text');
 
@@ -1808,7 +1719,7 @@
       }
 
       let closest = null;
-      let minDist = 2.6;
+      let minDist = 2.8;
 
       interactableMeshes.forEach(m => {
         const d = player.mesh.position.distanceTo(m.position);
@@ -1844,18 +1755,90 @@
       const clueId = GAME_STATE.activeInteractable;
       const clue = CLUES_DATA[clueId];
 
-      if (clueId === 'clue_centrifuge') {
+      // 嚴格有序的劇情推進鎖定
+      if (clue.stage > GAME_STATE.questStage) {
+        sound.playDialogueBlip();
+        if (clueId === 'clue_pipe_stash') {
+          startDialogueQueue([{
+            speaker: "梁澤銘",
+            role: "搜查思路",
+            text: "走廊水管夾層周圍有些凌亂。我應先搜查中央長廊的儲物櫃與販賣機投幣口，獲取具體暗號紙條，再來此處取證。"
+          }]);
+        } else if (clueId === 'clue_spot_plate') {
+          startDialogueQueue([{
+            speaker: "梁澤銘",
+            role: "搜查思路",
+            text: "點滴板檢驗需要兩份關鍵證物（班房紫晶液 A、水管夾層軟糖 B）。在起獲水管夾層軟糖前，盲測無法展開。"
+          }]);
+        } else if (clueId === 'clue_rooftop_burner') {
+          startDialogueQueue([{
+            speaker: "梁澤銘",
+            role: "搜查思路",
+            text: "天台防火門已鎖閉。我必須先在理科化學室透過點滴板確診致毒成分，取得法證依據後才能進入天台。"
+          }]);
+        } else {
+          startDialogueQueue([{
+            speaker: "梁澤銘",
+            role: "搜查思路",
+            text: "請依序徹查現場，當前應先前往事發的 1F 中六B班房岑詠蕎課桌！"
+          }]);
+        }
+        return;
+      }
+
+      // 觸發 6 孔點滴板實驗台
+      if (clueId === 'clue_spot_plate') {
         openLabModal();
         return;
       }
 
-      startClueStory(clue);
-    }
+      // 觸發天台毒販通聯手機（重要高潮劇情：截聽毒販通話！）
+      if (clueId === 'clue_rooftop_burner') {
+        sound.playPhoneRing();
+        GAME_STATE.cluesFound.add(clue.id);
+        GAME_STATE.questStage = 6; // 進入思維宮殿定案階段
+        updateCluesCount();
+        updateMissionObjective();
 
-    function startClueStory(clue) {
+        startDialogueQueue([
+          {
+            speaker: "加密衛星手機",
+            role: "通話鈴聲",
+            text: "【嘟……嘟……排風箱後的加密手機正處於接通狀態！揚聲器傳來一陣陰冷沙啞的聲音……】"
+          },
+          {
+            speaker: "「暗夜調劑師」",
+            role: "通緝主謀 • 囂張通話",
+            text: "『喂？霍展霆還是岑詠蕎？我警告你們，水管夾層的依托咪酯軟糖與煙油已經放好了。誰敢向校方或警方舉報，我保證你們在考場抽搐的影片立刻傳遍全港！今晚九點前把封口費打到暗網帳戶！』"
+          },
+          {
+            speaker: "梁澤銘",
+            role: "特約校園安全調查員",
+            text: "『我是青少年健康保護協進會特約調查員梁澤銘。你剛才的所有通話已被全程數位錄音存證！你的水管夾層已被封存，兩名學生已送院確診搶救，執法機關正根據衛星訊號鎖定你的實體位置！』"
+          },
+          {
+            speaker: "梁澤銘",
+            role: "調查告捷",
+            text: "物證、化學點滴板交叉檢定報告與毒販通聯錄音全數齊備！立即打開案件手冊，進入【思維宮殿】完成全鏈條定案通報！"
+          }
+        ]);
+        return;
+      }
+
+      // 常規線索調查
       sound.playClueFound();
       GAME_STATE.cluesFound.add(clue.id);
+
+      if (clueId === 'clue_desk') {
+        GAME_STATE.questStage = 2; // 解鎖儲物櫃與販賣機
+      } else if (clueId === 'clue_vending') {
+        GAME_STATE.questStage = 3; // 解鎖水管夾層
+      } else if (clueId === 'clue_pipe_stash') {
+        GAME_STATE.questStage = 4; // 解鎖點滴板實驗
+      }
+
       updateCluesCount();
+      updateMissionObjective();
 
       const script = [
         {
@@ -1870,17 +1853,7 @@
         }
       ];
 
-      if (GAME_STATE.hasIdentifiedEtomidate) {
-        script.push({
-          speaker: "梁澤銘",
-          role: "毒理分析",
-          text: "此物證與實驗室確診的『依托咪酯』非法分銷鏈完全吻合！"
-        });
-      }
-
-      startDialogueQueue(script, () => {
-        updateMissionObjective();
-      });
+      startDialogueQueue(script);
     }
 
     const dialogueBox = document.getElementById('dialogue-box');
@@ -1892,7 +1865,6 @@
       GAME_STATE.dialogueQueue = [...queue];
       GAME_STATE.dialogueCallback = callback;
       GAME_STATE.isDialogueOpen = true;
-      // 關鍵修復：啟動對話時開啟點擊捕獲，關閉時徹底退讓觸控
       dialogueBox.classList.remove('pointer-events-none');
       dialogueBox.classList.add('pointer-events-auto');
       dialogueBox.style.opacity = '1';
@@ -1926,18 +1898,18 @@
 
     function updateMissionObjective() {
       const obj = document.getElementById('hud-current-objective');
-      if (!GAME_STATE.cluesFound.has('clue_desk')) {
-        obj.textContent = "搜查 1F 中六B班岑詠蕎課桌，尋找導致痙攣的未知證物";
-      } else if (!GAME_STATE.cluesFound.has('clue_locker')) {
-        obj.textContent = "前往 1F 中央長廊，搜查 17 號儲物櫃內的字條與糖果";
-      } else if (!GAME_STATE.cluesFound.has('clue_vending')) {
-        obj.textContent = "在 1F 走廊販賣機投幣口隱蔽夾層尋找交易暗號";
-      } else if (!GAME_STATE.cluesFound.has('clue_centrifuge')) {
-        obj.textContent = "前往 1F 理科化學室操作快篩儀，定性致毒成分！";
-      } else if (!GAME_STATE.cluesFound.has('clue_rooftop_deal')) {
-        obj.textContent = "登上東側樓梯前往 2F 暮光天台，搜查排風箱後的聯絡手機";
+      if (GAME_STATE.questStage === 1) {
+        obj.textContent = "搜查中六B班岑詠蕎課桌，採樣紫晶液滴與字條 (Step 1/5)";
+      } else if (GAME_STATE.questStage === 2) {
+        obj.textContent = "搜查走廊 17 號儲物櫃及自動販賣機投幣口尋找暗號 (Step 2/5)";
+      } else if (GAME_STATE.questStage === 3) {
+        obj.textContent = "依紙條暗號前往 1F 化學室外走廊水管夾層取獲軟糖 (Step 3/5)";
+      } else if (GAME_STATE.questStage === 4) {
+        obj.textContent = "進入化學實驗室，在 6 孔點滴板展開雙重交叉盲測 (Step 4/5)";
+      } else if (GAME_STATE.questStage === 5) {
+        obj.textContent = "登上東側樓梯前往 2F 暮光天台，截獲排風箱後的通聯手機 (Step 5/5)";
       } else {
-        obj.textContent = "物證齊全！打開案件簿，在【思維宮殿】完成最終定案！";
+        obj.textContent = "所有法證物證齊備！打開案件簿在【思維宮殿】完成終極定案！";
       }
     }
 
@@ -1956,21 +1928,21 @@
       Object.values(CLUES_DATA).forEach(clue => {
         const found = GAME_STATE.cluesFound.has(clue.id);
         const card = document.createElement('div');
-        card.className = `p-3 rounded-2xl border transition-all ${
+        card.className = `p-3.5 rounded-2xl border transition-all ${
           found ? 'bg-slate-900/90 border-orange-500/50 shadow-md' : 'bg-slate-950/40 border-slate-800 opacity-40'
         }`;
         card.innerHTML = `
           <div class="flex items-center gap-2 mb-1">
-            <span class="text-xl">${found ? clue.icon : '❓'}</span>
+            <span class="text-2xl">${found ? clue.icon : '❓'}</span>
             <div>
-              <h4 class="font-bold text-xs ${found ? 'text-amber-300' : 'text-slate-500'}">
-                ${found ? clue.name : '未搜獲的關鍵法證物證'}
+              <h4 class="font-bold text-xs sm:text-sm ${found ? 'text-amber-300' : 'text-slate-500'}">
+                ${found ? clue.name : '未搜獲的主線關鍵物證'}
               </h4>
-              <span class="text-[9px] text-slate-400 font-mono">${found ? clue.zone : '地點未知'}</span>
+              <span class="text-[10px] text-slate-400 font-mono">${found ? clue.zone : '地點未知'}</span>
             </div>
           </div>
-          <p class="text-[10px] text-slate-300 leading-snug">
-            ${found ? clue.shortDesc : '自由在校舍探索，在發光菱形結晶處點擊調查。'}
+          <p class="text-xs text-slate-300 leading-snug">
+            ${found ? clue.shortDesc : '依循當前目標在校舍逐步搜查，在發光菱形結晶處點擊搜查。'}
           </p>
         `;
         container.appendChild(card);
@@ -2012,18 +1984,15 @@
       } else {
         sound.playDialogueBlip();
         const header = document.getElementById('deduce-header');
-        header.textContent = "⚠️ 推論存在漏洞：請核對化驗定性結果與《危險藥物條例》規定！";
-        header.className = "text-sm font-bold text-rose-400 mb-1";
+        header.textContent = "⚠️ 推論存在漏洞：請核對 6 孔點滴板交叉檢測確診報告！";
+        header.className = "text-sm sm:text-base font-bold text-rose-400 mb-1";
         setTimeout(() => {
           header.textContent = "🔍 邏輯因果定案鏈";
-          header.className = "text-sm font-bold text-amber-300 mb-1";
+          header.className = "text-sm sm:text-base font-bold text-amber-300 mb-1";
         }, 2500);
       }
     }
 
-    /* =========================================================================
-     * 8. 2D 懸浮雷達小地圖繪製
-     * ========================================================================= */
     const minimapCanvas = document.getElementById('minimap-canvas');
     const minimapCtx = minimapCanvas.getContext('2d');
 
@@ -2033,7 +2002,7 @@
       const h = minimapCanvas.height;
 
       minimapCtx.clearRect(0, 0, w, h);
-      minimapCtx.fillStyle = "#090d16";
+      minimapCtx.fillStyle = "#070a14";
       minimapCtx.fillRect(0, 0, w, h);
 
       const mapX = (wx) => ((wx + 24) / 54) * w;
@@ -2058,7 +2027,7 @@
         minimapCtx.fillStyle = "#eab308";
         minimapCtx.fillRect(mapX(8), mapZ(-2), mapX(13) - mapX(8), mapZ(2) - mapZ(-2));
         minimapCtx.fillStyle = "#000";
-        minimapCtx.font = "7px sans-serif";
+        minimapCtx.font = "8px sans-serif";
         minimapCtx.fillText("樓梯", mapX(8.6), mapZ(1));
       } else {
         minimapCtx.fillStyle = "#3b0764";
@@ -2076,12 +2045,12 @@
 
         if (matchesFloor) {
           minimapCtx.beginPath();
-          minimapCtx.arc(mapX(clue.pos.x), mapZ(clue.pos.z), found ? 2.2 : 3.5, 0, Math.PI * 2);
+          minimapCtx.arc(mapX(clue.pos.x), mapZ(clue.pos.z), found ? 2.5 : 4.0, 0, Math.PI * 2);
           minimapCtx.fillStyle = found ? "#10b981" : "#f59e0b";
           minimapCtx.fill();
           if (!found) {
             minimapCtx.strokeStyle = "#ffffff";
-            minimapCtx.lineWidth = 1;
+            minimapCtx.lineWidth = 1.2;
             minimapCtx.stroke();
           }
         }
@@ -2096,14 +2065,14 @@
       minimapCtx.rotate(heading);
 
       minimapCtx.beginPath();
-      minimapCtx.moveTo(0, 5);
-      minimapCtx.lineTo(-3.5, -4);
-      minimapCtx.lineTo(3.5, -4);
+      minimapCtx.moveTo(0, 6);
+      minimapCtx.lineTo(-4, -5);
+      minimapCtx.lineTo(4, -5);
       minimapCtx.closePath();
       minimapCtx.fillStyle = "#f97316";
       minimapCtx.fill();
       minimapCtx.strokeStyle = "#ffffff";
-      minimapCtx.lineWidth = 1;
+      minimapCtx.lineWidth = 1.2;
       minimapCtx.stroke();
 
       minimapCtx.restore();
@@ -2113,25 +2082,31 @@
       document.getElementById('title-screen').style.display = 'none';
       GAME_STATE.started = true;
       sound.init();
+      
+      // 嘗試請求手機全螢幕與橫向螢幕鎖定 (支援的環境下)
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {});
+      }
+
       setTimeout(() => {
         startDialogueQueue([
           {
             speaker: "梁澤銘",
-            role: "青少年法證安全專案特約調查員",
-            text: "我是特約校園安全調查員梁澤銘。咪制書院模擬考場內，模範生岑詠蕎突然全身強直痙攣抽搐倒地。"
+            role: "特約校園安全調查員",
+            text: "我是特約校園安全調查員梁澤銘。咪制書院中六考場上，岑詠蕎突發全身劇烈肌陣攣抽搐昏迷。"
           },
           {
             speaker: "梁澤銘",
             role: "任務啟動",
-            text: "情報顯示，有涉毒團伙專門以『純天然提神精油』誘騙學生。我必須在校舍內搜獲全部物證，親自化驗，查明真相！"
+            text: "我必須先搜查岑詠蕎課桌，採樣紫晶液滴；再依據走廊販賣機紙條前往水管夾層起獲軟糖，最後在化學室透過 6 孔點滴板交叉確診致毒黑手！"
           }
-        ], null);
+        ]);
       }, 400);
     }
 
-    /* =========================================================================
-     * 9. 手機端虛擬搖桿與精準觸控控制（動態定位計算，徹底解決橫豎屏失效）
-     * ========================================================================= */
     const touchJoystickInput = { x: 0, z: 0 };
     const joystickContainer = document.getElementById('touch-joystick-container');
     const joystickBase = document.getElementById('joystick-base');
@@ -2174,7 +2149,7 @@
         }
         if (!touch) return;
 
-        const maxDist = 46;
+        const maxDist = 48;
         const dx = touch.clientX - joystickCenter.x;
         const dy = touch.clientY - joystickCenter.y;
         const dist = Math.hypot(dx, dy);
@@ -2217,7 +2192,7 @@
       window.addEventListener('touchcancel', onJoystickEnd, { passive: false });
     }
 
-    // 螢幕右側滑動旋轉視角（過濾所有 UI 按鈕點擊，防止搜查與微調鍵被滑動手勢截胡）
+    // 螢幕右半部滑動旋轉鏡頭 (過濾按鈕點擊)
     let rightTouchId = null;
     let lastTouchX = 0;
 
@@ -2226,16 +2201,13 @@
         const t = e.changedTouches[i];
         const target = document.elementFromPoint(t.clientX, t.clientY) || t.target;
         
-        // 若觸摸點落在任何按鈕、搖桿或彈窗範圍內，一律不啟動鏡頭旋轉
         if (target && target.closest('button, #touch-joystick-container, #mobile-controls-cluster, #dialogue-box, #lab-modal, #notebook-modal, header, .glass-panel')) {
           continue;
         }
 
-        if (t.clientX > window.innerWidth * 0.42 && rightTouchId === null) {
+        if (t.clientX > window.innerWidth * 0.40 && rightTouchId === null) {
           rightTouchId = t.identifier;
           lastTouchX = t.clientX;
-          const hint = document.getElementById('swipe-hint');
-          if (hint) hint.style.display = 'none';
         }
       }
     }, { passive: true });
@@ -2270,7 +2242,6 @@
       document.getElementById('btn-rotate-left')?.addEventListener('click', () => rotateCameraByDegrees(-45));
       document.getElementById('btn-rotate-right')?.addEventListener('click', () => rotateCameraByDegrees(45));
       
-      // 核心修復：搜查按鈕綁定 pointerdown 與 click，杜絕手機 300ms 延遲與橫屏觸摸失效
       const interactBtn = document.getElementById('mobile-interact-btn');
       if (interactBtn) {
         interactBtn.addEventListener('pointerdown', (e) => {
@@ -2290,18 +2261,13 @@
         document.getElementById('icon-sound-on').style.opacity = isMuted ? '0.3' : '1';
       });
 
-      // 化學檢驗台按鈕
+      // 6 孔點滴板實驗按鈕
       document.getElementById('btn-close-lab')?.addEventListener('click', closeLabModal);
-      document.getElementById('tab-sample-etomidate')?.addEventListener('click', () => switchLabSample('sample_etomidate'));
-      document.getElementById('tab-sample-candy')?.addEventListener('click', () => switchLabSample('sample_candy'));
-      document.getElementById('tab-sample-control')?.addEventListener('click', () => switchLabSample('sample_control'));
-      document.getElementById('btn-lab-load')?.addEventListener('click', labStepLoadSample);
-      document.getElementById('btn-lab-reagent1')?.addEventListener('click', labStepApplyReagent1);
-      document.getElementById('btn-lab-reagent2')?.addEventListener('click', labStepApplyReagent2);
-      document.getElementById('btn-start-centrifuge')?.addEventListener('click', labStepCentrifuge);
-      document.getElementById('btn-uv-lamp')?.addEventListener('click', toggleUVLamp);
-      document.getElementById('btn-reset-lab')?.addEventListener('click', resetLabStation);
-      document.getElementById('btn-lab-submit')?.addEventListener('click', generateLabDiagnosis);
+      document.getElementById('btn-spot-load')?.addEventListener('click', spotStepLoadSamples);
+      document.getElementById('btn-spot-reagent1')?.addEventListener('click', spotStepApplyReagent1);
+      document.getElementById('btn-spot-reagent2')?.addEventListener('click', spotStepApplyReagent2);
+      document.getElementById('btn-spot-reset')?.addEventListener('click', resetSpotPlate);
+      document.getElementById('btn-spot-submit')?.addEventListener('click', spotStepSubmitReport);
 
       // 案件手冊分頁按鈕
       document.getElementById('tab-btn-clues')?.addEventListener('click', () => switchNotebookTab('clues'));
@@ -2313,9 +2279,11 @@
       document.getElementById('btn-start-game')?.addEventListener('click', startGame);
       document.getElementById('btn-restart-game')?.addEventListener('click', () => window.location.reload());
       document.getElementById('btn-webgl-reload')?.addEventListener('click', () => window.location.reload());
+      document.getElementById('btn-force-portrait-continue')?.addEventListener('click', () => {
+        document.getElementById('landscape-orientation-overlay').style.display = 'none';
+      });
     }
 
-    // 視窗大小及橫豎螢幕翻轉防抖監聽
     let resizeTimer;
     function handleViewportResize() {
       clearTimeout(resizeTimer);
@@ -2330,15 +2298,11 @@
     window.addEventListener('resize', handleViewportResize);
     window.addEventListener('orientationchange', handleViewportResize);
 
-    // Page Visibility API：背景分頁自動暫停渲染以省電
     let isTabVisible = true;
     document.addEventListener('visibilitychange', () => {
       isTabVisible = !document.hidden;
     });
 
-    /* =========================================================================
-     * 10. 遊戲主迴圈
-     * ========================================================================= */
     const clock = new THREE.Clock();
 
     function gameLoop() {
