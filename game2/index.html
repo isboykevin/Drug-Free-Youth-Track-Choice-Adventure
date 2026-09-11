@@ -162,6 +162,20 @@
       box-shadow: 0 4px 18px rgba(249, 115, 22, 0.85);
     }
 
+    /* 對話框多樣態設計（獨白/旁白/通聯區分） */
+    .dialogue-type-monologue {
+      border-color: rgba(56, 189, 248, 0.5) !important;
+      background: rgba(12, 25, 44, 0.96) !important;
+    }
+    .dialogue-type-narration {
+      border-color: rgba(251, 146, 60, 0.5) !important;
+      background: rgba(28, 19, 13, 0.96) !important;
+    }
+    .dialogue-type-call {
+      border-color: rgba(244, 63, 94, 0.7) !important;
+      background: rgba(36, 10, 20, 0.96) !important;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .pixel-scanlines, .animate-ping, .animate-bounce, .animate-pulse {
         animation: none !important;
@@ -171,7 +185,6 @@
   </style>
 </head>
 <body class="relative w-full h-full bg-slate-950 overflow-hidden">
-
   <!-- 無障礙跳至主要區域 -->
   <a href="#game-canvas" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-orange-600 focus:text-white focus:rounded-xl focus:font-bold">
     跳至主要校園搜查區域
@@ -241,7 +254,7 @@
       </div>
     </div>
 
-    <!-- 右上：3層立體雷達地圖、視角切換、案件簿與靜音 -->
+    <!-- 右上：2D雷達地圖、視角切換、案件簿與靜音 -->
     <div class="pointer-events-auto flex items-center gap-2">
       <!-- 2D 懸浮多樓層雷達小地圖 -->
       <div class="glass-panel p-1 rounded-2xl flex flex-col items-center shadow-xl border-orange-500/40 relative">
@@ -305,9 +318,9 @@
     <span id="prompt-action-text" class="text-xs font-bold text-slate-100">調查現場</span>
   </div>
 
-  <!-- 劇情對話介面 (緊湊零溢出) -->
+  <!-- 劇情對話介面 (清晰辨識：獨白/旁白/通聯) -->
   <div id="dialogue-box" class="fixed safe-bottom left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-2xl z-40 pointer-events-none opacity-0 translate-y-6 transition-all duration-300 flex flex-col" role="region" aria-label="劇情對話框">
-    <div class="glass-panel p-2.5 sm:p-3 rounded-2xl border-orange-400/40 relative shadow-2xl flex flex-col">
+    <div id="dialogue-panel-card" class="glass-panel p-2.5 sm:p-3 rounded-2xl border-orange-400/40 relative shadow-2xl flex flex-col transition-colors duration-200">
       <div class="flex items-center justify-between mb-1 border-b border-slate-700/60 pb-1 shrink-0">
         <div class="flex items-center gap-2">
           <div id="dialogue-avatar" class="w-7 h-7 rounded-xl bg-orange-600/20 border border-orange-400/60 flex items-center justify-center text-base shadow-inner">
@@ -529,7 +542,7 @@
         暮光迴響
       </h1>
       <h2 class="text-xs font-bold text-slate-300 mb-2 tracking-wide cinematic-serif">
-        Twilight Echoes: 沉淪之霧 • 三層立體校園旗艦版
+        Twilight Echoes: 沉淪之霧 • 垂直三層智能透視旗艦版
       </h2>
       <p class="text-xs text-slate-300 leading-relaxed mb-3 text-left bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
         香港「咪制書院」黃昏突發嚴重意外！中六生<strong class="text-amber-300">岑詠蕎</strong>在考場中劇烈抽搐休克；體育部更衣室內，籃球隊長<strong class="text-cyan-300">霍展霆</strong>亦服下不明糖果倒地！特約安全調查員梁澤銘踏入 1F 校門大堂，展開跨越 3 層樓的縱深搜查！
@@ -770,7 +783,7 @@
     // 遊戲狀態與有序三層任務階段
     const GAME_STATE = {
       started: false,
-      questStage: 1, // 1: 1F更衣室霍展霆隨身物, 2: 2F課桌紫晶液, 3: 2F儲物櫃17號, 4: 2F水管夾層軟糖, 5: 2F化驗室快篩, 6: 3F天台通聯錄音, 7: 思維宮殿
+      questStage: 1, // 1: 1F更衣室, 2: 2F課桌, 3: 2F儲物櫃17號, 4: 2F水管夾層, 5: 2F實驗室快篩, 6: 3F天台通聯, 7: 思維宮殿
       currentZone: 'foyer',
       cluesFound: new Set(),
       isDialogueOpen: false,
@@ -785,7 +798,7 @@
       currentFloor: 1 // 1: 1F大堂更衣室, 2: 2F教學化驗區, 3: 3F暮光天台
     };
 
-    // 階梯式全無遮擋三層校舍 5 大核心物證卷宗
+    // 5 大核心物證卷宗（嚴格對應垂直三層建築）
     const CLUES_DATA = {
       clue_gym_fok: {
         id: "clue_gym_fok",
@@ -793,10 +806,10 @@
         name: "1F 體育更衣室外霍展霆的護膝與水果糖紙",
         zone: "1F 體育更衣室走廊",
         icon: "🩹",
-        pos: { x: -20, y: 1.25, z: 2.0 },
+        pos: { x: -9.5, y: 1.25, z: 4.0 },
         floor: 1,
         shortDesc: "籃球隊長霍展霆在此休克送醫。現場拾獲撕開的奇異果糖包裝紙與沾有淡紫粉末的護膝，便條寫著：『展霆，中六B班詠蕎那裡還有存貨……』引導登上 2F 教學樓！",
-        fullDesc: "揭示霍展霆與岑詠蕎受害之共同源頭。引導調查員沿階梯A前往 2F 中六B班房！"
+        fullDesc: "揭示霍展霆與岑詠蕎受害之共同源頭。引導調查員沿東側階梯A前往 2F 中六B班房！"
       },
       clue_desk: {
         id: "clue_desk",
@@ -804,7 +817,7 @@
         name: "2F 中六B班 岑詠蕎課桌紫晶液滴與求助字條",
         zone: "2F 中六B班房",
         icon: "📝",
-        pos: { x: 5.0, y: 4.85, z: -4.5 },
+        pos: { x: -8.5, y: 5.05, z: -7.5 },
         floor: 2,
         shortDesc: "考場 2 號課桌殘留深紫色未知液滴（證物 A）。撕碎字條寫著：『17 號儲物櫃留了新暗號……我和展霆吸了全身劇烈抽搐……』指引排查 2F 走廊儲物櫃！",
         fullDesc: "採集到證物 A（紫晶液滴）。指示前往 2F 走廊排查 17 號儲物櫃。"
@@ -815,7 +828,7 @@
         name: "2F 走廊 17 號儲物櫃內的暗號提貨單",
         zone: "2F 教學樓中央長廊",
         icon: "🏷️",
-        pos: { x: 16.0, y: 4.85, z: -0.4 },
+        pos: { x: 3.0, y: 5.05, z: 1.2 },
         floor: 2,
         shortDesc: "排查 17 號儲物櫃起獲暗號提貨單：『新一批特調奇異果軟糖已放置在【化學實驗室外走廊水管夾層】，速取。』",
         fullDesc: "明確指出毒物藏匿於 2F 化學室外走廊水管夾層中。"
@@ -826,7 +839,7 @@
         name: "2F 化學室外水管夾層內的特調奇異果軟糖",
         zone: "2F 理科化學室外廊水管夾層",
         icon: "🍬",
-        pos: { x: 10.0, y: 4.85, z: 5.6 },
+        pos: { x: 6.5, y: 5.05, z: 5.2 },
         floor: 2,
         shortDesc: "起獲一包偽裝成提神果糖的未知軟糖（證物 B）！兩份樣品已齊全，立即進入旁邊化學室進行雙試管定性快篩！",
         fullDesc: "起獲證物 B（軟糖樣品）。與證物 A 一同送進 2F 理科實驗室化驗。"
@@ -837,7 +850,7 @@
         name: "2F 理科實驗室 雙試管快篩定性確診報告",
         zone: "2F 理科綜合化學實驗室",
         icon: "🧪",
-        pos: { x: 10.0, y: 4.85, z: 11.5 },
+        pos: { x: 9.0, y: 5.05, z: 7.0 },
         floor: 2,
         shortDesc: "排除氯胺酮，確診兩份樣品均含有受管制的危險藥物「依托咪酯」！此時 3F 天台方向傳來急促震動鈴聲！",
         fullDesc: "實驗室定性確診！通往 3F 天台之階梯B解鎖，立即登上天台追捕訊號源！"
@@ -848,7 +861,7 @@
         name: "3F 暮光天台排風箱後震動響鈴的毒販通聯手機",
         zone: "3F 教學樓暮光天台",
         icon: "📱",
-        pos: { x: 34.0, y: 8.45, z: -2.0 },
+        pos: { x: -5.0, y: 8.85, z: -2.5 },
         floor: 3,
         shortDesc: "接聽排風箱後的加密手機，成功錄下主謀「暗夜調劑師」勒索學生的通話錄音！定罪鏈全數完成！",
         fullDesc: "截獲關鍵鐵證通聯！立即打開案件手冊，進入思維宮殿完成定案並通報警方！"
@@ -861,28 +874,28 @@
         id: "locker_11",
         num: 11,
         name: "2F 走廊 11 號儲物櫃",
-        pos: { x: 12.0, y: 4.8, z: -0.4 },
+        pos: { x: -2.0, y: 5.0, z: 1.2 },
         desc: "這是 11 號儲物櫃。裡面整齊疊放著校服與幾本 DSE 歷屆試題，未發現可疑暗號。"
       },
       locker_14: {
         id: "locker_14",
         num: 14,
         name: "2F 走廊 14 號儲物櫃",
-        pos: { x: 14.0, y: 4.8, z: -0.4 },
+        pos: { x: 0.5, y: 5.0, z: 1.2 },
         desc: "這是 14 號儲物櫃。門外貼著學界籃球錦標賽賽程表，鎖具完好，無異常夾層。"
       },
       locker_20: {
         id: "locker_20",
         num: 20,
         name: "2F 走廊 20 號儲物櫃",
-        pos: { x: 18.0, y: 4.8, z: -0.4 },
+        pos: { x: 5.5, y: 5.0, z: 1.2 },
         desc: "這是 20 號儲物櫃。裡面放置著雨傘與水樽，縫隙乾淨，不是藏匿地點。"
       },
       locker_23: {
         id: "locker_23",
         num: 23,
         name: "2F 走廊 23 號儲物櫃",
-        pos: { x: 19.5, y: 4.8, z: -0.4 },
+        pos: { x: 7.5, y: 5.0, z: 1.2 },
         desc: "這是 23 號儲物櫃。鎖頭有些許鏽蝕，顯然近期無人動過。"
       }
     };
@@ -892,7 +905,7 @@
       trophy_case: {
         id: "trophy_case",
         name: "1F 大堂學界榮譽陳列櫃",
-        pos: { x: -10.0, y: 1.2, z: -3.4 },
+        pos: { x: 0.0, y: 1.2, z: -7.5 },
         desc: "陳列櫃擺放著咪制書院在學界體育與學術賽事的獎盃。其中『全港學界男子組冠軍 MVP 霍展霆』與『文憑試傑出特許生 岑詠蕎』的照片格外耀眼……兩人本應前途似錦，卻被毒販的偽裝話術拖入深淵！"
       }
     };
@@ -915,7 +928,7 @@
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x060814);
-    scene.fog = new THREE.FogExp2(0x0a0f20, 0.016);
+    scene.fog = new THREE.FogExp2(0x0a0f20, 0.014);
 
     const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
     renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "high-performance" });
@@ -935,20 +948,20 @@
     sunLight.shadow.mapSize.height = isMobileDevice ? 512 : 1024;
     sunLight.shadow.camera.near = 0.5;
     sunLight.shadow.camera.far = 120;
-    sunLight.shadow.camera.left = -45;
-    sunLight.shadow.camera.right = 45;
-    sunLight.shadow.camera.top = 45;
-    sunLight.shadow.camera.bottom = -45;
+    sunLight.shadow.camera.left = -30;
+    sunLight.shadow.camera.right = 30;
+    sunLight.shadow.camera.top = 30;
+    sunLight.shadow.camera.bottom = -30;
     scene.add(sunLight);
 
-    const roofPointLight = new THREE.PointLight(0xa855f7, 1.2, 30);
-    roofPointLight.position.set(34, 11, 0);
+    const roofPointLight = new THREE.PointLight(0xa855f7, 1.2, 25);
+    roofPointLight.position.set(-5, 11, -2);
     scene.add(roofPointLight);
 
     const CAMERA_PRESETS = [
       { name: "斜角俯視", dist: 8.5, height: 7.0 },
       { name: "特寫跟隨", dist: 5.6, height: 4.5 },
-      { name: "高空全覽", dist: 14.0, height: 12.0 }
+      { name: "高空全覽", dist: 13.0, height: 11.0 }
     ];
 
     function cycleCameraPreset() {
@@ -964,6 +977,7 @@
       sound.playDialogueBlip();
     }
 
+    // 鍵盤輸入狀態
     const keys = {};
     window.addEventListener('keydown', (e) => {
       keys[e.code] = true;
@@ -983,25 +997,30 @@
       keys[e.code] = false;
     });
 
-    const worldGroup = new THREE.Group();
-    scene.add(worldGroup);
+    // 核心垂直三層獨立羣組（透過 Floor Cutaway 徹底消除上層對下層的相機遮擋）
+    const floor1Group = new THREE.Group();
+    const floor2Group = new THREE.Group();
+    const floor3Group = new THREE.Group();
+    scene.add(floor1Group);
+    scene.add(floor2Group);
+    scene.add(floor3Group);
+
     const interactableMeshes = [];
 
-    // 實體障礙物碰撞箱 (完全匹配階梯式校舍)
+    // 實體障礙物碰撞箱
     const SOLID_OBSTACLES = [
-      // 1F 大堂陳列櫃 (y: 0~3.6)
-      { minX: -11.8, maxX: -8.2, minZ: -4.0, maxZ: -2.8, floor: 1 },
-      // 1F 體育更衣室隔間長椅 (y: 0~3.6)
-      { minX: -22.5, maxX: -17.5, minZ: 3.2, maxZ: 4.8, floor: 1 },
-      // 2F 走廊儲物櫃 (x: 11 ~ 20.2, z: -0.8 ~ 0.0, floor: 2)
-      { minX: 11.0, maxX: 20.2, minZ: -0.8, maxZ: 0.0, floor: 2 },
-      // 2F 化學實驗台 1 & 2 (floor: 2)
-      { minX: 7.0, maxX: 13.0, minZ: 7.2, maxZ: 8.8, floor: 2 },
-      { minX: 7.0, maxX: 13.0, minZ: 10.8, maxZ: 12.4, floor: 2 },
+      // 1F 大堂陳列櫃 (y: 0~3.8)
+      { minX: -2.0, maxX: 2.0, minZ: -8.5, maxZ: -6.5, floor: 1 },
+      // 1F 體育更衣室隔間長椅 (y: 0~3.8)
+      { minX: -12.0, maxX: -7.0, minZ: 3.2, maxZ: 4.8, floor: 1 },
+      // 2F 走廊儲物櫃 (x: -3 ~ 8.5, z: 0.8 ~ 1.6, floor: 2)
+      { minX: -3.0, maxX: 8.5, minZ: 0.8, maxZ: 1.6, floor: 2 },
+      // 2F 化學實驗台 (floor: 2)
+      { minX: 6.0, maxX: 12.0, minZ: 6.2, maxZ: 7.8, floor: 2 },
       // 3F 天台大水塔 (floor: 3)
-      { minX: 36.0, maxX: 40.0, minZ: 1.5, maxZ: 5.5, floor: 3 },
+      { minX: 6.0, maxX: 10.0, minZ: 2.0, maxZ: 6.0, floor: 3 },
       // 3F 天台排風箱 (floor: 3)
-      { minX: 32.0, maxX: 36.0, minZ: -4.5, maxZ: -2.5, floor: 3 }
+      { minX: -7.0, maxX: -3.0, minZ: -4.5, maxZ: -2.5, floor: 3 }
     ];
 
     const materials = {
@@ -1013,14 +1032,13 @@
       stairMat: new THREE.MeshStandardMaterial({ color: 0x333b4d, roughness: 0.5, metalness: 0.2 }),
       wallMat: new THREE.MeshStandardMaterial({ color: 0xdfd3c5, roughness: 0.85 }),
       halfWallMat: new THREE.MeshStandardMaterial({ color: 0xc8b8a6, roughness: 0.85 }),
-      glassMat: new THREE.MeshStandardMaterial({ color: 0x93c5fd, transparent: true, opacity: 0.35, roughness: 0.1 }),
       darkMetal: new THREE.MeshStandardMaterial({ color: 0x222733, metalness: 0.7, roughness: 0.35 }),
       deskWood: new THREE.MeshStandardMaterial({ color: 0xa35e30, roughness: 0.5 }),
       targetDeskWood: new THREE.MeshStandardMaterial({ color: 0xc2410c, roughness: 0.4 }),
       chalkboard: new THREE.MeshStandardMaterial({ color: 0x143121, roughness: 0.8 })
     };
 
-    function spawnClueMarker(clueKey, x, y, z, isDummy = false) {
+    function spawnClueMarker(clueKey, x, y, z, targetFloor, isDummy = false) {
       const g = new THREE.Group();
       g.position.set(x, y, z);
 
@@ -1042,97 +1060,119 @@
         ring.position.y = -1.1;
         g.add(ring);
 
-        g.userData = { clueId: clueKey, gemMesh: gem, ringMesh: ring, initialY: y, isDummy: false };
+        g.userData = { clueId: clueKey, floor: targetFloor, gemMesh: gem, ringMesh: ring, initialY: y, isDummy: false };
       } else {
-        g.userData = { clueId: clueKey, isDummy: true, initialY: y };
+        g.userData = { clueId: clueKey, floor: targetFloor, isDummy: true, initialY: y };
       }
 
       interactableMeshes.push(g);
-      worldGroup.add(g);
+
+      if (targetFloor === 1) floor1Group.add(g);
+      else if (targetFloor === 2) floor2Group.add(g);
+      else if (targetFloor === 3) floor3Group.add(g);
     }
 
-    function buildSeamlessWorld() {
+    function buildIsolatedMultiFloorWorld() {
       // =========================================================================================
-      // 【1F 西翼地面層：中庭接待大堂 & 體育部走廊】(X: -26 ~ -6, Y = 0, Z: -7 ~ 7)
-      // 零垂直重疊，相機由高處向下俯瞰完全通透！
+      // 【1F 地面層：中庭接待大堂 & 體育部走廊】(X: -14 ~ 14, Z: -9 ~ 9, Y = 0)
       // =========================================================================================
-      const f1Floor = new THREE.Mesh(new THREE.PlaneGeometry(20, 14), materials.foyerFloor);
+      const f1Floor = new THREE.Mesh(new THREE.PlaneGeometry(28, 18), materials.foyerFloor);
       f1Floor.rotation.x = -Math.PI / 2;
-      f1Floor.position.set(-16, 0, 0);
+      f1Floor.position.set(0, 0, 0);
       f1Floor.receiveShadow = true;
-      worldGroup.add(f1Floor);
+      floor1Group.add(f1Floor);
 
-      // 1F 北牆與西牆（高牆）
-      const f1WallN = new THREE.Mesh(new THREE.BoxGeometry(20, 3.2, 0.4), materials.wallMat);
-      f1WallN.position.set(-16, 1.6, -7);
-      worldGroup.add(f1WallN);
+      // 1F 外圍牆體（南側半矮牆 1.2m，確保相機俯視無任何阻擋）
+      const f1WallN = new THREE.Mesh(new THREE.BoxGeometry(28, 3.2, 0.4), materials.wallMat);
+      f1WallN.position.set(0, 1.6, -9);
+      floor1Group.add(f1WallN);
 
-      const f1WallW = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 14), materials.wallMat);
-      f1WallW.position.set(-26, 1.6, 0);
-      worldGroup.add(f1WallW);
+      const f1WallW = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), materials.wallMat);
+      f1WallW.position.set(-14, 1.6, 0);
+      floor1Group.add(f1WallW);
 
-      // 1F 南牆（半截防遮擋矮牆 1.2m，確保相機視角毫無遮蔽）
-      const f1WallS = new THREE.Mesh(new THREE.BoxGeometry(20, 1.2, 0.4), materials.halfWallMat);
-      f1WallS.position.set(-16, 0.6, 7);
-      worldGroup.add(f1WallS);
+      const f1WallS = new THREE.Mesh(new THREE.BoxGeometry(28, 1.2, 0.4), materials.halfWallMat);
+      f1WallS.position.set(0, 0.6, 9);
+      floor1Group.add(f1WallS);
 
-      // 1F 榮譽獎盃陳列櫃
+      const f1WallE = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), materials.wallMat);
+      f1WallE.position.set(14, 1.6, 0);
+      floor1Group.add(f1WallE);
+
+      // 1F 大堂榮譽陳列櫃
       const trophyMesh = new THREE.Mesh(new THREE.BoxGeometry(3.6, 2.2, 0.8), materials.darkMetal);
-      trophyMesh.position.set(-10, 1.1, -3.4);
+      trophyMesh.position.set(0, 1.1, -7.5);
       trophyMesh.castShadow = true;
-      worldGroup.add(trophyMesh);
+      floor1Group.add(trophyMesh);
 
       // 1F 體育更衣室長椅（霍展霆倒下處）
       const bench = new THREE.Mesh(new THREE.BoxGeometry(5.0, 0.6, 1.2), materials.woodFloor);
-      bench.position.set(-20, 0.3, 3.8);
+      bench.position.set(-9.5, 0.3, 4.0);
       bench.castShadow = true;
-      worldGroup.add(bench);
+      floor1Group.add(bench);
 
-      // 1F -> 2F 景觀階梯 A (連接 x: -6.0 ~ 0.0, y: 0 -> 3.6, z: -2 ~ 2)
+      // 1F -> 2F 階梯 A（東翼，X: 8.0 ~ 13.0, Y: 0 -> 3.8, Z: -1 ~ 3）
       const stair1Steps = 10;
-      const stair1Rise = 3.6 / stair1Steps;
-      const stair1Run = 6.0 / stair1Steps;
+      const stair1Rise = 3.8 / stair1Steps;
+      const stair1Run = 5.0 / stair1Steps;
       for (let s = 0; s < stair1Steps; s++) {
-        const sx = -6.0 + s * stair1Run + stair1Run / 2;
+        const sx = 8.0 + s * stair1Run + stair1Run / 2;
         const sh = (s + 1) * stair1Rise;
-        const step = new THREE.Mesh(new THREE.BoxGeometry(stair1Run * 1.02, sh, 4.0), materials.stairMat);
-        step.position.set(sx, sh / 2, 0);
+        const step = new THREE.Mesh(new THREE.BoxGeometry(stair1Run * 1.02, sh, 3.5), materials.stairMat);
+        step.position.set(sx, sh / 2, 1.0);
         step.receiveShadow = true;
-        worldGroup.add(step);
+        floor1Group.add(step);
       }
 
       // =========================================================================================
-      // 【2F 中翼教學樓層：中六B班房、走廊與理科化學室】(X: 0 ~ 20, Y = 3.6)
-      // 水平向東展開，階梯向上攀升，與 1F、3F 均無重疊！
+      // 【2F 垂直二樓：中六B班房、走廊與理科化學室】(X: -14 ~ 14, Z: -9 ~ 9, Y = 3.8)
+      // 垂直建立在 1F 正上方；當處於 1F 時本層完全消隱，杜絕遮擋！
       // =========================================================================================
-      // 2F 班房地面 (x: 0 ~ 10, z: -7 ~ 0)
-      const classFloor = new THREE.Mesh(new THREE.PlaneGeometry(10, 7), materials.woodFloor);
-      classFloor.rotation.x = -Math.PI / 2;
-      classFloor.position.set(5, 3.6, -3.5);
-      classFloor.receiveShadow = true;
-      worldGroup.add(classFloor);
+      const f2Floor = new THREE.Mesh(new THREE.PlaneGeometry(28, 18), materials.corridorFloor);
+      f2Floor.rotation.x = -Math.PI / 2;
+      f2Floor.position.set(0, 3.8, 0);
+      f2Floor.receiveShadow = true;
+      floor2Group.add(f2Floor);
 
-      const f2ClassN = new THREE.Mesh(new THREE.BoxGeometry(10, 2.6, 0.4), materials.wallMat);
-      f2ClassN.position.set(5, 4.9, -7);
-      worldGroup.add(f2ClassN);
+      const f2WallN = new THREE.Mesh(new THREE.BoxGeometry(28, 3.2, 0.4), materials.wallMat);
+      f2WallN.position.set(0, 5.4, -9);
+      floor2Group.add(f2WallN);
 
+      const f2WallW = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), materials.wallMat);
+      f2WallW.position.set(-14, 5.4, 0);
+      floor2Group.add(f2WallW);
+
+      const f2WallS = new THREE.Mesh(new THREE.BoxGeometry(28, 1.2, 0.4), materials.halfWallMat);
+      f2WallS.position.set(0, 4.4, 9);
+      floor2Group.add(f2WallS);
+
+      const f2WallE = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), materials.wallMat);
+      f2WallE.position.set(14, 5.4, 0);
+      floor2Group.add(f2WallE);
+
+      // 2F 中六B班房隔牆
+      const f2ClassDivider = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.0, 10), materials.wallMat);
+      f2ClassDivider.position.set(-2.5, 5.3, -4.0);
+      floor2Group.add(f2ClassDivider);
+
+      // 黑板
       const board = new THREE.Mesh(new THREE.BoxGeometry(6, 1.6, 0.1), materials.chalkboard);
-      board.position.set(5, 5.2, -6.75);
-      worldGroup.add(board);
+      board.position.set(-8.5, 5.4, -8.8);
+      floor2Group.add(board);
 
-      // 【2F 班房課桌椅：精準 3 排 x 3 列 = 9 張課桌】
-      const deskCols = [3, 5, 7];
-      const deskRows = [-5.0, -3.2, -1.4];
+      // 2F 班房課桌椅：精準 3 排 x 3 列 = 9 張課桌
+      const deskCols = [-11, -8.5, -6];
+      const deskRows = [-7.5, -5.5, -3.5];
       deskCols.forEach(dx => {
         deskRows.forEach(dz => {
-          const isTargetDesk = (dx === 5 && dz === -5.0);
+          const isTargetDesk = (dx === -8.5 && dz === -7.5);
           const deskMesh = new THREE.Mesh(
             new THREE.BoxGeometry(1.2, 0.75, 0.65),
             isTargetDesk ? materials.targetDeskWood : materials.deskWood
           );
-          deskMesh.position.set(dx, 4.05, dz);
+          deskMesh.position.set(dx, 4.25, dz);
           deskMesh.castShadow = true;
-          worldGroup.add(deskMesh);
+          floor2Group.add(deskMesh);
 
           SOLID_OBSTACLES.push({
             minX: dx - 0.6,
@@ -1144,131 +1184,119 @@
         });
       });
 
-      // 2F 中央長廊 (x: 0 ~ 20, z: 0 ~ 5.2)
-      const f2CorrFloor = new THREE.Mesh(new THREE.PlaneGeometry(20, 5.2), materials.corridorFloor);
-      f2CorrFloor.rotation.x = -Math.PI / 2;
-      f2CorrFloor.position.set(10, 3.6, 2.6);
-      f2CorrFloor.receiveShadow = true;
-      worldGroup.add(f2CorrFloor);
-
       // 2F 走廊儲物櫃（11、14、17、20、23 號）
       const lockerPositions = [
-        { x: 12.0, num: "11" },
-        { x: 14.0, num: "14" },
-        { x: 16.0, num: "17" },
-        { x: 18.0, num: "20" },
-        { x: 19.5, num: "23" }
+        { x: -2.0, num: "11" },
+        { x: 0.5, num: "14" },
+        { x: 3.0, num: "17" },
+        { x: 5.5, num: "20" },
+        { x: 7.5, num: "23" }
       ];
       lockerPositions.forEach(loc => {
-        const locker = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.2, 0.75), materials.darkMetal);
-        locker.position.set(loc.x, 4.7, -0.4);
+        const locker = new THREE.Mesh(new THREE.BoxGeometry(1.4, 2.2, 0.75), materials.darkMetal);
+        locker.position.set(loc.x, 4.9, 1.2);
         locker.castShadow = true;
-        worldGroup.add(locker);
+        floor2Group.add(locker);
       });
 
       // 2F 化學室外露水管
       const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 3.0, 12), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8, roughness: 0.2 }));
-      pipe.position.set(10, 5.1, 5.6);
-      worldGroup.add(pipe);
+      pipe.position.set(6.5, 5.3, 5.2);
+      floor2Group.add(pipe);
 
-      // 2F 理科化學實驗室 (x: 5.5 ~ 16.5, z: 5.2 ~ 15)
-      const labFloor = new THREE.Mesh(new THREE.PlaneGeometry(11, 9.8), materials.labFloor);
-      labFloor.rotation.x = -Math.PI / 2;
-      labFloor.position.set(11, 3.6, 10.1);
-      labFloor.receiveShadow = true;
-      worldGroup.add(labFloor);
+      // 2F 理化實驗台
+      const labTable = new THREE.Mesh(new THREE.BoxGeometry(6.0, 1.0, 1.6), new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3 }));
+      labTable.position.set(9.0, 4.35, 7.0);
+      labTable.castShadow = true;
+      floor2Group.add(labTable);
 
-      const labE = new THREE.Mesh(new THREE.BoxGeometry(0.4, 2.6, 9.8), materials.wallMat);
-      labE.position.set(16.5, 4.9, 10.1);
-      worldGroup.add(labE);
-
-      const labS = new THREE.Mesh(new THREE.BoxGeometry(11, 1.2, 0.4), materials.halfWallMat);
-      labS.position.set(11, 4.2, 15);
-      worldGroup.add(labS);
-
-      for (let lz = 8; lz <= 11.6; lz += 3.6) {
-        const labTable = new THREE.Mesh(new THREE.BoxGeometry(6.0, 1.0, 1.6), new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.3 }));
-        labTable.position.set(10, 4.15, lz);
-        labTable.castShadow = true;
-        worldGroup.add(labTable);
-      }
-
-      // 2F -> 3F 實體階梯 B (連接 x: 20.0 ~ 26.0, y: 3.6 -> 7.2, z: -2 ~ 2)
+      // 2F -> 3F 階梯 B（西翼，X: -8.0 ~ -13.0, Y: 3.8 -> 7.6, Z: 5.0 ~ 9.0）
       const stair2Steps = 10;
-      const stair2Rise = 3.6 / stair2Steps;
-      const stair2Run = 6.0 / stair2Steps;
+      const stair2Rise = 3.8 / stair2Steps;
+      const stair2Run = 5.0 / stair2Steps;
       for (let s = 0; s < stair2Steps; s++) {
-        const sx = 20.0 + s * stair2Run + stair2Run / 2;
-        const sh = 3.6 + (s + 1) * stair2Rise;
-        const step = new THREE.Mesh(new THREE.BoxGeometry(stair2Run * 1.02, sh, 4.0), materials.stairMat);
-        step.position.set(sx, sh / 2, 0);
+        const sx = -8.0 - s * stair2Run - stair2Run / 2;
+        const sh = 3.8 + (s + 1) * stair2Rise;
+        const step = new THREE.Mesh(new THREE.BoxGeometry(stair2Run * 1.02, sh, 3.5), materials.stairMat);
+        step.position.set(sx, sh / 2, 7.0);
         step.receiveShadow = true;
-        worldGroup.add(step);
+        floor2Group.add(step);
       }
 
       // =========================================================================================
-      // 【3F 東翼頂層：暮光全景天台 & 排風水塔區】(X: 26 ~ 42, Y = 7.2)
-      // 居高臨下，俯瞰整座校舍！
+      // 【3F 垂直三樓：暮光全景天台 & 水塔排風機】(X: -14 ~ 14, Z: -9 ~ 9, Y = 7.6)
       // =========================================================================================
-      const roofFloor = new THREE.Mesh(new THREE.PlaneGeometry(16, 14), materials.rooftopFloor);
+      const roofFloor = new THREE.Mesh(new THREE.PlaneGeometry(28, 18), materials.rooftopFloor);
       roofFloor.rotation.x = -Math.PI / 2;
-      roofFloor.position.set(34, 7.2, 0);
+      roofFloor.position.set(0, 7.6, 0);
       roofFloor.receiveShadow = true;
-      worldGroup.add(roofFloor);
-
-      const roofBase = new THREE.Mesh(new THREE.BoxGeometry(16, 7.2, 14), new THREE.MeshStandardMaterial({ color: 0x141822 }));
-      roofBase.position.set(34, 3.6, 0);
-      worldGroup.add(roofBase);
+      floor3Group.add(roofFloor);
 
       const fenceMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8, roughness: 0.3 });
-      const fenceN = new THREE.Mesh(new THREE.BoxGeometry(16, 1.3, 0.2), fenceMat);
-      fenceN.position.set(34, 7.85, -7);
-      worldGroup.add(fenceN);
+      const fenceN = new THREE.Mesh(new THREE.BoxGeometry(28, 1.3, 0.2), fenceMat);
+      fenceN.position.set(0, 8.25, -9);
+      floor3Group.add(fenceN);
 
-      const fenceS = new THREE.Mesh(new THREE.BoxGeometry(16, 1.3, 0.2), fenceMat);
-      fenceS.position.set(34, 7.85, 7);
-      worldGroup.add(fenceS);
+      const fenceS = new THREE.Mesh(new THREE.BoxGeometry(28, 1.3, 0.2), fenceMat);
+      fenceS.position.set(0, 8.25, 9);
+      floor3Group.add(fenceS);
 
-      const fenceE = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.3, 14), fenceMat);
-      fenceE.position.set(42, 7.85, 0);
-      worldGroup.add(fenceE);
+      const fenceE = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.3, 18), fenceMat);
+      fenceE.position.set(14, 8.25, 0);
+      floor3Group.add(fenceE);
+
+      const fenceW = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.3, 18), fenceMat);
+      fenceW.position.set(-14, 8.25, 0);
+      floor3Group.add(fenceW);
 
       // 水塔
       const tank = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 2.0, 3.2, 16), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.6 }));
-      tank.position.set(38, 8.8, 3.5);
+      tank.position.set(8.0, 9.2, 4.0);
       tank.castShadow = true;
-      worldGroup.add(tank);
+      floor3Group.add(tank);
 
       // 排風箱（藏匿手機）
-      const vent = new THREE.Mesh(new THREE.BoxGeometry(3.0, 1.6, 1.8), new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.7 }));
-      vent.position.set(34, 8.0, -3.5);
+      const vent = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.6, 1.8), new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.7 }));
+      vent.position.set(-5.0, 8.4, -3.5);
       vent.castShadow = true;
-      worldGroup.add(vent);
+      floor3Group.add(vent);
 
       // =========================================================================================
-      // 【物證與互動標記生成】
+      // 【物證與互動標記生成（精確綁定各自樓層羣組）】
       // =========================================================================================
-      // 1F: 體育更衣室霍展霆遺留物、榮譽櫃
-      spawnClueMarker('clue_gym_fok', -20, 1.25, 2.0);
-      spawnClueMarker('trophy_case', -10.0, 1.2, -3.4, true);
+      // 1F
+      spawnClueMarker('clue_gym_fok', -9.5, 1.25, 4.0, 1);
+      spawnClueMarker('trophy_case', 0.0, 1.2, -7.5, 1, true);
 
-      // 2F: 課桌、儲物櫃、水管夾層、化驗台
-      spawnClueMarker('clue_desk', 5.0, 4.85, -4.5);
-      spawnClueMarker('clue_corridor', 16.0, 4.85, -0.4);
-      spawnClueMarker('clue_pipe_stash', 10.0, 4.85, 5.6);
-      spawnClueMarker('clue_spot_plate', 10.0, 4.85, 11.5);
+      // 2F
+      spawnClueMarker('clue_desk', -8.5, 5.05, -7.5, 2);
+      spawnClueMarker('clue_corridor', 3.0, 5.05, 1.2, 2);
+      spawnClueMarker('clue_pipe_stash', 6.5, 5.05, 5.2, 2);
+      spawnClueMarker('clue_spot_plate', 9.0, 5.05, 7.0, 2);
 
-      // 2F 走廊非目標儲物櫃
-      spawnClueMarker('locker_11', 12.0, 4.8, -0.4, true);
-      spawnClueMarker('locker_14', 14.0, 4.8, -0.4, true);
-      spawnClueMarker('locker_20', 18.0, 4.8, -0.4, true);
-      spawnClueMarker('locker_23', 19.5, 4.8, -0.4, true);
+      spawnClueMarker('locker_11', -2.0, 5.0, 1.2, 2, true);
+      spawnClueMarker('locker_14', 0.5, 5.0, 1.2, 2, true);
+      spawnClueMarker('locker_20', 5.5, 5.0, 1.2, 2, true);
+      spawnClueMarker('locker_23', 7.5, 5.0, 1.2, 2, true);
 
-      // 3F: 天台加密手機
-      spawnClueMarker('clue_rooftop_burner', 34.0, 8.45, -2.0);
+      // 3F
+      spawnClueMarker('clue_rooftop_burner', -5.0, 8.85, -2.5, 3);
     }
 
-    buildSeamlessWorld();
+    buildIsolatedMultiFloorWorld();
+
+    // 動態樓層透視消隱控制：垂直多層結構但 100% 杜絕遮擋相機！
+    function updateFloorVisibility() {
+      const f = GAME_STATE.currentFloor;
+      // 1F 永遠作為底層地基
+      floor1Group.visible = true;
+      // 玩家在 1F 時，2F 地板/牆壁完全隱形，鏡頭俯視毫無遮蔽！
+      floor2Group.visible = (f >= 2);
+      // 僅當玩家到達 3F 天台時才顯示 3F
+      floor3Group.visible = (f >= 3);
+    }
+
+    updateFloorVisibility();
 
     class InvestigatorAvatar {
       constructor() {
@@ -1314,8 +1342,8 @@
         bag.position.set(0.4, 0.98, -0.05);
         this.mesh.add(bag);
 
-        // 1F 西翼大堂中庭入口處出生（上方毫無任何建築遮蔽！）
-        this.mesh.position.set(-16.0, 0, 1.5);
+        // 1F 中庭大堂出生
+        this.mesh.position.set(0.0, 0, 2.0);
         scene.add(this.mesh);
       }
 
@@ -1369,33 +1397,31 @@
         const x = this.mesh.position.x;
         const z = this.mesh.position.z;
         let targetY = 0;
+        let newFloor = 1;
 
-        // 3F 天台 (x >= 26.0)
-        if (x >= 26.0) {
-          targetY = 7.2;
-          GAME_STATE.currentFloor = 3;
-        } 
-        // 2F -> 3F 階梯 B (x: 20.0 ~ 26.0, z: -2.2 ~ 2.2)
-        else if (x >= 20.0 && x < 26.0 && z >= -2.2 && z <= 2.2) {
-          const progress = (x - 20.0) / 6.0;
-          targetY = THREE.MathUtils.lerp(3.6, 7.2, Math.min(Math.max(progress, 0), 1));
-          GAME_STATE.currentFloor = progress > 0.5 ? 3 : 2;
+        // 階梯 A (1F -> 2F): X: 8.0 ~ 13.0, Z: -1.0 ~ 3.0
+        const onStairA = (x >= 8.0 && x <= 13.0 && z >= -1.0 && z <= 3.0);
+        // 階梯 B (2F -> 3F): X: -13.0 ~ -8.0, Z: 5.0 ~ 9.0
+        const onStairB = (x >= -13.0 && x <= -8.0 && z >= 5.0 && z <= 9.0);
+
+        if (onStairB) {
+          const progress = Math.min(Math.max((-8.0 - x) / 5.0, 0), 1);
+          targetY = 3.8 + progress * 3.8;
+          newFloor = progress > 0.5 ? 3 : 2;
+        } else if (onStairA) {
+          const progress = Math.min(Math.max((x - 8.0) / 5.0, 0), 1);
+          targetY = progress * 3.8;
+          newFloor = progress > 0.5 ? 2 : 1;
+        } else {
+          if (GAME_STATE.currentFloor === 3) targetY = 7.6;
+          else if (GAME_STATE.currentFloor === 2) targetY = 3.8;
+          else targetY = 0;
+          newFloor = GAME_STATE.currentFloor;
         }
-        // 2F 教學與實驗區 (x: 0.0 ~ 20.0)
-        else if (x > 0.0 && x < 20.0) {
-          targetY = 3.6;
-          GAME_STATE.currentFloor = 2;
-        }
-        // 1F -> 2F 階梯 A (x: -6.0 ~ 0.0, z: -2.2 ~ 2.2)
-        else if (x >= -6.0 && x <= 0.0 && z >= -2.2 && z <= 2.2) {
-          const progress = (x - (-6.0)) / 6.0;
-          targetY = THREE.MathUtils.lerp(0, 3.6, Math.min(Math.max(progress, 0), 1));
-          GAME_STATE.currentFloor = progress > 0.5 ? 2 : 1;
-        }
-        // 1F 地面大堂 (x <= -6.0)
-        else {
-          targetY = 0;
-          GAME_STATE.currentFloor = 1;
+
+        if (newFloor !== GAME_STATE.currentFloor) {
+          GAME_STATE.currentFloor = newFloor;
+          updateFloorVisibility();
         }
 
         this.mesh.position.y = THREE.MathUtils.lerp(this.mesh.position.y, targetY, 15 * delta);
@@ -1404,20 +1430,10 @@
       canWalk(x, z) {
         const f = GAME_STATE.currentFloor;
 
-        // 1F 區域邊界
-        const in1F = (f === 1 && x >= -25.5 && x <= -5.8 && z >= -6.5 && z <= 6.5);
-        const onStair1 = (x >= -6.2 && x <= 0.2 && z >= -2.2 && z <= 2.2);
-
-        // 2F 區域邊界
-        const in2FClassCorridor = (f === 2 && x >= 0.0 && x <= 20.0 && z >= -6.5 && z <= 5.2);
-        const in2FLab = (f === 2 && x >= 5.5 && x <= 16.5 && z >= 4.8 && z <= 15.2);
-        const onStair2 = (x >= 19.8 && x <= 26.2 && z >= -2.2 && z <= 2.2);
-
-        // 3F 天台邊界
-        const in3FRooftop = (f === 3 && x >= 25.8 && x <= 41.5 && z >= -6.5 && z <= 6.5);
-
-        const insideWalkable = in1F || onStair1 || in2FClassCorridor || in2FLab || onStair2 || in3FRooftop;
-        if (!insideWalkable) return false;
+        // 外邊界限制
+        if (x < -13.5 || x > 13.5 || z < -8.5 || z > 8.5) {
+          return false;
+        }
 
         // 實體障礙物碰撞
         for (const obs of SOLID_OBSTACLES) {
@@ -1427,11 +1443,11 @@
         }
 
         // 任務推進門禁鎖定
-        if (f === 1 && x > -2.0 && GAME_STATE.questStage < 2) {
-          return false; // 未調查霍展霆遺留物前暫不上樓
+        if (f === 1 && x > 9.5 && GAME_STATE.questStage < 2) {
+          return false;
         }
-        if (f === 2 && x >= 22.0 && GAME_STATE.questStage < 6) {
-          return false; // 未完成實驗室快篩前天台階梯鎖閉
+        if (f === 2 && x < -9.5 && z > 5.0 && GAME_STATE.questStage < 6) {
+          return false;
         }
 
         return true;
@@ -1439,25 +1455,32 @@
 
       checkCurrentZone() {
         const x = this.mesh.position.x;
+        const z = this.mesh.position.z;
         const f = GAME_STATE.currentFloor;
         let zone = "1F 咪制書院 中庭大堂";
         let icon = "🏛️";
 
         if (f === 1) {
-          if (x < -18.0) {
+          if (x < -4.0) {
             zone = "1F 體育更衣室走廊";
             icon = "🏀";
+          } else if (x > 8.0) {
+            zone = "1F 景觀階梯間 A";
+            icon = "🪜";
           } else {
             zone = "1F 中庭接待大堂";
             icon = "🏛️";
           }
         } else if (f === 2) {
-          if (x <= 10 && this.mesh.position.z < 0) {
+          if (x < -2.5) {
             zone = "2F 中六B班房 (事發現場)";
             icon = "📚";
-          } else if (this.mesh.position.z > 5) {
+          } else if (z > 5.0 && x > 2.0) {
             zone = "2F 理科綜合化學實驗室";
             icon = "🧪";
+          } else if (x < -8.0 && z > 5.0) {
+            zone = "2F 天台階梯間 B";
+            icon = "🪜";
           } else {
             zone = "2F 教學樓中央長廊";
             icon = "🚪";
@@ -1481,10 +1504,10 @@
     }
 
     const player = new InvestigatorAvatar();
-
     const minimapCanvas = document.getElementById('minimap-canvas');
     const minimapCtx = minimapCanvas ? minimapCanvas.getContext('2d') : null;
     const dialogueBox = document.getElementById('dialogue-box');
+    const dialoguePanelCard = document.getElementById('dialogue-panel-card');
     const dialogueSpeaker = document.getElementById('dialogue-speaker');
     const dialogueRoleTag = document.getElementById('dialogue-role-tag');
     const dialogueText = document.getElementById('dialogue-text');
@@ -1504,59 +1527,51 @@
       minimapCtx.fillStyle = "#070a14";
       minimapCtx.fillRect(0, 0, w, h);
 
-      // 全局 X: -26 ~ 42 (跨度 68), Z: -8 ~ 16 (跨度 24)
-      const mapX = (wx) => ((wx + 26) / 68) * w;
-      const mapZ = (wz) => ((wz + 8) / 24) * h;
+      // 樓層投影 (X: -14 ~ 14, Z: -9 ~ 9)
+      const mapX = (wx) => ((wx + 14) / 28) * w;
+      const mapZ = (wz) => ((wz + 9) / 18) * h;
 
       const f = GAME_STATE.currentFloor;
 
       // 1F 大堂與更衣室
       if (f === 1) {
         minimapCtx.fillStyle = "#1e293b";
-        minimapCtx.fillRect(mapX(-26), mapZ(-7), mapX(-6) - mapX(-26), mapZ(7) - mapZ(-7));
+        minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(14) - mapX(-14), mapZ(9) - mapZ(-9));
         minimapCtx.strokeStyle = "#3b82f6";
-        minimapCtx.strokeRect(mapX(-26), mapZ(-7), mapX(-6) - mapX(-26), mapZ(7) - mapZ(-7));
+        minimapCtx.strokeRect(mapX(-14), mapZ(-9), mapX(14) - mapX(-14), mapZ(9) - mapZ(-9));
 
         // 階梯 A
         minimapCtx.fillStyle = "#eab308";
-        minimapCtx.fillRect(mapX(-6), mapZ(-2), mapX(0) - mapX(-6), mapZ(2) - mapZ(-2));
+        minimapCtx.fillRect(mapX(8), mapZ(-1), mapX(13) - mapX(8), mapZ(3) - mapZ(-1));
         minimapCtx.fillStyle = "#000";
         minimapCtx.font = "8px sans-serif";
-        minimapCtx.fillText("階梯A", mapX(-5.5), mapZ(0.5));
+        minimapCtx.fillText("階梯A", mapX(8.5), mapZ(1.5));
       } 
       // 2F 教學與化驗區
       else if (f === 2) {
-        // 班房
         minimapCtx.fillStyle = "#1e293b";
-        minimapCtx.fillRect(mapX(0), mapZ(-7), mapX(10) - mapX(0), mapZ(0) - mapZ(-7));
+        minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(-2.5) - mapX(-14), mapZ(1) - mapZ(-9));
 
-        // 長廊
         minimapCtx.fillStyle = "#172554";
-        minimapCtx.fillRect(mapX(0), mapZ(0), mapX(20) - mapX(0), mapZ(5.2) - mapZ(0));
+        minimapCtx.fillRect(mapX(-14), mapZ(1), mapX(14) - mapX(-14), mapZ(5) - mapZ(1));
 
-        // 化驗室
         minimapCtx.fillStyle = "#0c4a6e";
-        minimapCtx.fillRect(mapX(5.5), mapZ(5), mapX(16.5) - mapX(5.5), mapZ(15) - mapZ(5));
+        minimapCtx.fillRect(mapX(2), mapZ(5), mapX(14) - mapX(2), mapZ(9) - mapZ(5));
 
-        // 階梯 B
+        // 階梯 A & B
         minimapCtx.fillStyle = "#eab308";
-        minimapCtx.fillRect(mapX(20), mapZ(-2), mapX(26) - mapX(20), mapZ(2) - mapZ(-2));
-        minimapCtx.fillStyle = "#000";
-        minimapCtx.font = "8px sans-serif";
-        minimapCtx.fillText("階梯B", mapX(20.5), mapZ(0.5));
+        minimapCtx.fillRect(mapX(8), mapZ(-1), mapX(13) - mapX(8), mapZ(3) - mapZ(-1));
+        minimapCtx.fillRect(mapX(-13), mapZ(5), mapX(-8) - mapX(-13), mapZ(9) - mapZ(5));
       } 
       // 3F 天台
       else if (f === 3) {
         minimapCtx.fillStyle = "#3b0764";
-        minimapCtx.fillRect(mapX(26), mapZ(-7), mapX(42) - mapX(26), mapZ(7) - mapZ(-7));
+        minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(14) - mapX(-14), mapZ(9) - mapZ(-9));
         minimapCtx.strokeStyle = "#c084fc";
-        minimapCtx.strokeRect(mapX(26), mapZ(-7), mapX(42) - mapX(26), mapZ(7) - mapZ(-7));
-
-        minimapCtx.fillStyle = "#eab308";
-        minimapCtx.fillRect(mapX(20), mapZ(-2), mapX(26) - mapX(20), mapZ(2) - mapZ(-2));
+        minimapCtx.strokeRect(mapX(-14), mapZ(-9), mapX(14) - mapX(-14), mapZ(9) - mapZ(-9));
       }
 
-      // 物證標記
+      // 當前樓層物證標記
       Object.values(CLUES_DATA).forEach(clue => {
         const found = GAME_STATE.cluesFound.has(clue.id);
         if (clue.floor === f) {
@@ -1610,14 +1625,16 @@
       setTimeout(() => {
         startDialogueQueue([
           {
+            type: "dialogue",
             speaker: "梁澤銘",
-            role: "特約校園安全調查員",
-            text: "我是特約安全調查員梁澤銘。我已抵達咪制書院 1F 中庭大堂。兩名學生離奇抽搐休克，校舍已被全面封鎖。"
+            role: "特約安全調查員",
+            text: "我是特約安全調查員梁澤銘。我已抵達咪制書院 1F 中庭大堂。兩名學生離奇抽搐休克，全校封鎖線已拉起。"
           },
           {
-            speaker: "梁澤銘",
-            role: "調查啟動",
-            text: "籃球隊長霍展霆在西側體育更衣室外倒下。我必須先沿著大堂西側走廊，搜查他遺落的隨身物品！"
+            type: "monologue",
+            speaker: "梁澤銘（心想）",
+            role: "案情思索",
+            text: "（霍展霆在西側體育更衣室外倒下，岑詠蕎則是在 2F 考場抽搐……兩宗意外幾乎同時發生，絕非偶然。我得先去更衣室長椅排查霍展霆留下的物件。）"
           }
         ]);
       }, 400);
@@ -1750,6 +1767,19 @@
       }
     }, { passive: true });
 
+    // 防止重複連按 (Debounce / Throttle 控制鎖)
+    let lastInteractionTimestamp = 0;
+    const INTERACTION_COOLDOWN_MS = 280;
+
+    function canTriggerInput() {
+      const now = performance.now();
+      if (now - lastInteractionTimestamp < INTERACTION_COOLDOWN_MS) {
+        return false;
+      }
+      lastInteractionTimestamp = now;
+      return true;
+    }
+
     function startDialogueQueue(lines, callback = null) {
       GAME_STATE.dialogueQueue = lines.slice();
       GAME_STATE.dialogueCallback = callback;
@@ -1766,10 +1796,22 @@
       if (dialogueSpeaker) dialogueSpeaker.textContent = current.speaker;
       if (dialogueRoleTag) dialogueRoleTag.textContent = current.role;
       if (dialogueText) dialogueText.textContent = current.text;
-      if (dialogueAvatar) {
-        if (current.speaker && current.speaker.includes('通聯')) dialogueAvatar.textContent = '📱';
-        else if (current.role && (current.role.includes('物證') || current.role.includes('結論'))) dialogueAvatar.textContent = '🔬';
-        else dialogueAvatar.textContent = '🧑‍💼';
+
+      // 核心升級：視覺樣態明確區分（獨白 / 現場紀錄 / 遠端通話 / 正式通報）
+      if (dialoguePanelCard) {
+        dialoguePanelCard.classList.remove('dialogue-type-monologue', 'dialogue-type-narration', 'dialogue-type-call');
+        if (current.type === 'monologue') {
+          dialoguePanelCard.classList.add('dialogue-type-monologue');
+          if (dialogueAvatar) dialogueAvatar.textContent = '💭';
+        } else if (current.type === 'narration') {
+          dialoguePanelCard.classList.add('dialogue-type-narration');
+          if (dialogueAvatar) dialogueAvatar.textContent = '📜';
+        } else if (current.type === 'call') {
+          dialoguePanelCard.classList.add('dialogue-type-call');
+          if (dialogueAvatar) dialogueAvatar.textContent = '📱';
+        } else {
+          if (dialogueAvatar) dialogueAvatar.textContent = '🧑‍💼';
+        }
       }
 
       if (dialogueBox) {
@@ -1887,6 +1929,8 @@
     }
 
     function triggerInvestigation() {
+      if (!canTriggerInput()) return;
+
       if (GAME_STATE.isDialogueOpen) {
         nextDialogue();
         return;
@@ -1903,9 +1947,16 @@
       if (target.type === 'inspect') {
         startDialogueQueue([
           {
-            speaker: "梁澤銘",
-            role: "調查備忘",
+            type: "narration",
+            speaker: "現場物證紀錄",
+            role: "榮譽展櫃檔案",
             text: target.data.desc
+          },
+          {
+            type: "monologue",
+            speaker: "梁澤銘（心想）",
+            role: "內心思索",
+            text: "（展霆是球隊核心，詠蕎是尖子生……兩人本有無限前程，卻在毒販以『秒速止痛』與『考前提神神藥』的精巧話術下失足崩潰。）"
           }
         ]);
         return;
@@ -1914,8 +1965,9 @@
       if (target.type === 'dummy_locker') {
         startDialogueQueue([
           {
-            speaker: "梁澤銘",
-            role: "儲物櫃排查",
+            type: "narration",
+            speaker: "現場排查紀錄",
+            role: "走廊櫃位翻查",
             text: target.data.desc
           }
         ]);
@@ -1928,9 +1980,10 @@
         if (GAME_STATE.cluesFound.has(clue.id)) {
           startDialogueQueue([
             {
-              speaker: "梁澤銘",
-              role: "物證已記錄",
-              text: `此處物證【${clue.name}】已採集入卷宗。\n${clue.shortDesc}`
+              type: "narration",
+              speaker: "案卷已歸檔",
+              role: "物證重複核實",
+              text: `物證【${clue.name}】已成功採集入卷宗。\n${clue.shortDesc}`
             }
           ]);
           return;
@@ -1938,17 +1991,18 @@
 
         if (clue.stage > GAME_STATE.questStage) {
           let hint = "現場線索錯綜複雜，應先按照既定偵查方向逐步推進，請留意右上角當前目標。";
-          if (GAME_STATE.questStage === 1) hint = "更衣室外霍展霆的遺留物尚未查驗，先去更衣室排查！";
-          else if (GAME_STATE.questStage === 2) hint = "應先前往 2F 中六B班房搜查岑詠蕎的課桌！";
+          if (GAME_STATE.questStage === 1) hint = "更衣室外霍展霆的遺留物尚未查驗，先去西側更衣室排查！";
+          else if (GAME_STATE.questStage === 2) hint = "應先登上 2F 中六B班房搜查岑詠蕎的課桌！";
           else if (GAME_STATE.questStage === 3) hint = "根據課桌字條，應先在 2F 走廊排查儲物櫃尋找暗號！";
           else if (GAME_STATE.questStage === 4) hint = "提貨單指示毒物藏在化學室外走廊水管夾層，先取回軟糖樣品！";
           else if (GAME_STATE.questStage === 5) hint = "已取回兩份樣品，先至化學實驗台完成雙試管快篩！";
 
           startDialogueQueue([
             {
-              speaker: "梁澤銘",
-              role: "偵查順序引導",
-              text: hint
+              type: "monologue",
+              speaker: "梁澤銘（心想）",
+              role: "偵查順序推理",
+              text: `（${hint}）`
             }
           ]);
           return;
@@ -1957,17 +2011,19 @@
         if (clue.stage === 1) {
           collectClue(clue.id);
           GAME_STATE.questStage = 2;
-          updateObjective("沿階梯 A 登上 2F，搜查中六B班房岑詠蕎的課桌 (2/5)");
+          updateObjective("沿東側階梯 A 登上 2F，搜查中六B班房岑詠蕎的課桌 (2/5)");
           startDialogueQueue([
             {
-              speaker: "梁澤銘",
-              role: "現場物證起獲",
-              text: "在更衣室長椅拾獲霍展霆的護膝與撕開的奇異果糖包裝紙！包裝內殘留淡紫色微粒，便條寫著：『展霆，中六B班詠蕎那裡還有存貨……』"
+              type: "narration",
+              speaker: "現場物證紀錄",
+              role: "更衣室起獲物證",
+              text: "長椅上起獲籃球護膝與撕開的奇異果糖包裝紙。包裝內壁殘留紫色微粒，附便條寫著：『展霆，中六B班詠蕎那裡還有存貨……』"
             },
             {
-              speaker: "梁澤銘",
-              role: "下一步推論",
-              text: "籃球隊長與考場休克的中六生岑詠蕎均接觸過此物！我必須立即登上 2F 教學樓，搜查中六B班岑詠蕎的課桌！"
+              type: "monologue",
+              speaker: "梁澤銘（心想）",
+              role: "因果推理",
+              text: "（果然！霍展霆的腿傷止痛糖與考場休克的岑詠蕎來自同一源頭！我必須立即沿東側階梯 A 登上 2F，徹底搜查中六B班岑詠蕎的課桌！）"
             }
           ]);
         } else if (clue.stage === 2) {
@@ -1976,14 +2032,16 @@
           updateObjective("排查 2F 教學樓長廊儲物櫃，尋找 17 號暗號提貨單 (3/5)");
           startDialogueQueue([
             {
-              speaker: "梁澤銘",
-              role: "現場物證起獲",
-              text: "在岑詠蕎課桌上採集到深紫色未知液滴（證物 A）！桌面壓著撕碎的求助字條：『17 號儲物櫃留了新暗號……我和展霆吸了全身劇烈抽搐……』"
+              type: "narration",
+              speaker: "現場物證紀錄",
+              role: "事發課桌起獲物證",
+              text: "在 2 號課桌提取到深紫色未知液滴（證物 A）！桌面壓著撕裂的草稿紙：『17 號儲物櫃留了新暗號……我和展霆吸了全身劇烈抽搐……』"
             },
             {
-              speaker: "梁澤銘",
-              role: "下一步推論",
-              text: "17 號儲物櫃！毒販利用校內櫃位進行無接觸交收。馬上前往 2F 走廊排查儲物櫃！"
+              type: "monologue",
+              speaker: "梁澤銘（心想）",
+              role: "因果推理",
+              text: "（17 號儲物櫃！毒販利用學校置物櫃作為隱蔽交收死角。走廊有一整排櫃子，我得逐一排查！）"
             }
           ]);
         } else if (clue.stage === 3) {
@@ -1992,14 +2050,16 @@
           updateObjective("搜查 2F 理科化學室外走廊水管夾層，取回可疑軟糖 (4/5)");
           startDialogueQueue([
             {
-              speaker: "梁澤銘",
-              role: "現場物證起獲",
-              text: "成功打開 17 號儲物櫃！夾層起獲暗號提貨單：『新一批特調奇異果軟糖已放置在【化學實驗室外走廊水管夾層】，速取。』"
+              type: "narration",
+              speaker: "現場物證紀錄",
+              role: "儲物櫃暗格起獲物證",
+              text: "成功開啟 17 號櫃！底層夾縫搜獲加密提貨單：『新一批特調奇異果軟糖已放置在【化學實驗室外走廊水管夾層】，速取。』"
             },
             {
-              speaker: "梁澤銘",
-              role: "下一步推論",
-              text: "化學室外走廊水管夾層……毒販藏毒手法隱蔽。立刻過去取獲毒物樣品！"
+              type: "monologue",
+              speaker: "梁澤銘（心想）",
+              role: "因果推理",
+              text: "（毒販把未拆封的軟糖藏在化學室外的水管夾層！必須立即取回樣品，才能進行成分定性！）"
             }
           ]);
         } else if (clue.stage === 4) {
@@ -2008,14 +2068,16 @@
           updateObjective("進入 2F 理科綜合化學實驗室，進行雙試管快篩確診 (5/5)");
           startDialogueQueue([
             {
-              speaker: "梁澤銘",
-              role: "現場物證起獲",
-              text: "在水管與牆壁縫隙中摸出一包真空密封的奇異果味軟糖（證物 B）！表面滲出與課桌相同的紫微光澤。"
+              type: "narration",
+              speaker: "現場物證紀錄",
+              role: "水管死角起獲物證",
+              text: "在水管與水泥牆死角摸出一包真空密封的奇異果味軟糖（證物 B）！糖身泛著與課桌液體完全一致的妖異紫光。"
             },
             {
-              speaker: "梁澤銘",
-              role: "下一步推論",
-              text: "兩份現場樣品（課桌紫晶液與夾層軟糖）均已齊備！立刻轉身進入理科化學實驗室，使用雙試管快速檢驗台進行定性比對！"
+              type: "monologue",
+              speaker: "梁澤銘（心想）",
+              role: "因果推理",
+              text: "（兩份物證——課桌紫晶液與夾層軟糖均已到手！立刻進入旁邊的理科實驗室，上檢驗台做定性比對！）"
             }
           ]);
         } else if (clue.stage === 5) {
@@ -2027,19 +2089,22 @@
           updateObjective("打開【案件手冊】進入【思維宮殿】，完成定案通報警方！");
           startDialogueQueue([
             {
-              speaker: "加密通聯",
-              role: "天台排風箱暗處",
-              text: "（按鍵接通錄音器）喂？！東西拿到了沒有？尾款今晚交不出來，就把你們吸食抽搐的影片傳給全校家長！"
+              type: "call",
+              speaker: "加密通聯（排風箱暗處）",
+              role: "毒販黑網電話",
+              text: "『喂？！東西拿到了沒有？！尾款今晚交不出來，就把你們吸到抽搐翻白眼的影片傳給全校家長！』"
             },
             {
+              type: "dialogue",
               speaker: "梁澤銘",
-              role: "鎖定主謀通聯",
-              text: "聲音已錄製！是黑市主謀『暗夜調劑師』的敲詐電話！通話基站與轉賬賬戶已全數鎖定！"
+              role: "調查員取證通報",
+              text: "錄音器已成功鎖定音軌！毒販『暗夜調劑師』的通話基站與勒索罪證全部固定！"
             },
             {
-              speaker: "梁澤銘",
-              role: "全鏈條告破",
-              text: "所有物證已齊備！立即點擊右上角【📋 案件簿】，進入【思維宮殿定案】，核實因果鏈後直接向警務處通報收網！"
+              type: "monologue",
+              speaker: "梁澤銘（心想）",
+              role: "思維宮殿定案",
+              text: "（所有鏈條齊全！打開【📋 案件簿】的【思維宮殿定案】，核實因果鏈後立刻通報特區警方！）"
             }
           ], () => {
             toggleNotebook();
@@ -2197,14 +2262,16 @@
 
       startDialogueQueue([
         {
-          speaker: "梁澤銘",
-          role: "法醫鑑證結論",
+          type: "narration",
+          speaker: "法醫毒理報告",
+          role: "定性鑑證結論",
           text: "雙試管交叉比對確診！岑詠蕎課桌紫液與水管軟糖均含有《危險藥物條例》（第134章）嚴格管制的【依托咪酯】！"
         },
         {
-          speaker: "梁澤銘",
-          role: "突發通聯追蹤",
-          text: "等等！東側 3F 天台方向傳來急促的手機震動鈴聲！是毒販留下的聯絡工具！沿階梯 B 立即登上 3F 天台！"
+          type: "monologue",
+          speaker: "梁澤銘（心想）",
+          role: "突發警覺",
+          text: "（等等！頭頂 3F 天台方向傳來急促的手機震動鈴聲！是毒販遺留的聯絡工具！立刻沿階梯 B 登上 3F 天台截獲訊號！）"
         }
       ]);
     }
@@ -2325,19 +2392,23 @@
       document.getElementById('btn-rotate-left')?.addEventListener('click', () => rotateCameraByDegrees(-45));
       document.getElementById('btn-rotate-right')?.addEventListener('click', () => rotateCameraByDegrees(45));
       
+      // 關鍵修復：移除 pointerdown + click 雙重監聽，只監聽 pointerdown 並施加防抖閥門
       const interactBtn = document.getElementById('mobile-interact-btn');
       if (interactBtn) {
         interactBtn.addEventListener('pointerdown', (e) => {
-          e.stopPropagation();
-          triggerInvestigation();
-        });
-        interactBtn.addEventListener('click', (e) => {
+          e.preventDefault();
           e.stopPropagation();
           triggerInvestigation();
         });
       }
 
-      dialogueBox?.addEventListener('click', nextDialogue);
+      dialogueBox?.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (canTriggerInput()) {
+          nextDialogue();
+        }
+      });
 
       document.getElementById('btn-toggle-sound')?.addEventListener('click', () => {
         const isMuted = sound.toggleMute();
