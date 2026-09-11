@@ -8,17 +8,21 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Three.js 3D 渲染引擎 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Three.js 3D 渲染引擎 (含 crossorigin 屬性) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
   
-  <!-- Google 字體 (預加載並優化字體渲染) -->
+  <!-- Google 字體預加載與優化字體呈現 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
 
   <style>
     /* 基礎字體與全域排版 */
-    :root, html, body {
+    :root {
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sat: env(safe-area-inset-top, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+      --sar: env(safe-area-inset-right, 0px);
       box-sizing: border-box;
       font-family: 'Noto Sans TC', sans-serif;
     }
@@ -27,19 +31,34 @@
       box-sizing: inherit;
     }
     
-    /* 修正手機瀏覽器視窗：改用 min-height: 100vh 與 relative，避免 position: fixed 破壞手勢與縮放 */
+    /* 改善手機視窗：使用 min-height 與 relative 確保工具列相容性 */
     body, html {
       margin: 0;
       padding: 0;
       width: 100%;
       min-height: 100vh;
+      min-height: -webkit-fill-available;
       position: relative;
       overflow-x: hidden;
       background-color: #060813;
       color: #f8fafc;
     }
 
-    /* 僅針對遊戲主畫布與虛擬控制元件限制手勢，避免破壞全域無障礙與輔助功能 */
+    /* 安全邊界定位支援 (防範 iPhone 橫屏/豎屏底部瀏海遮擋按鈕) */
+    .safe-bottom {
+      bottom: calc(1rem + var(--sab));
+    }
+    .safe-left {
+      left: calc(1rem + var(--sal));
+    }
+    .safe-right {
+      right: calc(1rem + var(--sar));
+    }
+    .safe-top {
+      top: calc(0.75rem + var(--sat));
+    }
+
+    /* 僅針對遊戲主畫布與虛擬操作元件限制手勢，避免破壞全域文字選取 */
     .game-interactive,
     #joystick-base,
     #joystick-thumb,
@@ -50,19 +69,19 @@
       -webkit-touch-callout: none;
     }
 
+    /* STREAMING_CHUNK:Styling visual layers and glassmorphism panels -->
     #joystick-base,
-    #joystick-thumb,
-    #canvas-container {
+    #joystick-thumb {
       touch-action: none;
     }
 
     /* 鍵盤操作無障礙焦點提示樣式 */
     :focus-visible {
-      outline: 2px solid #fb923c;
-      outline-offset: 2px;
+      outline: 3px solid #fb923c;
+      outline-offset: 3px;
     }
 
-    /* 維多利亞港夕照日系賽璐珞電影氛圍 */
+    /* 維多利亞港夕照電影感濾鏡 */
     .twilight-vignette {
       background: radial-gradient(circle at 50% 45%, rgba(251, 146, 60, 0.08) 15%, rgba(6, 8, 19, 0.94) 100%);
       pointer-events: none;
@@ -85,19 +104,20 @@
     }
 
     .glass-btn {
-      background: linear-gradient(135deg, rgba(249, 115, 22, 0.45), rgba(225, 29, 72, 0.35));
-      border: 1px solid rgba(251, 146, 60, 0.6);
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.5), rgba(225, 29, 72, 0.4));
+      border: 1.5px solid rgba(251, 146, 60, 0.65);
+      transition: transform 0.15s ease, background 0.15s ease;
     }
     .glass-btn:active {
-      transform: scale(0.96);
-      background: linear-gradient(135deg, rgba(249, 115, 22, 0.7), rgba(225, 29, 72, 0.55));
+      transform: scale(0.94);
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.8), rgba(225, 29, 72, 0.65));
     }
 
     .cinematic-serif {
       font-family: 'Noto Serif TC', serif;
     }
 
+    /* STREAMING_CHUNK:Defining animations and accessibility reduction rules -->
     @keyframes uvGlow {
       0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.5); }
       50% { box-shadow: 0 0 40px rgba(34, 211, 238, 0.95); }
@@ -108,16 +128,16 @@
 
     /* 虛擬操作桿樣式 */
     .joystick-base {
-      background: radial-gradient(circle, rgba(30, 41, 59, 0.75) 0%, rgba(15, 23, 42, 0.92) 100%);
-      border: 2px solid rgba(251, 146, 60, 0.5);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+      background: radial-gradient(circle, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.96) 100%);
+      border: 2.5px solid rgba(251, 146, 60, 0.65);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.75);
     }
     .joystick-thumb {
-      background: radial-gradient(circle, #f97316 0%, #c2410c 100%);
-      box-shadow: 0 4px 15px rgba(249, 115, 22, 0.7);
+      background: radial-gradient(circle, #fb923c 0%, #c2410c 100%);
+      box-shadow: 0 4px 18px rgba(249, 115, 22, 0.85);
     }
 
-    /* 尊重使用者偏好減少動態效果 (Accessibility: prefers-reduced-motion) */
+    /* 支援偏好減少動態無障礙 (prefers-reduced-motion) */
     @media (prefers-reduced-motion: reduce) {
       .film-grain,
       .animate-ping,
@@ -130,39 +150,46 @@
     }
   </style>
 </head>
-<body class="relative w-full h-full overflow-hidden bg-slate-950">
+<body class="relative w-full h-full bg-slate-950">
+
+  <!-- 無障礙跳至主要互動區按鈕 (螢幕閱讀器與鍵盤友善) -->
+  <a href="#game-canvas" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-orange-600 focus:text-white focus:rounded-xl focus:font-bold">
+    跳至主要校園搜查區域
+  </a>
 
   <!-- 螢幕閱讀器專用無障礙即時播報區域 -->
   <div id="screen-reader-announcer" class="sr-only" aria-live="polite"></div>
 
   <!-- WebGL 友善退場降級提示介面 -->
-  <div id="webgl-fallback" class="hidden fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center p-6 text-center">
+  <div id="webgl-fallback" class="hidden fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center p-6 text-center" role="alert">
     <div class="max-w-md p-6 glass-panel rounded-3xl border-rose-500/50">
       <div class="text-4xl mb-3">⚠️</div>
       <h2 class="text-lg font-black text-white mb-2">瀏覽器硬體加速或 WebGL 尚未啟用</h2>
       <p class="text-xs text-slate-300 leading-relaxed mb-4">
         您的裝置或瀏覽器目前無法載入 3D WebGL 渲染環境。建議使用最新版本 Chrome、Safari 或 Firefox，並確認已開啟硬體加速支援。
       </p>
-      <button onclick="window.location.reload()" class="glass-btn px-4 py-2 rounded-xl text-xs font-bold text-white">
+      <button id="btn-webgl-reload" class="glass-btn px-4 py-2 rounded-xl text-xs font-bold text-white">
         重新整理嘗試連線
       </button>
     </div>
   </div>
 
-  <!-- 3D WebGL 主畫布 -->
-  <div id="canvas-container" class="fixed inset-0 w-full h-full overflow-hidden pointer-events-auto">
-    <canvas id="game-canvas" role="application" aria-label="3D校園搜查互動場景：咪制書院" tabindex="0" class="w-full h-full block"></canvas>
-  </div>
+  <!-- 主地標容器：包裝 3D WebGL 場景與濾鏡 -->
+  <main id="main-content" role="main" class="fixed inset-0 w-full h-full overflow-hidden">
+    <div id="canvas-container" class="w-full h-full overflow-hidden">
+      <canvas id="game-canvas" role="application" aria-label="3D校園搜查互動場景：咪制書院" tabindex="0" class="w-full h-full block touch-none"></canvas>
+    </div>
 
-  <!-- 黃昏氛圍電影濾鏡 -->
-  <div class="twilight-vignette fixed inset-0 z-10 pointer-events-none"></div>
-  <div class="film-grain fixed inset-0 z-10 pointer-events-none"></div>
+    <!-- 黃昏氛圍電影濾鏡 -->
+    <div class="twilight-vignette fixed inset-0 z-10 pointer-events-none"></div>
+    <div class="film-grain fixed inset-0 z-10 pointer-events-none"></div>
+  </main>
 
   <!-- 頂部 HUD 狀態列 -->
-  <header class="fixed top-0 left-0 right-0 z-20 flex items-start justify-between p-3 md:p-5 pointer-events-none">
+  <header class="fixed safe-top left-0 right-0 z-20 flex items-start justify-between px-3 md:px-5 pointer-events-none">
     
     <!-- 左上：調查員身分、校園區域與當前任務目標 -->
-    <div class="pointer-events-auto flex flex-col gap-1.5 max-w-[62%] sm:max-w-md">
+    <div class="pointer-events-auto flex flex-col gap-1.5 max-w-[60%] sm:max-w-md">
       <div class="glass-panel px-3 py-1.5 rounded-xl flex items-center gap-2">
         <span class="relative flex h-2.5 w-2.5">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -194,7 +221,7 @@
           </span>
           <span class="text-slate-400 text-[8px]" id="minimap-clue-indicator">線索: 0/5</span>
         </div>
-        <canvas id="minimap-canvas" width="100" height="75" class="rounded-xl bg-slate-950/90 border border-slate-800" aria-label="校舍雷達地圖"></canvas>
+        <canvas id="minimap-canvas" width="96" height="70" class="rounded-xl bg-slate-950/90 border border-slate-800" aria-label="校舍雷達地圖"></canvas>
       </div>
 
       <!-- 快捷視角切換器 -->
@@ -216,44 +243,44 @@
     </div>
   </header>
 
-  <!-- 手機專用虛擬方向搖桿 (左下角) -->
-  <div id="touch-joystick-container" class="fixed bottom-6 left-6 z-30 pointer-events-auto touch-none">
-    <div id="joystick-base" class="w-28 h-28 rounded-full joystick-base relative flex items-center justify-center">
-      <div id="joystick-thumb" class="w-12 h-12 rounded-full joystick-thumb absolute pointer-events-none transition-transform duration-75"></div>
+  <!-- 手機專用虛擬方向搖桿 (左下角，包含 safe-area 邊界計算，確保豎屏與橫屏皆不被遮擋) -->
+  <div id="touch-joystick-container" class="fixed safe-bottom safe-left z-30 pointer-events-auto touch-none">
+    <div id="joystick-base" class="w-28 h-28 sm:w-32 sm:h-32 rounded-full joystick-base relative flex items-center justify-center">
+      <div id="joystick-thumb" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full joystick-thumb absolute pointer-events-none transition-transform duration-75"></div>
     </div>
   </div>
 
-  <!-- 手機專用操作與視角微調鍵 (右下角) -->
-  <div class="fixed bottom-6 right-6 z-30 pointer-events-auto flex flex-col items-end gap-3 touch-none">
+  <!-- 手機專用操作與視角微調鍵 (右下角，具備 safe-area 邊界保護，修復橫屏與豎屏點擊無效) -->
+  <div id="mobile-controls-cluster" class="fixed safe-bottom safe-right z-30 pointer-events-auto flex flex-col items-end gap-3 touch-none">
     <div class="flex items-center gap-2">
-      <button id="btn-rotate-left" class="glass-panel w-11 h-11 rounded-full text-orange-300 font-black text-sm flex items-center justify-center active:scale-90 shadow-lg" title="向左旋轉鏡頭" aria-label="向左旋轉視角 45 度">
+      <button id="btn-rotate-left" class="glass-panel w-11 h-11 sm:w-12 sm:h-12 rounded-full text-orange-300 font-black text-sm flex items-center justify-center active:scale-90 shadow-lg" title="向左旋轉鏡頭" aria-label="向左旋轉視角 45 度">
         ⟲
       </button>
-      <button id="btn-rotate-right" class="glass-panel w-11 h-11 rounded-full text-orange-300 font-black text-sm flex items-center justify-center active:scale-90 shadow-lg" title="向右旋轉鏡頭" aria-label="向右旋轉視角 45 度">
+      <button id="btn-rotate-right" class="glass-panel w-11 h-11 sm:w-12 sm:h-12 rounded-full text-orange-300 font-black text-sm flex items-center justify-center active:scale-90 shadow-lg" title="向右旋轉鏡頭" aria-label="向右旋轉視角 45 度">
         ⟳
       </button>
     </div>
 
-    <!-- 核心搜查互動按鈕 -->
-    <button id="mobile-interact-btn" class="glass-btn w-16 h-16 rounded-2xl flex flex-col items-center justify-center text-white font-black shadow-[0_0_25px_rgba(249,115,22,0.5)] active:scale-90 border-orange-400" aria-label="執行現場調查或推進劇情">
-      <span class="text-xl">🔍</span>
-      <span class="text-[10px] tracking-widest mt-0.5">搜查</span>
+    <!-- 核心搜查互動按鈕 (加強觸控感應與尺寸，支援 touchstart/pointerdown 即時觸發) -->
+    <button id="mobile-interact-btn" class="glass-btn w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex flex-col items-center justify-center text-white font-black shadow-[0_0_25px_rgba(249,115,22,0.6)] active:scale-90 border-2 border-orange-400 cursor-pointer" aria-label="執行現場調查或推進劇情">
+      <span class="text-2xl sm:text-3xl pointer-events-none">🔍</span>
+      <span class="text-[11px] sm:text-xs font-bold tracking-wider mt-0.5 pointer-events-none">搜查</span>
     </button>
   </div>
 
   <!-- 滑動操作提示標籤 -->
-  <div id="swipe-hint" class="fixed top-16 right-4 z-20 pointer-events-none opacity-80 text-[10px] text-orange-300/90 bg-slate-900/70 px-2.5 py-1 rounded-full border border-orange-500/30">
-    👉 螢幕右半部滑動可 360° 旋轉視角
+  <div id="swipe-hint" class="fixed top-20 right-4 z-20 pointer-events-none opacity-80 text-[10px] text-orange-300/90 bg-slate-900/70 px-2.5 py-1 rounded-full border border-orange-500/30">
+    👉 螢幕右半部空處滑動可 360° 旋轉視角
   </div>
 
   <!-- 物證接近浮動提示 -->
-  <div id="interaction-prompt" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 transition-all duration-300 transform scale-95 flex items-center gap-2 glass-panel px-4 py-2 rounded-full border-orange-500/60 shadow-xl">
+  <div id="interaction-prompt" class="fixed bottom-28 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 transition-all duration-300 transform scale-95 flex items-center gap-2 glass-panel px-4 py-2 rounded-full border-orange-500/60 shadow-xl">
     <span class="w-6 h-6 rounded-full bg-orange-600 flex items-center justify-center font-black text-white text-xs animate-pulse">E</span>
     <span id="prompt-action-text" class="text-xs font-bold text-slate-100">調查未知物品</span>
   </div>
 
-  <!-- 劇情對話介面 (清晰標註青少年法證安全專案特約身分，絕不使用真實執法機關名稱) -->
-  <div id="dialogue-box" class="fixed bottom-4 left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-2xl z-40 pointer-events-auto opacity-0 translate-y-6 transition-all duration-300" role="region" aria-label="情境劇情對話框">
+  <!-- 劇情對話介面 (關鍵修復：預設為 pointer-events-none，防止隱藏時遮蔽整個底部觸控點) -->
+  <div id="dialogue-box" class="fixed safe-bottom left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-2xl z-40 pointer-events-none opacity-0 translate-y-6 transition-all duration-300" role="region" aria-label="情境劇情對話框">
     <div class="glass-panel p-4 sm:p-6 rounded-3xl border-orange-400/40 relative shadow-2xl">
       <!-- 說話者資訊 -->
       <div class="flex items-center justify-between mb-2.5 border-b border-slate-700/60 pb-2">
@@ -287,8 +314,8 @@
     </div>
   </div>
 
-  <!-- 法醫化學檢驗台（清晰 5 步流程、無 inline onclick，具備完全無障礙焦點控制） -->
-  <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="lab-modal-title">
+  <!-- 法醫化學檢驗台（清晰 5 步流程、無 inline onclick，具備無障礙 aria-modal 與焦點鎖定） -->
+  <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="lab-modal-title" tabindex="-1">
     <div class="glass-panel w-full max-w-2xl rounded-3xl p-4 sm:p-6 relative border-cyan-500/40 max-h-[96vh] flex flex-col justify-between overflow-y-auto">
       
       <!-- 實驗台頂部標題與待檢樣品切換 -->
@@ -312,13 +339,13 @@
         <!-- 待檢樣品切換按鈕 -->
         <div class="flex flex-wrap items-center gap-1.5 mb-2.5">
           <span class="text-[11px] text-slate-400 font-bold">待檢樣品：</span>
-          <button id="tab-sample-etomidate" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-cyan-600 text-white border border-cyan-400 transition">
+          <button id="tab-sample-etomidate" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-cyan-600 text-white border border-cyan-400 transition" aria-label="選取樣品1：紫晶液">
             樣品 1：岑詠蕎課桌遺留的未知紫晶液
           </button>
-          <button id="tab-sample-candy" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 transition">
+          <button id="tab-sample-candy" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 transition" aria-label="選取樣品2：軟糖">
             樣品 2：霍展霆儲物櫃的提神鎮痛軟糖
           </button>
-          <button id="tab-sample-control" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 transition">
+          <button id="tab-sample-control" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700 transition" aria-label="選取樣品3：對照組">
             樣品 3：標準無毒甘油對照組（陰性標準）
           </button>
         </div>
@@ -360,7 +387,7 @@
         <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800 flex flex-col justify-between text-xs space-y-2">
           <div class="flex items-center justify-between border-b border-slate-800 pb-1.5">
             <span class="font-bold text-slate-200 text-[11px]">定性化學檢驗標準規範：</span>
-            <button id="btn-uv-lamp" class="px-2.5 py-1 rounded-lg bg-purple-950/80 border border-purple-500/50 text-purple-300 font-bold text-[10px] active:scale-95 transition disabled:opacity-40" disabled>
+            <button id="btn-uv-lamp" class="px-2.5 py-1 rounded-lg bg-purple-950/80 border border-purple-500/50 text-purple-300 font-bold text-[10px] active:scale-95 transition disabled:opacity-40" disabled aria-label="開關365nm紫外線燈">
               🔦 365nm UV紫外燈：關
             </button>
           </div>
@@ -436,7 +463,7 @@
   </div>
 
   <!-- 調查員案件手冊與思維宮殿（校園安全專案與官方防毒途徑） -->
-  <div id="notebook-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="notebook-modal-title">
+  <div id="notebook-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="notebook-modal-title" tabindex="-1">
     <div class="glass-panel w-full max-w-3xl h-[90vh] rounded-3xl p-4 sm:p-6 flex flex-col relative border-amber-500/40">
       
       <!-- 手冊頂部 -->
@@ -626,15 +653,15 @@
       <div class="mt-5 flex flex-wrap items-center justify-center gap-2 text-[10px] text-slate-400 font-mono">
         <span>左下搖桿移動</span>
         <span>•</span>
-        <span>右側滑動旋轉視角</span>
+        <span>螢幕空處滑動轉向</span>
         <span>•</span>
-        <span>右下按鈕搜查</span>
+        <span>右下搜查按鈕</span>
       </div>
     </div>
   </div>
 
   <!-- 案件告破結案畫面 (完整包含官方熱線與毒品咪制口號) -->
-  <div id="victory-screen" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-2xl flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-700">
+  <div id="victory-screen" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-2xl flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-700" role="dialog" aria-modal="true">
     <div class="glass-panel max-w-lg w-full rounded-3xl p-5 sm:p-7 border-emerald-500/50 text-center relative overflow-hidden">
       <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-3xl mb-3 shadow-[0_0_35px_rgba(16,185,129,0.35)]">
         🏆
@@ -694,6 +721,8 @@
           } catch(e) {
             console.warn("音效引擎初始化受阻或不支援 Web Audio");
           }
+        } else if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
         }
       }
 
@@ -835,7 +864,7 @@
     window.addEventListener('keydown', unlockAudioContext, { once: true });
 
     /* =========================================================================
-     * 2. 全局遊戲狀態與更新後的咪制書院案卷資料庫
+     * 2. 全域遊戲狀態與咪制書院案卷資料庫
      * ========================================================================= */
     const GAME_STATE = {
       started: false,
@@ -853,7 +882,6 @@
       currentFloor: 1
     };
 
-    // 案卷庫：更新為咪制書院、岑詠蕎與霍展霆
     const CLUES_DATA = {
       clue_desk: {
         id: "clue_desk",
@@ -907,10 +935,12 @@
       }
     };
 
+    /* =========================================================================
+     * 3. 3D WebGL 渲染環境與效能調整 (包含行動裝置陰影優化)
+     * ========================================================================= */
     const canvas = document.getElementById('game-canvas');
     let renderer = null;
 
-    // WebGL 支援檢測
     function isWebGLAvailable() {
       try {
         const testCanvas = document.createElement('canvas');
@@ -938,11 +968,13 @@
     const ambientLight = new THREE.AmbientLight(0xdba686, 0.9);
     scene.add(ambientLight);
 
+    // 行動端調優陰影貼圖解析度
+    const isMobileDevice = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
     const sunLight = new THREE.DirectionalLight(0xfb923c, 1.4);
     sunLight.position.set(-25, 20, -15);
     sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 1024;
-    sunLight.shadow.mapSize.height = 1024;
+    sunLight.shadow.mapSize.width = isMobileDevice ? 512 : 1024;
+    sunLight.shadow.mapSize.height = isMobileDevice ? 512 : 1024;
     sunLight.shadow.camera.near = 0.5;
     sunLight.shadow.camera.far = 80;
     sunLight.shadow.camera.left = -30;
@@ -993,6 +1025,9 @@
       keys[e.code] = false;
     });
 
+    /* =========================================================================
+     * 4. 3D 校舍幾何結構與雙層樓梯建造
+     * ========================================================================= */
     const worldGroup = new THREE.Group();
     scene.add(worldGroup);
     const interactableMeshes = [];
@@ -1220,6 +1255,9 @@
 
     buildSeamlessWorld();
 
+    /* =========================================================================
+     * 5. 調查員人物骨架與雙層物理運動邏輯
+     * ========================================================================= */
     class InvestigatorAvatar {
       constructor() {
         this.mesh = new THREE.Group();
@@ -1378,6 +1416,9 @@
 
     const player = new InvestigatorAvatar();
 
+    /* =========================================================================
+     * 6. 理化鑑驗邏輯（5步流程、多樣品對照組與離心機防重複防抖）
+     * ========================================================================= */
     let labCurrentSample = 'sample_etomidate';
     let labStep = 0;
     let labCentrifuging = false;
@@ -1416,21 +1457,77 @@
       }
     };
 
+    let lastFocusedElement = null;
+
+    function openModalWithA11y(modalEl, closeCallback) {
+      lastFocusedElement = document.activeElement;
+      modalEl.style.opacity = '1';
+      modalEl.style.pointerEvents = 'auto';
+      modalEl.setAttribute('aria-hidden', 'false');
+      
+      const mainContent = document.getElementById('main-content');
+      if (mainContent) mainContent.setAttribute('aria-hidden', 'true');
+
+      trapFocus(modalEl, closeCallback);
+    }
+
+    function closeModalWithA11y(modalEl) {
+      modalEl.style.opacity = '0';
+      modalEl.style.pointerEvents = 'none';
+      modalEl.setAttribute('aria-hidden', 'true');
+
+      const mainContent = document.getElementById('main-content');
+      if (mainContent) mainContent.setAttribute('aria-hidden', 'false');
+
+      if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+        lastFocusedElement.focus();
+      } else {
+        canvas.focus();
+      }
+    }
+
+    function trapFocus(modalEl, closeCallback) {
+      const focusableSelectors = 'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      const focusable = modalEl.querySelectorAll(focusableSelectors);
+      if (focusable.length > 0) {
+        focusable[0].focus();
+      }
+
+      const keyHandler = (e) => {
+        if (e.key === 'Escape') {
+          modalEl.removeEventListener('keydown', keyHandler);
+          closeCallback();
+          return;
+        }
+        if (e.key === 'Tab') {
+          const freshFocusable = modalEl.querySelectorAll(focusableSelectors);
+          if (freshFocusable.length === 0) return;
+          const first = freshFocusable[0];
+          const last = freshFocusable[freshFocusable.length - 1];
+
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      };
+      modalEl.addEventListener('keydown', keyHandler);
+    }
+
     function openLabModal() {
       GAME_STATE.isLabModalOpen = true;
       const modal = document.getElementById('lab-modal');
-      modal.style.opacity = '1';
-      modal.style.pointerEvents = 'auto';
       resetLabStation();
-      trapFocus(modal, closeLabModal);
+      openModalWithA11y(modal, closeLabModal);
     }
 
     function closeLabModal() {
       GAME_STATE.isLabModalOpen = false;
       const modal = document.getElementById('lab-modal');
-      modal.style.opacity = '0';
-      modal.style.pointerEvents = 'none';
-      canvas.focus();
+      closeModalWithA11y(modal);
     }
 
     function switchLabSample(sampleKey) {
@@ -1698,37 +1795,9 @@
       }, 1600);
     }
 
-    function trapFocus(modalEl, closeCallback) {
-      const focusableSelectors = 'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-      const focusable = modalEl.querySelectorAll(focusableSelectors);
-      if (focusable.length > 0) {
-        focusable[0].focus();
-      }
-
-      const keyHandler = (e) => {
-        if (e.key === 'Escape') {
-          modalEl.removeEventListener('keydown', keyHandler);
-          closeCallback();
-          return;
-        }
-        if (e.key === 'Tab') {
-          const freshFocusable = modalEl.querySelectorAll(focusableSelectors);
-          if (freshFocusable.length === 0) return;
-          const first = freshFocusable[0];
-          const last = freshFocusable[freshFocusable.length - 1];
-
-          if (e.shiftKey && document.activeElement === first) {
-            e.preventDefault();
-            last.focus();
-          } else if (!e.shiftKey && document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      };
-      modalEl.addEventListener('keydown', keyHandler);
-    }
-
+    /* =========================================================================
+     * 7. 現場搜查與劇情推進觸發
+     * ========================================================================= */
     const promptUI = document.getElementById('interaction-prompt');
     const promptText = document.getElementById('prompt-action-text');
 
@@ -1823,6 +1892,9 @@
       GAME_STATE.dialogueQueue = [...queue];
       GAME_STATE.dialogueCallback = callback;
       GAME_STATE.isDialogueOpen = true;
+      // 關鍵修復：啟動對話時開啟點擊捕獲，關閉時徹底退讓觸控
+      dialogueBox.classList.remove('pointer-events-none');
+      dialogueBox.classList.add('pointer-events-auto');
       dialogueBox.style.opacity = '1';
       dialogueBox.style.transform = 'translate(0, 0)';
       nextDialogue();
@@ -1842,6 +1914,8 @@
 
     function closeDialogue() {
       GAME_STATE.isDialogueOpen = false;
+      dialogueBox.classList.remove('pointer-events-auto');
+      dialogueBox.classList.add('pointer-events-none');
       dialogueBox.style.opacity = '0';
       dialogueBox.style.transform = 'translate(0, 20px)';
       if (GAME_STATE.dialogueCallback) {
@@ -1907,14 +1981,10 @@
       GAME_STATE.isNotebookOpen = !GAME_STATE.isNotebookOpen;
       const modal = document.getElementById('notebook-modal');
       if (GAME_STATE.isNotebookOpen) {
-        modal.style.opacity = '1';
-        modal.style.pointerEvents = 'auto';
         renderClueCards();
-        trapFocus(modal, toggleNotebook);
+        openModalWithA11y(modal, toggleNotebook);
       } else {
-        modal.style.opacity = '0';
-        modal.style.pointerEvents = 'none';
-        canvas.focus();
+        closeModalWithA11y(modal);
       }
     }
 
@@ -1937,8 +2007,7 @@
       if (v === 'correct' && s === 'correct' && src === 'correct' && a === 'correct') {
         toggleNotebook();
         const win = document.getElementById('victory-screen');
-        win.style.opacity = '1';
-        win.style.pointerEvents = 'auto';
+        openModalWithA11y(win, () => {});
         sound.playClueFound();
       } else {
         sound.playDialogueBlip();
@@ -1952,6 +2021,9 @@
       }
     }
 
+    /* =========================================================================
+     * 8. 2D 懸浮雷達小地圖繪製
+     * ========================================================================= */
     const minimapCanvas = document.getElementById('minimap-canvas');
     const minimapCtx = minimapCanvas.getContext('2d');
 
@@ -2057,7 +2129,9 @@
       }, 400);
     }
 
-    // 虛擬觸控搖桿
+    /* =========================================================================
+     * 9. 手機端虛擬搖桿與精準觸控控制（動態定位計算，徹底解決橫豎屏失效）
+     * ========================================================================= */
     const touchJoystickInput = { x: 0, z: 0 };
     const joystickContainer = document.getElementById('touch-joystick-container');
     const joystickBase = document.getElementById('joystick-base');
@@ -2066,17 +2140,22 @@
     let joystickTouchId = null;
     let joystickCenter = { x: 0, y: 0 };
 
+    function updateJoystickCenter() {
+      if (!joystickBase) return;
+      const rect = joystickBase.getBoundingClientRect();
+      joystickCenter = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+    }
+
     if (joystickContainer && joystickThumb && joystickBase) {
       const onJoystickStart = (e) => {
         if (joystickActive) return;
         const touch = e.changedTouches ? e.changedTouches[0] : e;
         joystickActive = true;
         joystickTouchId = touch.identifier ?? 'mouse';
-        const rect = joystickBase.getBoundingClientRect();
-        joystickCenter = {
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2
-        };
+        updateJoystickCenter();
         onJoystickMove(e);
       };
 
@@ -2095,7 +2174,7 @@
         }
         if (!touch) return;
 
-        const maxDist = 44;
+        const maxDist = 46;
         const dx = touch.clientX - joystickCenter.x;
         const dy = touch.clientY - joystickCenter.y;
         const dist = Math.hypot(dx, dy);
@@ -2138,16 +2217,21 @@
       window.addEventListener('touchcancel', onJoystickEnd, { passive: false });
     }
 
-    // 螢幕右側滑動旋轉視角
+    // 螢幕右側滑動旋轉視角（過濾所有 UI 按鈕點擊，防止搜查與微調鍵被滑動手勢截胡）
     let rightTouchId = null;
     let lastTouchX = 0;
 
     window.addEventListener('touchstart', (e) => {
       for (let i = 0; i < e.changedTouches.length; i++) {
         const t = e.changedTouches[i];
-        if (t.clientX > window.innerWidth * 0.45 && rightTouchId === null) {
-          const interactBtn = document.getElementById('mobile-interact-btn');
-          if (interactBtn && interactBtn.contains(e.target)) continue;
+        const target = document.elementFromPoint(t.clientX, t.clientY) || t.target;
+        
+        // 若觸摸點落在任何按鈕、搖桿或彈窗範圍內，一律不啟動鏡頭旋轉
+        if (target && target.closest('button, #touch-joystick-container, #mobile-controls-cluster, #dialogue-box, #lab-modal, #notebook-modal, header, .glass-panel')) {
+          continue;
+        }
+
+        if (t.clientX > window.innerWidth * 0.42 && rightTouchId === null) {
           rightTouchId = t.identifier;
           lastTouchX = t.clientX;
           const hint = document.getElementById('swipe-hint');
@@ -2179,14 +2263,26 @@
       }
     }, { passive: true });
 
-    // 綁定全站所有按鈕監聽器 (無 inline onclick，保障 CSP 與效能)
     function setupEventListeners() {
       document.getElementById('btn-cam-cycle')?.addEventListener('click', cycleCameraPreset);
       document.getElementById('btn-open-notebook')?.addEventListener('click', toggleNotebook);
       document.getElementById('btn-close-notebook')?.addEventListener('click', toggleNotebook);
       document.getElementById('btn-rotate-left')?.addEventListener('click', () => rotateCameraByDegrees(-45));
       document.getElementById('btn-rotate-right')?.addEventListener('click', () => rotateCameraByDegrees(45));
-      document.getElementById('mobile-interact-btn')?.addEventListener('click', triggerInvestigation);
+      
+      // 核心修復：搜查按鈕綁定 pointerdown 與 click，杜絕手機 300ms 延遲與橫屏觸摸失效
+      const interactBtn = document.getElementById('mobile-interact-btn');
+      if (interactBtn) {
+        interactBtn.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          triggerInvestigation();
+        });
+        interactBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          triggerInvestigation();
+        });
+      }
+
       dialogueBox?.addEventListener('click', nextDialogue);
 
       document.getElementById('btn-toggle-sound')?.addEventListener('click', () => {
@@ -2216,26 +2312,33 @@
       // 流程控制
       document.getElementById('btn-start-game')?.addEventListener('click', startGame);
       document.getElementById('btn-restart-game')?.addEventListener('click', () => window.location.reload());
+      document.getElementById('btn-webgl-reload')?.addEventListener('click', () => window.location.reload());
     }
 
-    // 防抖 resize 監聽器
+    // 視窗大小及橫豎螢幕翻轉防抖監聽
     let resizeTimer;
-    window.addEventListener('resize', () => {
+    function handleViewportResize() {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         if (!renderer) return;
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
+        updateJoystickCenter();
       }, 120);
-    });
+    }
+    window.addEventListener('resize', handleViewportResize);
+    window.addEventListener('orientationchange', handleViewportResize);
 
-    // Page Visibility API：背景分頁自動暫停渲染以節省電量與算力
+    // Page Visibility API：背景分頁自動暫停渲染以省電
     let isTabVisible = true;
     document.addEventListener('visibilitychange', () => {
       isTabVisible = !document.hidden;
     });
 
+    /* =========================================================================
+     * 10. 遊戲主迴圈
+     * ========================================================================= */
     const clock = new THREE.Clock();
 
     function gameLoop() {
@@ -2295,6 +2398,7 @@
 
     window.onload = function() {
       setupEventListeners();
+      updateJoystickCenter();
       gameLoop();
     };
   </script>
