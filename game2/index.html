@@ -107,6 +107,7 @@
     .dialogue-type-monologue { border-color: rgba(56, 189, 248, 0.6) !important; background: rgba(12, 25, 44, 0.96) !important; }
     .dialogue-type-narration { border-color: rgba(251, 146, 60, 0.6) !important; background: rgba(28, 19, 13, 0.96) !important; }
     .dialogue-type-call { border-color: rgba(244, 63, 94, 0.75) !important; background: rgba(36, 10, 20, 0.96) !important; }
+    
     .tumbler-dial {
       background: linear-gradient(180deg, #090d16 0%, #1e293b 50%, #090d16 100%);
       box-shadow: inset 0 0 12px rgba(0,0,0,0.95), 0 2px 10px rgba(249,115,22,0.3); border: 1.5px solid #475569;
@@ -117,6 +118,26 @@
       40%, 80% { transform: translateX(6px); }
     }
     .animate-shake { animation: shake 0.35s ease-in-out; }
+
+    /* 對話框立繪浮動樣式 */
+    .dialogue-portrait-img {
+      position: absolute;
+      bottom: calc(100% - 18px);
+      left: 14px;
+      height: 145px;
+      max-height: 38vh;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.92));
+      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      z-index: 15;
+    }
+    @media (min-width: 640px) {
+      .dialogue-portrait-img {
+        height: 210px;
+        left: 24px;
+      }
+    }
   </style>
 </head>
 <body class="relative w-full h-full bg-slate-950 overflow-hidden">
@@ -206,9 +227,18 @@
     <span id="prompt-action-text" class="text-xs font-bold text-slate-100">調查現場</span>
   </div>
 
-  <!-- 對話框 -->
-  <div id="dialogue-box" class="fixed bottom-20 sm:bottom-6 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-xl z-40 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 flex flex-col" role="region">
-    <div id="dialogue-panel-card" class="glass-panel p-3 rounded-2xl border-orange-400/40 relative shadow-2xl flex flex-col transition-colors duration-200 cursor-pointer">
+  <!-- 對話框 + 頂部角色半身立繪 -->
+  <div id="dialogue-box" class="fixed bottom-16 sm:bottom-6 left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-xl z-40 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 flex flex-col" role="region">
+    
+    <!-- 半身立繪展示容器 -->
+    <div class="relative w-full h-0 pointer-events-none overflow-visible">
+      <img id="dialogue-portrait" 
+           src="" 
+           alt="角色立繪" 
+           class="dialogue-portrait-img opacity-0 translate-y-3">
+    </div>
+
+    <div id="dialogue-panel-card" class="glass-panel p-3 rounded-2xl border-orange-400/40 relative shadow-2xl flex flex-col transition-colors duration-200 cursor-pointer z-10">
       <div class="flex items-center justify-between mb-1 border-b border-slate-700/60 pb-1 shrink-0">
         <div class="flex items-center gap-2">
           <div id="dialogue-avatar" class="w-7 h-7 rounded-xl bg-orange-600/20 border border-orange-400/60 flex items-center justify-center text-sm shadow-inner">🧑‍💼</div>
@@ -396,7 +426,7 @@
         <div class="flex gap-1">
           <button id="tab-btn-clues" class="px-2 py-1 rounded-lg text-xs font-bold bg-orange-500 text-white transition">物證鏈 (<span id="clue-count-text">0</span>/7)</button>
           <button id="tab-btn-mindpalace" class="px-2 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">思維宮殿定案</button>
-          <button id="tab-btn-profiles" class="px-2 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">涉案人員</button>
+          <button id="tab-btn-profiles" class="px-2 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">涉案人物檔案</button>
           <button id="btn-close-notebook" class="ml-1 px-2 py-1 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold">✕</button>
         </div>
       </div>
@@ -470,38 +500,45 @@
         </div>
       </div>
 
+      <!-- 涉案人員人物檔案（加入立繪寫真展示） -->
       <div id="tab-content-profiles" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-2 my-2">
         <div class="glass-panel p-2.5 rounded-xl border-cyan-500/40 flex flex-col">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-lg">🧑‍💼</span>
+          <div class="flex items-center gap-2 mb-1.5">
+            <img src="assets/梁澤銘.webp" alt="梁澤銘" class="w-9 h-9 rounded-xl object-cover border border-cyan-400/50 bg-slate-900" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'36\' height=\'36\'><rect width=\'36\' height=\'36\' fill=\'%230284c7\'/></svg>'">
             <div>
               <div class="font-bold text-white text-xs">梁澤銘</div>
               <div class="text-[10px] text-cyan-300">特約安全調查員</div>
             </div>
           </div>
-          <p class="text-[11px] text-slate-300 leading-relaxed">受託封鎖校園排查真相。不放過任何化學反應與通聯音軌，決心瓦解毒害校園的幕後鏈條。</p>
+          <p class="text-[11px] text-slate-300 leading-relaxed">受託封鎖咪制書院排查真相。嚴密分析現場化學痕跡與通聯音軌，決心瓦解毒害校園青少年的地下黑產鏈條。</p>
         </div>
 
         <div class="glass-panel p-2.5 rounded-xl border-purple-500/40 flex flex-col">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-lg">👩‍🎓</span>
+          <div class="flex items-center gap-2 mb-1.5">
+            <div class="flex -space-x-2 overflow-hidden">
+              <img src="assets/岑詠蕎.webp" alt="岑詠蕎" class="inline-block w-9 h-9 rounded-xl object-cover border border-purple-400/50 bg-slate-900" onerror="this.style.display='none'">
+              <img src="assets/霍展霆.webp" alt="霍展霆" class="inline-block w-9 h-9 rounded-xl object-cover border border-purple-400/50 bg-slate-900" onerror="this.style.display='none'">
+            </div>
             <div>
               <div class="font-bold text-white text-xs">岑詠蕎 & 霍展霆</div>
               <div class="text-[10px] text-purple-300">中六B班受害學生</div>
             </div>
           </div>
-          <p class="text-[11px] text-slate-300 leading-relaxed">詠蕎背負拔尖升學焦慮，展霆面臨學界賽膝傷淘汰危機。兩人在重壓下被「草本提神止痛」的謊言誘騙，吸入不明改裝煙油後誘發急性肌陣攣痙攣送院。</p>
+          <p class="text-[11px] text-slate-300 leading-relaxed">詠蕎背負拔尖升學焦慮，展霆面臨學界賽膝傷淘汰危機。兩人在極限高壓下被「草本提神止痛」的謊言誘騙，吸入不明改裝煙油後誘發急性肌陣攣痙攣送院。</p>
         </div>
 
         <div class="glass-panel p-2.5 rounded-xl border-rose-500/40 bg-rose-950/20 flex flex-col">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-lg">⚠️</span>
+          <div class="flex items-center gap-2 mb-1.5">
+            <div class="flex -space-x-2 overflow-hidden">
+              <img src="assets/暗夜調劑師.webp" alt="暗夜調劑師" class="inline-block w-9 h-9 rounded-xl object-cover border border-rose-500/50 bg-slate-900" onerror="this.style.display='none'">
+              <img src="assets/阿強.webp" alt="阿強" class="inline-block w-9 h-9 rounded-xl object-cover border border-rose-500/50 bg-slate-900" onerror="this.style.display='none'">
+            </div>
             <div>
               <div class="font-bold text-rose-400 text-xs">「暗夜調劑師」與跑腿阿強</div>
               <div class="text-[10px] text-rose-300">校外主謀與校內接應</div>
             </div>
           </div>
-          <p class="text-[11px] text-slate-300 leading-relaxed">利用走廊空置儲物櫃散布毒品，並指使校內跑腿偷拍學生全身抽搐、神智不清的醜態影片，企圖以毀滅前途為由向家長勒索鉅額封口費。</p>
+          <p class="text-[11px] text-slate-300 leading-relaxed">利用走廊空置儲物櫃散布依託咪酯，並指使校內跑腿阿強偷拍學生全身抽搐、神智不清的醜態影片，企圖以毀滅前途為由向家長勒索高達五十萬封口費。</p>
         </div>
       </div>
     </div>
@@ -544,52 +581,69 @@
     </div>
   </div>
 
-  <!-- 結案與勝利畫面 -->
+  <!-- 結案與勝利畫面（重構：溫暖親筆感謝信 + 情感回報） -->
   <div id="victory-screen" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-2xl flex items-center justify-center p-2 sm:p-3 opacity-0 pointer-events-none transition-all duration-500" role="dialog" aria-modal="true">
-    <div class="glass-panel max-w-2xl w-full rounded-3xl p-3 sm:p-4 border-emerald-500/60 text-center relative overflow-hidden flex flex-col justify-between">
+    <div class="glass-panel max-w-2xl w-full rounded-3xl p-3 sm:p-4 border-emerald-500/60 text-center relative overflow-hidden flex flex-col justify-between max-h-[95vh] overflow-y-auto">
       <div class="shrink-0 flex items-center justify-between pb-1.5 border-b border-slate-700/80 mb-2">
         <div class="flex items-center gap-2">
           <div class="w-7 h-7 rounded-xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-base shadow-[0_0_20px_rgba(16,185,129,0.35)]">🏆</div>
           <div class="text-left">
-            <h2 class="text-xs sm:text-sm font-black text-white">案情告破：全鏈條物證核實！</h2>
-            <div class="text-[10px] text-emerald-400 font-bold">執法部門雷霆收網 • 犯罪網絡瓦解</div>
+            <h2 class="text-xs sm:text-sm font-black text-white">案情破獲：全鏈條物證核實！</h2>
+            <div class="text-[10px] text-emerald-400 font-bold">執法部門雷霆收網 • 犯罪網絡連根拔起</div>
           </div>
         </div>
-        <div class="px-2 py-0.5 rounded-full bg-rose-950 border border-rose-500 text-rose-300 text-[10px] font-black tracking-wider">
+        <div class="px-2.5 py-0.5 rounded-full bg-rose-950 border border-rose-500 text-rose-300 text-[10px] font-black tracking-wider">
           🛑 核心口號：【毒品咪制！】
         </div>
       </div>
       
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-left my-1">
-        <div class="bg-slate-900/90 p-2.5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-2">
-          <div class="space-y-1 text-[11px] text-slate-300 leading-relaxed">
-            <div>
-              <strong class="text-amber-300">雷霆收網：</strong>現場雙試管顯色化驗及時確診毒物為受《危險藥物條例》嚴格管制之麻醉藥<strong>「依托咪酯」</strong>。天台截獲之跑腿通聯錄音與閉路電視 16:40:32 鎖定之 17 號儲物櫃影像，使警方迅速在校外拘捕幕後調劑師與涉案跑腿，徹底粉碎利用抽搐影片勒索家長封口費的惡性犯罪。
+        <!-- 左側：病房寄來的感謝信 -->
+        <div class="bg-slate-900/95 p-3 rounded-2xl border border-amber-500/40 flex flex-col justify-between space-y-2 relative">
+          <div>
+            <div class="text-amber-300 font-bold text-xs flex items-center gap-1.5 border-b border-slate-800 pb-1.5 mb-1.5">
+              <span>✉️</span>
+              <span>來自瑪麗醫院兒科病房的感謝信：</span>
             </div>
-            <div>
-              <strong class="text-cyan-300">精準救治：</strong>醫院第一時間獲悉毒理化驗結果確診為依托咪酯，立即施行緊急氣道維護、抗抽搐及深層重症監護支持治療。由於及早識別毒物並對症搶救，岑詠蕎與霍展霆的急性肌陣攣抽搐與呼吸抑制已完全平息，脫離生命危險。
+            <p class="text-[11px] text-slate-200 leading-relaxed space-y-1.5 italic cinematic-serif">
+              「梁調查員：<br><br>
+              醫生說，如果不是你第一時間在現場完成化驗、確診毒物是受管制的麻醉藥<strong>『依托咪酯』</strong>，我們的中樞神經系統很可能已經造成永久性損傷……<br><br>
+              那些吸入口中時所謂的『速效提神』和『無害放鬆』，代價竟然是身體不受控地劇烈痙攣、在地上抽搐失控的尊嚴盡失。展霆已經開始做物理康復治療，我也徹底清醒過來——面對升學和淘汰的壓力，沒有任何捷徑值得拿一生去賭。<br><br>
+              謝謝你替我們找回了真相，也拉住了差點墜入深淵的我們。」
+            </p>
+            <div class="text-right text-[10px] text-amber-400 font-bold pt-1">
+              —— 岑詠蕎 & 霍展霆 敬上
             </div>
           </div>
 
-          <button id="btn-restart-game" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wider shadow-md active:scale-95 transition cursor-pointer">
-            🔄 重新啟動複盤
+          <button id="btn-restart-game" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wider shadow-md active:scale-95 transition cursor-pointer mt-1">
+            🔄 重新啟動案情複盤
           </button>
         </div>
 
-        <div class="p-2.5 rounded-2xl bg-slate-950/95 border border-amber-500/40 flex flex-col justify-between space-y-2">
+        <!-- 右側：執法通報與求助專線 -->
+        <div class="p-3 rounded-2xl bg-slate-950/95 border border-slate-800 flex flex-col justify-between space-y-2">
           <div>
-            <div class="text-amber-300 font-bold text-xs flex items-center gap-1 mb-1">
+            <div class="text-xs font-bold text-white flex items-center gap-1 mb-1">
+              <span>⚖️</span>
+              <span class="text-emerald-300">收網執法通報：</span>
+            </div>
+            <p class="text-[11px] text-slate-300 leading-relaxed mb-2">
+              警方依據天台截獲的錄音軌與 16:40:32 CCTV 監控記錄，已在校外將「暗夜調劑師」與接應跑腿阿強全數拘捕歸案。其企圖利用抽搐醜態影片向家長勒索五十萬封口費的惡意犯罪已被全面粉碎。
+            </p>
+
+            <div class="text-amber-300 font-bold text-xs flex items-center gap-1 mb-1 pt-1 border-t border-slate-800">
               <span>📞</span>
-              <span>官方打擊依托咪酯專線：</span>
+              <span>官方反毒與求助專線：</span>
             </div>
             <div class="text-[11px] text-slate-200 space-y-1 pl-1">
-              <div>• 毒品舉報熱線：<strong class="text-white font-mono bg-slate-800 px-1.5 py-0.5 rounded">2527-1234</strong></div>
+              <div>• 警務處毒品舉報熱線：<strong class="text-white font-mono bg-slate-800 px-1.5 py-0.5 rounded">2527-1234</strong></div>
               <div>• 打擊依托咪酯專線：<strong class="text-rose-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">6629-2966</strong></div>
             </div>
           </div>
 
           <div class="text-[11px] text-orange-300 bg-orange-950/30 p-2 rounded-xl border border-orange-500/30 leading-relaxed">
-            任何宣稱「提神、解壓、無害」的偽裝煙油皆是毒品陷阱。依托咪酯受《危險藥物條例》嚴格管轄。守護校園，牢記<strong>【毒品咪制！】</strong>。
+            任何宣稱「提神、解壓、天然」的偽裝煙油皆是毒品陷阱。依托咪酯受《危險藥物條例》嚴格管轄。守護校園，牢記<strong>【毒品咪制！】</strong>。
           </div>
         </div>
       </div>
@@ -830,6 +884,15 @@
     const TOTAL_CLUES = 7;
     const SAVE_STORAGE_KEY = "twilight_echoes_save_data";
 
+    /* 立繪對應表（置於 assets/ 資料夾中） */
+    const PORTRAIT_MAP = {
+      "梁澤銘": "assets/梁澤銘.webp",
+      "霍展霆": "assets/霍展霆.webp",
+      "岑詠蕎": "assets/岑詠蕎.webp",
+      "暗夜調劑師": "assets/暗夜調劑師.webp",
+      "阿強": "assets/阿強.webp"
+    };
+
     const GAME_STATE = {
       started: false,
       questStage: 1,
@@ -873,30 +936,30 @@
       } catch(e) { return null; }
     }
 
-    /* 線索數據（全面去劇透化，無 17 號櫃劇透、無解藥漏洞） */
+    /* 案件線索（豐富環境敘事，更衣室與課桌元素全面升級） */
     const CLUES_DATA = {
       clue_gym_fok: {
         id: "clue_gym_fok",
         stage: 1,
-        name: "1F 更衣室長椅下的改裝煙彈殘骸與誘騙便條",
+        name: "1F 更衣室長椅下的改裝煙彈與學界正選踢除通知",
         zone: "1F 體育更衣室走廊",
         icon: "🩹",
         pos: { x: -9.5, y: 1.25, z: 4.0 },
         floor: 1,
-        shortDesc: "更衣室夾縫起獲摔裂的電子煙彈，殘油泛淡紫色。便條利用展霆膝傷誘騙其吸食聲稱速效止痛的特調煙油，並指涉中六B班岑詠蕎。",
-        fullDesc: "更衣室長椅夾縫起獲一枚摔裂的改裝煙彈，殘存液體呈淡紫色，旁邊遺留著球隊冰敷袋與破損護膝。長椅壓著打印便條：『膝傷痛就抽兩口，保證止痛放鬆、學界照樣上場。你同中六B班岑詠蕎一樣，何必死頂？——調劑師』。",
+        shortDesc: "長椅夾縫起獲摔裂的電子煙彈與破損護膝。旁邊壓著被紅筆劃除的學界賽正選推薦表、見底的止痛藥空殼，以及調劑師的誘騙字條。",
+        fullDesc: "更衣室長椅夾縫起獲一枚摔裂的改裝煙彈，殘油泛淡紫光。長椅下方散落著展霆破裂的護膝、幾板吃空的強效止痛藥排，以及一張被教練用紅筆重重批註的《學界精英賽正選名冊》——『膝傷若未及時痊癒即永久除名』。而在名冊背後，黏著一張打印便條：『膝傷痛就抽兩口，保證止痛放鬆、學界照樣上場。你同中六B班岑詠蕎一樣，何必死頂？——調劑師』。",
         forensic: "煙嘴檢出特殊有機化合物氣味，以高黏度丙二醇為載體，具強烈中樞神經抑制毒性，具體化學成分待實驗室化驗確診。"
       },
       clue_desk: {
         id: "clue_desk",
         stage: 2,
-        name: "2F 課桌痙攣撕裂之答題紙與手震求救手機草稿",
+        name: "2F 課桌痙攣撕裂試卷與極限作息草稿",
         zone: "2F 中六B班房",
         icon: "📝",
         pos: { x: -8.5, y: 5.05, z: -7.5 },
         floor: 2,
-        shortDesc: "桌面漏出深紫油液（樣品A）。試卷被筆尖刺穿；手機草稿滿是吸入不明煙油後手指失控痙攣打出的求救字句，提及毒販利用走廊無人用的儲物櫃放貨。",
-        fullDesc: "課桌上漏出一灘未乾涸的油性紫液（樣品 A）。模擬試卷後半段被筆尖失控撕破，呈現劇烈肌陣攣顫抖痕跡；手機停留在未鎖草稿，字句因手指抽搐失控而錯亂：『心跳快到就爆……手手手震gggggg……停唔到……根本唔係提神精油……放喺走廊……無人用的儲物櫃……密碼係……1樓展板寫嘅大麻黑話代號……救命……叫救護車快d……asdhjffffffffffffff……』。",
+        shortDesc: "課桌漏出深紫油液。桌角貼著每天僅睡3小時的倒數作息表與空咖啡罐；手機草稿滿是手指痙攣失控打出的求救字句，提及走廊空儲物櫃。",
+        fullDesc: "課桌上漏出一灘未乾涸的油性紫液（樣品 A）。模擬試卷前半段答題極其工整，後半段卻被原子筆失控刺穿數十道裂痕，呈現出劇烈肌陣攣顫抖的痕跡。桌角貼著寫滿『不可鬆懈！』的倒數作息表（每日睡眠僅定為 3.5 小時），旁邊堆著四罐喝空的提神濃縮咖啡。手機螢幕停留在未鎖草稿，字句錯亂：『心跳快到就爆……手手手震gggggg……根本唔係提神精油……叫我喺走廊……無人用的儲物櫃攞貨……密碼係……1樓展板寫嘅大麻黑話代號……救命……asdhjffffffffffffff……』。",
         forensic: "桌面漏液呈淡紫油狀，高脂溶性，微酸性。已提取封存為【樣品 A】以供進一步毒理化驗。"
       },
       clue_cctv: {
@@ -950,14 +1013,14 @@
       clue_rooftop_burner: {
         id: "clue_rooftop_burner",
         stage: 7,
-        name: "3F 天台排風箱後截獲之勒索跑腿通話音軌",
+        name: "3F 天台排風箱後截獲之勒索通話音軌與跑腿書包",
         zone: "3F 教學樓天台",
         icon: "📱",
         pos: { x: -5.0, y: 8.85, z: -2.5 },
         floor: 3,
-        shortDesc: "截獲校內跑腿遺留之工作機，錄下調劑師企圖以學生吸毒抽搐失控醜態影片敲詐勒索高額封口費之核心罪證。",
-        fullDesc: "天台排風箱後起獲震動中的通聯手機。接通電話並自動錄音：『喂？！做咩咁耐先聽電話？！咪制書院門口點解會有救護車同差人封鎖？！阿強，霍展霆同岑詠蕎食咗批貨之後，倒地抽搐嘅片你拍低咗未？！……聽住，條片即刻傳上網盤！如果佢哋屋企唔肯畀五十萬封口費，今晚十二點前我就將佢哋口吐白沫、全身抽筋嘅片發去升學委員會、全港中學同體育總會，等佢哋前途盡毀！……喂？點解唔出聲？你……你根本唔係阿強？！混帳——！』通話隨即被對方切斷。",
-        forensic: "通話音頻、基地台信號與嫌疑人網絡帳號已由警方技術組同步全面鎖定。"
+        shortDesc: "截獲校內跑腿阿強遺留的工作機與學生證，錄下調劑師企圖以學生抽搐影片敲詐五十萬封口費之核心罪證。",
+        fullDesc: "天台排風箱旁散落著校內跑腿阿強的學生證與幾張折皺的千元鈔票。工作機接通並自動錄音：『喂？！做咩咁耐先聽電話？！咪制書院門口點解會有救護車同差人封鎖？！阿強，霍展霆同岑詠蕎食咗批貨之後，倒地抽搐嘅片你拍低咗未？！……聽住，條片即刻傳上網盤！如果佢哋屋企唔肯畀五十萬封口費，今晚十二點前我就將佢哋口吐白沫、全身抽筋嘅片發去升學委員會、全港中學同體育總會，等佢哋前途盡毀！……喂？點解唔出聲？你……你根本唔係阿強？！混帳——！』",
+        forensic: "通話音頻、基地台信號與暗網帳號已由警方技術組同步全面鎖定。"
       }
     };
 
@@ -1041,7 +1104,7 @@
 
     const keys = {};
     let minimapCanvas, minimapCtx;
-    let dialogueBox, dialoguePanelCard, dialogueSpeaker, dialogueRoleTag, dialogueText, dialogueAvatar;
+    let dialogueBox, dialoguePanelCard, dialogueSpeaker, dialogueRoleTag, dialogueText, dialogueAvatar, dialoguePortrait;
     let interactionPrompt, promptActionText, promptInputBadge;
     let labModal, notebookModal, victoryScreen, lockerModal, cctvModal;
     let cctvCanvas, cctvCtx;
@@ -1351,6 +1414,7 @@
       scene.add(objectiveArrowMesh);
     }
 
+    /* 關鍵修復：綠色箭頭不再指向 17 號儲物櫃，保留純粹探索推理解謎樂趣 */
     function updateObjectiveArrow() {
       if (!objectiveArrowMesh) return;
       let targetPos = null;
@@ -1363,8 +1427,8 @@
       } else if (GAME_STATE.questStage === 3) {
         targetPos = CLUES_DATA.clue_cctv.pos; targetFloor = 1;
       } else if (GAME_STATE.questStage === 4) {
-        // CCTV 完成後，明確引導前往 17 號櫃
-        targetPos = CLUES_DATA.clue_corridor.pos; targetFloor = 2;
+        // Stage 4: 移除了指向 17 號櫃的綠色箭頭！讓玩家自行在 2F 走廊排查儲物櫃
+        targetPos = null;
       } else if (GAME_STATE.questStage === 5) {
         targetPos = CLUES_DATA.clue_pipe_stash.pos; targetFloor = 2;
       } else if (GAME_STATE.questStage === 6) {
@@ -1490,7 +1554,7 @@
         });
       });
 
-      // 儲物櫃組（11, 13, 15, 17, 19）均勻排列且外觀高矮完全一致
+      // 儲物櫃均勻排列
       const lockers = [-2.0, 0.5, 3.0, 5.5, 7.5];
       lockers.forEach(lx => {
         const lg = new THREE.Group();
@@ -1640,7 +1704,7 @@
       });
 
       Object.values(CLUES_DATA).forEach(clue => {
-        // 核心防劇透修正：17號櫃未經CCTV查驗前，小地圖絕對不單獨標記！
+        // 核心防劇透：17號櫃未經CCTV查驗前，小地圖絕對不單獨標記！
         if (clue.id === 'clue_corridor' && GAME_STATE.questStage < 4) return;
 
         const found = GAME_STATE.cluesFound.has(clue.id);
@@ -1719,6 +1783,20 @@
       nextDialogue();
     }
 
+    function updatePortrait(portraitKey) {
+      if (!dialoguePortrait) return;
+      if (portraitKey && PORTRAIT_MAP[portraitKey]) {
+        dialoguePortrait.src = PORTRAIT_MAP[portraitKey];
+        dialoguePortrait.onerror = () => { dialoguePortrait.style.display = 'none'; };
+        dialoguePortrait.onload = () => { dialoguePortrait.style.display = 'block'; };
+        dialoguePortrait.classList.remove('opacity-0', 'translate-y-3');
+        dialoguePortrait.classList.add('opacity-100', 'translate-y-0');
+      } else {
+        dialoguePortrait.classList.remove('opacity-100', 'translate-y-0');
+        dialoguePortrait.classList.add('opacity-0', 'translate-y-3');
+      }
+    }
+
     function nextDialogue() {
       if (!GAME_STATE.dialogueQueue || GAME_STATE.dialogueQueue.length === 0) {
         closeDialogue();
@@ -1728,6 +1806,10 @@
       if (dialogueSpeaker) dialogueSpeaker.textContent = current.speaker;
       if (dialogueRoleTag) dialogueRoleTag.textContent = current.role;
       if (dialogueText) dialogueText.textContent = current.text;
+
+      // 更新半身立繪
+      const pKey = current.portrait || (PORTRAIT_MAP[current.speaker] ? current.speaker : null);
+      updatePortrait(pKey);
 
       if (dialoguePanelCard) {
         dialoguePanelCard.classList.remove('dialogue-type-monologue', 'dialogue-type-narration', 'dialogue-type-call');
@@ -1757,6 +1839,7 @@
         dialogueBox.classList.remove('pointer-events-auto', 'opacity-100', 'translate-y-0');
         dialogueBox.classList.add('pointer-events-none', 'opacity-0', 'translate-y-4');
       }
+      updatePortrait(null);
       GAME_STATE.isDialogueOpen = false;
       if (GAME_STATE.dialogueCallback) {
         const cb = GAME_STATE.dialogueCallback;
@@ -1803,7 +1886,6 @@
         let actionLabel = "調查現場";
         if (closestObj.type === 'clue') {
           if (closestObj.data.id === 'clue_corridor') {
-            // 防劇透：未鎖定 17 號櫃之前，提示文字與其他儲物櫃完全一致
             if (GAME_STATE.questStage < 4) {
               actionLabel = "檢視：儲物櫃";
             } else {
@@ -1884,7 +1966,7 @@
 
       if (GAME_STATE.questStage === 1 && target.type !== 'clue') {
         startDialogueQueue([
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "優先目標", text: "（展霆休克前所在的西側更衣室長椅就在前方。先排查現場遺留物。）" }
+          { type: "monologue", speaker: "梁澤銘", role: "優先目標", portrait: "梁澤銘", text: "（展霆休克前所在的西側更衣室長椅就在前方。先排查現場遺留物。）" }
         ]);
         return;
       }
@@ -1892,23 +1974,23 @@
       if (target.type === 'easter_egg') {
         startDialogueQueue([
           { type: "narration", speaker: "校園環境紀錄", role: target.data.name, text: target.data.desc },
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員手記", text: target.data.monologue }
+          { type: "monologue", speaker: "梁澤銘", role: "調查員手記", portrait: "梁澤銘", text: target.data.monologue }
         ]);
         return;
       }
 
-      // 未看監控前，排查任何儲物櫃（包括 17 號）均反饋一致
+      // 儲物櫃探索（未獲明確線索前與排查非涉案櫃）
       if (target.type === 'dummy_locker' || (target.type === 'clue' && target.data.id === 'clue_corridor' && GAME_STATE.questStage < 4)) {
         if (GAME_STATE.questStage < 4) {
           startDialogueQueue([
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "現場勘查", text: "（走廊兩側是一整排空置與學生儲物櫃。未獲取明確線索前逐一盲目翻查只會浪費時間。先按線索搜查班房課桌。）" }
+            { type: "monologue", speaker: "梁澤銘", role: "現場勘查", portrait: "梁澤銘", text: "（走廊兩側是一整排儲物櫃。未在閉路電視獲取確鑿影像前逐一翻查只會打草驚蛇。先按指引調查班房課桌。）" }
           ]);
           return;
         }
         if (target.type === 'dummy_locker') {
           startDialogueQueue([
             { type: "narration", speaker: "儲物櫃排查紀錄", role: "儲物櫃翻查", text: target.data.desc },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "調查分析", text: `（這是 ${target.data.num} 號櫃。鎖具正常，無毒品留置痕跡。閉路電視清楚拍到嫌疑人投放物品的目標是 17 號櫃。）` }
+            { type: "monologue", speaker: "梁澤銘", role: "調查分析", portrait: "梁澤銘", text: `（這是 ${target.data.num} 號櫃。鎖具正常，無毒品留置痕跡。閉路電視清楚拍到嫌疑人投放物品的目標是 17 號櫃。）` }
           ]);
           return;
         }
@@ -1923,7 +2005,7 @@
           }
           startDialogueQueue([
             { type: "narration", speaker: "物證回顧", role: clue.zone, text: `【${clue.name}】已歸檔：\n${clue.fullDesc}` },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "鑑證備忘", text: `（鑑識細節：${clue.forensic}）` }
+            { type: "monologue", speaker: "梁澤銘", role: "鑑證備忘", portrait: "梁澤銘", text: `（鑑識細節：${clue.forensic}）` }
           ]);
           return;
         }
@@ -1933,10 +2015,10 @@
           if (GAME_STATE.questStage === 1) hint = "先前往更衣室長椅排查展霆遺留物。";
           else if (GAME_STATE.questStage === 2) hint = "登上 2F 中六B班房搜查岑詠蕎的課桌。";
           else if (GAME_STATE.questStage === 3) hint = "返回 1F 大堂保安工作台調取走廊監控回放。";
-          else if (GAME_STATE.questStage === 4) hint = "前往 2F 走廊找出並解開 17 號儲物櫃。";
+          else if (GAME_STATE.questStage === 4) hint = "依據監控線索，在 2F 走廊找出並排查 17 號儲物櫃。";
           else if (GAME_STATE.questStage === 5) hint = "在化學室外排水管暗角搜查毒品原液。";
           else if (GAME_STATE.questStage === 6) hint = "兩份樣品已備齊，進入實驗室化驗。";
-          startDialogueQueue([{ type: "monologue", speaker: "梁澤銘（心想）", role: "偵查順序", text: `（${hint}）` }]);
+          startDialogueQueue([{ type: "monologue", speaker: "梁澤銘", role: "偵查順序", portrait: "梁澤銘", text: `（${hint}）` }]);
           return;
         }
 
@@ -1946,16 +2028,16 @@
           updateStairBarriers();
           updateObjective("沿東側階梯登上 2F，搜查中六B班房岑詠蕎的課桌 (2/7)");
           startDialogueQueue([
-            { type: "narration", speaker: "物證發現", role: "更衣室長椅", text: "長椅夾縫起獲摔裂的改裝煙彈，煙油呈淡紫色。長椅上壓著一張打印便條：『膝傷痛就抽兩口，保證止痛放鬆、學界照樣上場。你同中六B班岑詠蕎一樣，何必死頂？——調劑師』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果分析", text: "（展霆面臨學界賽膝傷淘汰，犯罪者抓住他的焦慮誘騙其吸食聲稱速效止痛的特調煙油。便條更直接提到中六B班岑詠蕎！東側階梯封鎖已解除，立刻上 2F 查看詠蕎的課桌。）" }
+            { type: "narration", speaker: "現場物證起獲", role: "更衣室長椅", portrait: "霍展霆", text: "長椅夾縫起獲摔裂的改裝煙彈與破損護膝。旁邊壓著被紅筆劃除的學界精英賽名單、見底的強效止痛藥排，以及調劑師的打印便條：『膝傷痛就抽兩口，保證止痛放鬆、學界照樣上場。你同中六B班岑詠蕎一樣，何必死頂？』" },
+            { type: "monologue", speaker: "梁澤銘", role: "因果分析", portrait: "梁澤銘", text: "（展霆面臨學界賽膝傷淘汰的極限恐慌，毒販趁虛而入誘騙其吸食所謂的速效止痛特調煙油。便條更直接指向中六B班岑詠蕎！東側階梯封鎖已解除，立刻上 2F 查看詠蕎課桌。）" }
           ]);
         } else if (clue.stage === 2) {
           collectClue(clue.id);
           GAME_STATE.questStage = 3;
           updateObjective("前往 1F 大堂保安監控終端，回放 2F 走廊閉路電視 (3/7)");
           startDialogueQueue([
-            { type: "narration", speaker: "物證發現", role: "中六B班課桌", text: "課桌漏出深紫色油液（樣品 A）。答題紙被筆尖痙攣刺穿；手機螢幕停留在未鎖草稿，滿是手指因吸入不明煙油劇烈抽搐打出的亂碼：『心跳快到就爆……手手手震gggggg……停唔到……根本唔係提神精油……放喺走廊……無人用的儲物櫃……密碼係……1樓展板寫嘅大麻黑話代號……救命……叫救護車快d……asdhjffffffffffffff……』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "關鍵動向", text: "（詠蕎在意識模糊前提及走廊『無人用的儲物櫃』……走廊儲物櫃那麼多，盲目翻查只會打草驚蛇。先回 1F 大堂保安監控終端，調取走廊錄像，看清楚可疑人員究竟將東西放進了哪一個櫃！）" }
+            { type: "narration", speaker: "現場物證起獲", role: "中六B班課桌", portrait: "岑詠蕎", text: "課桌漏出深紫油液（樣品 A）。試卷後半部滿是原子筆刺破的痙攣痕跡，桌角貼著每天僅睡3小時的倒數作息表；手機螢幕停留在未鎖草稿，滿是手指抽搐打出的求救字句：『心跳快到就爆……手手手震gggggg……叫我喺走廊無人用的儲物櫃攞貨……密碼係1樓展板寫嘅大麻黑話代號……救命……asdhjffffffffff……』" },
+            { type: "monologue", speaker: "梁澤銘", role: "關鍵動向", portrait: "梁澤銘", text: "（詠蕎在意識模糊前提及走廊『無人用的儲物櫃』……走廊櫃子眾多，先回 1F 大堂保安監控終端調取錄像，看清楚可疑人員究竟將物件投放進了哪一個櫃！）" }
           ]);
         } else if (clue.stage === 3) {
           openCctvModal();
@@ -1966,8 +2048,8 @@
           GAME_STATE.questStage = 6;
           updateObjective("進入 2F 理科實驗室，進行雙試管快篩化驗 (6/7)");
           startDialogueQueue([
-            { type: "narration", speaker: "物證發現", role: "排水管暗角", text: "在排水管固定鐵架暗角搜出未開封的真空包裝煙彈（樣品 B），標籤印著『100%草本提取提神原液』，液體透著微紫光澤。" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "化驗準備", text: "（課桌漏液樣品 A 與暗角起獲的原裝煙彈樣品 B 齊備。進入旁邊的理科實驗室進行雙試管顯色交叉比對，確診具體毒物成分。）" }
+            { type: "narration", speaker: "物證起獲", role: "排水管暗角", text: "在排水管固定鐵架暗角搜出未開封的真空包裝煙彈（樣品 B），標籤印著極具偽裝性的『100%草本提取極速提神原液』，內部透著淡微紫光澤。" },
+            { type: "monologue", speaker: "梁澤銘", role: "化驗準備", portrait: "梁澤銘", text: "（課桌漏液樣品 A 與暗角起獲的原裝煙彈樣品 B 齊備。進入旁邊的理科實驗室進行雙試管顯色交叉比對，確診具體毒物成分。）" }
           ]);
         } else if (clue.stage === 6) {
           openLabModal();
@@ -1978,9 +2060,9 @@
           updateClueBadges();
           updateObjective("打開【案件簿】進入【思維宮殿】，定案並通報執法部門 (7/7)");
           startDialogueQueue([
-            { type: "call", speaker: "通話音軌錄取", role: "排風箱通聯手機", text: "『喂？！做咩咁耐先聽電話？！咪制書院門口點解會有救護車同差人封鎖？！阿強，霍展霆同岑詠蕎食咗批貨之後，倒地抽搐嘅片你拍低咗未？！……聽住，條片即刻傳上網盤！如果佢哋屋企唔肯畀五十萬封口費，今晚十二點前我就將佢哋口吐白沫、全身抽筋嘅片發去升學委員會、全港中學同體育總會，等佢哋前途盡毀！……喂？點解唔出聲？你……你根本唔係阿強？！混帳——！』" },
-            { type: "dialogue", speaker: "梁澤銘", role: "錄音存檔", text: "通話音軌已被完全錄取！對方的基地台信號與暗網帳號已由警方技術組同步鎖定。" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "定案整理", text: "（原來犯罪分子並非單純兜售毒品，而是引誘吸食依托咪酯後偷拍抽搐醜態影片實施勒索！全案 7 大物證已全部集齊。打開【📋 案件簿】的【思維宮殿定案】，提交報告並啟動雷霆收網！）" }
+            { type: "narration", speaker: "現場物證起獲", role: "天台排風箱", portrait: "阿強", text: "天台排風箱旁散落著校內跑腿阿強的學生證與幾張折皺的千元鈔票。遺留的工作機此時瘋狂震動，自動錄音系統已同步啟動——" },
+            { type: "call", speaker: "暗夜調劑師", role: "幕後黑手電話通聯", portrait: "暗夜調劑師", text: "『喂？！做咩咁耐先聽電話？！咪制書院門口點解會有救護車同差人封鎖？！阿強，霍展霆同岑詠蕎食咗批貨之後，倒地抽搐嘅片你拍低咗未？！……聽住，條片即刻傳上網盤！如果佢哋屋企唔肯畀五十萬封口費，今晚十二點前我就將佢哋全身抽搐口吐白沫嘅片發去升學委員會、全港中學同體育總會，等佢哋前途盡毀！……喂？點解唔出聲？你……你根本唔係阿強？！混帳——！』" },
+            { type: "monologue", speaker: "梁澤銘", role: "定案收網", portrait: "梁澤銘", text: "（原來這幫不法分子並非單純兜售毒品，而是引誘吸食依托咪酯後偷拍抽搐醜態實施敲詐勒索！全案 7 大物證已全部集齊。打開【📋 案件簿】的【思維宮殿定案】，提交報告啟動雷霆收網！）" }
           ], () => {
             toggleNotebook();
             switchNotebookTab('mindpalace');
@@ -2145,10 +2227,10 @@
         collectClue('clue_cctv');
         GAME_STATE.hasCctvClue = true;
         GAME_STATE.questStage = 4;
-        updateObjective("登上 2F 走廊，排查 17 號儲物櫃 (4/7)");
+        updateObjective("依據 CCTV 截圖線索，在 2F 走廊找出並排查涉案儲物櫃 (4/7)");
         startDialogueQueue([
-          { type: "narration", speaker: "閉路電視截圖取證", role: "物證歸檔", text: "成功截獲 16:40:32 關鍵幀！清晰記錄涉案人員將改裝煙彈放入 2F 走廊【17 號儲物櫃】。" },
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "偵查鎖定", text: "（目標鎖定為 17 號空置儲物櫃！嫌疑人利用無人使用的儲物櫃作為交收死角。立刻上 2F 走廊排查 17 號櫃！）" }
+          { type: "narration", speaker: "閉路電視截圖取證", role: "物證歸檔", portrait: "梁澤銘", text: "成功截獲 16:40:32 關鍵幀！清晰記錄涉案人員將改裝煙彈塞入 2F 走廊【17 號儲物櫃】。" },
+          { type: "monologue", speaker: "梁澤銘", role: "偵查鎖定", portrait: "梁澤銘", text: "（涉案目標已鎖定為 17 號儲物櫃。立刻登上 2F 走廊，親自找出並解開 17 號櫃！）" }
         ]);
       } else {
         sound.playLockBuzzer();
@@ -2203,8 +2285,8 @@
         GAME_STATE.questStage = 5;
         updateObjective("搜查 2F 化學室外排水管支架暗角 (5/7)");
         startDialogueQueue([
-          { type: "narration", speaker: "鎖具彈開", role: "17號儲物櫃", text: "輸入【4】【2】【0】，鎖芯應聲彈開。起獲接頭便條：『咪制書院節點：試用裝已按約定放入空櫃。下批特調原液已暫存【化學室外排水管支架暗角】，取後即銷毀。』" },
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "因果分析", text: "（涉案人果然將未拆封的原液藏在化學室外的排水管暗角，立即前往固定物證。）" }
+          { type: "narration", speaker: "鎖具彈開", role: "17號儲物櫃", text: "輸入【4】【2】【0】，金屬滾輪彈開。起獲接頭便條：『咪制書院節點：試用裝已按約定放入空櫃。下批特調原液已暫存【化學室外排水管支架暗角】，取後即銷毀。』" },
+          { type: "monologue", speaker: "梁澤銘", role: "因果分析", portrait: "梁澤銘", text: "（涉案人果然將未拆封的原液藏在化學室外的排水管暗角，立即前往固定物證。）" }
         ]);
       } else {
         sound.playLockBuzzer();
@@ -2213,7 +2295,7 @@
           void card.offsetWidth;
           card.classList.add('animate-shake');
         }
-        if (err) err.textContent = "❌ 密碼不符。（詠蕎草稿提及大麻代號，請回想 1F 抗毒宣傳板上的涉毒黑話代號）";
+        if (err) err.textContent = "❌ 密碼不符。（詠蕎草稿提及大麻代號，請回想 1F 抗毒宣傳板上的黑話代號）";
       }
     }
 
@@ -2221,7 +2303,7 @@
       sound.playDialogueBlip();
       closeLockerModal();
       startDialogueQueue([
-        { type: "monologue", speaker: "梁澤銘（心想）", role: "思維回想", text: "（詠蕎草稿裡寫著『密碼係1樓展板寫嘅大麻黑話代號』……剛才在 1 樓大堂抗毒宣傳板上看過，涉毒黑市中指代大麻的黑話數字代號正是 420！）" }
+        { type: "monologue", speaker: "梁澤銘", role: "思維回想", portrait: "梁澤銘", text: "（詠蕎草稿裡寫著『密碼係1樓展板寫嘅大麻黑話代號』……剛才在 1 樓大堂抗毒宣傳板上看過，涉毒黑市中指代大麻的黑話數字代號正是 420！）" }
       ]);
     }
 
@@ -2351,8 +2433,8 @@
       sound.playPhoneRing();
 
       startDialogueQueue([
-        { type: "narration", speaker: "化驗報告結論", role: "定性鑑證", text: "交叉顯色化驗確鑿：課桌殘留液與暗角煙彈均驗出高濃度管制麻醉危險藥物【依托咪酯】。所謂『草本提神』純屬騙局謊言。" },
-        { type: "monologue", speaker: "梁澤銘（心想）", role: "警覺", text: "（等等……頭頂天台傳來急促的手機震動聲！天台階梯封鎖已解除，立刻上去截獲通聯設備！）" }
+        { type: "narration", speaker: "化驗報告結論", role: "定性鑑證", portrait: "梁澤銘", text: "交叉顯色化驗確鑿：課桌殘留液與暗角煙彈均驗出高濃度管制麻醉危險藥物【依托咪酯】。所謂『草本提神』純屬害人謊言。" },
+        { type: "monologue", speaker: "梁澤銘", role: "警覺", portrait: "梁澤銘", text: "（等等……頭頂天台傳來急促的手機震動聲！天台階梯封鎖已解除，立刻上去截獲通聯設備！）" }
       ]);
     }
 
@@ -2521,7 +2603,7 @@
           let resumeHint = "排查現場";
           if (GAME_STATE.questStage === 2) resumeHint = "沿東側階梯登上 2F，搜查中六B班房岑詠蕎的課桌 (2/7)";
           else if (GAME_STATE.questStage === 3) resumeHint = "前往 1F 大堂保安監控終端，回放 2F 走廊閉路電視 (3/7)";
-          else if (GAME_STATE.questStage === 4) resumeHint = "登上 2F 走廊，排查 17 號儲物櫃 (4/7)";
+          else if (GAME_STATE.questStage === 4) resumeHint = "依據 CCTV 截圖線索，在 2F 走廊找出並排查涉案儲物櫃 (4/7)";
           else if (GAME_STATE.questStage === 5) resumeHint = "搜查 2F 化學室外排水管支架暗角 (5/7)";
           else if (GAME_STATE.questStage === 6) resumeHint = "進入 2F 理科實驗室，進行雙試管快篩化驗 (6/7)";
           else if (GAME_STATE.questStage === 7) resumeHint = "循著急促鈴聲登上 3F 天台，排查排風箱通聯手機 (7/7)";
@@ -2534,11 +2616,11 @@
       setTimeout(() => {
         startDialogueQueue([
           {
-            type: "dialogue", speaker: "梁澤銘", role: "特約安全調查員",
+            type: "dialogue", speaker: "梁澤銘", role: "特約安全調查員", portrait: "梁澤銘",
             text: "我是特約安全調查員梁澤銘。現場封鎖線已生效，專案搜查正式展開。"
           },
           {
-            type: "monologue", speaker: "梁澤銘（心想）", role: "現場勘查",
+            type: "monologue", speaker: "梁澤銘", role: "現場勘查", portrait: "梁澤銘",
             text: "（霍展霆在體育更衣室休克倒下，岑詠蕎在模擬試途中劇烈抽搐……兩人此前均無突發病史。先跟隨綠色導標前往西側更衣室排查遺留物。）"
           }
         ]);
@@ -2813,6 +2895,7 @@
       dialogueRoleTag = document.getElementById('dialogue-role-tag');
       dialogueText = document.getElementById('dialogue-text');
       dialogueAvatar = document.getElementById('dialogue-avatar');
+      dialoguePortrait = document.getElementById('dialogue-portrait');
       interactionPrompt = document.getElementById('interaction-prompt');
       promptActionText = document.getElementById('prompt-action-text');
       promptInputBadge = document.getElementById('prompt-input-badge');
