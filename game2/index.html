@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="description" content="暮光迴響：沉淪之霧 - 咪制書院校園安全特別調查專案 3D 禁毒推理互動劇">
+  <meta name="description" content="暮光迴響：沉淪之霧 - 咪制書院校園安全特別調查專案">
   <meta name="theme-color" content="#04060d">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>">
   <title>暮光迴響：沉淪之霧 - 咪制書院校園安全特別調查專案</title>
   
   <!-- Tailwind CSS CDN -->
@@ -43,7 +42,6 @@
       overflow: hidden;
       background-color: #04060d;
       color: #f8fafc;
-      -webkit-tap-highlight-color: transparent;
     }
 
     .safe-bottom { bottom: calc(0.75rem + var(--sab)); }
@@ -92,13 +90,13 @@
     }
 
     .glass-btn {
-      background: linear-gradient(135deg, rgba(249, 115, 22, 0.85), rgba(225, 29, 72, 0.75));
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.8), rgba(225, 29, 72, 0.65));
       border: 1.5px solid rgba(251, 146, 60, 0.75);
       transition: transform 0.1s ease, background 0.12s ease;
     }
     .glass-btn:active {
-      transform: scale(0.95);
-      background: linear-gradient(135deg, rgba(249, 115, 22, 0.98), rgba(225, 29, 72, 0.9));
+      transform: scale(0.94);
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.95), rgba(225, 29, 72, 0.85));
     }
 
     .cinematic-serif {
@@ -121,11 +119,11 @@
     }
 
     .test-tube-glass {
-      width: 46px;
-      height: 104px;
-      border: 2.5px solid rgba(255, 255, 255, 0.6);
+      width: 44px;
+      height: 100px;
+      border: 2.5px solid rgba(255, 255, 255, 0.55);
       border-top: none;
-      border-radius: 0 0 23px 23px;
+      border-radius: 0 0 22px 22px;
       position: relative;
       overflow: hidden;
       background: rgba(255, 255, 255, 0.06);
@@ -139,7 +137,7 @@
       left: 0;
       right: 0;
       height: 65%;
-      border-radius: 0 0 20px 20px;
+      border-radius: 0 0 19px 19px;
       transition: background-color 0.5s ease, height 0.4s ease, filter 0.5s ease;
     }
 
@@ -191,23 +189,6 @@
       animation: shake 0.35s ease-in-out;
     }
 
-    /* 自定義滾動條樣式 */
-    .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.6);
-      border-radius: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(249, 115, 22, 0.5);
-      border-radius: 4px;
-    }
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: rgba(249, 115, 22, 0.8);
-    }
-
     @media (prefers-reduced-motion: reduce) {
       .pixel-scanlines, .animate-ping, .animate-bounce, .animate-pulse, .animate-shake {
         animation: none !important;
@@ -216,7 +197,7 @@
     }
   </style>
 </head>
-<body class="relative w-full h-full bg-slate-950 overflow-hidden select-none">
+<body class="relative w-full h-full bg-slate-950 overflow-hidden">
   <a href="#game-canvas" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-orange-600 focus:text-white focus:rounded-xl focus:font-bold">
     跳至主要校園搜查區域
   </a>
@@ -270,7 +251,6 @@
     </div>
 
     <div class="pointer-events-auto flex items-center gap-2">
-      <!-- 雷達小地圖 -->
       <div class="glass-panel p-1 rounded-2xl flex flex-col items-center shadow-xl border-orange-500/40 relative">
         <div class="flex items-center justify-between w-full px-2 py-0.5 text-[9px] font-mono">
           <span class="text-amber-400 font-bold flex items-center gap-1">
@@ -282,129 +262,120 @@
         <canvas id="minimap-canvas" width="108" height="68" class="rounded-xl bg-slate-950/90 border border-slate-800" aria-label="3層校舍雷達小地圖"></canvas>
       </div>
 
-      <!-- 重啟與保存按鈕 -->
-      <button id="btn-restart-hud" class="glass-panel px-2.5 py-2 rounded-2xl text-xs font-bold text-rose-300 hover:text-rose-200 active:scale-95 flex items-center gap-1" title="重啟調查或清除存檔">
+      <button id="btn-restart-hud" class="glass-panel px-2.5 py-2 rounded-2xl text-xs font-bold text-rose-300 hover:text-rose-200 active:scale-95 flex items-center gap-1" title="重啟調查">
         <span>🔄</span>
         <span class="hidden md:inline">重啟</span>
       </button>
 
-      <!-- 視角切換 -->
       <button id="btn-cam-cycle" class="glass-panel px-2.5 py-2 rounded-2xl text-xs font-bold text-orange-200 active:scale-95 flex items-center gap-1" aria-label="切換鏡頭視角">
         <span>🎥</span>
         <span id="cam-mode-text" class="hidden md:inline">斜角俯視</span>
       </button>
 
-      <!-- 案件手冊按鈕 -->
       <button id="btn-open-notebook" class="glass-btn px-3 py-2 rounded-2xl flex items-center gap-1.5 text-xs font-black text-white shadow-xl active:scale-95" aria-label="打開案件手冊與物證日誌">
         <span>📋 案件簿</span>
         <span id="hud-clue-badge" class="bg-orange-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-black">0/6</span>
       </button>
 
-      <!-- 靜音開關 -->
       <button id="btn-toggle-sound" class="glass-panel p-2 rounded-2xl text-slate-300 hover:text-white active:scale-95 transition" aria-label="切換靜音">
         <svg id="icon-sound-on" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
       </button>
     </div>
   </header>
 
-  <!-- 左下虛擬搖桿 -->
+  <!-- 搖桿 -->
   <div id="touch-joystick-container" class="fixed safe-bottom safe-left z-30 pointer-events-auto touch-none">
     <div id="joystick-base" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full joystick-base relative flex items-center justify-center">
       <div id="joystick-thumb" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full joystick-thumb absolute pointer-events-none transition-transform duration-75"></div>
     </div>
   </div>
 
-  <!-- 右下控制按鈕組（優化：加大觸控面積，增設流暢旋轉支援） -->
+  <!-- 按鈕組 -->
   <div id="mobile-controls-cluster" class="fixed safe-bottom safe-right z-30 pointer-events-auto flex flex-col items-end gap-2 touch-none">
     <div class="flex items-center gap-2">
-      <button id="btn-rotate-left" class="glass-panel w-11 h-11 rounded-full text-orange-300 font-black text-sm flex items-center justify-center active:scale-90 shadow-md" title="向左轉鏡頭" aria-label="向左旋轉視角 45 度">⟲</button>
-      <button id="btn-rotate-right" class="glass-panel w-11 h-11 rounded-full text-orange-300 font-black text-sm flex items-center justify-center active:scale-90 shadow-md" title="向右轉鏡頭" aria-label="向右旋轉視角 45 度">⟳</button>
+      <button id="btn-rotate-left" class="glass-panel w-10 h-10 sm:w-11 sm:h-11 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md" title="向左轉鏡頭" aria-label="向左旋轉視角 45 度">⟲</button>
+      <button id="btn-rotate-right" class="glass-panel w-10 h-10 sm:w-11 sm:h-11 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md" title="向右轉鏡頭" aria-label="向右旋轉視角 45 度">⟳</button>
     </div>
-    <button id="mobile-interact-btn" class="glass-btn w-18 h-18 sm:w-20 sm:h-20 rounded-3xl flex flex-col items-center justify-center text-white font-black shadow-[0_0_24px_rgba(249,115,22,0.7)] active:scale-90 border-2 border-orange-400 cursor-pointer p-2" aria-label="執行調查或繼續劇情">
+    <button id="mobile-interact-btn" class="glass-btn w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex flex-col items-center justify-center text-white font-black shadow-[0_0_20px_rgba(249,115,22,0.6)] active:scale-90 border-2 border-orange-400 cursor-pointer" aria-label="執行調查或繼續劇情">
       <span class="text-2xl sm:text-3xl pointer-events-none">🔍</span>
-      <span class="text-xs font-black tracking-wider mt-0.5 pointer-events-none">搜查</span>
+      <span class="text-[11px] sm:text-xs font-black tracking-wider mt-0.5 pointer-events-none">搜查</span>
     </button>
   </div>
 
-  <!-- 接近互動提示標籤 -->
-  <div id="interaction-prompt" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 transition-all duration-200 transform scale-95 flex items-center gap-2 glass-panel px-4 py-2 rounded-full border-orange-500/60 shadow-xl">
-    <span id="prompt-input-badge" class="w-6 h-6 rounded-full bg-orange-600 flex items-center justify-center font-black text-white text-xs animate-pulse">E</span>
-    <span id="prompt-action-text" class="text-xs sm:text-sm font-bold text-slate-100">調查現場</span>
+  <!-- 接近提示 -->
+  <div id="interaction-prompt" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 transition-all duration-200 transform scale-95 flex items-center gap-2 glass-panel px-3.5 py-1.5 rounded-full border-orange-500/60 shadow-xl">
+    <span id="prompt-input-badge" class="w-5 h-5 rounded-full bg-orange-600 flex items-center justify-center font-black text-white text-[11px] animate-pulse">E</span>
+    <span id="prompt-action-text" class="text-xs font-bold text-slate-100">調查現場</span>
   </div>
 
-  <!-- 劇情對話框 -->
-  <div id="dialogue-box" class="fixed safe-bottom left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-2xl z-40 pointer-events-none opacity-0 translate-y-6 transition-all duration-300 flex flex-col cursor-pointer" role="region" aria-label="劇情對話框">
-    <div id="dialogue-panel-card" class="glass-panel p-3 sm:p-4 rounded-2xl border-orange-400/40 relative shadow-2xl flex flex-col transition-colors duration-200">
-      <div class="flex items-center justify-between mb-1.5 border-b border-slate-700/60 pb-1.5 shrink-0">
-        <div class="flex items-center gap-2.5">
-          <div id="dialogue-avatar" class="w-8 h-8 rounded-xl bg-orange-600/20 border border-orange-400/60 flex items-center justify-center text-lg shadow-inner">🧑‍💼</div>
-          <div class="flex items-center gap-2">
+  <!-- 對話框 -->
+  <div id="dialogue-box" class="fixed safe-bottom left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-2xl z-40 pointer-events-none opacity-0 translate-y-6 transition-all duration-300 flex flex-col" role="region" aria-label="劇情對話框">
+    <div id="dialogue-panel-card" class="glass-panel p-2.5 sm:p-3 rounded-2xl border-orange-400/40 relative shadow-2xl flex flex-col transition-colors duration-200">
+      <div class="flex items-center justify-between mb-1 border-b border-slate-700/60 pb-1 shrink-0">
+        <div class="flex items-center gap-2">
+          <div id="dialogue-avatar" class="w-7 h-7 rounded-xl bg-orange-600/20 border border-orange-400/60 flex items-center justify-center text-base shadow-inner">🧑‍💼</div>
+          <div class="flex items-center gap-1.5">
             <span id="dialogue-speaker" class="font-black text-amber-300 text-xs sm:text-sm">梁澤銘</span>
-            <span id="dialogue-role-tag" class="text-[10px] bg-slate-800 text-orange-300 px-2 py-0.5 rounded-full border border-orange-500/30 font-bold">特約校園安全調查員</span>
+            <span id="dialogue-role-tag" class="text-[9px] bg-slate-800 text-orange-300 px-1.5 py-0.5 rounded-full border border-orange-500/30 font-bold">特約校園安全調查員</span>
           </div>
         </div>
-        <span class="text-[11px] text-amber-400/90 font-bold flex items-center gap-1">
-          <span>點擊繼續</span>
-          <span class="animate-pulse">▶</span>
-        </span>
+        <span class="text-[10px] text-amber-400/90 font-bold">點擊繼續 ▶</span>
       </div>
-      <p id="dialogue-text" class="text-slate-100 text-xs sm:text-sm leading-relaxed cinematic-serif m-0">抵達現場。</p>
+      <p id="dialogue-text" class="text-slate-100 text-xs sm:text-sm leading-snug cinematic-serif m-0">抵達現場。</p>
     </div>
   </div>
 
   <!-- 17 號儲物櫃密碼鎖解鎖面板 -->
   <div id="locker-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="locker-modal-title" tabindex="-1">
-    <div id="locker-modal-card" class="glass-panel w-full max-w-sm rounded-3xl p-4 sm:p-5 border-amber-500/50 flex flex-col items-center justify-between relative shadow-2xl">
+    <div id="locker-modal-card" class="glass-panel w-full max-w-sm rounded-3xl p-4 border-amber-500/50 flex flex-col items-center justify-between relative shadow-2xl">
       <div class="w-full flex items-center justify-between pb-2 border-b border-slate-700/80 mb-3">
         <div class="flex items-center gap-2">
-          <span class="text-2xl">🔐</span>
+          <span class="text-xl">🔐</span>
           <div>
-            <h3 id="locker-modal-title" class="text-sm sm:text-base font-black text-white">2F 走廊 17 號儲物櫃</h3>
-            <p class="text-[11px] text-amber-400">三位數金屬滾輪密碼鎖</p>
+            <h3 id="locker-modal-title" class="text-sm font-black text-white">2F 走廊 17 號儲物櫃</h3>
+            <p class="text-[10px] text-amber-400">三位數金屬滾輪密碼鎖</p>
           </div>
         </div>
-        <button id="btn-close-locker" class="px-2.5 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition text-xs font-bold" aria-label="關閉儲物櫃面板">✕</button>
+        <button id="btn-close-locker" class="px-2 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition text-xs font-bold">✕</button>
       </div>
 
-      <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700/80 w-full mb-3 text-center">
-        <p class="text-xs text-slate-300 leading-relaxed mb-1">
-          櫃門掛鎖嚴實。課桌草稿紙邊角顫抖寫著：<br>
-          <span class="text-amber-300 font-bold font-mono text-sm">「17號櫃密碼是大麻的……」</span>
+      <div class="bg-slate-900/90 p-2.5 rounded-2xl border border-slate-700/80 w-full mb-3 text-center">
+        <p class="text-[11px] text-slate-300 leading-tight mb-1">
+          櫃門鎖扣嚴密。詠蕎答題紙邊角顫抖寫著：<br>
+          <span class="text-amber-300 font-bold font-mono">「17號櫃密碼是大麻的……」</span>
         </p>
-        <div id="locker-hint-text" class="text-[11px] text-cyan-300 font-mono mt-1">
-          （後續字樣受漏出的黏稠煙油浸染模糊，可聯想大麻的國際通用數字代號，或回 1F 查看抗毒海報）
-        </div>
+        <div id="locker-hint-text" class="text-[10px] text-cyan-300 font-mono">（字跡受漏出的煙油浸染模糊，可翻查校園抗毒海報尋找代號）</div>
       </div>
 
       <!-- 3 位數滾輪 UI -->
-      <div class="flex items-center justify-center gap-4 my-2">
+      <div class="flex items-center justify-center gap-3 my-2">
         <!-- 滾輪 1 -->
         <div class="flex flex-col items-center">
-          <button id="dial-0-up" class="w-12 h-8 rounded-t-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-sm transition border border-slate-600" aria-label="第一個數字增加">▲</button>
-          <div id="dial-0-val" class="w-12 h-16 tumbler-dial flex items-center justify-center text-3xl font-black text-amber-300 font-mono">0</div>
-          <button id="dial-0-down" class="w-12 h-8 rounded-b-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-sm transition border border-slate-600" aria-label="第一個數字減少">▼</button>
+          <button id="dial-0-up" class="w-10 h-7 rounded-t-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▲</button>
+          <div id="dial-0-val" class="w-10 h-14 tumbler-dial flex items-center justify-center text-2xl font-black text-amber-300 font-mono">0</div>
+          <button id="dial-0-down" class="w-10 h-7 rounded-b-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▼</button>
         </div>
         <!-- 滾輪 2 -->
         <div class="flex flex-col items-center">
-          <button id="dial-1-up" class="w-12 h-8 rounded-t-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-sm transition border border-slate-600" aria-label="第二個數字增加">▲</button>
-          <div id="dial-1-val" class="w-12 h-16 tumbler-dial flex items-center justify-center text-3xl font-black text-amber-300 font-mono">0</div>
-          <button id="dial-1-down" class="w-12 h-8 rounded-b-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-sm transition border border-slate-600" aria-label="第二個數字減少">▼</button>
+          <button id="dial-1-up" class="w-10 h-7 rounded-t-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▲</button>
+          <div id="dial-1-val" class="w-10 h-14 tumbler-dial flex items-center justify-center text-2xl font-black text-amber-300 font-mono">0</div>
+          <button id="dial-1-down" class="w-10 h-7 rounded-b-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▼</button>
         </div>
         <!-- 滾輪 3 -->
         <div class="flex flex-col items-center">
-          <button id="dial-2-up" class="w-12 h-8 rounded-t-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-sm transition border border-slate-600" aria-label="第三個數字增加">▲</button>
-          <div id="dial-2-val" class="w-12 h-16 tumbler-dial flex items-center justify-center text-3xl font-black text-amber-300 font-mono">0</div>
-          <button id="dial-2-down" class="w-12 h-8 rounded-b-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-sm transition border border-slate-600" aria-label="第三個數字減少">▼</button>
+          <button id="dial-2-up" class="w-10 h-7 rounded-t-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▲</button>
+          <div id="dial-2-val" class="w-10 h-14 tumbler-dial flex items-center justify-center text-2xl font-black text-amber-300 font-mono">0</div>
+          <button id="dial-2-down" class="w-10 h-7 rounded-b-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▼</button>
         </div>
       </div>
 
-      <div id="locker-error-feedback" class="h-6 text-xs font-bold text-rose-400 text-center my-1"></div>
+      <div id="locker-error-feedback" class="h-5 text-[11px] font-bold text-rose-400 text-center my-1"></div>
 
       <div class="w-full flex gap-2 pt-2 border-t border-slate-800 mt-2">
-        <button id="btn-locker-clue-hint" class="px-3.5 py-2.5 rounded-xl bg-slate-800 text-cyan-300 text-xs font-bold hover:bg-slate-700 active:scale-95 transition">
-          💡 線索思維提示
+        <button id="btn-locker-clue-hint" class="px-3 py-2 rounded-xl bg-slate-800 text-cyan-300 text-xs font-bold hover:bg-slate-700 active:scale-95 transition">
+          💡 線索提示
         </button>
-        <button id="btn-submit-lock" class="flex-1 py-2.5 rounded-xl glass-btn text-white font-black text-xs sm:text-sm shadow-lg active:scale-95 transition tracking-wider flex items-center justify-center gap-1.5">
+        <button id="btn-submit-lock" class="flex-1 py-2 rounded-xl glass-btn text-white font-black text-xs shadow-lg active:scale-95 transition tracking-wider flex items-center justify-center gap-1">
           <span>扭轉鎖芯解鎖</span>
         </button>
       </div>
@@ -412,228 +383,219 @@
   </div>
 
   <!-- 雙試管快篩鑑驗台 -->
-  <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="lab-modal-title" tabindex="-1">
-    <div class="glass-panel w-full max-w-xl rounded-3xl p-3.5 sm:p-5 relative border-cyan-500/50 flex flex-col justify-between">
-      <div class="shrink-0 flex items-center justify-between pb-2 border-b border-slate-700/80 mb-2">
+  <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="lab-modal-title" tabindex="-1">
+    <div class="glass-panel w-full max-w-xl rounded-3xl p-3 sm:p-3.5 relative border-cyan-500/50 flex flex-col justify-between">
+      <div class="shrink-0 flex items-center justify-between pb-1.5 border-b border-slate-700/80 mb-2">
         <div class="flex items-center gap-2">
-          <span class="text-xl sm:text-2xl">🧪</span>
+          <span class="text-lg">🧪</span>
           <div>
-            <h3 id="lab-modal-title" class="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">毒理鑑證：雙試管快篩化驗台</h3>
-            <p class="text-[10px] sm:text-xs text-cyan-300">比對課桌漏出紫油（樣品A）與外管夾角全新煙彈原液（樣品B）的化學顯色反應</p>
+            <h3 id="lab-modal-title" class="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">毒理鑑證：雙試管極速快篩台</h3>
+            <p class="text-[10px] text-cyan-300">比對中六課桌漏出紫油（證物A）與外管夾角煙彈原液（證物B）的顯色反應</p>
           </div>
         </div>
-        <button id="btn-close-lab" class="px-2.5 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉鑑驗台">✕</button>
+        <button id="btn-close-lab" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉鑑驗台">✕</button>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-center my-2">
-        <div class="test-tube-rack p-3 rounded-2xl flex flex-col items-center justify-center">
-          <div class="flex items-end justify-center gap-6 py-2">
+      <div class="grid grid-cols-2 gap-3 items-center my-1">
+        <div class="test-tube-rack p-2 rounded-2xl flex flex-col items-center justify-center">
+          <div class="flex items-end justify-center gap-5 py-1">
             <div class="flex flex-col items-center">
-              <span class="text-[11px] font-black text-purple-300 mb-1">試管 A</span>
+              <span class="text-[10px] font-black text-purple-300 mb-1">試管 A</span>
               <div class="test-tube-glass">
                 <div id="tube-a-liquid" class="test-tube-liquid bg-purple-500/40"><div class="tube-meniscus"></div></div>
               </div>
-              <span class="text-[10px] text-slate-200 font-bold mt-1 bg-slate-900/90 px-2 py-0.5 rounded border border-slate-700">課桌提取液</span>
+              <span class="text-[9px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">課桌漏油提取液</span>
             </div>
             <div class="flex flex-col items-center">
-              <span class="text-[11px] font-black text-cyan-300 mb-1">試管 B</span>
+              <span class="text-[10px] font-black text-cyan-300 mb-1">試管 B</span>
               <div class="test-tube-glass">
                 <div id="tube-b-liquid" class="test-tube-liquid bg-cyan-500/40"><div class="tube-meniscus"></div></div>
               </div>
-              <span class="text-[10px] text-slate-200 font-bold mt-1 bg-slate-900/90 px-2 py-0.5 rounded border border-slate-700">暗角煙彈原液</span>
+              <span class="text-[9px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">暗角煙彈原液</span>
             </div>
           </div>
-          <div class="text-[10px] text-slate-400 font-mono mt-1">【丙二醇 PG/VG 油性載體樣品已預載入】</div>
+          <div class="text-[9px] text-slate-400 font-mono mt-1">【丙二醇油性載體樣品已預載入】</div>
         </div>
 
         <div class="flex flex-col justify-between h-full space-y-2">
-          <div id="spot-verdict-box" class="p-3 rounded-2xl bg-slate-900/90 border border-slate-700 flex-1 flex flex-col justify-center">
-            <div class="flex items-center justify-between text-xs font-bold text-amber-300 mb-1">
-              <span>📋 檢驗反應判定：</span>
-              <span id="spot-status-badge" class="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[10px] font-bold">待化驗</span>
+          <div id="spot-verdict-box" class="p-2.5 rounded-2xl bg-slate-900/90 border border-slate-700 flex-1 flex flex-col justify-center">
+            <div class="flex items-center justify-between text-[11px] font-bold text-amber-300 mb-1">
+              <span>📋 檢驗反應即時判定：</span>
+              <span id="spot-status-badge" class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[10px]">待化驗</span>
             </div>
-            <div id="spot-verdict-text" class="text-slate-200 text-xs leading-relaxed">
-              請點擊下方 <strong class="text-cyan-400">1️⃣ 滴入 K仔常規快篩試劑</strong>，排查是否為一般氯胺酮。
+            <div id="spot-verdict-text" class="text-slate-200 text-[11px] leading-relaxed">
+              請點擊下方 <strong class="text-cyan-400">1️⃣ 滴入 K仔試劑</strong>，排查是否為常規氯胺酮。
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-1.5 text-[11px] text-center font-bold">
-            <div id="spot-step-1" class="py-1.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-600">步驟 1: 篩查 K仔</div>
-            <div id="spot-step-2" class="py-1.5 rounded bg-slate-900 text-slate-500 border border-slate-800">步驟 2: 篩查 依托咪酯</div>
+          <div class="grid grid-cols-2 gap-1 text-[10px] text-center font-bold">
+            <div id="spot-step-1" class="py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600">步驟 1: 篩查 K仔</div>
+            <div id="spot-step-2" class="py-1 rounded bg-slate-900 text-slate-500 border border-slate-800">步驟 2: 篩查 依托咪酯</div>
           </div>
         </div>
       </div>
 
       <div class="shrink-0 pt-2 border-t border-slate-800 flex gap-2">
-        <button id="btn-spot-reagent1" class="flex-1 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md">
+        <button id="btn-spot-reagent1" class="flex-1 py-2 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md">
           1️⃣ 滴入 K仔試劑
         </button>
-        <button id="btn-spot-reagent2" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 transition cursor-not-allowed" disabled>
+        <button id="btn-spot-reagent2" class="flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 transition cursor-not-allowed" disabled>
           2️⃣ 滴入 依托咪酯試劑
         </button>
-        <button id="btn-spot-reset" class="px-3 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold active:scale-95 transition">🔄 重置</button>
-        <button id="btn-spot-submit" class="flex-1 py-2.5 rounded-xl bg-cyan-600 text-white font-bold text-xs shadow-lg transition active:scale-95 disabled:opacity-30 disabled:pointer-events-none" disabled>
+        <button id="btn-spot-reset" class="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold active:scale-95 transition">🔄 重置</button>
+        <button id="btn-spot-submit" class="flex-1 py-2 rounded-xl bg-cyan-600 text-white font-bold text-xs shadow-lg transition active:scale-95 disabled:opacity-30 disabled:pointer-events-none" disabled>
           確認檢驗報告
         </button>
       </div>
     </div>
   </div>
 
-  <!-- 調查員案件手冊與思維宮殿（優化：改進物證排版，提高手機端可讀性） -->
-  <div id="notebook-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="notebook-modal-title" tabindex="-1">
-    <div class="glass-panel w-full max-w-2xl rounded-3xl p-3 sm:p-5 flex flex-col justify-between relative border-amber-500/40 max-h-[92vh]">
-      <div class="shrink-0 flex items-center justify-between pb-2 border-b border-slate-700">
+  <!-- 調查員案件手冊與思維宮殿 -->
+  <div id="notebook-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="notebook-modal-title" tabindex="-1">
+    <div class="glass-panel w-full max-w-xl rounded-3xl p-3 sm:p-3.5 flex flex-col justify-between relative border-amber-500/40">
+      <div class="shrink-0 flex items-center justify-between pb-1.5 border-b border-slate-700">
         <div class="flex items-center gap-2">
-          <span class="text-xl">📋</span>
+          <span class="text-base">📋</span>
           <div>
             <h2 id="notebook-modal-title" class="text-xs sm:text-sm font-black text-white">咪制書院校園安全專案手冊</h2>
             <p class="text-[10px] text-orange-400">依托咪酯毒理專案卷宗 • 6大核心物證鏈</p>
           </div>
         </div>
         
-        <div class="flex items-center gap-1.5">
-          <button id="tab-btn-clues" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-orange-500 text-white transition">現場物證 (<span id="clue-count-text">0</span>/6)</button>
-          <button id="tab-btn-mindpalace" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">思維宮殿定案</button>
-          <button id="tab-btn-profiles" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">涉案名冊</button>
-          <button id="btn-close-notebook" class="ml-1 px-2.5 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉案件手冊">✕</button>
+        <div class="flex gap-1.5">
+          <button id="tab-btn-clues" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-500 text-white transition">現場物證 (<span id="clue-count-text">0</span>/6)</button>
+          <button id="tab-btn-mindpalace" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">思維宮殿定案</button>
+          <button id="tab-btn-profiles" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">涉案名冊</button>
+          <button id="btn-close-notebook" class="ml-2 px-2 py-1 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉案件手冊">✕</button>
         </div>
       </div>
 
-      <!-- 物證展示區（響應式：手機 2 列，平板/桌機 3 列，字體提升至 11-12px） -->
-      <div id="tab-content-clues" class="grid grid-cols-2 sm:grid-cols-3 gap-2 my-2 overflow-y-auto max-h-[58vh] p-1 custom-scrollbar"></div>
+      <div id="tab-content-clues" class="grid grid-cols-6 gap-1 my-2"></div>
 
-      <!-- 物證詳情展開面板 -->
-      <div id="clue-detail-panel" class="hidden p-3 rounded-2xl bg-slate-900/95 border border-amber-500/50 my-1 text-left flex flex-col justify-between shrink-0">
-        <div class="flex items-center justify-between border-b border-slate-700 pb-1.5 mb-1.5">
+      <div id="clue-detail-panel" class="hidden p-2 rounded-2xl bg-slate-900/95 border border-amber-500/50 my-1 text-left flex flex-col justify-between">
+        <div class="flex items-center justify-between border-b border-slate-700 pb-1 mb-1">
           <div class="flex items-center gap-2">
-            <span id="detail-clue-icon" class="text-xl">🔍</span>
+            <span id="detail-clue-icon" class="text-lg">🔍</span>
             <div>
-              <div id="detail-clue-title" class="text-xs sm:text-sm font-black text-amber-300">物證標題</div>
-              <div id="detail-clue-meta" class="text-[10px] text-slate-400 font-mono">時間/地點</div>
+              <div id="detail-clue-title" class="text-xs font-black text-amber-300">物證標題</div>
+              <div id="detail-clue-meta" class="text-[9px] text-slate-400 font-mono">時間/地點</div>
             </div>
           </div>
-          <button id="btn-close-clue-detail" class="text-slate-400 hover:text-white text-xs px-2.5 py-1 rounded bg-slate-800 font-bold">收起 ✕</button>
+          <button id="btn-close-clue-detail" class="text-slate-400 hover:text-white text-xs px-2 py-0.5 rounded bg-slate-800 font-bold">收起 ✕</button>
         </div>
-        <p id="detail-clue-body" class="text-xs text-slate-200 leading-relaxed m-0 mb-1.5">詳細案情說明</p>
-        <div id="detail-clue-forensic" class="text-[11px] text-cyan-300 bg-cyan-950/50 p-2 rounded-xl border border-cyan-500/30">毒理鑑識結論</div>
+        <p id="detail-clue-body" class="text-[10px] text-slate-200 leading-relaxed m-0 mb-1">詳細案情說明</p>
+        <div id="detail-clue-forensic" class="text-[9px] text-cyan-300 bg-cyan-950/40 p-1.5 rounded-lg border border-cyan-500/30">毒理鑑識結論</div>
       </div>
 
-      <!-- 思維宮殿定案區 -->
-      <div id="tab-content-mindpalace" class="hidden my-2 space-y-2 overflow-y-auto max-h-[58vh] p-1 custom-scrollbar">
-        <div id="mindpalace-locked-notice" class="bg-rose-950/30 p-4 rounded-2xl border border-rose-500/40 text-center flex flex-col items-center gap-2">
-          <div class="text-3xl animate-pulse">🔒</div>
-          <div class="text-sm font-black text-rose-300">思維宮殿定案鏈尚未就緒</div>
-          <p class="text-xs text-slate-300 leading-relaxed max-w-sm">
-            現場物證尚未齊備（目前進度 <span id="locked-clue-progress" class="text-amber-400 font-bold">0/6</span>）。請先集齊 6 大核心物證並於天台截獲暗夜調劑師通聯，方可正式拼湊因果鏈並通報執法部門！
+      <div id="tab-content-mindpalace" class="hidden my-2 space-y-2">
+        <div id="mindpalace-locked-notice" class="bg-rose-950/30 p-3 rounded-2xl border border-rose-500/40 text-center flex flex-col items-center gap-1.5">
+          <div class="text-2xl animate-pulse">🔒</div>
+          <div class="text-xs font-black text-rose-300">思維宮殿定案鏈尚未就緒</div>
+          <p class="text-[10px] text-slate-300 leading-relaxed max-w-sm">
+            現場偵查尚未完備（目前進度 <span id="locked-clue-progress" class="text-amber-400 font-bold">0/6</span>）。請先集齊 6 大核心物證並於天台截獲毒販通聯，方可正式定案！
           </p>
         </div>
 
-        <div id="mindpalace-form-area" class="hidden bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-2">
-          <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-amber-300 mb-1 border-b border-slate-800 pb-1.5">
+        <div id="mindpalace-form-area" class="hidden bg-slate-900/90 p-2 rounded-2xl border border-slate-800 space-y-1.5">
+          <div class="flex items-center justify-between text-xs font-bold text-amber-300 mb-1">
             <span id="deduce-header">🔍 邏輯因果定案鏈：完成執法通報</span>
-            <span class="text-xs text-emerald-400 font-bold">✓ 6項核心物證已全數核實</span>
+            <span class="text-[10px] text-emerald-400 font-bold">✓ 6項核心物證已全數核實</span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-            <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1.5">
+          <div class="grid grid-cols-3 gap-2 text-[11px]">
+            <div class="p-1.5 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1">
               <label for="deduce-vector" class="text-slate-200 font-bold">1. 雙試管確診物質：</label>
-              <select id="deduce-vector" class="bg-slate-900 text-xs text-orange-300 p-1.5 rounded-lg border border-slate-700 outline-none">
+              <select id="deduce-vector" class="bg-slate-900 text-[10px] text-orange-300 p-1 rounded border border-slate-700 outline-none">
                 <option value="none">-- 請選擇 --</option>
                 <option value="wrong1">普通葡萄運動飲料</option>
-                <option value="correct">混入電子煙之危險藥物「依托咪酯」（俗稱太空油）</option>
+                <option value="correct">混入電子煙之危險藥物「依托咪酯」（毒販俗稱太空油）</option>
                 <option value="wrong2">純薄荷調味甘油</option>
               </select>
             </div>
 
-            <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1.5">
+            <div class="p-1.5 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1">
               <label for="deduce-symptoms" class="text-slate-200 font-bold">2. 典型臨床中毒反應：</label>
-              <select id="deduce-symptoms" class="bg-slate-900 text-xs text-orange-300 p-1.5 rounded-lg border border-slate-700 outline-none">
+              <select id="deduce-symptoms" class="bg-slate-900 text-[10px] text-orange-300 p-1 rounded border border-slate-700 outline-none">
                 <option value="none">-- 請選擇 --</option>
                 <option value="wrong1">考前眼睛乾澀疲倦</option>
-                <option value="correct">肌陣攣全身劇烈抽搐、意識斷片、呼吸抑制</option>
-                <option value="wrong2">大腦專注力大幅提升</option>
+                <option value="correct">肌陣攣全身劇烈抽搐、意識斷片</option>
+                <option value="wrong2">專注力明顯提升</option>
               </select>
             </div>
 
-            <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1.5">
-              <label for="deduce-action" class="text-slate-200 font-bold">3. 禁毒態度與舉報途徑：</label>
-              <select id="deduce-action" class="bg-slate-900 text-xs text-orange-300 p-1.5 rounded-lg border border-slate-700 outline-none">
+            <div class="p-1.5 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1">
+              <label for="deduce-action" class="text-slate-200 font-bold">3. 禁毒口號與舉報熱線：</label>
+              <select id="deduce-action" class="bg-slate-900 text-[10px] text-orange-300 p-1 rounded border border-slate-700 outline-none">
                 <option value="none">-- 請選擇 --</option>
                 <option value="correct">【毒品咪制！】打熱線 2527-1234 或專線 6629-2966</option>
-                <option value="wrong1">只要吸食次數少就不會上癮受害</option>
+                <option value="wrong1">只要吸食間隔長就不會上癮</option>
               </select>
             </div>
           </div>
 
-          <button id="btn-submit-deduction" class="w-full py-2.5 rounded-xl glass-btn font-black text-amber-200 text-xs sm:text-sm tracking-wider flex items-center justify-center gap-1.5 active:scale-95 shadow-lg mt-2">
+          <button id="btn-submit-deduction" class="w-full py-2 rounded-xl glass-btn font-black text-amber-200 text-xs tracking-wider flex items-center justify-center gap-1 active:scale-95 shadow-lg">
             <span>確認定案鏈並向執法部門發出通報</span>
           </button>
         </div>
       </div>
 
-      <!-- 涉案人物名冊 -->
-      <div id="tab-content-profiles" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-2 my-2 overflow-y-auto max-h-[58vh] p-1 custom-scrollbar">
-        <div class="glass-panel p-3 rounded-2xl border-cyan-500/40 flex flex-col">
-          <div class="flex items-center gap-2 mb-1.5">
-            <span class="text-xl">🧑‍💼</span>
+      <div id="tab-content-profiles" class="hidden grid grid-cols-3 gap-2 my-2">
+        <div class="glass-panel p-2 rounded-xl border-cyan-500/40 flex flex-col">
+          <div class="flex items-center gap-1.5 mb-1">
+            <span class="text-base">🧑‍💼</span>
             <div>
-              <div class="font-bold text-white text-xs">梁澤銘</div>
-              <div class="text-[10px] text-cyan-300">特約安全調查員</div>
+              <div class="font-bold text-white text-[11px]">梁澤銘</div>
+              <div class="text-[9px] text-cyan-300">特約安全調查員</div>
             </div>
           </div>
-          <p class="text-xs text-slate-300 leading-relaxed">受託進入校園封鎖線，搜集物證、比對毒理數據並還原真相，將涉毒犯罪鏈繩之以法。</p>
+          <p class="text-[10px] text-slate-300 leading-tight">受託進入校園封鎖線，搜集物證並還原真相。</p>
         </div>
 
-        <div class="glass-panel p-3 rounded-2xl border-purple-500/40 flex flex-col">
-          <div class="flex items-center gap-2 mb-1.5">
-            <span class="text-xl">👩‍🎓</span>
+        <div class="glass-panel p-2 rounded-xl border-purple-500/40 flex flex-col">
+          <div class="flex items-center gap-1.5 mb-1">
+            <span class="text-base">👩‍🎓</span>
             <div>
-              <div class="font-bold text-white text-xs">岑詠蕎 & 霍展霆</div>
-              <div class="text-[10px] text-purple-300">中六B班受害學生</div>
+              <div class="font-bold text-white text-[11px]">岑詠蕎 & 霍展霆</div>
+              <div class="text-[9px] text-purple-300">中六B班受害學生</div>
             </div>
           </div>
-          <p class="text-xs text-slate-300 leading-relaxed">詠蕎受考前巨大焦慮所困，誤吸偽裝成提神物的煙彈引發急性肌陣攣抽搐；展霆則為緩解賽事舊患痛楚，誤信毒販謊言吸食毒煙彈倒地。</p>
+          <p class="text-[10px] text-slate-300 leading-tight">詠蕎受考前焦慮所困，誤吸偽裝煙彈引發急性肌陣攣抽搐休克；展霆則為緩解賽事舊患痛誤吸毒煙彈倒地。</p>
         </div>
 
-        <div class="glass-panel p-3 rounded-2xl border-rose-500/40 bg-rose-950/20 flex flex-col">
-          <div class="flex items-center gap-2 mb-1.5">
-            <span class="text-xl">⚠️</span>
+        <div class="glass-panel p-2 rounded-xl border-rose-500/40 bg-rose-950/20 flex flex-col">
+          <div class="flex items-center gap-1.5 mb-1">
+            <span class="text-base">⚠️</span>
             <div>
-              <div class="font-bold text-rose-400 text-xs">「暗夜調劑師」</div>
-              <div class="text-[10px] text-rose-300">黑市通緝主謀</div>
+              <div class="font-bold text-rose-400 text-[11px]">「暗夜調劑師」</div>
+              <div class="text-[9px] text-rose-300">黑市通緝主謀</div>
             </div>
           </div>
-          <p class="text-xs text-slate-300 leading-relaxed">以加密通訊向校園學生滲透，將受管制危險藥物包裝成「太空油提神煙彈」，並拍下受害者失控抽搐影片敲詐勒索。</p>
+          <p class="text-[10px] text-slate-300 leading-tight">以加密通訊向學生散播偽裝成提神煙彈的危險藥物，並以偷拍影片進行網絡敲詐。</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 開場畫面（增設：支援讀取本地存檔進度） -->
+  <!-- 開場畫面 -->
   <div id="title-screen" class="fixed inset-0 z-50 bg-[#04060d] flex items-center justify-center p-3 text-center">
-    <div class="max-w-xl w-full p-5 glass-panel rounded-3xl border-orange-500/50 flex flex-col items-center">
-      <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-orange-950/80 border border-orange-500/50 text-orange-400 text-xs font-bold uppercase tracking-widest mb-1 shadow-md">
+    <div class="max-w-xl w-full p-4 glass-panel rounded-3xl border-orange-500/50 flex flex-col items-center">
+      <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-orange-950/80 border border-orange-500/50 text-orange-400 text-[11px] font-bold uppercase tracking-widest mb-1 shadow-md">
         <span class="w-2 h-2 rounded-full bg-orange-400 animate-ping"></span>
         咪制書院校園安全特別專案
       </div>
       <h1 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-rose-400 tracking-tight leading-tight mb-0.5" style="font-family: 'Cinzel', serif;">
         暮光迴響
       </h1>
-      <h2 class="text-xs sm:text-sm font-bold text-slate-300 mb-2.5 tracking-wide cinematic-serif">
+      <h2 class="text-xs font-bold text-slate-300 mb-2 tracking-wide cinematic-serif">
         Twilight Echoes: 沉淪之霧 • 校園特別調查
       </h2>
-      <p class="text-xs text-slate-300 leading-relaxed mb-4 text-left bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+      <p class="text-xs text-slate-300 leading-relaxed mb-3 text-left bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
         放學後的咪制書院突發兩起嚴重急性中毒事件！中六尖子<strong class="text-amber-300">岑詠蕎</strong>在課堂上突發全身劇烈肌陣攣抽搐倒地；同一時間，籃球隊長<strong class="text-cyan-300">霍展霆</strong>亦在更衣室倒地休克！現場殘留著散發異樣氣味的改裝電子煙油。特約調查員梁澤銘受託進入封鎖現場，請跟隨導引排查現場 6 大關鍵物證，揭開神秘煙油背後的致命真相！
       </p>
 
-      <div class="w-full flex flex-col sm:flex-row gap-2.5 justify-center max-w-sm mb-2">
-        <button id="btn-start-game" class="flex-1 py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 text-white font-black text-xs sm:text-sm tracking-wider shadow-[0_0_25px_rgba(249,115,22,0.5)] active:scale-95 transition cursor-pointer">
-          展開全新調查
-        </button>
-        <button id="btn-resume-game" class="hidden flex-1 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/50 font-bold text-xs sm:text-sm tracking-wider active:scale-95 transition cursor-pointer">
-          繼續上次調查 📂
-        </button>
-      </div>
+      <button id="btn-start-game" class="w-full max-w-xs py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 text-white font-black text-xs sm:text-sm tracking-wider shadow-[0_0_25px_rgba(249,115,22,0.5)] active:scale-95 transition cursor-pointer">
+        進入校舍大堂展開搜查
+      </button>
 
       <div class="mt-2 flex items-center justify-center gap-3 text-[10px] text-slate-400 font-mono">
         <span>左下搖桿移動</span>
@@ -645,25 +607,25 @@
     </div>
   </div>
 
-  <!-- 結案破案畫面 -->
-  <div id="victory-screen" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-2xl flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-all duration-500" role="dialog" aria-modal="true">
-    <div class="glass-panel max-w-2xl w-full rounded-3xl p-4 sm:p-5 border-emerald-500/60 text-center relative overflow-hidden flex flex-col justify-between">
-      <div class="shrink-0 flex items-center justify-between pb-2 border-b border-slate-700/80 mb-2">
+  <!-- 結案畫面 -->
+  <div id="victory-screen" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-2xl flex items-center justify-center p-2 sm:p-3 opacity-0 pointer-events-none transition-all duration-500" role="dialog" aria-modal="true">
+    <div class="glass-panel max-w-2xl w-full rounded-3xl p-3 sm:p-3.5 border-emerald-500/60 text-center relative overflow-hidden flex flex-col justify-between">
+      <div class="shrink-0 flex items-center justify-between pb-1.5 border-b border-slate-700/80 mb-2">
         <div class="flex items-center gap-2">
-          <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-xl shadow-[0_0_20px_rgba(16,185,129,0.35)]">🏆</div>
+          <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-lg shadow-[0_0_20px_rgba(16,185,129,0.35)]">🏆</div>
           <div class="text-left">
             <h2 class="text-xs sm:text-sm font-black text-white">案情告破：真相水落石出！</h2>
-            <div class="text-[10px] sm:text-xs text-emerald-400 font-bold">【S級 金牌特約調查員】依托咪酯全鏈條物證通報核實</div>
+            <div class="text-[10px] text-emerald-400 font-bold">【S級 金牌特約調查員】依托咪酯全鏈條物證通報核實</div>
           </div>
         </div>
-        <div class="px-3 py-1 rounded-full bg-rose-950 border border-rose-500 text-rose-300 text-xs font-black tracking-wider">
+        <div class="px-2.5 py-1 rounded-full bg-rose-950 border border-rose-500 text-rose-300 text-[10px] font-black tracking-wider">
           🛑 核心口號：【毒品咪制！】
         </div>
       </div>
       
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left my-2">
-        <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-2">
-          <div class="space-y-1.5 text-xs text-slate-300 leading-relaxed">
+      <div class="grid grid-cols-2 gap-2.5 text-left my-1">
+        <div class="bg-slate-900/90 p-2.5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-1.5">
+          <div class="space-y-1 text-[11px] text-slate-300 leading-snug">
             <div>
               <strong class="text-amber-300">雷霆收網：</strong>依據梁澤銘於 1F 更衣室起獲之殘破煙彈、2F 課桌漏油草稿、破解 17 號儲物櫃密碼（420）起獲之提貨單，以及實驗室外排水管查獲之密封煙彈，經雙試管交叉檢驗，確診毒物為受《危險藥物條例》嚴格管制之麻醉藥<strong>「依托咪酯」（毒販俗稱太空油）</strong>！專案組已將「暗夜調劑師」及其走私分銷網絡連根拔起！
             </div>
@@ -672,24 +634,24 @@
             </div>
           </div>
 
-          <button id="btn-restart-game" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wider shadow-md active:scale-95 transition">
+          <button id="btn-restart-game" class="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wider shadow-md active:scale-95 transition">
             🔄 重新啟動調查複盤
           </button>
         </div>
 
-        <div class="p-3 rounded-2xl bg-slate-950/95 border border-amber-500/40 flex flex-col justify-between space-y-2">
+        <div class="p-2.5 rounded-2xl bg-slate-950/95 border border-amber-500/40 flex flex-col justify-between space-y-1.5">
           <div>
-            <div class="text-amber-300 font-bold text-xs sm:text-sm flex items-center gap-1.5 mb-1.5">
+            <div class="text-amber-300 font-bold text-xs flex items-center gap-1 mb-1">
               <span>📞</span>
               <span>官方禁毒與打擊依托咪酯舉報途徑：</span>
             </div>
-            <div class="text-xs text-slate-200 space-y-1.5 pl-1">
-              <div>• 毒品舉報熱線：<strong class="text-white font-mono bg-slate-800 px-2 py-0.5 rounded text-sm">2527-1234</strong></div>
-              <div>• 打擊依托咪酯（太空油）專線：<strong class="text-rose-400 font-mono bg-slate-800 px-2 py-0.5 rounded text-sm">6629-2966</strong></div>
+            <div class="text-[11px] text-slate-200 space-y-1 pl-1">
+              <div>• 毒品舉報熱線：<strong class="text-white font-mono bg-slate-800 px-1.5 py-0.5 rounded">2527-1234</strong></div>
+              <div>• 打擊依托咪酯（太空油）專線：<strong class="text-rose-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">6629-2966</strong></div>
             </div>
           </div>
 
-          <div class="text-xs text-orange-300 bg-orange-950/40 p-2.5 rounded-xl border border-orange-500/30 leading-relaxed">
+          <div class="text-[10px] text-orange-300 bg-orange-950/30 p-1.5 rounded-lg border border-orange-500/30 leading-tight">
             拒絕毒販美化話術！依托咪酯受《危險藥物條例》嚴格管轄！齊心守護無毒校園，牢記<strong>【毒品咪制！】</strong>！
           </div>
         </div>
@@ -699,7 +661,7 @@
 
   <script>
     // ==========================================
-    // 1. 專業 Web Audio 配樂與音效合成引擎 (零外部依賴)
+    // 1. 專業 Web Audio 配樂與音效引擎
     // ==========================================
     class RetroSoundEngine {
       constructor() {
@@ -772,7 +734,7 @@
           this.droneOsc2.start();
         } catch(e){}
 
-        const notes = [261.63, 311.13, 392.00, 466.16, 523.25, 466.16]; // Cm7 迷幻迴響旋律
+        const notes = [261.63, 311.13, 392.00, 466.16, 523.25, 466.16]; // Cm7
         let noteIdx = 0;
 
         const playChime = () => {
@@ -930,10 +892,9 @@
     const sound = new RetroSoundEngine();
 
     // ==========================================
-    // 2. 核心遊戲狀態與物證數據庫
+    // 2. 核心遊戲狀態與數據庫
     // ==========================================
     const TOTAL_CLUES = 6;
-    const STORAGE_KEY = 'twilight_echoes_save_data';
 
     const GAME_STATE = {
       started: false,
@@ -963,7 +924,7 @@
         icon: "🩹",
         pos: { x: -9.5, y: 1.25, z: 4.0 },
         floor: 1,
-        shortDesc: "隊長展霆在此倒地。起獲摔裂的偽裝提神煙彈，底部帶暗網骷髏印記便條：『練球舊患痛就抽兩口……不夠找中六B班詠蕎拿新貨』！",
+        shortDesc: "隊長展霆在此倒地。起獲摔裂的偽裝提神煙彈，底部帶暗網骷髏暗印便條：『練球舊患痛就抽兩口……不夠找中六B班詠蕎拿新貨』！",
         fullDesc: "隊長霍展霆在此急性中毒送醫。長椅下起獲摔裂的改裝電子煙彈，煙油呈淡紫色，並檢出一張加密暗號字條：『舊患痛抽兩口保證止痛放鬆。不夠的話，中六B班詠蕎手上有新一批貨……』煙嘴殘留特異性中樞麻醉酯類氣味，源頭直指 2F 課室！",
         forensic: "煙嘴及殘裂處附著高黏度丙二醇（PG）與植物甘油（VG）溶劑，帶有特異性中樞麻醉酯類氣味。"
       },
@@ -975,20 +936,20 @@
         icon: "📝",
         pos: { x: -8.5, y: 5.05, z: -7.5 },
         floor: 2,
-        shortDesc: "課桌上起獲漏出的紫色煙油（樣品 A）與撕裂答題紙！筆跡扭曲成痙攣墨痕；手機備忘錄寫著：『17號櫃密碼是大麻的……』！",
-        fullDesc: "課桌上漏出一灘深紫色油性煙液（樣品 A）。桌上模擬試化學答題紙前兩行公式突然嚴重扭曲變形，最後劃破紙張留下一道長長墨跡——證實詠蕎吸食不明煙油後，一回到課桌即誘發劇烈肌陣攣全身抽搐！旁邊手機未鎖屏備忘錄寫著：『17號儲物櫃密碼是大麻的……（後續字樣被漏出的黏稠煙油浸化模糊）』！",
-        forensic: "桌面漏液呈淡紫透明油狀，高脂溶性，微酸性。提取為現場【樣品 A】以供化驗。"
+        shortDesc: "課桌上起獲漏出的紫色煙油（證物 A）與撕裂的答題紙！筆跡由公式劇烈扭曲成痙攣劃痕；手機未鎖屏備忘錄寫著：『17號櫃密碼是大麻的……』！",
+        fullDesc: "課桌上漏出一灘深紫色油性煙液（證物 A）。桌上模擬試化學答題紙前兩行公式突然嚴重扭曲變形，最後劃破紙張留下一道長長墨跡——證實詠蕎吸食不明煙油後，一回到課桌即誘發劇烈肌陣攣全身抽搐！旁邊手機未鎖屏備忘錄寫著：『17號儲物櫃密碼是大麻的……（後續字樣被漏出的黏稠煙油浸化模糊）』！",
+        forensic: "桌面漏液呈淡紫透明油狀，高脂溶性，微酸性。提取為現場【證物 A】送檢。"
       },
       clue_corridor: {
         id: "clue_corridor",
         stage: 3,
         name: "2F 走廊 17 號儲物櫃內的暗網提貨單",
-        zone: "2F 教學樓儲物櫃長廊",
+        zone: "2F 教學樓儲物櫃",
         icon: "🏷️",
-        pos: { x: 5.5, y: 5.05, z: 0.1 }, // 位於右側第四個儲物櫃
+        pos: { x: 5.5, y: 5.05, z: 0.1 }, // 單數排布第 4 個櫃：11, 13, 15, 17, 19
         floor: 2,
         shortDesc: "輸入密碼 420 成功解開 17 號儲物櫃！起獲打印提貨單：『新一批煙彈已藏於化學實驗室外排水管後方固定管架暗角，速取！』",
-        fullDesc: "成功解鎖 17 號儲物櫃！櫃內起獲暗網打印單據，蓋有暗夜調劑師骷髏火印：『新一批調製電子煙彈已藏於【化學實驗室外排水管後方固定管架暗角】，速取，銷毀痕跡。』",
+        fullDesc: "成功解鎖 17 號儲物櫃！櫃內起獲暗網打印單據，蓋有暗夜調劑師骷髏火印：『新一批調製電子煙彈已藏於【化學實驗室外排水管後方固定管架暗角】，速取，閱後銷毀。』",
         forensic: "紙張表面帶有防窺印刷暗碼，邊緣檢出非校內人員殘留指紋及麻醉酯類揮發痕跡。"
       },
       clue_pipe_stash: {
@@ -999,8 +960,8 @@
         icon: "🧪",
         pos: { x: 6.5, y: 5.05, z: 5.2 },
         floor: 2,
-        shortDesc: "在排水管金屬架夾角起獲未開封的密封煙彈（樣品 B）！兩份樣品齊備，立即進入旁邊化學室進行雙試管快篩！",
-        fullDesc: "在外露排水管與牆身固定鐵架暗角搜出一盒密封的電子煙彈（樣品 B），標籤偽裝為『天然提神草本煙油』，內裡液體透著與課桌漏油相同的幽微紫光。兩份檢體就緒，必須進入實驗室分析。",
+        shortDesc: "在排水管金屬架夾角起獲未開封的密封煙彈（證物 B）！兩份樣品齊備，立即進入旁邊化學室進行雙試管快篩！",
+        fullDesc: "在外露排水管與牆身固定鐵架暗角搜出一盒密封的電子煙彈（證物 B），標籤偽裝為『天然提神草本煙油』，內裡液體透著與課桌漏油相同的幽微紫光。兩份檢體就緒，必須進入實驗室分析。",
         forensic: "煙彈內液體經化驗管抽取，揮發性載體與課桌漏油完全一致，具備高濃度中樞抑制藥物特徵。"
       },
       clue_spot_plate: {
@@ -1012,7 +973,7 @@
         pos: { x: 9.0, y: 5.05, z: 7.0 },
         floor: 2,
         shortDesc: "排除氯胺酮，雙試管確診兩份煙油樣品皆為危險藥物「依托咪酯」！毒販美稱的『太空油』謊言破滅！天台傳來震動鈴聲！",
-        fullDesc: "雙試管交叉顯色完成！排除氯胺酮（K仔），確診課桌漏油（樣品 A）與排水管煙彈（樣品 B）皆為受香港特區《危險藥物條例》嚴格管制的【依托咪酯 (Etomidate)】！毒販所謂的太空油根本就是粉飾毒品的偽裝！此時天台方向傳來急響的手機鈴聲！",
+        fullDesc: "雙試管交叉顯色完成！排除氯胺酮（K仔），確診課桌漏油（證物 A）與排水管煙彈（證物 B）皆為受香港特區《危險藥物條例》嚴格管制的【依托咪酯 (Etomidate)】！毒販所謂的太空油根本就是粉飾毒品的偽裝！此時天台方向傳來急響的手機鈴聲！",
         forensic: "咪唑羧酸酯特異顯色反應呈強陽性深紫褐色沉澱，證實為超量管制危險藥物依托咪酯。"
       },
       clue_rooftop_burner: {
@@ -1029,57 +990,29 @@
       }
     };
 
-    // 儲物櫃序列（按咪制書院學會重新分配排布：11、14、20、17、23）
+    // 儲物櫃單數真實排布：11（第1）、13（第2）、15（第3）、17（目標，第4）、19（第5）
     const DUMMY_LOCKERS = {
-      locker_11: { 
-        id: "locker_11", 
-        num: 11, 
-        name: "2F 走廊 11 號儲物櫃", 
-        pos: { x: -2.0, y: 5.0, z: 0.1 },
-        descBeforeStage3: "這是 11 號學生儲物櫃，門扉緊扣。整排儲物櫃數量不少，在未有具體線索前盲目搜查只是浪費時間，應先按照指引去 2F 課室查驗現場證物。",
-        descStage3: "這是 11 號儲物櫃。裡面整齊疊放著校服與模擬試卷，並非詠蕎草稿上標註的 17 號。" 
-      },
-      locker_14: { 
-        id: "locker_14", 
-        num: 14, 
-        name: "2F 走廊 14 號儲物櫃", 
-        pos: { x: 0.5, y: 5.0, z: 0.1 },
-        descBeforeStage3: "這是 14 號學生儲物櫃，門鎖緊閉。走廊儲物櫃較多，應先去中六B課室搜查詠蕎課桌。",
-        descStage3: "這是 14 號儲物櫃。門外貼著學界籃球賽賽程表，鎖具完好無撬痕。目標是 17 號。" 
-      },
-      locker_20: { 
-        id: "locker_20", 
-        num: 20, 
-        name: "2F 走廊 20 號儲物櫃", 
-        pos: { x: 3.0, y: 5.0, z: 0.1 },
-        descBeforeStage3: "這是 20 號學生儲物櫃，門鎖完好。先前往中六B班搜查現場。",
-        descStage3: "這是 20 號儲物櫃。裡面放置著雨傘與水樽，無任何毒品或煙彈交收痕跡。" 
-      },
-      locker_23: { 
-        id: "locker_23", 
-        num: 23, 
-        name: "2F 走廊 23 號儲物櫃", 
-        pos: { x: 7.5, y: 5.0, z: 0.1 },
-        descBeforeStage3: "這是 23 號學生儲物櫃。目前缺乏相關線索，先前往課室展開調查。",
-        descStage3: "這是 23 號儲物櫃。鎖頭有些微生鏽，近期並未有開啟痕跡。" 
-      }
+      locker_11: { id: "locker_11", num: 11, name: "2F 走廊 11 號儲物櫃", pos: { x: -2.0, y: 5.0, z: 0.1 }, desc: "這是 11 號儲物櫃。裡面整齊疊放著校服與模擬試卷，未發現可疑物品。" },
+      locker_13: { id: "locker_13", num: 13, name: "2F 走廊 13 號儲物櫃", pos: { x: 0.5, y: 5.0, z: 0.1 }, desc: "這是 13 號儲物櫃。門外貼著學界賽程表，鎖具完好無撬痕。" },
+      locker_15: { id: "locker_15", num: 15, name: "2F 走廊 15 號儲物櫃", pos: { x: 3.0, y: 5.0, z: 0.1 }, desc: "這是 15 號儲物櫃。裡面放置著雨傘與水樽，無毒品或煙彈交收痕跡。" },
+      locker_19: { id: "locker_19", num: 19, name: "2F 走廊 19 號儲物櫃", pos: { x: 7.5, y: 5.0, z: 0.1 }, desc: "這是 19 號儲物櫃。鎖頭有些微生鏽，近期未有開啟痕跡。" }
     };
 
     const EASTER_EGGS = {
       notice_board: {
         id: "notice_board", name: "1F 校園抗毒海報", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
-        desc: "【校園抗毒海報：識破毒品黑話與受管制藥物陷阱】\n• 警惕「依托咪酯」：毒販常以「太空油」作為美化俗稱，誘騙青少年以為只是普通提神電子煙。實際上依托咪酯是受《危險藥物條例》嚴格管制的麻醉劑，濫用會導致肌陣攣抽搐、記憶斷片、呼吸衰竭及成癮猝死！\n• 識破毒品黑話：毒販常利用黑話掩飾罪行，例如大麻常被隱蔽指代為「草」、「花」，或國際常用數字代號「420」！",
-        monologue: "（這張抗毒海報揭露了毒販話術——所謂『太空油』純粹是美化毒品的糖衣，真身是依托咪酯！海報還提到大麻國際代號是『420』，這對解讀毒販密碼可能極為關鍵！）"
+        desc: "【校園抗毒海報：識破毒品黑話與受管制藥物陷阱】\n• 警惕「依托咪酯」：毒販常以「太空油」作為美化俗稱，誘騙青少年以為只是普通提神電子煙。實際上依托咪酯是受《危險藥物條例》嚴管的中樞神經抑制麻醉劑，濫用會導致肌陣攣抽搐、記憶斷片、呼吸衰竭及成癮猝死！\n• 識破毒品黑話：毒販常利用黑話掩飾罪行，例如大麻常被隱蔽指代為「草」、「花」，或國際常用數字代號「420」！",
+        monologue: "（這張抗毒海報揭露了毒販話術——所謂『太空油』純粹是美化毒品的糖衣，真身是依托咪酯！海報還提到大麻代號是『420』，這對解開密碼極為關鍵！）"
       },
       trophy_case: {
         id: "trophy_case", name: "1F 大堂學界榮譽陳列櫃", pos: { x: 0.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🏆",
-        desc: "陳列櫃擺放著咪制書院的各項獎盃。正中央是霍展霆與岑詠蕎的優秀學生代表合影。",
-        monologue: "（展霆是球隊核心，詠蕎是全校尖子……他們正面臨前所未有的學業與大賽壓力，極易被宣稱能『放鬆止痛』的非法煙油誘騙。）"
+        desc: "陳列櫃擺放著咪制書院的獎盃。正中央是霍展霆與岑詠蕎的優秀學生合影。",
+        monologue: "（展霆是球隊核心，詠蕎是全校尖子……他們正面臨前所未有的學業與比賽壓力，極易被宣稱能『放鬆止痛』的非法煙彈誘騙。）"
       },
       vending_machine: {
         id: "vending_machine", name: "1F 小食部自動販賣機", pos: { x: 8.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🥤",
         desc: "販賣機陳列著烏龍茶與能量飲料。側面貼著學生祈願便條：『DSE 順利！』",
-        monologue: "（考生承受著巨大的焦慮……毒販往往正是利用這種想走捷徑的心態，將毒品包裝成提神物乘虛而入。）"
+        monologue: "（考生承受著巨大升學焦慮……毒販往往正是利用這種想走捷徑的心態，將毒品包裝成提神物乘虛而入。）"
       },
       lost_and_found: {
         id: "lost_and_found", name: "2F 走廊失物認領箱", pos: { x: -1.0, y: 5.0, z: 2.5 }, floor: 2, icon: "📦",
@@ -1089,7 +1022,7 @@
       lab_microscope: {
         id: "lab_microscope", name: "2F 理科實驗室顯微鏡台", pos: { x: 12.0, y: 5.0, z: 7.0 }, floor: 2, icon: "🔬",
         desc: "實驗桌上的雙目顯微鏡旁壓著《化學實驗守則》。載玻片上是植物切片，秩序井然。",
-        monologue: "（化學本是求真的殿堂，卻被黑市之徒用於非法調劑摧毀青年神經的管制藥物。）"
+        monologue: "（化學本是求真的殿堂，卻被黑網之徒用於非法調劑摧毀青年神經的管制藥物。）"
       },
       rooftop_telescope: {
         id: "rooftop_telescope", name: "3F 天台天文觀測折射鏡", pos: { x: 8.0, y: 8.8, z: -6.5 }, floor: 3, icon: "🔭",
@@ -1099,12 +1032,12 @@
       rooftop_guitar: {
         id: "rooftop_guitar", name: "3F 天台角落樂隊練習設備", pos: { x: -8.0, y: 8.8, z: 4.5 }, floor: 3, icon: "🎸",
         desc: "一把缺弦的吉他倚在音箱旁。這裡原是放學後學生樂隊排練的角落。",
-        monologue: "（原本充滿青春夢想的校園角落，卻被不法之徒當作藏匿通聯電話的犯罪跳板。）"
+        monologue: "（原本充滿熱血與夢想的校園角落，卻被不法之徒當作藏匿通聯電話的犯罪跳板。）"
       }
     };
 
     // ==========================================
-    // 3. 3D 場景物理碰撞與幾何結構
+    // 3. 3D 場景與障礙物幾何
     // ==========================================
     let renderer, scene, camera, player;
     let floor1Group, floor2Group, floor3Group;
@@ -1186,12 +1119,12 @@
     }
 
     // ==========================================
-    // 5. 調查員控制類與骨骼運動
+    // 5. 調查員控制類
     // ==========================================
     class InvestigatorAvatar {
       constructor() {
         this.mesh = new THREE.Group();
-        this.speed = 6.5;
+        this.speed = 6.4;
         this.walkCycle = 0;
 
         const skin = new THREE.MeshStandardMaterial({ color: 0xffd1b3 });
@@ -1482,7 +1415,7 @@
       scene.add(objectiveArrowMesh);
     }
 
-    // 更新目標導引光標（修復：精準指向 Stage 3 的 17 號儲物櫃，消弭誤導摩擦）
+    // Stage 3 光標指向走廊開闊處，不直接標定 17 號，引導玩家自主靠近排查
     function updateObjectiveArrow() {
       if (!objectiveArrowMesh) return;
       let targetPos = null;
@@ -1495,7 +1428,7 @@
         targetPos = CLUES_DATA.clue_desk.pos;
         targetFloor = 2;
       } else if (GAME_STATE.questStage === 3) {
-        targetPos = CLUES_DATA.clue_corridor.pos; // 直接指向 17 號櫃位置 (5.5, 5.05, 0.1)
+        targetPos = { x: 2.8, y: 5.0, z: 2.2 }; // 走廊儲物櫃區域正中央，留出探索空間
         targetFloor = 2;
       } else if (GAME_STATE.questStage === 4) {
         targetPos = CLUES_DATA.clue_pipe_stash.pos;
@@ -1678,7 +1611,7 @@
         });
       });
 
-      // 2F 儲物櫃幾何排列：[-2.0, 0.5, 3.0, 5.5, 7.5] 對應 11、14、20、17、23 號
+      // 2F 儲物櫃幾何排列
       const lockers = [-2.0, 0.5, 3.0, 5.5, 7.5];
       lockers.forEach(lx => {
         const lg = new THREE.Group();
@@ -1762,13 +1695,13 @@
       spawnMarker('trophy_case', 0.0, 1.2, -7.5, 1, 'egg', '🏆');
       spawnMarker('vending_machine', 8.0, 1.2, -7.5, 1, 'egg', '🥤');
 
-      // 2F 儲物櫃（由左至右：11、14、20、17、23。17 號為第 4 個，外觀標牌均等）
+      // 2F 儲物櫃（整齊單數序列：11, 13, 15, 17, 19。17 號位於第 4 個）
       spawnMarker('clue_desk', -8.5, 5.05, -7.5, 2, 'clue', '📝');
       spawnMarker('locker_11', -2.0, 5.0, 0.1, 2, 'locker', '11');
-      spawnMarker('locker_14', 0.5, 5.0, 0.1, 2, 'locker', '14');
-      spawnMarker('locker_20', 3.0, 5.0, 0.1, 2, 'locker', '20');
-      spawnMarker('clue_corridor', 5.5, 5.05, 0.1, 2, 'locker', '17'); // 17 號儲物櫃（第 4 個）
-      spawnMarker('locker_23', 7.5, 5.0, 0.1, 2, 'locker', '23');
+      spawnMarker('locker_13', 0.5, 5.0, 0.1, 2, 'locker', '13');
+      spawnMarker('locker_15', 3.0, 5.0, 0.1, 2, 'locker', '15');
+      spawnMarker('clue_corridor', 5.5, 5.05, 0.1, 2, 'locker', '17'); // 17 號密碼櫃（第 4 個）
+      spawnMarker('locker_19', 7.5, 5.0, 0.1, 2, 'locker', '19');
 
       spawnMarker('clue_pipe_stash', 6.5, 5.05, 5.2, 2, 'clue', '🧪');
       spawnMarker('clue_spot_plate', 9.0, 5.05, 7.0, 2, 'clue', '🔬');
@@ -1819,7 +1752,7 @@
 
         g.userData = { clueId: key, floor: targetFloor, gemMesh: prism, ringMesh: ring, spriteMesh: sprite, initialY: y, type };
       } else {
-        // locker 類型：統一使用低調的灰銀色編號標牌，外觀均等
+        // locker 類型：統一使用低調金屬灰銀色編號標牌，外觀均等
         const sprite = createIconSprite(symbol, 'rgba(15, 23, 42, 0.95)', '#94a3b8');
         sprite.scale.set(0.65, 0.65, 1.0);
         sprite.position.y = 0.4;
@@ -1852,7 +1785,7 @@
     }
 
     // ==========================================
-    // 7. 小地圖與雷達掃描
+    // 7. 小地圖與視角
     // ==========================================
     function renderMinimap() {
       if (!minimapCtx || !minimapCanvas || !player) return;
@@ -1887,8 +1820,15 @@
       Object.values(CLUES_DATA).forEach(clue => {
         const found = GAME_STATE.cluesFound.has(clue.id);
         if (clue.floor === f) {
+          let drawX = clue.pos.x;
+          let drawZ = clue.pos.z;
+          // 儲物櫃未找到時小地圖標註在走廊開闊處，不直接標死 17 號
+          if (clue.id === 'clue_corridor' && !found) {
+            drawX = 2.8;
+            drawZ = 2.2;
+          }
           minimapCtx.beginPath();
-          minimapCtx.arc(mapX(clue.pos.x), mapZ(clue.pos.z), found ? 2.5 : 4.0, 0, Math.PI * 2);
+          minimapCtx.arc(mapX(drawX), mapZ(drawZ), found ? 2.5 : 4.0, 0, Math.PI * 2);
           minimapCtx.fillStyle = found ? "#10b981" : (clue.stage === GAME_STATE.questStage ? "#22c55e" : "#f59e0b");
           minimapCtx.fill();
         }
@@ -1925,62 +1865,7 @@
     }
 
     // ==========================================
-    // 8. 存檔系統 (LocalStorage 持久化)
-    // ==========================================
-    function saveGameProgress() {
-      try {
-        const payload = {
-          questStage: GAME_STATE.questStage,
-          cluesFound: Array.from(GAME_STATE.cluesFound),
-          hasIdentifiedEtomidate: GAME_STATE.hasIdentifiedEtomidate,
-          isMuted: sound.isMuted,
-          timestamp: Date.now()
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-      } catch(e){}
-    }
-
-    function checkExistingSave() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-          const data = JSON.parse(raw);
-          if (data && data.questStage && data.cluesFound) {
-            const btnResume = document.getElementById('btn-resume-game');
-            if (btnResume) btnResume.classList.remove('hidden');
-          }
-        }
-      } catch(e){}
-    }
-
-    function loadGameProgress() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return false;
-        const data = JSON.parse(raw);
-        if (data) {
-          GAME_STATE.questStage = data.questStage || 1;
-          GAME_STATE.cluesFound = new Set(data.cluesFound || []);
-          GAME_STATE.hasIdentifiedEtomidate = !!data.hasIdentifiedEtomidate;
-          if (data.isMuted) {
-            sound.isMuted = true;
-            const icon = document.getElementById('icon-sound-on');
-            if (icon) icon.style.opacity = '0.3';
-          }
-          return true;
-        }
-      } catch(e){}
-      return false;
-    }
-
-    function clearSaveData() {
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch(e){}
-    }
-
-    // ==========================================
-    // 9. 搖桿與手勢操控
+    // 8. 搖桿與手勢操控
     // ==========================================
     const touchJoystickInput = { x: 0, z: 0 };
     let joystickActive = false;
@@ -2006,7 +1891,7 @@
     }
 
     // ==========================================
-    // 10. 對話系統
+    // 9. 對話系統
     // ==========================================
     function startDialogueQueue(lines, callback = null) {
       GAME_STATE.dialogueQueue = lines.slice();
@@ -2062,7 +1947,7 @@
     }
 
     // ==========================================
-    // 11. 案件搜查與嚴密狀態機校驗 (徹底修復儲物櫃時序穿幫)
+    // 10. 案件搜查互動
     // ==========================================
     function checkProximity() {
       if (!GAME_STATE.started || GAME_STATE.isDialogueOpen || GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen || GAME_STATE.isLockerModalOpen || !player) {
@@ -2112,9 +1997,13 @@
 
       if (closestObj && interactionPrompt && promptActionText) {
         let actionLabel = "調查現場";
+        const hasDeskClue = GAME_STATE.cluesFound.has('clue_desk');
+
         if (closestObj.type === 'clue') {
           if (closestObj.data.id === 'clue_corridor') {
-            actionLabel = GAME_STATE.cluesFound.has('clue_corridor') ? "已解鎖：17 號櫃" : "翻查：17 號儲物櫃";
+            actionLabel = GAME_STATE.cluesFound.has('clue_corridor') 
+              ? "已解鎖：17 號櫃" 
+              : (hasDeskClue ? "排查：17 號儲物櫃" : "檢視：17 號儲物櫃");
           } else if (GAME_STATE.cluesFound.has(closestObj.data.id)) {
             actionLabel = `覆盤重讀：${closestObj.data.name.split(' ')[0]}`;
           } else if (closestObj.data.stage === GAME_STATE.questStage) {
@@ -2123,7 +2012,7 @@
             actionLabel = `查看：${closestObj.data.name.split(' ')[0]}`;
           }
         } else if (closestObj.type === 'dummy_locker') {
-          actionLabel = `翻查：${closestObj.data.num} 號櫃`;
+          actionLabel = hasDeskClue ? `排查：${closestObj.data.num} 號櫃` : `查看：${closestObj.data.num} 號櫃`;
         } else if (closestObj.type === 'easter_egg') {
           actionLabel = `檢視：${closestObj.data.name.split(' ')[0]}`;
         }
@@ -2149,7 +2038,6 @@
       if (!GAME_STATE.cluesFound.has(clueId)) {
         GAME_STATE.cluesFound.add(clueId);
         sound.playClueFound();
-        saveGameProgress();
         updateClueBadges();
       }
     }
@@ -2195,10 +2083,9 @@
 
       sound.playDialogueBlip();
 
-      // Stage 1 優先引導
       if (GAME_STATE.questStage === 1 && target.type !== 'clue') {
         startDialogueQueue([
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "優先目標提示", text: "（展霆休克後留下的急救痕跡在西側更衣室長椅。緊隨綠色導引光標先去排查，切勿分心！）" }
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "優先目標提示", text: "（展霆休克後留下的急救痕跡在西側更衣室長椅。跟著綠色導引光標先去排查，切勿分心！）" }
         ]);
         return;
       }
@@ -2211,19 +2098,18 @@
         return;
       }
 
-      // 【核心邏輯修復】非 17 號儲物櫃（Dummy Lockers）狀態過濾
+      // 儲物櫃狀態防護：若尚未搜查課桌，絕不劇透 17 號與草稿紙線索
       if (target.type === 'dummy_locker') {
-        if (GAME_STATE.questStage < 3) {
-          // 尚未查看詠蕎課桌：絕對不洩漏「詠蕎草稿紙」或「17 號」任何資訊！
+        const hasDeskClue = GAME_STATE.cluesFound.has('clue_desk');
+        if (!hasDeskClue) {
           startDialogueQueue([
-            { type: "narration", speaker: "現場儲物櫃", role: "走廊公用設施", text: target.data.descBeforeStage3 },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員分析", text: "（整排儲物櫃由左至右重新編過號。在未獲得相關線索前盲目搜查只是浪費時間，應先按照搜查目標去中六B課室！）" }
+            { type: "narration", speaker: "走廊儲物櫃排查", role: "儲物櫃排查", text: `這是走廊的 ${target.data.num} 號儲物櫃。整排儲物櫃按單數順序編號排列。` },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員分析", text: "（目前尚未掌握任何指向具體櫃號的線索，盲目排查只會耽誤時間。先前往中六B班搜查詠蕎的課桌！）" }
           ]);
         } else {
-          // 已解鎖 Stage 3：合法對照詠蕎草稿紙進行排查
           startDialogueQueue([
-            { type: "narration", speaker: "現場儲物櫃排查紀錄", role: "儲物櫃翻查", text: target.data.descStage3 },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員分析", text: `（這不是 17 號櫃。對照詠蕎草稿紙，目標是 17 號櫃，鎖著三位數滾輪鎖，位於右側第四個櫃門。）` }
+            { type: "narration", speaker: "現場儲物櫃排查紀錄", role: "儲物櫃翻查", text: target.data.desc },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員分析", text: "（這不是 17 號櫃。整排儲物櫃按單數排列（11、13、15、17、19），17 號櫃應在靠右第 4 個位置。）" }
           ]);
         }
         return;
@@ -2240,12 +2126,12 @@
           return;
         }
 
-        // 【核心邏輯修復】未到階段的 17 號儲物櫃特別處理
+        // 檢查順序前置邏輯（防止提早觸發後續物證）
         if (clue.stage > GAME_STATE.questStage) {
           if (clue.id === 'clue_corridor') {
             startDialogueQueue([
-              { type: "narration", speaker: "2F 走廊 17 號儲物櫃", role: "儲物櫃設施", text: "這是 17 號儲物櫃，掛著一把三位數金屬滾輪密碼鎖，緊緊扣住。" },
-              { type: "monologue", speaker: "梁澤銘（心想）", role: "偵查順序判斷", text: "（櫃門鎖扣嚴實，目前我沒有任何密碼線索或開啟動機。應先前往中六B班搜查詠蕎的課桌！）" }
+              { type: "narration", speaker: "現場儲物櫃排查紀錄", role: "儲物櫃排查", text: "這是 17 號儲物櫃，櫃門掛著三位數金屬滾輪密碼鎖。" },
+              { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員分析", text: "（目前尚不清楚密碼與關聯線索。應先登上 2F 中六B班房搜查岑詠蕎的課桌！）" }
             ]);
             return;
           }
@@ -2253,7 +2139,7 @@
           let hint = "應先留意右上角當前偵查目標。";
           if (GAME_STATE.questStage === 1) hint = "跟著綠色光標先去更衣室排查展霆遺物！";
           else if (GAME_STATE.questStage === 2) hint = "登上 2F 中六B班房搜查岑詠蕎的課桌！";
-          else if (GAME_STATE.questStage === 3) hint = "在 2F 走廊排查 17 號儲物櫃並破解密碼！";
+          else if (GAME_STATE.questStage === 3) hint = "在 2F 走廊儲物櫃長廊排查 17 號櫃！";
           else if (GAME_STATE.questStage === 4) hint = "在化學室外排水管後方固定管架暗角搜查樣品！";
           else if (GAME_STATE.questStage === 5) hint = "兩份樣品已齊備，先進入化學實驗台完成快篩！";
 
@@ -2266,7 +2152,6 @@
         if (clue.stage === 1) {
           collectClue(clue.id);
           GAME_STATE.questStage = 2;
-          saveGameProgress();
           updateStairBarriers();
           updateObjective("沿東側階梯 A 登上 2F，搜查中六B班房岑詠蕎的課桌 (2/6)");
           startDialogueQueue([
@@ -2276,21 +2161,19 @@
         } else if (clue.stage === 2) {
           collectClue(clue.id);
           GAME_STATE.questStage = 3;
-          saveGameProgress();
-          updateObjective("在 2F 走廊排查 17 號儲物櫃（右側第四個）並破解 3 位數密碼鎖 (3/6)");
+          updateObjective("排查 2F 走廊儲物櫃（單數列），解鎖 17 號密碼櫃 (3/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "課桌起獲物證", text: "課桌上漏出一灘深紫色油性煙液（樣品 A）！桌上的模擬試化學答題紙前幾行公式突然劇烈扭曲變形，最後因手部失控劃破紙張；旁邊手機未鎖屏備忘錄寫著：『17號櫃密碼是大麻的……（字跡被漏液浸染模糊）』！" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "病理與時序推理", text: "（答題紙撕裂的墨跡完全符合強烈神經痙攣發作的痕跡！詠蕎是在開考前吸食，返回座位剛坐下便誘發肌陣攣抽搐倒地！手機備忘錄提到了 17 號儲物櫃與大麻代號。咪制書院儲物櫃是重新編過號的，由左至右分別為 11、14、20、17、23，目標在右側第四個，去解鎖 17 號櫃！）" }
+            { type: "narration", speaker: "現場物證紀錄", role: "課桌起獲物證", text: "課桌上漏出一灘深紫色油性煙液（證物 A）！桌上的模擬試化學答題紙前幾行公式突然劇烈扭曲變形，最後因手部失控劃破紙張；旁邊手機未鎖屏備忘錄寫著：『17號櫃密碼是大麻的……（字跡被漏液浸染模糊）』！" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "病理與時序推理", text: "（答題紙撕裂的墨跡完全符合強烈神經痙攣發作的痕跡！詠蕎是在開考前吸食，返回座位剛坐下便誘發肌陣攣抽搐倒地！手機備忘錄提到了 17 號儲物櫃與大麻代號。走廊有一排單數儲物櫃，去排查並破解 17 號櫃！）" }
           ]);
         } else if (clue.stage === 3) {
           openLockerModal();
         } else if (clue.stage === 4) {
           collectClue(clue.id);
           GAME_STATE.questStage = 5;
-          saveGameProgress();
           updateObjective("進入 2F 理科綜合化學實驗室，進行雙試管快篩確診 (5/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "排水管支架起獲物證", text: "在排水管固定鐵架暗角搜出一盒密封的電子煙彈（樣品 B）！煙油泛著與課桌漏油完全一致的紫色光澤。" },
+            { type: "narration", speaker: "現場物證紀錄", role: "排水管支架起獲物證", text: "在排水管固定鐵架暗角搜出一盒密封的電子煙彈（證物 B）！煙油泛著與課桌漏油完全一致的紫色光澤。" },
             { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（兩份物證——課桌漏出的煙油液滴與暗角起獲的全新煙彈均已齊備！立刻進入旁邊的理科實驗室，上檢驗台做交叉比對！）" }
           ]);
         } else if (clue.stage === 5) {
@@ -2299,13 +2182,12 @@
           sound.playPhoneRing();
           collectClue(clue.id);
           GAME_STATE.questStage = 7;
-          saveGameProgress();
           updateClueBadges();
           updateObjective("打開【案件手冊】進入【思維宮殿】，完成定案通報執法部門！ (6/6)");
           startDialogueQueue([
-            { type: "call", speaker: "暗夜調劑師（加密黑網通話）", role: "幕後主謀", text: "『喂？！新煙彈拿到了沒有？！尾款今晚九點前交不出來，就把你們吸太空油吸到全身抽搐翻白眼的影片發給全校家長和社媒！』" },
-            { type: "dialogue", speaker: "梁澤銘", role: "調查員權限通報", text: "錄音器與網罪科已鎖定你的加密基站音軌！暗夜調劑師，你的勒索罪證全部固定，警方重案組正在收網路上！" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "思維宮殿定案", text: "（6 大核心物證鏈條全數齊備！打開【📋 案件簿】的【思維宮殿定案】，核實因果鏈後立刻向執法部門發出正式通報！）" }
+            { type: "call", speaker: "暗夜調劑師（黑網通話）", role: "幕後主謀", text: "『喂？！新煙彈拿到了沒有？！尾款今晚交不出來，就把你們吸到全身抽搐翻白眼的影片發給全校家長！』" },
+            { type: "dialogue", speaker: "梁澤銘", role: "調查員取證通報", text: "錄音器已成功鎖定音軌！暗夜調劑師，你的網絡通訊基站與勒索罪證全部固定，警方專案組已在收網路上！" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "思維宮殿定案", text: "（6 大核心物證鏈條齊備！打開【📋 案件簿】的【思維宮殿定案】，核實因果鏈後立刻通報執法部門！）" }
           ], () => {
             toggleNotebook();
             switchNotebookTab('mindpalace');
@@ -2315,7 +2197,7 @@
     }
 
     // ==========================================
-    // 12. 儲物櫃 3 位數滾輪密碼鎖系統
+    // 11. 儲物櫃 3 位數密碼鎖邏輯
     // ==========================================
     function openLockerModal() {
       if (lockerModal) {
@@ -2359,12 +2241,11 @@
         closeLockerModal();
         collectClue('clue_corridor');
         GAME_STATE.questStage = 4;
-        saveGameProgress();
         updateObjective("搜查 2F 理科化學室外排水管後方固定管架暗角 (4/6)");
 
         startDialogueQueue([
           { type: "narration", speaker: "密碼鎖咔噠彈開！", role: "17號儲物櫃已解鎖", text: "轉動至【4】【2】【0】，鎖芯應聲彈開！起獲打印的暗網提貨單：『新一批煙彈已藏於【化學實驗室外排水管後方固定管架暗角】，速取，銷毀痕跡。』" },
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（密碼果然是大麻的黑市國際代號『420』！暗夜調劑師把未拆封的全新煙彈藏在化學室外的排水管支架暗角！必須立刻前往取回樣品！）" }
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（密碼果然是大麻的黑市代號『420』！暗夜調劑師把未拆封的全新煙彈藏在化學室外的排水管支架暗角！必須立刻前往取回樣品！）" }
         ]);
       } else {
         sound.playLockBuzzer();
@@ -2374,7 +2255,7 @@
           card.classList.add('animate-shake');
         }
         if (err) {
-          err.textContent = "❌ 鎖芯紋絲不動！密碼不符。（提示：大麻的國際通用黑話數字代號）";
+          err.textContent = "❌ 鎖芯紋絲不動！密碼不符。（詠蕎草稿留下了『密碼是大麻的...』）";
         }
       }
     }
@@ -2387,13 +2268,13 @@
           type: "monologue",
           speaker: "梁澤銘（心想）",
           role: "密碼解讀思維",
-          text: "（詠蕎的化學草稿紙邊緣寫著：『密碼是大麻的……』但後面的字被漏出的煙油浸染。大麻在黑市與青少年群組裡有特定的數字代號！記得 1F 大堂中庭的【📌 校園抗毒海報】上，詳細記載了大麻的國際代號是『420』，這正是鎖芯的 3 位數密碼！）"
+          text: "（詠蕎的化學草稿紙邊緣寫著：『密碼是大麻的……』但後面的字被漏出的煙油浸染。大麻在黑市與青少年群組裡有特定的數字代號！記得 1F 大堂中庭的【📌 校園抗毒海報】上，詳細記載了毒品黑話與常見數字代號，我應該去那裡看看！）"
         }
       ]);
     }
 
     // ==========================================
-    // 13. 化學快篩鑑驗台邏輯
+    // 12. 快篩鑑驗台邏輯
     // ==========================================
     function openLabModal() {
       if (labModal) {
@@ -2423,23 +2304,23 @@
 
       if (statusBadge) {
         statusBadge.textContent = "排除氯胺酮 (K仔)";
-        statusBadge.className = "px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/50 text-[10px] font-bold";
+        statusBadge.className = "px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/50 text-[10px]";
       }
       if (verdictText) {
-        verdictText.innerHTML = "兩支試管均無顯色反應，維持清澈！<strong class="text-emerald-400">【陰性反應】</strong>排除常規氯胺酮。請點擊 <strong class="text-cyan-400">2️⃣ 滴入 依托咪酯快篩試劑</strong>！";
+        verdictText.innerHTML = "兩支試管均無顯色反應，維持清澈！<strong class=\"text-emerald-400\">【陰性反應】</strong>排除常規氯胺酮。請點擊 <strong class=\"text-cyan-400\">2️⃣ 滴入 依托咪酯試劑</strong>！";
       }
       if (step1) {
-        step1.className = "py-1.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600";
+        step1.className = "py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-600";
         step1.textContent = "步驟 1: 排除 K仔 ✓";
       }
-      if (step2) step2.className = "py-1.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-600";
+      if (step2) step2.className = "py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600";
       if (btn1) {
         btn1.disabled = true;
-        btn1.className = "flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 cursor-not-allowed";
+        btn1.className = "flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 cursor-not-allowed";
       }
       if (btn2) {
         btn2.disabled = false;
-        btn2.className = "flex-1 py-2.5 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs border border-purple-400 active:scale-95 transition shadow-md cursor-pointer";
+        btn2.className = "flex-1 py-2 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs border border-purple-400 active:scale-95 transition shadow-md cursor-pointer";
       }
     }
 
@@ -2463,22 +2344,22 @@
       }
       if (statusBadge) {
         statusBadge.textContent = "確診 依托咪酯 (陽性)";
-        statusBadge.className = "px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600 text-[10px] font-black animate-pulse";
+        statusBadge.className = "px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600 text-[10px] font-black animate-pulse";
       }
       if (verdictText) {
-        verdictText.innerHTML = "<strong class="text-rose-400">【陽性反應！】</strong>兩支試管均劇烈顯色並生成深紫褐色沉澱！確診樣品 A 與 B 均為受香港特區《危險藥物條例》嚴格管制的麻醉藥<strong class="text-amber-300">「依托咪酯」（毒販俗稱太空油）</strong>！";
+        verdictText.innerHTML = "<strong class=\"text-rose-400\">【陽性反應！】</strong>兩支試管均劇烈顯色並生成深紫褐色沉澱！確診毒物為混入電子煙的受管制危險藥物<strong class=\"text-amber-300\">「依托咪酯」（毒販俗稱太空油）</strong>！";
       }
       if (step2) {
-        step2.className = "py-1.5 rounded bg-rose-950 text-rose-300 border border-rose-600";
+        step2.className = "py-1 rounded bg-rose-950 text-rose-300 border border-rose-600";
         step2.textContent = "步驟 2: 確診依托咪酯 ✓";
       }
       if (btn2) {
         btn2.disabled = true;
-        btn2.className = "flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 cursor-not-allowed";
+        btn2.className = "flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 cursor-not-allowed";
       }
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.className = "flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg transition active:scale-95 animate-bounce cursor-pointer";
+        submitBtn.className = "flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg transition active:scale-95 animate-bounce cursor-pointer";
       }
     }
 
@@ -2497,30 +2378,30 @@
       if (tubeB) { tubeB.style.backgroundColor = 'rgba(6, 182, 212, 0.4)'; tubeB.style.filter = 'none'; }
       if (statusBadge) {
         statusBadge.textContent = "待化驗";
-        statusBadge.className = "px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[10px] font-bold";
+        statusBadge.className = "px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[10px]";
       }
       if (verdictText) {
-        verdictText.innerHTML = "請點擊下方 <strong class="text-cyan-400">1️⃣ 滴入 K仔快篩試劑</strong>，排查是否為常規氯胺酮。";
+        verdictText.innerHTML = "請點擊下方 <strong class=\"text-cyan-400\">1️⃣ 滴入 K仔試劑</strong>，排查是否為常規氯胺酮。";
       }
       if (step1) {
-        step1.className = "py-1.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-600";
+        step1.className = "py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600";
         step1.textContent = "步驟 1: 篩查 K仔";
       }
       if (step2) {
-        step2.className = "py-1.5 rounded bg-slate-900 text-slate-500 border border-slate-800";
+        step2.className = "py-1 rounded bg-slate-900 text-slate-500 border border-slate-800";
         step2.textContent = "步驟 2: 篩查 依托咪酯";
       }
       if (btn1) {
         btn1.disabled = false;
-        btn1.className = "flex-1 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md cursor-pointer";
+        btn1.className = "flex-1 py-2 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md cursor-pointer";
       }
       if (btn2) {
         btn2.disabled = true;
-        btn2.className = "flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 transition cursor-not-allowed";
+        btn2.className = "flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 transition cursor-not-allowed";
       }
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.className = "flex-1 py-2.5 rounded-xl bg-cyan-600 text-white font-bold text-xs shadow-lg transition active:scale-95 disabled:opacity-30 disabled:pointer-events-none";
+        submitBtn.className = "flex-1 py-2 rounded-xl bg-cyan-600 text-white font-bold text-xs shadow-lg transition active:scale-95 disabled:opacity-30 disabled:pointer-events-none";
       }
     }
 
@@ -2529,19 +2410,18 @@
       collectClue('clue_spot_plate');
       GAME_STATE.hasIdentifiedEtomidate = true;
       GAME_STATE.questStage = 6;
-      saveGameProgress();
       updateStairBarriers();
-      updateObjective("循著震動鈴聲登上 3F 天台，搜查排風箱通聯手機 (6/6)");
+      updateObjective("循著震動鈴聲登上 3F 天台，搜查排風箱 (6/6)");
       sound.playPhoneRing();
 
       startDialogueQueue([
-        { type: "narration", speaker: "毒理檢驗報告", role: "定性鑑證結論", text: "雙試管交叉比對確診！課桌漏出的紫色滴液與暗角起獲的全新煙彈均含有《危險藥物條例》嚴格管制的麻醉藥【依托咪酯】！所謂太空油只不過是毒販粉飾罪行的誘騙話術！" },
+        { type: "narration", speaker: "毒理檢驗報告", role: "定性鑑證結論", text: "雙試管交叉比對確診！課桌漏出的紫色滴液與暗角起獲的煙彈均含有《危險藥物條例》嚴管的麻醉藥【依托咪酯】！所謂太空油只不過是毒販粉飾罪行的誘騙話術！" },
         { type: "monologue", speaker: "梁澤銘（心想）", role: "突發警覺", text: "（等等！頭頂 3F 天台方向傳來急促的手機震動鈴聲！天台階梯封鎖已解除，立刻登上天台截獲通聯訊號！）" }
       ]);
     }
 
     // ==========================================
-    // 14. 案件手冊與思維宮殿邏輯 (排版大幅升級)
+    // 13. 案件手冊與思維宮殿邏輯
     // ==========================================
     function toggleNotebook() {
       if (!notebookModal) return;
@@ -2570,7 +2450,7 @@
       const detailPanel = document.getElementById('clue-detail-panel');
 
       [btnClues, btnMind, btnProfiles].forEach(b => {
-        if (b) b.className = "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition cursor-pointer";
+        if (b) b.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition cursor-pointer";
       });
       [tabClues, tabMind, tabProfiles].forEach(t => {
         if (t) t.classList.add('hidden');
@@ -2578,14 +2458,14 @@
       if (detailPanel) detailPanel.classList.add('hidden');
 
       if (tab === 'clues') {
-        if (btnClues) btnClues.className = "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-orange-500 text-white transition cursor-pointer";
+        if (btnClues) btnClues.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-500 text-white transition cursor-pointer";
         if (tabClues) tabClues.classList.remove('hidden');
       } else if (tab === 'mindpalace') {
-        if (btnMind) btnMind.className = "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-orange-500 text-white transition cursor-pointer";
+        if (btnMind) btnMind.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-500 text-white transition cursor-pointer";
         if (tabMind) tabMind.classList.remove('hidden');
         updateClueBadges();
       } else if (tab === 'profiles') {
-        if (btnProfiles) btnProfiles.className = "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-orange-500 text-white transition cursor-pointer";
+        if (btnProfiles) btnProfiles.className = "px-2.5 py-1 rounded-lg text-xs font-bold bg-orange-500 text-white transition cursor-pointer";
         if (tabProfiles) tabProfiles.classList.remove('hidden');
       }
       sound.playDialogueBlip();
@@ -2628,24 +2508,21 @@
       cluesList.forEach((c) => {
         const isFound = GAME_STATE.cluesFound.has(c.id);
         const card = document.createElement('div');
-        card.className = `p-2.5 rounded-2xl border flex flex-col justify-between transition active:scale-95 ${
+        card.className = `p-1.5 rounded-xl border flex flex-col justify-between transition active:scale-95 ${
           isFound 
             ? 'bg-slate-900/90 border-amber-500/60 text-amber-200 cursor-pointer hover:border-amber-400' 
             : 'bg-slate-950/60 border-slate-800 text-slate-600 cursor-not-allowed'
         }`;
         card.innerHTML = `
-          <div>
-            <div class="flex items-center gap-1.5 mb-1">
-              <span class="text-base">${isFound ? c.icon : '🔒'}</span>
-              <span class="text-xs font-black truncate">${isFound ? (c.zone.split(' ')[1] || c.zone) : '未解鎖物證'}</span>
-            </div>
-            <p class="text-[11px] leading-snug line-clamp-3 ${isFound ? 'text-slate-300' : 'text-slate-600'}">
-              ${isFound ? c.shortDesc : '請跟隨現場指引前往目標區域搜查...'}
-            </p>
+          <div class="flex items-center gap-1">
+            <span class="text-sm">${isFound ? c.icon : '🔒'}</span>
+            <span class="text-[9px] font-bold truncate">${isFound ? (c.zone.split(' ')[1] || c.zone) : '未解鎖'}</span>
           </div>
-          <div class="text-[10px] font-mono mt-2 flex items-center justify-between ${isFound ? 'text-orange-400 font-bold' : 'text-slate-600'}">
-            <span>${isFound ? '✓ 已封存入卷' : '待搜查'}</span>
-            ${isFound ? '<span class="underline underline-offset-2">詳細 ▶</span>' : ''}
+          <p class="text-[8.5px] leading-tight mt-1 line-clamp-2 ${isFound ? 'text-slate-300' : 'text-slate-600'}">
+            ${isFound ? c.shortDesc : '依指引前往搜查...'}
+          </p>
+          <div class="text-[8px] font-mono mt-1 ${isFound ? 'text-orange-400 font-bold' : 'text-slate-600'}">
+            ${isFound ? '✓ 點擊閱覽' : '待搜查'}
           </div>
         `;
 
@@ -2678,7 +2555,6 @@
           victoryScreen.classList.add('pointer-events-auto', 'opacity-100');
         }
         sound.playClueFound();
-        clearSaveData(); // 破案後結清進度
       } else {
         sound.playDialogueBlip();
         const deduceHeader = document.getElementById('deduce-header');
@@ -2690,16 +2566,15 @@
     }
 
     function handleRestartConfirm() {
-      if (confirm("確定要重啟調查專案嗎？這將會清除當前搜查進度。")) {
-        clearSaveData();
+      if (confirm("確定要重啟調查專案嗎？所有現場搜查進度將重新開始。")) {
         window.location.reload();
       }
     }
 
     // ==========================================
-    // 15. 核心遊戲啟動與恢復
+    // 14. 核心啟動函數
     // ==========================================
-    function startGame(resume = false) {
+    function startGame() {
       const title = document.getElementById('title-screen');
       if (title) {
         title.style.display = 'none';
@@ -2714,32 +2589,6 @@
         screen.orientation.lock('landscape').catch(() => {});
       }
 
-      if (resume && loadGameProgress()) {
-        updateFloorVisibility();
-        updateStairBarriers();
-        updateClueBadges();
-        
-        let targetText = "跟隨綠色光標，排查體育部更衣室外霍展霆遺物 (1/6)";
-        if (GAME_STATE.questStage === 2) targetText = "沿東側階梯 A 登上 2F，搜查中六B班房岑詠蕎的課桌 (2/6)";
-        else if (GAME_STATE.questStage === 3) targetText = "在 2F 走廊排查 17 號儲物櫃（右側第四個）並破解 3 位數密碼鎖 (3/6)";
-        else if (GAME_STATE.questStage === 4) targetText = "搜查 2F 理科化學室外排水管後方固定管架暗角 (4/6)";
-        else if (GAME_STATE.questStage === 5) targetText = "進入 2F 理科綜合化學實驗室，進行雙試管快篩確診 (5/6)";
-        else if (GAME_STATE.questStage === 6) targetText = "循著震動鈴聲登上 3F 天台，搜查排風箱通聯手機 (6/6)";
-        else if (GAME_STATE.questStage >= 7) targetText = "打開【案件手冊】進入【思維宮殿】，完成定案通報！ (6/6)";
-
-        updateObjective(targetText);
-        startDialogueQueue([
-          {
-            type: "dialogue",
-            speaker: "梁澤銘",
-            role: "特約安全調查員",
-            text: `已恢復上次搜查進度。當前搜查階段：Stage ${GAME_STATE.questStage}，已起獲核心物證 ${GAME_STATE.cluesFound.size}/${TOTAL_CLUES} 項。`
-          }
-        ]);
-        return;
-      }
-
-      // 全新開始
       setTimeout(() => {
         startDialogueQueue([
           {
@@ -2759,11 +2608,10 @@
     }
 
     // ==========================================
-    // 16. 全域事件監聽與無障礙鍵盤適配 (Esc 支援)
+    // 15. 事件監聽綁定
     // ==========================================
     function setupEventListeners() {
-      document.getElementById('btn-start-game')?.addEventListener('click', () => startGame(false));
-      document.getElementById('btn-resume-game')?.addEventListener('click', () => startGame(true));
+      document.getElementById('btn-start-game')?.addEventListener('click', startGame);
       document.getElementById('btn-restart-hud')?.addEventListener('click', handleRestartConfirm);
 
       document.getElementById('btn-cam-cycle')?.addEventListener('click', cycleCameraPreset);
@@ -2798,7 +2646,7 @@
         if (icon) icon.style.opacity = isMuted ? '0.3' : '1';
       });
 
-      // 儲物櫃滾輪密碼事件
+      // 儲物櫃滾輪事件
       document.getElementById('btn-close-locker')?.addEventListener('click', closeLockerModal);
       document.getElementById('dial-0-up')?.addEventListener('click', () => changeLockerDigit(0, 1));
       document.getElementById('dial-0-down')?.addEventListener('click', () => changeLockerDigit(0, -1));
@@ -2821,17 +2669,12 @@
       document.getElementById('tab-btn-profiles')?.addEventListener('click', () => switchNotebookTab('profiles'));
       document.getElementById('btn-submit-deduction')?.addEventListener('click', submitFinalDeduction);
 
-      document.getElementById('btn-restart-game')?.addEventListener('click', () => {
-        clearSaveData();
-        window.location.reload();
-      });
-      
+      document.getElementById('btn-restart-game')?.addEventListener('click', () => window.location.reload());
       document.getElementById('btn-force-portrait-continue')?.addEventListener('click', () => {
         const overlay = document.getElementById('landscape-orientation-overlay');
         if (overlay) overlay.style.display = 'none';
       });
 
-      // 鍵盤無障礙操作
       window.addEventListener('keydown', (e) => {
         keys[e.code] = true;
         if (e.code === 'KeyE' || e.code === 'Space') {
@@ -2840,15 +2683,14 @@
           rotateCameraByDegrees(-45);
         } else if (e.code === 'KeyR') {
           rotateCameraByDegrees(45);
-        } else if (e.code === 'Escape') {
-          // Esc 關閉所有彈窗
-          if (GAME_STATE.isLockerModalOpen) closeLockerModal();
-          else if (GAME_STATE.isLabModalOpen) closeLabModal();
-          else if (GAME_STATE.isNotebookOpen) toggleNotebook();
-          else if (GAME_STATE.isDialogueOpen) nextDialogue();
         } else if (e.code === 'Tab') {
           e.preventDefault();
           toggleNotebook();
+        } else if (e.code === 'Escape') {
+          // ESC 鍵快速關閉彈出面板
+          if (GAME_STATE.isLockerModalOpen) closeLockerModal();
+          else if (GAME_STATE.isLabModalOpen) closeLabModal();
+          else if (GAME_STATE.isNotebookOpen) toggleNotebook();
         }
       });
 
@@ -2866,7 +2708,6 @@
         updateJoystickCenter();
       }, { passive: true });
 
-      // 左下虛擬搖桿事件
       const jContainer = document.getElementById('touch-joystick-container');
       const jThumb = document.getElementById('joystick-thumb');
 
@@ -2919,7 +2760,6 @@
         window.addEventListener('touchcancel', endJoystick, { passive: false });
       }
 
-      // 右側手勢滑動旋轉視角
       window.addEventListener('touchstart', (e) => {
         for (let i = 0; i < e.changedTouches.length; i++) {
           const t = e.changedTouches[i];
@@ -2959,7 +2799,7 @@
     }
 
     // ==========================================
-    // 17. 主渲染循環
+    // 16. 主渲染循環
     // ==========================================
     const clock = new THREE.Clock();
     let isTabVisible = true;
@@ -3044,7 +2884,7 @@
     });
 
     // ==========================================
-    // 18. 安全啟動入口
+    // 17. 安全啟動入口
     // ==========================================
     function bootApp() {
       minimapCanvas = document.getElementById('minimap-canvas');
@@ -3066,7 +2906,6 @@
       setupEventListeners();
       updateJoystickCenter();
       updateClueBadges();
-      checkExistingSave();
 
       const ready = init3DWorld();
       if (ready) {
