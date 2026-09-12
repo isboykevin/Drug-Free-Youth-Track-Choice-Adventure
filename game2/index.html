@@ -36,7 +36,7 @@
     .game-interactive, #joystick-base, #joystick-thumb, .glass-btn, button {
       user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
     }
-    #joystick-base, #joystick-thumb, #mobile-controls-cluster { touch-action: none; }
+    #joystick-base, #joystick-thumb, #mobile-controls-cluster, #touch-joystick-container { touch-action: none; }
     :focus-visible { outline: 3px solid #fb923c; outline-offset: 2px; }
 
     .twilight-vignette {
@@ -85,13 +85,26 @@
     .tube-meniscus {
       position: absolute; top: -3px; left: 0; right: 0; height: 5px; border-radius: 50%; background: rgba(255, 255, 255, 0.5);
     }
+    
+    /* 核心修復：使用固定尺寸，防止 Tailwind 類名失效導致搖桿塌陷 */
     .joystick-base {
+      width: 96px !important;
+      height: 96px !important;
+      border-radius: 50%;
       background: radial-gradient(circle, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.96) 100%);
-      border: 2.5px solid rgba(251, 146, 60, 0.65); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.75);
+      border: 2.5px solid rgba(251, 146, 60, 0.65);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.75);
+      touch-action: none;
     }
     .joystick-thumb {
-      background: radial-gradient(circle, #fb923c 0%, #c2410c 100%); box-shadow: 0 4px 18px rgba(249, 115, 22, 0.85);
+      width: 44px !important;
+      height: 44px !important;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fb923c 0%, #c2410c 100%);
+      box-shadow: 0 4px 18px rgba(249, 115, 22, 0.85);
+      touch-action: none;
     }
+
     .dialogue-type-monologue { border-color: rgba(56, 189, 248, 0.6) !important; background: rgba(12, 25, 44, 0.96) !important; }
     .dialogue-type-narration { border-color: rgba(251, 146, 60, 0.6) !important; background: rgba(28, 19, 13, 0.96) !important; }
     .dialogue-type-call { border-color: rgba(244, 63, 94, 0.75) !important; background: rgba(36, 10, 20, 0.96) !important; }
@@ -171,16 +184,17 @@
     </div>
   </header>
 
-  <div id="touch-joystick-container" class="fixed safe-bottom safe-left z-30 pointer-events-auto touch-none">
-    <div id="joystick-base" class="w-22 h-22 sm:w-26 sm:h-26 rounded-full joystick-base relative flex items-center justify-center">
-      <div id="joystick-thumb" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full joystick-thumb absolute pointer-events-none transition-transform duration-75"></div>
+  <!-- 左下虛擬搖桿：已設定固定寬高並強化觸控捕獲 -->
+  <div id="touch-joystick-container" class="fixed safe-bottom safe-left z-30 pointer-events-auto touch-none select-none p-2">
+    <div id="joystick-base" class="joystick-base relative flex items-center justify-center">
+      <div id="joystick-thumb" class="joystick-thumb absolute pointer-events-none transition-transform duration-75"></div>
     </div>
   </div>
 
   <div id="mobile-controls-cluster" class="fixed safe-bottom safe-right z-30 pointer-events-auto flex flex-col items-end gap-1.5 touch-none">
     <div class="flex items-center gap-1.5">
-      <button id="btn-rotate-left" class="glass-panel w-9 h-9 sm:w-10 sm:h-10 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md">⟲</button>
-      <button id="btn-rotate-right" class="glass-panel w-9 h-9 sm:w-10 sm:h-10 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md">⟳</button>
+      <button id="btn-rotate-left" class="glass-panel w-10 h-10 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md">⟲</button>
+      <button id="btn-rotate-right" class="glass-panel w-10 h-10 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md">⟳</button>
     </div>
     <button id="mobile-interact-btn" class="glass-btn w-16 h-16 sm:w-18 sm:h-18 rounded-3xl flex flex-col items-center justify-center text-white font-black shadow-[0_0_20px_rgba(249,115,22,0.6)] active:scale-90 border-2 border-orange-400 cursor-pointer">
       <span class="text-2xl pointer-events-none">🔍</span>
@@ -188,13 +202,14 @@
     </button>
   </div>
 
-  <div id="interaction-prompt" class="fixed bottom-16 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 transition-all duration-200 transform scale-95 flex items-center gap-2 glass-panel px-3.5 py-1.5 rounded-full border-orange-500/60 shadow-xl">
+  <div id="interaction-prompt" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 transition-all duration-200 transform scale-95 flex items-center gap-2 glass-panel px-3.5 py-1.5 rounded-full border-orange-500/60 shadow-xl">
     <span id="prompt-input-badge" class="w-4 h-4 rounded-full bg-orange-600 flex items-center justify-center font-black text-white text-[10px] animate-pulse">👆</span>
     <span id="prompt-action-text" class="text-xs font-bold text-slate-100">調查現場</span>
   </div>
 
-  <div id="dialogue-box" class="fixed safe-bottom left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-xl z-40 pointer-events-none opacity-0 translate-y-6 transition-all duration-300 flex flex-col" role="region">
-    <div id="dialogue-panel-card" class="glass-panel p-2.5 sm:p-3 rounded-2xl border-orange-400/40 relative shadow-2xl flex flex-col transition-colors duration-200">
+  <!-- 對話框已調整避讓距離，避免在手機橫屏下遮擋左側搖桿與右側按鈕 -->
+  <div id="dialogue-box" class="fixed bottom-24 sm:bottom-6 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-xl z-40 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 flex flex-col" role="region">
+    <div id="dialogue-panel-card" class="glass-panel p-3 rounded-2xl border-orange-400/40 relative shadow-2xl flex flex-col transition-colors duration-200 cursor-pointer">
       <div class="flex items-center justify-between mb-1 border-b border-slate-700/60 pb-1 shrink-0">
         <div class="flex items-center gap-2">
           <div id="dialogue-avatar" class="w-7 h-7 rounded-xl bg-orange-600/20 border border-orange-400/60 flex items-center justify-center text-sm shadow-inner">🧑‍💼</div>
@@ -209,7 +224,7 @@
     </div>
   </div>
 
-  <!-- CCTV 監控回放介面（針對手機橫屏重構：雙欄自適應，高度絕不溢出） -->
+  <!-- CCTV 監控回放介面 -->
   <div id="cctv-modal" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-md flex items-center justify-center p-2 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" tabindex="-1">
     <div class="glass-panel w-full max-w-2xl max-h-[95dvh] rounded-3xl p-3 border-emerald-500/50 flex flex-col justify-between relative shadow-2xl overflow-hidden">
       <div class="shrink-0 w-full flex items-center justify-between pb-1.5 border-b border-slate-700/80 mb-1.5">
@@ -476,7 +491,7 @@
               <div class="text-[10px] text-purple-300">中六B班受害學生</div>
             </div>
           </div>
-          <p class="text-[11px] text-slate-300 leading-relaxed">詠蕎背負拔尖升學焦慮，展霆面臨學界賽膝傷淘汰危機。兩人在重壓下被「草本提神止痛」的謊言誘騙，誘發急性肌陣攣抽搐送院。</p>
+          <p class="text-[11px] text-slate-300 leading-relaxed">詠蕎背負拔尖升學焦慮，展霆面臨學界賽膝傷淘汰危機。兩人在重壓下被「草本提神止痛」的謊言誘騙，吸入依托咪酯後誘發急性肌陣攣抽搐送院。</p>
         </div>
 
         <div class="glass-panel p-2.5 rounded-xl border-rose-500/40 bg-rose-950/20 flex flex-col">
@@ -487,7 +502,7 @@
               <div class="text-[10px] text-rose-300">校外主謀與校內接應</div>
             </div>
           </div>
-          <p class="text-[11px] text-slate-300 leading-relaxed">利用 17 號儲物櫃死信箱散布毒品，並指使校內跑腿偷拍學生全身抽搐的痛苦慘狀，企圖以毀滅前途為由實施高額勒索。</p>
+          <p class="text-[11px] text-slate-300 leading-relaxed">利用 17 號儲物櫃死信箱散布依托咪酯毒品，並指使校內跑腿偷拍學生全身抽搐的痛苦慘狀，企圖以毀滅前途為由實施高額勒索。</p>
         </div>
       </div>
     </div>
@@ -507,12 +522,17 @@
       </h2>
       <p class="text-xs text-slate-300 leading-relaxed mb-3.5 text-left bg-slate-900/80 p-2.5 sm:p-3 rounded-2xl border border-slate-800">
         放學後的咪制書院接連發生兩起嚴重急性中毒休克事件。拔尖生<strong class="text-amber-300">岑詠蕎</strong>在模擬試途中劇烈肌陣攣抽搐倒地；同一時間，籃球隊長<strong class="text-cyan-300">霍展霆</strong>亦在更衣室窒息休克。<br><br>
-        校舍已被緊急封鎖，調查員梁澤銘受託搜集客觀物證。排查閉路電視、提取化驗殘留物、截獲幕後通聯音軌——查明真相，在悲劇重演前挽救受害者。
+        校舍已被緊急封鎖，特約安全調查員梁澤銘受託搜集客觀物證。排查閉路電視、提取化驗殘留物、截獲幕後通聯音軌——查明真相，在悲劇重演前挽救受害者。
       </p>
 
-      <button id="btn-start-game" class="w-full max-w-xs py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 text-white font-black text-xs sm:text-sm tracking-wider shadow-[0_0_25px_rgba(249,115,22,0.5)] active:scale-95 transition cursor-pointer">
-        進入大堂展開搜查
-      </button>
+      <div class="w-full max-w-xs flex flex-col gap-2">
+        <button id="btn-start-game" class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 text-white font-black text-xs sm:text-sm tracking-wider shadow-[0_0_25px_rgba(249,115,22,0.5)] active:scale-95 transition cursor-pointer">
+          展開全新搜查
+        </button>
+        <button id="btn-resume-game" class="hidden w-full py-2 rounded-2xl bg-slate-800 border border-emerald-500 text-emerald-300 font-bold text-xs tracking-wider active:scale-95 transition">
+          📂 讀取存檔繼續調查 (<span id="saved-stage-label">進度 1/7</span>)
+        </button>
+      </div>
 
       <div class="mt-2 flex items-center justify-center gap-3 text-[11px] text-slate-400 font-mono">
         <span>左下搖桿移動</span>
@@ -547,7 +567,7 @@
               <strong class="text-amber-300">雷霆收網：</strong>現場雙試管顯色化驗及時確診毒物為受《危險藥物條例》嚴格管制之麻醉藥<strong>「依托咪酯」</strong>。天台截獲之跑腿通聯錄音與閉路電視 16:40:32 死信箱畫面，使警方迅速在校外拘捕幕後調劑師與涉案跑腿，徹底粉碎利用抽搐影片勒索學生的罪行。
             </div>
             <div>
-              <strong class="text-cyan-300">精準施救：</strong>醫院第一時間獲得化驗報告，精準使用拮抗藥物，岑詠蕎與霍展霆的急性肌陣攣已平息，徹底脫離生命危險。
+              <strong class="text-cyan-300">精準施救：</strong>醫院第一時間獲得化驗報告，精準使用拮抗處置，岑詠蕎與霍展霆的急性肌陣攣抽搐已平息，徹底脫離生命危險。
             </div>
           </div>
 
@@ -569,7 +589,7 @@
           </div>
 
           <div class="text-[11px] text-orange-300 bg-orange-950/30 p-2 rounded-xl border border-orange-500/30 leading-relaxed">
-            任何宣稱「提神、解壓、無害」的偽裝煙油皆是陷阱。依托咪酯受《危險藥物條例》嚴格管轄。守護校園，牢記<strong>【毒品咪制！】</strong>。
+            任何宣稱「提神、解壓、無害」的偽裝煙油皆是毒品陷阱。依托咪酯受《危險藥物條例》嚴格管轄。守護校園，牢記<strong>【毒品咪制！】</strong>。
           </div>
         </div>
       </div>
@@ -808,6 +828,7 @@
 
     const sound = new RetroSoundEngine();
     const TOTAL_CLUES = 7;
+    const SAVE_STORAGE_KEY = "twilight_echoes_save_data";
 
     const GAME_STATE = {
       started: false,
@@ -831,6 +852,27 @@
       cctvProgress: 20
     };
 
+    function saveGameProgress() {
+      try {
+        const payload = {
+          questStage: GAME_STATE.questStage,
+          cluesFound: Array.from(GAME_STATE.cluesFound),
+          currentFloor: GAME_STATE.currentFloor,
+          hasCctvClue: GAME_STATE.hasCctvClue,
+          hasIdentifiedEtomidate: GAME_STATE.hasIdentifiedEtomidate
+        };
+        localStorage.setItem(SAVE_STORAGE_KEY, JSON.stringify(payload));
+      } catch(e) {}
+    }
+
+    function checkSavedProgress() {
+      try {
+        const raw = localStorage.getItem(SAVE_STORAGE_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch(e) { return null; }
+    }
+
     const CLUES_DATA = {
       clue_gym_fok: {
         id: "clue_gym_fok",
@@ -840,9 +882,9 @@
         icon: "🩹",
         pos: { x: -9.5, y: 1.25, z: 4.0 },
         floor: 1,
-        shortDesc: "更衣室夾縫起獲摔裂的電子煙彈，殘油泛淡紫色。便條利用展霆膝傷誘騙其吸食，並指涉中六B班岑詠蕎。",
+        shortDesc: "更衣室夾縫起獲摔裂的電子煙彈，殘油泛淡紫色。便條利用展霆膝傷誘騙其吸食依托咪酯，並指涉中六B班岑詠蕎。",
         fullDesc: "更衣室長椅夾縫起獲一枚摔裂的電子煙彈，殘存液體呈淡紫色，旁邊遺留著球隊冰敷袋與破損護膝。長椅壓著打印便條：『膝傷痛就抽兩口，保證止痛放鬆、學界照樣上場。你同中六B班岑詠蕎一樣，何必死頂？——調劑師』。",
-        forensic: "煙嘴檢出特殊酯類化合物氣味，以高黏度丙二醇為載體，具強烈中樞麻醉抑制性質。"
+        forensic: "煙嘴檢出特殊咪唑酯類化合物氣味，以高黏度丙二醇為載體，具強烈中樞麻醉與中樞神經抑制毒性。"
       },
       clue_desk: {
         id: "clue_desk",
@@ -852,9 +894,9 @@
         icon: "📝",
         pos: { x: -8.5, y: 5.05, z: -7.5 },
         floor: 2,
-        shortDesc: "桌面漏出深紫油液（樣品A）。試卷被筆尖刺穿；手機草稿滿是手指痙攣抽搐時打出的亂碼與求救暗語。",
+        shortDesc: "桌面漏出深紫油液（樣品A）。試卷被筆尖刺穿；手機草稿滿是吸入依托咪酯後手部痙攣抽搐打出的亂碼與求救暗語。",
         fullDesc: "課桌上漏出一灘未乾涸的油性紫液（樣品 A）。模擬試卷後半段被筆尖失控撕破，呈現劇烈肌陣攣顫抖痕跡；手機停留在未鎖草稿，字句因手指抽搐失控而錯亂：『心跳快到就爆……手手手震gggggg……停唔到……根本唔唔係草本精油……17號……密碼……草……大麻……420……救命……叫救護車快d……asdhjffffffffffffff……』。",
-        forensic: "桌面漏液呈淡紫油狀，高脂溶性，微酸性。已提取封存為【樣品 A】以供化驗。"
+        forensic: "桌面漏液呈淡紫油狀，高脂溶性，微酸性。已提取封存為【樣品 A】以供進一步毒理化驗。"
       },
       clue_cctv: {
         id: "clue_cctv",
@@ -864,9 +906,9 @@
         icon: "📹",
         pos: { x: 2.0, y: 1.2, z: -7.5 },
         floor: 1,
-        shortDesc: "調取監控畫面，鎖定嫌疑人於 16:40:32 在 2F 走廊 17 號儲物櫃縫隙投放深色改裝物證。",
+        shortDesc: "調取監控畫面，鎖定嫌疑人於 16:40:32 在 2F 走廊 17 號儲物櫃縫隙投放深色改裝依托咪酯物證。",
         fullDesc: "調取 CAM_02 監控錄像，在 16:40:32 成功截獲關鍵幀：一名頭戴黑色鴨舌帽的可疑人員在 2F 走廊徘徊，並將深色包裝物件快速塞入 17 號儲物櫃死信箱暗格。此物證直接鎖定 17 號櫃為犯罪交收核心節點。",
-        forensic: "嫌疑人身材特徵與投放動作已被影像固定，時間戳與兩名學生發病倒地時間高度吻合。"
+        forensic: "嫌疑人身材特徵與投放動作已被影像固定，時間戳與兩名學生突發肌陣攣倒地時間高度吻合。"
       },
       clue_corridor: {
         id: "clue_corridor",
@@ -876,9 +918,9 @@
         icon: "🏷️",
         pos: { x: 5.5, y: 5.05, z: 0.1 },
         floor: 2,
-        shortDesc: "解開 17 號櫃。起獲代號交收單，載明新一批特調原液已暫存於化學室外排水管支架暗角。",
-        fullDesc: "輸入大麻黑市代號【420】解鎖儲物櫃。暗格夾層起獲防窺印刷代號單：『咪制書院節點：試用裝已投放目標儲物格。下批特調原液已暫存【化學室外排水管支架暗角】，閱後即焚。』",
-        forensic: "紙張帶有特種油墨，邊緣檢出揮發性酯類氣味殘留。"
+        shortDesc: "解開 17 號櫃。起獲代號交收單，載明新一批特調依托咪酯原液已暫存於化學室外排水管支架暗角。",
+        fullDesc: "輸入黑市代號【420】解鎖儲物櫃。暗格夾層起獲防窺印刷代號單：『咪制書院節點：試用裝已投放目標儲物格。下批特調原液已暫存【化學室外排水管支架暗角】，閱後即焚。』",
+        forensic: "紙張帶有特種油墨，邊緣檢出揮發性咪唑羧酸酯特異氣味殘留。"
       },
       clue_pipe_stash: {
         id: "clue_pipe_stash",
@@ -888,9 +930,9 @@
         icon: "🧪",
         pos: { x: 6.5, y: 5.05, z: 5.2 },
         floor: 2,
-        shortDesc: "搜出密封改裝煙彈（樣品B），標籤偽裝為草本提神物。兩份樣品已齊備，可前往化驗室比對。",
+        shortDesc: "搜出密封改裝煙彈（樣品B），標籤偽裝為草本提神物。兩份樣品已齊備，可前往化驗室比對依托咪酯成分。",
         fullDesc: "在排水管固定鐵架暗角搜出未拆封的真空包裝煙彈（樣品 B）。外包裝印著極具迷惑性的『100%草本提取、無焦油極速提神』標籤，內部液體透著微紫色澤。",
-        forensic: "煙彈抽取液揮發特徵與課桌漏液完全一致，具備高濃度中樞抑制藥物物理性質。"
+        forensic: "煙彈抽取液揮發特徵與課桌漏液完全一致，具備高濃度管制危險藥物依托咪酯之物理性質。"
       },
       clue_spot_plate: {
         id: "clue_spot_plate",
@@ -900,7 +942,7 @@
         icon: "🔬",
         pos: { x: 9.0, y: 5.05, z: 7.0 },
         floor: 2,
-        shortDesc: "排除氯胺酮，雙試管強陽性確診兩份樣品均為受嚴格管制之「依托咪酯」。天台方向傳來急促震動鈴聲。",
+        shortDesc: "排除氯胺酮，雙試管強陽性確診兩份樣品均為受嚴格管制之麻醉藥「依托咪酯」。天台方向傳來急促震動鈴聲。",
         fullDesc: "雙試管交叉比對結果出爐：氯胺酮試劑呈陰性無色；而第二組特異顯色反應瞬間轉化為深紫褐色沉澱。兩份樣品均含有高濃度受嚴格管制的麻醉危險藥物「依托咪酯」。此時，頭頂天台傳來一陣急促的手機震動鈴聲。",
         forensic: "咪唑羧酸酯特異顯色呈強陽性深紫褐色沉澱，證實為超量管制危險藥物依托咪酯。"
       },
@@ -912,7 +954,7 @@
         icon: "📱",
         pos: { x: -5.0, y: 8.85, z: -2.5 },
         floor: 3,
-        shortDesc: "接聽校內跑腿遺留之工作機並錄音，成功截獲調劑師企圖以學生抽搐影片敲詐勒索之核心罪證。",
+        shortDesc: "接聽校內跑腿遺留之工作機並錄音，成功截獲調劑師企圖以學生吸入依托咪酯後的抽搐影片敲詐勒索之核心罪證。",
         fullDesc: "天台排風箱後起獲震動中的暗網通聯手機。接通電話並自動錄音：『喂？！做咩咁耐先聽電話？！咪制書院門口點解會有救護車同差人封鎖？！阿強，咪撚扮啞！霍展霆同岑詠蕎食咗批貨之後，倒地抽搐嘅片你拍低咗未？！……聽住，條片即刻傳上網盤！如果佢哋屋企唔肯畀贖金買解藥，今晚十二點前我就將佢哋口吐白沫抽筋嘅片發去升學委員會同全港中學，等佢哋前途盡毀！……喂？點解唔出聲？你……你唔係阿強？！仆街——！』通話隨即被對方切斷。",
         forensic: "通話音頻、基地台信號與暗網帳號已由後方技術組全面鎖定。"
       }
@@ -934,7 +976,7 @@
       notice_board: {
         id: "notice_board", name: "1F 校園抗毒宣傳板", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
         desc: "【校園抗毒公告：警惕偽裝煙彈與黑話陷阱】\n• 警惕「依托咪酯」：常被偽裝成提神精油或草本煙彈。濫用會導致急性肌陣攣抽搐、思維斷片、成癮猝死。\n• 黑市暗語警示：不法分子常借用代號掩飾交易，例如大麻在黑市常以『草』或數字『420』代稱。",
-        monologue: "（展板介紹了依托咪酯的中毒特徵，還提到大麻在黑市常用的數字代號是 420……現在新型毒品的偽裝手法真是層出不窮。）"
+        monologue: "（展板詳細介紹了依托咪酯的中毒特徵，還提到大麻在黑市常用的數字代號是 420……現在新型毒品的偽裝手法真是層出不窮。）"
       },
       trophy_case: {
         id: "trophy_case", name: "1F 大堂學界榮譽陳列櫃", pos: { x: -2.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🏆",
@@ -944,17 +986,17 @@
       vending_machine: {
         id: "vending_machine", name: "1F 自動販賣機", pos: { x: 8.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🥤",
         desc: "販賣機陳列著烏龍茶與能量飲料。側面貼著便條：『DSE 加油！』",
-        monologue: "（考生面對重壓容易焦慮……偽裝成『無害提神』的危險藥物正是藉此滲透校園。）"
+        monologue: "（考生面對重壓容易焦慮……偽裝成『無害提神』的依托咪酯正是藉此滲透校園。）"
       },
       lost_and_found: {
         id: "lost_and_found", name: "2F 走廊失物認領箱", pos: { x: -1.0, y: 5.0, z: 2.5 }, floor: 2, icon: "📦",
         desc: "角落的失物箱。裡面堆放著外套與水杯，上方貼著：『失物可領，莫失青春』。",
-        monologue: "（丟失的物品尚能找回，若神經中樞受損，代價無法挽回。）"
+        monologue: "（丟失的物品尚能找回，若神經中樞受到依托咪酯永久受損，代價無法挽回。）"
       },
       lab_microscope: {
         id: "lab_microscope", name: "2F 實驗室顯微鏡台", pos: { x: 12.0, y: 5.0, z: 7.0 }, floor: 2, icon: "🔬",
         desc: "實驗桌上的雙目顯微鏡旁壓著《化學實驗守則》。載玻片整齊排列。",
-        monologue: "（嚴密的化學分析，能讓任何偽裝的依托咪酯原形畢露。）"
+        monologue: "（嚴密的化學分析，能讓任何偽裝成提神物的依托咪酯原形畢露。）"
       },
       rooftop_telescope: {
         id: "rooftop_telescope", name: "3F 天台折射望遠鏡", pos: { x: 8.0, y: 8.8, z: -6.5 }, floor: 3, icon: "🔭",
@@ -964,7 +1006,7 @@
       rooftop_guitar: {
         id: "rooftop_guitar", name: "3F 天台角落音箱設備", pos: { x: -8.0, y: 8.8, z: 4.5 }, floor: 3, icon: "🎸",
         desc: "一把缺弦的吉他倚在音箱旁。這裡原是放學後學生樂隊排練的角落。",
-        monologue: "（原本充滿青春活力的角落，差點淪為不法分子作惡的陰暗跳板。）"
+        monologue: "（原本充滿青春活力的角落，差點淪為不法分子散布毒品的陰暗跳板。）"
       }
     };
 
@@ -1320,7 +1362,7 @@
       } else if (GAME_STATE.questStage === 3) {
         targetPos = CLUES_DATA.clue_cctv.pos; targetFloor = 1;
       } else if (GAME_STATE.questStage === 4) {
-        targetPos = CLUES_DATA.clue_corridor.pos; targetFloor = 2; // 正確指向 17 號儲物櫃
+        targetPos = CLUES_DATA.clue_corridor.pos; targetFloor = 2;
       } else if (GAME_STATE.questStage === 5) {
         targetPos = CLUES_DATA.clue_pipe_stash.pos; targetFloor = 2;
       } else if (GAME_STATE.questStage === 6) {
@@ -1375,7 +1417,6 @@
       const trophyMesh = new THREE.Mesh(new THREE.BoxGeometry(3.6, 2.2, 0.8), mats.darkMetal);
       trophyMesh.position.set(-2.0, 1.1, -7.5); floor1Group.add(trophyMesh);
 
-      // 1F 保安終端
       const cctvTerminalMesh = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.3, 0.8), mats.cctvTerminalMat);
       cctvTerminalMesh.position.set(2.0, 0.65, -7.5); floor1Group.add(cctvTerminalMesh);
       const cctvScreenMesh = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.8, 0.1), new THREE.MeshBasicMaterial({ color: 0x10b981 }));
@@ -1494,7 +1535,7 @@
       vent.position.set(-5.0, 8.4, -3.5); floor3Group.add(vent);
 
       spawnMarker('clue_gym_fok', -9.5, 1.25, 4.0, 1, 'clue', '🩹');
-      spawnMarker('cctv_terminal', 2.0, 1.2, -7.5, 1, 'clue', '📹'); // 實質物證標記
+      spawnMarker('cctv_terminal', 2.0, 1.2, -7.5, 1, 'clue', '📹');
       spawnMarker('notice_board', 5.5, 1.2, -8.0, 1, 'egg', '📌');
       spawnMarker('trophy_case', -2.0, 1.2, -7.5, 1, 'egg', '🏆');
       spawnMarker('vending_machine', 8.0, 1.2, -7.5, 1, 'egg', '🥤');
@@ -1503,7 +1544,7 @@
       spawnMarker('locker_11', -2.0, 5.0, 0.1, 2, 'locker', '11');
       spawnMarker('locker_13', 0.5, 5.0, 0.1, 2, 'locker', '13');
       spawnMarker('locker_15', 3.0, 5.0, 0.1, 2, 'locker', '15');
-      spawnMarker('clue_corridor', 5.5, 5.05, 0.1, 2, 'locker', '17'); // 17 號櫃
+      spawnMarker('clue_corridor', 5.5, 5.05, 0.1, 2, 'locker', '17');
       spawnMarker('locker_19', 7.5, 5.0, 0.1, 2, 'locker', '19');
 
       spawnMarker('clue_pipe_stash', 6.5, 5.05, 5.2, 2, 'clue', '🧪');
@@ -1641,6 +1682,21 @@
       joystickCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
     }
 
+    function updateJoystickPosition(clientX, clientY) {
+      const jThumb = document.getElementById('joystick-thumb');
+      const maxDist = 42;
+      const dx = clientX - joystickCenter.x;
+      const dy = clientY - joystickCenter.y;
+      const dist = Math.hypot(dx, dy);
+      const clamped = Math.min(dist, maxDist);
+      const angle = Math.atan2(dy, dx);
+      const tx = Math.cos(angle) * clamped;
+      const ty = Math.sin(angle) * clamped;
+      if (jThumb) jThumb.style.transform = `translate(${tx}px, ${ty}px)`;
+      touchJoystickInput.x = tx / maxDist;
+      touchJoystickInput.z = ty / maxDist;
+    }
+
     let rightTouchId = null, lastTouchX = 0;
     let lastInteractionTimestamp = 0;
     function canTriggerInput() {
@@ -1684,7 +1740,7 @@
       }
 
       if (dialogueBox) {
-        dialogueBox.classList.remove('pointer-events-none', 'opacity-0', 'translate-y-6');
+        dialogueBox.classList.remove('pointer-events-none', 'opacity-0', 'translate-y-4');
         dialogueBox.classList.add('pointer-events-auto', 'opacity-100', 'translate-y-0');
       }
       sound.playDialogueBlip();
@@ -1693,7 +1749,7 @@
     function closeDialogue() {
       if (dialogueBox) {
         dialogueBox.classList.remove('pointer-events-auto', 'opacity-100', 'translate-y-0');
-        dialogueBox.classList.add('pointer-events-none', 'opacity-0', 'translate-y-6');
+        dialogueBox.classList.add('pointer-events-none', 'opacity-0', 'translate-y-4');
       }
       GAME_STATE.isDialogueOpen = false;
       if (GAME_STATE.dialogueCallback) {
@@ -1741,7 +1797,11 @@
         let actionLabel = "調查現場";
         if (closestObj.type === 'clue') {
           if (closestObj.data.id === 'clue_corridor') {
-            actionLabel = GAME_STATE.cluesFound.has('clue_corridor') ? "已解鎖：17 號儲物櫃" : "排查：17 號儲物櫃";
+            if (GAME_STATE.questStage < 4) {
+              actionLabel = "檢視：2F 儲物櫃長廊";
+            } else {
+              actionLabel = GAME_STATE.cluesFound.has('clue_corridor') ? "已解鎖：17 號儲物櫃" : "排查：17 號儲物櫃";
+            }
           } else if (closestObj.data.id === 'clue_cctv') {
             actionLabel = GAME_STATE.cluesFound.has('clue_cctv') ? "已鎖定：監控影像存檔" : "調取：閉路電視回放";
           } else if (GAME_STATE.cluesFound.has(closestObj.data.id)) {
@@ -1750,7 +1810,7 @@
             actionLabel = `搜查：${closestObj.data.name.split(' ')[0]}`;
           }
         } else if (closestObj.type === 'dummy_locker') {
-          actionLabel = `排查：${closestObj.data.num} 號櫃`;
+          actionLabel = GAME_STATE.questStage < 4 ? "檢視：儲物櫃" : `排查：${closestObj.data.num} 號櫃`;
         } else if (closestObj.type === 'easter_egg') {
           actionLabel = `檢視：${closestObj.data.name.split(' ')[0]}`;
         }
@@ -1768,6 +1828,7 @@
       const elem = document.getElementById('hud-current-objective');
       if (elem) elem.textContent = text;
       updateObjectiveArrow();
+      saveGameProgress();
     }
 
     function collectClue(clueId) {
@@ -1775,6 +1836,7 @@
         GAME_STATE.cluesFound.add(clueId);
         sound.playClueFound();
         updateClueBadges();
+        saveGameProgress();
       }
     }
 
@@ -1828,10 +1890,17 @@
         return;
       }
 
+      /* 修復：儲物櫃前置邏輯鎖。在調查詠蕎課桌前，不會未卜先知得知 17 號與死信箱 */
       if (target.type === 'dummy_locker') {
+        if (GAME_STATE.questStage < 4) {
+          startDialogueQueue([
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "現場勘查", text: "（走廊兩側是學生的日常儲物櫃。未獲取明確線索前逐一翻查只會浪費時間。先按指引搜查班房課桌。）" }
+          ]);
+          return;
+        }
         startDialogueQueue([
           { type: "narration", speaker: "儲物櫃排查紀錄", role: "儲物櫃翻查", text: target.data.desc },
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "調查分析", text: `（這是 ${target.data.num} 號櫃。鎖具正常，無毒品死信箱痕跡。鎖定目標應為 17 號櫃。）` }
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "調查分析", text: `（這是 ${target.data.num} 號櫃。鎖具正常，無毒品死信箱痕跡。閉路電視與草稿指涉的交收目標應為 17 號櫃。）` }
         ]);
         return;
       }
@@ -1869,14 +1938,14 @@
           updateObjective("沿東側階梯登上 2F，搜查中六B班房岑詠蕎的課桌 (2/7)");
           startDialogueQueue([
             { type: "narration", speaker: "物證發現", role: "更衣室長椅", text: "長椅夾縫起獲摔裂的電子煙彈，煙油呈淡紫色。長椅上壓著一張打印便條：『膝傷痛就抽兩口，保證止痛放鬆、學界照樣上場。你同中六B班岑詠蕎一樣，何必死頂？——調劑師』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果分析", text: "（展霆面臨學界賽膝傷淘汰，犯罪者抓住他的焦慮誘騙其吸食。便條更直接提到中六B班岑詠蕎！東側階梯封鎖已解除，立刻上 2F 查看詠蕎的課桌。）" }
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果分析", text: "（展霆面臨學界賽膝傷淘汰，犯罪者抓住他的焦慮誘騙其吸食依托咪酯。便條更直接提到中六B班岑詠蕎！東側階梯封鎖已解除，立刻上 2F 查看詠蕎的課桌。）" }
           ]);
         } else if (clue.stage === 2) {
           collectClue(clue.id);
           GAME_STATE.questStage = 3;
           updateObjective("前往 1F 大堂保安監控終端，回放 2F 走廊閉路電視 (3/7)");
           startDialogueQueue([
-            { type: "narration", speaker: "物證發現", role: "中六B班課桌", text: "課桌漏出深紫色油液（樣品 A）。答題紙被筆尖痙攣刺穿；手機螢幕停留在未鎖草稿，滿是手指劇烈抽搐打出的亂碼：『心跳快到就爆……手手手震gggggg……停唔到……根本唔唔係草本精油……17號……密碼……草……大麻……420……救命……快d……asdhjffffffffffffff……』" },
+            { type: "narration", speaker: "物證發現", role: "中六B班課桌", text: "課桌漏出深紫色油液（樣品 A）。答題紙被筆尖痙攣刺穿；手機螢幕停留在未鎖草稿，滿是手指因吸入依托咪酯劇烈抽搐打出的亂碼：『心跳快到就爆……手手手震gggggg……停唔到……根本唔唔係草本精油……17號……密碼……草……大麻……420……救命……快d……asdhjffffffffffffff……』" },
             { type: "monologue", speaker: "梁澤銘（心想）", role: "關鍵動向", text: "（詠蕎在意識模糊前打出了『17號』……嫌疑人顯然在利用儲物櫃作為死信箱！回到 1F 大堂保安監控終端，調取 2F 走廊錄像，查出嫌疑人究竟在何時投遞物證！）" }
           ]);
         } else if (clue.stage === 3) {
@@ -1889,7 +1958,7 @@
           updateObjective("進入 2F 理科實驗室，進行雙試管快篩化驗 (6/7)");
           startDialogueQueue([
             { type: "narration", speaker: "物證發現", role: "排水管暗角", text: "在排水管固定鐵架暗角搜出未開封的真空包裝煙彈（樣品 B），標籤印著『100%草本提取提神原液』，液體透著微紫光澤。" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "化驗準備", text: "（課桌漏液樣品 A 與暗角起獲的原裝煙彈樣品 B 齊備。進入旁邊的理科實驗室進行雙試管顯色交叉比對。）" }
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "化驗準備", text: "（課桌漏液樣品 A 與暗角起獲的原裝煙彈樣品 B 齊備。進入旁邊的理科實驗室進行雙試管顯色交叉比對，確診是否為依托咪酯。）" }
           ]);
         } else if (clue.stage === 6) {
           openLabModal();
@@ -1902,7 +1971,7 @@
           startDialogueQueue([
             { type: "call", speaker: "通話音軌錄取", role: "排風箱通聯手機", text: "『喂？！做咩咁耐先聽電話？！咪制書院門口點解會有救護車同差人封鎖？！阿強，咪撚扮啞！霍展霆同岑詠蕎食咗批貨之後，倒地抽搐嘅片你拍低咗未？！……聽住，條片即刻傳上網盤！如果佢哋屋企唔肯畀贖金買解藥，今晚十二點前我就將佢哋口吐白沫抽筋嘅片發去升學委員會同全港中學，等佢哋前途盡毀！……喂？點解唔出聲？你……你唔係阿強？！仆街——！』" },
             { type: "dialogue", speaker: "梁澤銘", role: "錄音存檔", text: "通話音軌已被完全錄取！對方的基地台信號與暗網帳號已由警方技術組同步鎖定。" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "定案整理", text: "（原來犯罪分子並非單純兜售毒品，而是引誘發病後偷拍抽搐影片實施敲詐勒索！全案 7 大物證已全部集齊。打開【📋 案件簿】的【思維宮殿定案】，提交報告並啟動雷霆收網！）" }
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "定案整理", text: "（原來犯罪分子並非單純兜售毒品，而是引誘吸食依托咪酯後偷拍抽搐影片實施敲詐勒索！全案 7 大物證已全部集齊。打開【📋 案件簿】的【思維宮殿定案】，提交報告並啟動雷霆收網！）" }
           ], () => {
             toggleNotebook();
             switchNotebookTab('mindpalace');
@@ -1993,7 +2062,7 @@
           suspectTag.style.top = `${((charY - 24) / h) * 100}%`;
         }
         if (logText) {
-          logText.innerHTML = "<strong class=\"text-rose-400\">【發現異常動向】</strong>一名戴黑色鴨舌帽的可疑人正在 17 號儲物櫃前停留，並將深色包裝物件塞入縫隙！";
+          logText.innerHTML = "<strong class=\"text-rose-400\">【發現異常動向】</strong>一名戴黑色鴨舌帽的可疑人正在 17 號儲物櫃前停留，並將深色包裝物件塞入死信箱縫隙！";
         }
       } else {
         if (suspectTag) suspectTag.classList.add('hidden');
@@ -2018,7 +2087,10 @@
         ]);
       } else {
         sound.playLockBuzzer();
-        alert("當前時間幀無異常人員活動。請拖動時間軸至可疑人物出現時再截圖取證！");
+        const logText = document.getElementById('cctv-log-text');
+        if (logText) {
+          logText.innerHTML = "<span class=\"text-rose-400 font-bold animate-pulse\">⚠️ 取證失敗：當前時間幀無異常黑影！請拖動時間軸至可疑人物投放物件時再截圖。</span>";
+        }
       }
     }
 
@@ -2067,7 +2139,7 @@
         updateObjective("搜查 2F 化學室外排水管支架暗角 (5/7)");
         startDialogueQueue([
           { type: "narration", speaker: "鎖具彈開", role: "17號儲物櫃", text: "輸入【4】【2】【0】，鎖芯應聲彈開。起獲暗格交收單：『咪制書院節點：試用裝已投放完畢。下批特調原液已暫存【化學室外排水管支架暗角】，速取銷毀。』" },
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "因果分析", text: "（涉案人果然將未拆封的原裝原液藏在化學室外排水管暗角，立即前往固定物證。）" }
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "因果分析", text: "（涉案人果然將未拆封的依托咪酯原液藏在化學室外排水管暗角，立即前往固定物證。）" }
         ]);
       } else {
         sound.playLockBuzzer();
@@ -2214,7 +2286,7 @@
       sound.playPhoneRing();
 
       startDialogueQueue([
-        { type: "narration", speaker: "化驗報告結論", role: "定性鑑證", text: "交叉顯色化驗確鑿：課桌殘留液與暗角煙彈均驗出高濃度管制麻醉危險藥物【依托咪酯】。所謂『草本提神』純屬謊言。" },
+        { type: "narration", speaker: "化驗報告結論", role: "定性鑑證", text: "交叉顯色化驗確鑿：課桌殘留液與暗角煙彈均驗出高濃度管制麻醉危險藥物【依托咪酯】。所謂『草本提神』純屬騙局謊言。" },
         { type: "monologue", speaker: "梁澤銘（心想）", role: "警覺", text: "（等等……頭頂天台傳來急促的手機震動聲！天台階梯封鎖已解除，立刻上去截獲設備！）" }
       ]);
     }
@@ -2341,7 +2413,7 @@
         sound.playDialogueBlip();
         const deduceHeader = document.getElementById('deduce-header');
         if (deduceHeader) {
-          deduceHeader.textContent = "❌ 定案邏輯有誤，請核對化驗結果與錄音動機！";
+          deduceHeader.textContent = "❌ 定案邏輯有誤，請核對依托咪酯化驗結果與勒索錄音！";
           deduceHeader.className = "text-xs font-bold text-rose-400 mb-1 animate-pulse";
         }
       }
@@ -2349,11 +2421,12 @@
 
     function handleRestartConfirm() {
       if (confirm("確定要重啟調查嗎？現場搜查進度將重新開始。")) {
+        try { localStorage.removeItem(SAVE_STORAGE_KEY); } catch(e) {}
         window.location.reload();
       }
     }
 
-    function startGame() {
+    function startGame(resume = false) {
       const title = document.getElementById('title-screen');
       if (title) title.style.display = 'none';
       GAME_STATE.started = true;
@@ -2367,6 +2440,31 @@
           screen.orientation.lock('landscape').catch(() => {});
         }
       } catch(e) {}
+
+      if (resume) {
+        const saved = checkSavedProgress();
+        if (saved) {
+          GAME_STATE.questStage = saved.questStage || 1;
+          GAME_STATE.cluesFound = new Set(saved.cluesFound || []);
+          GAME_STATE.currentFloor = saved.currentFloor || 1;
+          GAME_STATE.hasCctvClue = !!saved.hasCctvClue;
+          GAME_STATE.hasIdentifiedEtomidate = !!saved.hasIdentifiedEtomidate;
+          updateClueBadges();
+          updateStairBarriers();
+          updateFloorVisibility();
+
+          let resumeHint = "排查現場";
+          if (GAME_STATE.questStage === 2) resumeHint = "沿東側階梯登上 2F，搜查中六B班房岑詠蕎的課桌 (2/7)";
+          else if (GAME_STATE.questStage === 3) resumeHint = "前往 1F 大堂保安監控終端，回放 2F 走廊閉路電視 (3/7)";
+          else if (GAME_STATE.questStage === 4) resumeHint = "登上 2F 走廊，找出並解鎖 17 號儲物櫃 (4/7)";
+          else if (GAME_STATE.questStage === 5) resumeHint = "搜查 2F 化學室外排水管支架暗角 (5/7)";
+          else if (GAME_STATE.questStage === 6) resumeHint = "進入 2F 理科實驗室，進行雙試管快篩化驗 (6/7)";
+          else if (GAME_STATE.questStage === 7) resumeHint = "循著急促鈴聲登上 3F 天台，排查排風箱通聯手機 (7/7)";
+          else if (GAME_STATE.questStage === 8) resumeHint = "打開【案件簿】進入【思維宮殿】，定案並通報執法部門 (7/7)";
+          updateObjective(resumeHint);
+          return;
+        }
+      }
 
       setTimeout(() => {
         startDialogueQueue([
@@ -2383,7 +2481,8 @@
     }
 
     function setupEventListeners() {
-      document.getElementById('btn-start-game')?.addEventListener('click', startGame);
+      document.getElementById('btn-start-game')?.addEventListener('click', () => startGame(false));
+      document.getElementById('btn-resume-game')?.addEventListener('click', () => startGame(true));
       document.getElementById('btn-restart-hud')?.addEventListener('click', handleRestartConfirm);
       document.getElementById('btn-cam-cycle')?.addEventListener('click', cycleCameraPreset);
       document.getElementById('btn-open-notebook')?.addEventListener('click', toggleNotebook);
@@ -2445,7 +2544,10 @@
       document.getElementById('tab-btn-profiles')?.addEventListener('click', () => switchNotebookTab('profiles'));
       document.getElementById('btn-submit-deduction')?.addEventListener('click', submitFinalDeduction);
 
-      document.getElementById('btn-restart-game')?.addEventListener('click', () => window.location.reload());
+      document.getElementById('btn-restart-game')?.addEventListener('click', () => {
+        try { localStorage.removeItem(SAVE_STORAGE_KEY); } catch(e) {}
+        window.location.reload();
+      });
       document.getElementById('btn-force-portrait-continue')?.addEventListener('click', () => {
         const overlay = document.getElementById('landscape-orientation-overlay');
         if (overlay) overlay.style.display = 'none';
@@ -2476,16 +2578,19 @@
         updateJoystickCenter();
       }, { passive: true });
 
+      // 核心修復：優化虛擬搖桿多點觸控，避免滑動時意外脫靶
       const jContainer = document.getElementById('touch-joystick-container');
       const jThumb = document.getElementById('joystick-thumb');
 
       if (jContainer && jThumb) {
         jContainer.addEventListener('touchstart', (e) => {
+          e.preventDefault();
           if (joystickActive) return;
           const touch = e.changedTouches ? e.changedTouches[0] : e;
           joystickActive = true;
           joystickTouchId = touch.identifier ?? 'mouse';
           updateJoystickCenter();
+          updateJoystickPosition(touch.clientX, touch.clientY);
         }, { passive: false });
 
         window.addEventListener('touchmove', (e) => {
@@ -2495,23 +2600,30 @@
             for (let i = 0; i < e.changedTouches.length; i++) {
               if (e.changedTouches[i].identifier === joystickTouchId) { touch = e.changedTouches[i]; break; }
             }
+          } else {
+            touch = e;
           }
           if (!touch) return;
-          const maxDist = 44;
-          const dx = touch.clientX - joystickCenter.x, dy = touch.clientY - joystickCenter.y;
-          const dist = Math.hypot(dx, dy);
-          const clamped = Math.min(dist, maxDist);
-          const angle = Math.atan2(dy, dx);
-          const tx = Math.cos(angle) * clamped, ty = Math.sin(angle) * clamped;
-          jThumb.style.transform = `translate(${tx}px, ${ty}px)`;
-          touchJoystickInput.x = tx / maxDist;
-          touchJoystickInput.z = ty / maxDist;
+          if (e.cancelable) e.preventDefault();
+          updateJoystickPosition(touch.clientX, touch.clientY);
         }, { passive: false });
 
-        const endJoystick = () => {
-          joystickActive = false; joystickTouchId = null;
-          touchJoystickInput.x = 0; touchJoystickInput.z = 0;
-          if (jThumb) jThumb.style.transform = `translate(0px, 0px)`;
+        const endJoystick = (e) => {
+          if (!joystickActive) return;
+          if (e.changedTouches) {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+              if (e.changedTouches[i].identifier === joystickTouchId) {
+                joystickActive = false; joystickTouchId = null;
+                touchJoystickInput.x = 0; touchJoystickInput.z = 0;
+                if (jThumb) jThumb.style.transform = `translate(0px, 0px)`;
+                break;
+              }
+            }
+          } else {
+            joystickActive = false; joystickTouchId = null;
+            touchJoystickInput.x = 0; touchJoystickInput.z = 0;
+            if (jThumb) jThumb.style.transform = `translate(0px, 0px)`;
+          }
         };
         window.addEventListener('touchend', endJoystick, { passive: false });
         window.addEventListener('touchcancel', endJoystick, { passive: false });
@@ -2648,6 +2760,14 @@
       setupEventListeners();
       updateJoystickCenter();
       updateClueBadges();
+
+      const saved = checkSavedProgress();
+      if (saved && saved.questStage > 1) {
+        const resumeBtn = document.getElementById('btn-resume-game');
+        const stageLbl = document.getElementById('saved-stage-label');
+        if (resumeBtn) resumeBtn.classList.remove('hidden');
+        if (stageLbl) stageLbl.textContent = `進度 ${saved.questStage}/7`;
+      }
 
       if (init3DWorld()) {
         gameLoop();
