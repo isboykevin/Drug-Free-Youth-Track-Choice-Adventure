@@ -138,7 +138,7 @@
       </div>
       <div class="glass-panel px-3 py-1.5 rounded-2xl text-xs text-amber-100 flex items-center gap-2 shadow-md border-l-4 border-l-orange-500">
         <span>🎯</span>
-        <div class="truncate">目標：<span id="hud-current-objective" class="text-amber-300 font-bold">跟隨綠色導標，排查體育更衣室外霍展霆遺物 (1/6)</span></div>
+        <div class="truncate">目標：<span id="hud-current-objective" class="text-amber-300 font-bold">跟隨綠色導標，排查體育更衣室外霍展霆遺留物 (1/6)</span></div>
       </div>
     </div>
 
@@ -220,10 +220,10 @@
 
       <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700/80 w-full mb-3 text-center">
         <p class="text-xs text-slate-300 leading-relaxed mb-1">
-          詠蕎課桌手機最後留下的未發出文字：<br>
-          <span class="text-amber-300 font-bold font-mono text-sm">「……17號櫃……黑話420……救我……」</span>
+          詠蕎課桌手機草稿（因急性手震而殘缺錯亂）：<br>
+          <span class="text-amber-300 font-bold font-mono text-sm">「……17號……密碼……係……大麻……救我……」</span>
         </p>
-        <div class="text-[11px] text-cyan-300 font-mono">（提示：1F 中庭抗毒宣傳板記錄了各類黑話代號）</div>
+        <div class="text-[11px] text-cyan-300 font-mono">（提示：1F 中庭抗毒宣傳板記錄了各類黑話代號與數字暗語）</div>
       </div>
 
       <div class="flex items-center justify-center gap-4 my-2">
@@ -793,8 +793,8 @@
         icon: "📝",
         pos: { x: -8.5, y: 5.05, z: -7.5 },
         floor: 2,
-        shortDesc: "課桌漏出深紫油液（樣品A）。答題紙末尾呈劇烈痙攣劃痕；手機未發出文字提及『17號櫃』與『黑話420』。",
-        fullDesc: "課桌上漏出一灘未乾涸的油性紫液（樣品 A）。模擬試卷的數學公式在後半段突然化為劇烈顫抖的撕裂劃痕；旁邊手機停留在未鎖的備忘錄草稿：『心跳好快……手腳完全唔受控咁抽搐……呢個根本唔係草本精油……17號櫃……黑話420……邊個可以救我……』。",
+        shortDesc: "課桌漏出深紫油液（樣品A）。答題紙呈痙攣撕裂劃痕；手機殘留斷續草稿：『……密碼係……大麻……17……』。",
+        fullDesc: "課桌上漏出一灘未乾涸的油性紫液（樣品 A）。模擬試卷後半段被筆尖失控撕破，呈現劇烈肌陣攣顫抖痕跡；手機停留在未鎖草稿，字句因手指抽搐而錯亂截斷：『心跳……好快……手…手震停唔到……唔係草本……17號……密碼……係……大麻……救……』。",
         forensic: "桌面漏液呈淡紫油狀，高脂溶性，微酸性。提取為現場【樣品 A】以供化驗。"
       },
       clue_corridor: {
@@ -858,7 +858,7 @@
       notice_board: {
         id: "notice_board", name: "1F 校園抗毒宣傳板", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
         desc: "【校園抗毒公告：警惕偽裝煙彈與黑話陷阱】\n• 警惕「依托咪酯（Etomidate）」：不法分子常將其偽裝成提神精油或草本煙彈，誘騙青少年。濫用會導致急性肌陣攣抽搐、思維斷片、成癮猝死。\n• 黑話代號識別：不法分子常借用代號掩飾交易，例如大麻在黑市常以『草』或數字『420』代稱。",
-        monologue: "（這塊展板記錄了依托咪酯的臨床中毒症狀，還提到大麻在黑市常用的代號『420』……這或許能派上用場。）"
+        monologue: "（這塊展板記錄了依托咪酯的臨床中毒症狀，還提到大麻在黑市常用的數字代號是『420』……如果遇到相關暗號，這就是解讀鑰匙。）"
       },
       trophy_case: {
         id: "trophy_case", name: "1F 大堂學界榮譽陳列櫃", pos: { x: 0.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🏆",
@@ -1730,7 +1730,7 @@
 
       if (GAME_STATE.questStage === 1 && target.type !== 'clue') {
         startDialogueQueue([
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "優先目標", text: "（展霆休克前所在的西側更衣室長椅就在前方。先去排查現場遺物。）" }
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "優先目標", text: "（展霆休克前所在的西側更衣室長椅就在前方。先去排查現場遺留物。）" }
         ]);
         return;
       }
@@ -1753,7 +1753,7 @@
         } else {
           startDialogueQueue([
             { type: "narration", speaker: "儲物櫃排查紀錄", role: "儲物櫃翻查", text: target.data.desc },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "調查分析", text: `（這是 ${target.data.num} 號櫃，門內是普通學生物品。詠蕎備忘錄提到的是 17 號櫃。）` }
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "調查分析", text: `（這是 ${target.data.num} 號櫃，門內是普通學生物品。詠蕎手機草稿提到的是 17 號櫃。）` }
           ]);
         }
         return;
@@ -1801,8 +1801,8 @@
           GAME_STATE.questStage = 3;
           updateObjective("排查 2F 走廊儲物櫃，找出並解鎖 17 號櫃 (3/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "物證發現", role: "中六B班課桌", text: "課桌上漏出一灘深紫色油性煙液（樣品 A）。答題紙後半段公式突然化為劇烈顫抖的撕裂劃痕；手機螢幕停留在未鎖的備忘錄：『心跳好快……手腳完全唔受控咁抽搐……呢個根本唔係草本精油……17號櫃……黑話420……邊個可以救我……』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "病理推斷", text: "（答題紙撕裂與手腳抽搐，完全符合中樞神經受損的急性肌陣攣特徵。備忘錄提及了 17 號櫃與『黑話420』。走廊儲物櫃就在教室外。）" }
+            { type: "narration", speaker: "物證發現", role: "中六B班課桌", text: "課桌上漏出一灘深紫色油性煙液（樣品 A）。答題紙被筆尖痙攣刺穿；手機螢幕停留在未鎖草稿，滿是手震錯字與截斷詞句：『心跳好快……手腳抽搐停唔到……呢個唔係草本……17號……密碼……係……大麻……救……』" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "病理推斷", text: "（答題紙痙攣劃痕與全身抽搐，完全吻合中樞神經受損的急性肌陣攣（Myoclonus）特徵！詠蕎在失去意識前勉強打出『17號』和『密碼係……大麻』……先去走廊排查 17 號儲物櫃，並比對黑話代號。）" }
           ]);
         } else if (clue.stage === 3) {
           openLockerModal();
@@ -1888,7 +1888,7 @@
           void card.offsetWidth;
           card.classList.add('animate-shake');
         }
-        if (err) err.textContent = "❌ 鎖芯未轉動。密碼不符。（提示：詠蕎備忘錄提及『黑話420』）";
+        if (err) err.textContent = "❌ 鎖芯未轉動。密碼不符。（提示：詠蕎提及『大麻』，查閱 1F 抗毒宣傳板的黑話代號）";
       }
     }
 
@@ -1896,7 +1896,7 @@
       sound.playDialogueBlip();
       closeLockerModal();
       startDialogueQueue([
-        { type: "monologue", speaker: "梁澤銘（心想）", role: "思維線索", text: "（詠蕎備忘錄記錄了『黑話420』。1F 中庭的抗毒公告板也特別提到了大麻代號『420』，這正是儲物櫃的開鎖密碼。）" }
+        { type: "monologue", speaker: "梁澤銘（心想）", role: "思維線索", text: "（詠蕎草稿艱難留下的字眼是『密碼係……大麻』。1F 中庭抗毒宣傳板上寫過，黑市大麻對應的數字黑話正是『420』……）" }
       ]);
     }
 
@@ -2173,9 +2173,11 @@
       if (document.documentElement.requestFullscreen) {
         document.documentElement.requestFullscreen().catch(() => {});
       }
-      if (screen.orientation && screen.orientation.lock) {
-        screen.orientation.lock('landscape').catch(() => {});
-      }
+      try {
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock('landscape').catch(() => {});
+        }
+      } catch(e) {}
 
       setTimeout(() => {
         startDialogueQueue([
@@ -2185,7 +2187,7 @@
           },
           {
             type: "monologue", speaker: "梁澤銘（心想）", role: "現場勘查",
-            text: "（霍展霆在體育更衣室倒下，岑詠蕎在模擬試途中痙攣昏迷……兩人此前均無突發病史。先跟隨導標前往西側更衣室排查現場遺物。）"
+            text: "（霍展霆在體育更衣室倒下，岑詠蕎在模擬試途中痙攣昏迷……兩人此前均無突發病史。先跟隨導標前往西側更衣室排查現場遺留物。）"
           }
         ]);
       }, 400);
