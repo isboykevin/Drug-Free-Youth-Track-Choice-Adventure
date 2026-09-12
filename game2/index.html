@@ -60,7 +60,8 @@
     }
 
     #joystick-base,
-    #joystick-thumb {
+    #joystick-thumb,
+    #mobile-controls-cluster {
       touch-action: none;
     }
 
@@ -290,7 +291,7 @@
     </div>
   </div>
 
-  <!-- 手機右側操作區 -->
+  <!-- 手機右側操作區（嚴格隔離觸控範圍，防止誤觸視角旋轉） -->
   <div id="mobile-controls-cluster" class="fixed safe-bottom safe-right z-30 pointer-events-auto flex flex-col items-end gap-2 touch-none">
     <div class="flex items-center gap-2">
       <button id="btn-rotate-left" class="glass-panel w-10 h-10 sm:w-11 sm:h-11 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md" title="向左轉鏡頭" aria-label="向左旋轉視角 45 度">⟲</button>
@@ -341,7 +342,7 @@
 
       <div class="bg-slate-900/90 p-2.5 rounded-2xl border border-slate-700/80 w-full mb-3 text-center">
         <p class="text-[11px] text-slate-300 leading-tight mb-1">
-          櫃門鎖扣嚴密。詠蕎課桌的手機畫面上停留著殘缺文字：<br>
+          櫃門鎖扣嚴密。詠蕎課桌的手機螢幕上停留著殘缺文字：<br>
           <span class="text-amber-300 font-bold font-mono">「17號……大麻……」</span>
         </p>
         <div id="locker-hint-text" class="text-[10px] text-cyan-300 font-mono">（螢幕殘留黏稠油漬遮蔽了後續文字，可探索校園環境尋找關聯線索）</div>
@@ -467,7 +468,7 @@
         </div>
       </div>
 
-      <!-- 手機端優化為 3 列，桌面端 6 列 -->
+      <!-- 手機端優化自適應網格 -->
       <div id="tab-content-clues" class="grid grid-cols-3 sm:grid-cols-6 gap-1.5 my-2"></div>
 
       <div id="clue-detail-panel" class="hidden p-2 rounded-2xl bg-slate-900/95 border border-amber-500/50 my-1 text-left flex flex-col justify-between">
@@ -506,7 +507,7 @@
               <select id="deduce-vector" class="bg-slate-900 text-[10px] text-orange-300 p-1 rounded border border-slate-700 outline-none">
                 <option value="none">-- 請選擇 --</option>
                 <option value="wrong1">普通葡萄運動飲料</option>
-                <option value="correct">受管制危險藥物「依托咪酯」（毒販誘騙俗稱太空油）</option>
+                <option value="correct">混入電子煙之受管制危險藥物「依托咪酯」</option>
                 <option value="wrong2">純薄荷調味甘油</option>
               </select>
             </div>
@@ -588,7 +589,7 @@
         Twilight Echoes: 沉淪之霧 • 校園特別調查
       </h2>
       <p class="text-xs text-slate-300 leading-relaxed mb-3 text-left bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-        放學後的咪制書院突發兩起嚴重急性中毒事件！中六尖子<strong class="text-amber-300">岑詠蕎</strong>在課堂上突發全身劇烈肌陣攣抽搐倒地；同一時間，籃球隊長<strong class="text-cyan-300">霍展霆</strong>亦在更衣室倒地休克！現場殘留著散發異樣氣味的改裝煙油。特約調查員梁澤銘受託進入封鎖現場，請排查現場 6 大關鍵物證，揭開神秘煙油背後的危險藥物真相！
+        放學後的咪制書院突發兩起嚴重急性中毒事件！中六尖子<strong class="text-amber-300">岑詠蕎</strong>在課堂上突發全身劇烈肌陣攣抽搐倒地；同一時間，籃球隊長<strong class="text-cyan-300">霍展霆</strong>亦在更衣室倒地休克！現場殘留著散發異樣氣味的改裝煙油。特約調查員梁澤銘受託進入封鎖現場，請排查現場 6 大關鍵物證，揭開神秘煙油背後的依托咪酯真相！
       </p>
 
       <button id="btn-start-game" class="w-full max-w-xs py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 text-white font-black text-xs sm:text-sm tracking-wider shadow-[0_0_25px_rgba(249,115,22,0.5)] active:scale-95 transition cursor-pointer">
@@ -625,7 +626,7 @@
         <div class="bg-slate-900/90 p-2.5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-1.5">
           <div class="space-y-1 text-[11px] text-slate-300 leading-snug">
             <div>
-              <strong class="text-amber-300">雷霆收網：</strong>依據梁澤銘於 1F 更衣室起獲之殘破煙彈、2F 課桌漏油、解鎖 17 號儲物櫃（420）起獲之提貨單，以及化學室外排水管查獲之密封煙彈，經雙試管交叉檢驗，確診毒物為受《危險藥物條例》嚴格管制之麻醉藥<strong>「依托咪酯」（毒販俗稱太空油）</strong>！專案組已將「暗夜調劑師」及其分銷網絡連根拔起！
+              <strong class="text-amber-300">雷霆收網：</strong>依據梁澤銘於 1F 更衣室起獲之殘破煙彈、2F 課桌漏油、解鎖 17 號儲物櫃（420）起獲之提貨單，以及化學室外排水管查獲之密封煙彈，經雙試管交叉檢驗，確診毒物為受《危險藥物條例》嚴格管制之麻醉藥<strong>「依托咪酯」</strong>！專案組已將「暗夜調劑師」及其分銷網絡連根拔起！
             </div>
             <div>
               <strong class="text-cyan-300">及時救治：</strong>岑詠蕎與霍展霆因第一時間精準確診為依托咪酯急性中毒，醫院施以對症拮抗治療，已脫離生命危險，學校社工與輔導機構已全面介入！
@@ -645,7 +646,7 @@
             </div>
             <div class="text-[11px] text-slate-200 space-y-1 pl-1">
               <div>• 毒品舉報熱線：<strong class="text-white font-mono bg-slate-800 px-1.5 py-0.5 rounded">2527-1234</strong></div>
-              <div>• 打擊依托咪酯（太空油）專線：<strong class="text-rose-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">6629-2966</strong></div>
+              <div>• 打擊依托咪酯專線：<strong class="text-rose-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">6629-2966</strong></div>
             </div>
           </div>
 
@@ -659,7 +660,18 @@
 
   <script>
     // ==========================================
-    // 1. Web Audio 程序化音效引擎
+    // 1. 觸覺震動回饋輔助
+    // ==========================================
+    function haptic(pattern = 15) {
+      try {
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          navigator.vibrate(pattern);
+        }
+      } catch (e) {}
+    }
+
+    // ==========================================
+    // 2. Web Audio 程序化音效引擎
     // ==========================================
     class RetroSoundEngine {
       constructor() {
@@ -778,6 +790,7 @@
       }
 
       playClueFound() {
+        haptic([30, 40, 30]);
         if (!this.ctx || this.isMuted) return;
         const chords = [523.25, 659.25, 783.99, 1046.50, 1318.51];
         chords.forEach((freq, idx) => {
@@ -796,6 +809,7 @@
       }
 
       playPipetteDrop() {
+        haptic(20);
         if (!this.ctx || this.isMuted) return;
         try {
           const osc = this.ctx.createOscillator();
@@ -813,6 +827,7 @@
       }
 
       playDialClick() {
+        haptic(12);
         if (!this.ctx || this.isMuted) return;
         try {
           const osc = this.ctx.createOscillator();
@@ -830,6 +845,7 @@
       }
 
       playLockBuzzer() {
+        haptic([80, 50, 80]);
         if (!this.ctx || this.isMuted) return;
         try {
           const osc = this.ctx.createOscillator();
@@ -890,7 +906,7 @@
     const sound = new RetroSoundEngine();
 
     // ==========================================
-    // 2. 核心遊戲狀態與數據庫
+    // 3. 核心遊戲狀態與數據庫
     // ==========================================
     const TOTAL_CLUES = 6;
 
@@ -971,8 +987,8 @@
         icon: "🔬",
         pos: { x: 9.0, y: 5.05, z: 7.0 },
         floor: 2,
-        shortDesc: "排除氯胺酮，雙試管確診兩份煙油樣品皆為危險藥物「依托咪酯」！毒販美化誘騙謊言破滅！天台傳來震動鈴聲！",
-        fullDesc: "雙試管交叉顯色完成！排除氯胺酮，確診課桌漏油（證物 A）與排水管煙彈（證物 B）皆為受香港特區《危險藥物條例》嚴格管制的【依托咪酯 (Etomidate)】！毒販所謂的太空油根本就是粉飾毒品的偽裝！此時天台方向傳來急促的手機鈴聲！",
+        shortDesc: "排除氯胺酮，雙試管確診兩份煙油樣品皆為受管制危險藥物「依托咪酯」！毒販偽裝提神的謊言破滅！天台傳來震動鈴聲！",
+        fullDesc: "雙試管交叉顯色完成！排除氯胺酮，確診課桌漏油（證物 A）與排水管煙彈（證物 B）皆為受香港特區《危險藥物條例》嚴格管制的【依托咪酯 (Etomidate)】！毒販所謂的提神放鬆煙油根本就是粉飾危險藥物的偽裝！此時天台方向傳來急促的手機鈴聲！",
         forensic: "咪唑羧酸酯特異顯色反應呈強陽性深紫褐色沉澱，證實為超量管制危險藥物依托咪酯。"
       },
       clue_rooftop_burner: {
@@ -1001,8 +1017,8 @@
     const EASTER_EGGS = {
       notice_board: {
         id: "notice_board", name: "1F 校園抗毒海報", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
-        desc: "【校園抗毒海報：識破毒品黑話與受管制藥物陷阱】\n• 警惕「依托咪酯（Etomidate）」：不法分子常以「太空油」作為美化俗稱，誘騙青少年以為只是普通提神電子煙。實際上依托咪酯是受《危險藥物條例》嚴格管制的麻醉劑，濫用會導致肌陣攣劇烈抽搐、記憶斷片、呼吸衰竭及成癮猝死！\n• 識破毒品黑話：毒販常利用黑話掩飾罪行，例如大麻常被隱蔽指代為「草」，在國際上常用數字代號「420」！",
-        monologue: "（這張抗毒海報揭露了毒販話術——所謂『太空油』純粹是美化毒品的糖衣，真身是依托咪酯！海報上還特別提及大麻代號是『420』，這對解開相關線索極為關鍵！）"
+        desc: "【校園抗毒海報：識破毒品黑話與受管制藥物陷阱】\n• 警惕「依托咪酯（Etomidate）」：不法分子常將其偽裝成普通提神或止痛煙彈，誘騙青少年吸食。實際上依托咪酯是受《危險藥物條例》嚴格管制的麻醉劑，濫用會導致肌陣攣劇烈抽搐、記憶斷片、呼吸衰竭及成癮猝死！\n• 識破毒品黑話：毒販常利用黑話掩飾罪行，例如大麻常被隱蔽指代為「草」，在國際上常用數字代號「420」！",
+        monologue: "（這張抗毒海報揭露了毒販話術——真身原來是受管制的依托咪酯！海報上還特別提及大麻代號是『420』，這對解開相關線索極為關鍵！）"
       },
       trophy_case: {
         id: "trophy_case", name: "1F 大堂學界榮譽陳列櫃", pos: { x: 0.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🏆",
@@ -1037,7 +1053,7 @@
     };
 
     // ==========================================
-    // 3. 3D 場景配置與碰撞實體
+    // 4. 3D 場景配置與碰撞實體
     // ==========================================
     let renderer, scene, camera, player;
     let floor1Group, floor2Group, floor3Group;
@@ -1082,7 +1098,7 @@
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
     // ==========================================
-    // 4. 動態生成 3D Billboard 圖示
+    // 5. 動態生成 3D Billboard 圖示
     // ==========================================
     function createIconSprite(emoji, bgColor = 'rgba(15, 23, 42, 0.92)', borderColor = '#fb923c') {
       const c = document.createElement('canvas');
@@ -1119,7 +1135,7 @@
     }
 
     // ==========================================
-    // 5. 調查員控制類
+    // 6. 調查員控制類
     // ==========================================
     class InvestigatorAvatar {
       constructor() {
@@ -1308,7 +1324,7 @@
     }
 
     // ==========================================
-    // 6. 3D 場景建構
+    // 7. 3D 場景建構
     // ==========================================
     function init3DWorld() {
       const canvasElem = document.getElementById('game-canvas');
@@ -1780,7 +1796,7 @@
     }
 
     // ==========================================
-    // 7. 小地圖與視角（完整包含非主線光點）
+    // 8. 小地圖與視角（完整支援非主線青色光點）
     // ==========================================
     function renderMinimap() {
       if (!minimapCtx || !minimapCanvas || !player) return;
@@ -1812,7 +1828,7 @@
         minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(14) - mapX(-14), mapZ(9) - mapZ(-9));
       }
 
-      // 繪製非主線環境線索/彩蛋（青色光點）
+      // 繪製非主線環境線索/彩蛋（青色微光點）
       Object.values(EASTER_EGGS).forEach(egg => {
         if (egg.floor === f) {
           minimapCtx.beginPath();
@@ -1874,7 +1890,7 @@
     }
 
     // ==========================================
-    // 8. 搖桿與手勢操控
+    // 9. 搖桿與手勢操控
     // ==========================================
     const touchJoystickInput = { x: 0, z: 0 };
     let joystickActive = false;
@@ -1900,7 +1916,7 @@
     }
 
     // ==========================================
-    // 9. 對話系統
+    // 10. 對話系統
     // ==========================================
     function startDialogueQueue(lines, callback = null) {
       GAME_STATE.dialogueQueue = lines.slice();
@@ -1956,7 +1972,7 @@
     }
 
     // ==========================================
-    // 10. 案件搜查與互動系統
+    // 11. 案件搜查與互動系統
     // ==========================================
     function checkProximity() {
       if (!GAME_STATE.started || GAME_STATE.isDialogueOpen || GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen || GAME_STATE.isLockerModalOpen || !player) {
@@ -2078,6 +2094,7 @@
 
     function triggerInvestigation() {
       if (!canTriggerInput()) return;
+      haptic(15);
 
       if (GAME_STATE.isDialogueOpen) {
         nextDialogue();
@@ -2205,7 +2222,7 @@
     }
 
     // ==========================================
-    // 11. 儲物櫃 3 位數密碼鎖邏輯
+    // 12. 儲物櫃 3 位數密碼鎖邏輯
     // ==========================================
     function openLockerModal() {
       if (lockerModal) {
@@ -2282,7 +2299,7 @@
     }
 
     // ==========================================
-    // 12. 快篩鑑驗台邏輯
+    // 13. 快篩鑑驗台邏輯
     // ==========================================
     function openLabModal() {
       if (labModal) {
@@ -2334,6 +2351,7 @@
 
     function spotStepApplyReagent2() {
       sound.playPipetteDrop();
+      haptic([25, 40, 35]);
       const tubeA = document.getElementById('tube-a-liquid');
       const tubeB = document.getElementById('tube-b-liquid');
       const statusBadge = document.getElementById('spot-status-badge');
@@ -2355,7 +2373,7 @@
         statusBadge.className = "px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600 text-[10px] font-black animate-pulse";
       }
       if (verdictText) {
-        verdictText.innerHTML = "<strong class=\"text-rose-400\">【強陽性反應！】</strong>兩支試管均劇烈顯色並生成深紫褐色沉澱！確診毒物為混入電子煙的受管制危險藥物<strong class=\"text-amber-300\">「依托咪酯」（毒販俗稱太空油）</strong>！";
+        verdictText.innerHTML = "<strong class=\"text-rose-400\">【強陽性反應！】</strong>兩支試管均劇烈顯色並生成深紫褐色沉澱！確診毒物為混入電子煙的受管制危險藥物<strong class=\"text-amber-300\">「依托咪酯」</strong>！";
       }
       if (step2) {
         step2.className = "py-1 rounded bg-rose-950 text-rose-300 border border-rose-600";
@@ -2423,13 +2441,13 @@
       sound.playPhoneRing();
 
       startDialogueQueue([
-        { type: "narration", speaker: "毒理檢驗報告", role: "定性鑑證結論", text: "雙試管交叉比對確診！課桌漏出的紫色滴液與暗角起獲的煙彈均含有受《危險藥物條例》嚴管的麻醉藥【依托咪酯】！所謂太空油只不過是毒販粉飾罪行的誘騙話術！" },
+        { type: "narration", speaker: "毒理檢驗報告", role: "定性鑑證結論", text: "雙試管交叉比對確診！課桌漏出的紫色滴液與暗角起獲的煙彈均含有受《危險藥物條例》嚴管的麻醉藥【依托咪酯】！毒販宣稱的無害提神只不過是粉飾罪行的誘騙話術！" },
         { type: "monologue", speaker: "梁澤銘（心想）", role: "突發警覺", text: "（等等！頭頂 3F 天台方向傳來急促的手機震動鈴聲！天台階梯封鎖已解除，立刻登上天台截獲通聯訊號！）" }
       ]);
     }
 
     // ==========================================
-    // 13. 案件手冊與思維宮殿
+    // 14. 案件手冊與思維宮殿
     // ==========================================
     function toggleNotebook() {
       if (!notebookModal) return;
@@ -2580,7 +2598,7 @@
     }
 
     // ==========================================
-    // 14. 核心啟動函數
+    // 15. 核心啟動函數
     // ==========================================
     function startGame() {
       const title = document.getElementById('title-screen');
@@ -2616,7 +2634,7 @@
     }
 
     // ==========================================
-    // 15. 事件監聽綁定
+    // 16. 事件監聽綁定
     // ==========================================
     function setupEventListeners() {
       document.getElementById('btn-start-game')?.addEventListener('click', startGame);
@@ -2767,11 +2785,12 @@
         window.addEventListener('touchcancel', endJoystick, { passive: false });
       }
 
+      // 右側旋轉手勢：嚴格排除操作按鈕與彈窗，杜絕觸控衝突
       window.addEventListener('touchstart', (e) => {
         for (let i = 0; i < e.changedTouches.length; i++) {
           const t = e.changedTouches[i];
           const target = document.elementFromPoint(t.clientX, t.clientY) || t.target;
-          if (target && target.closest('button, #touch-joystick-container, #mobile-controls-cluster, #dialogue-box, #lab-modal, #notebook-modal, #locker-modal, header, .glass-panel')) {
+          if (target && target.closest('button, #touch-joystick-container, #mobile-controls-cluster, #dialogue-box, #lab-modal, #notebook-modal, #locker-modal, header, .glass-panel, .glass-btn')) {
             continue;
           }
           if (t.clientX > window.innerWidth * 0.40 && rightTouchId === null) {
@@ -2806,7 +2825,7 @@
     }
 
     // ==========================================
-    // 16. 主渲染循環
+    // 17. 主渲染循環
     // ==========================================
     const clock = new THREE.Clock();
     let isTabVisible = true;
@@ -2891,7 +2910,7 @@
     });
 
     // ==========================================
-    // 17. 應用安全入口
+    // 18. 應用安全入口
     // ==========================================
     function bootApp() {
       minimapCanvas = document.getElementById('minimap-canvas');
