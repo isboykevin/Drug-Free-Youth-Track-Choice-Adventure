@@ -3,17 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="description" content="暮光迴響：沉淪之霧 - 咪制書院校園安全特別調查專案（依托咪酯毒理調查）">
+  <meta name="description" content="暮光迴響：沉淪之霧 - 咪制書院校園特別調查專案">
   <meta name="theme-color" content="#04060d">
-  <title>暮光迴響：沉淪之霧 - 咪制書院校園特別調查專案</title>
+  <title>暮光迴響：沉淪之霧 - 咪制書院校園特別調查</title>
   
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Three.js 3D 渲染引擎 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
   
-  <!-- Google 字體加載 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
@@ -27,210 +23,107 @@
       box-sizing: border-box;
       font-family: 'Noto Sans TC', sans-serif;
     }
-
-    *, *::before, *::after {
-      box-sizing: inherit;
-    }
-    
+    *, *::before, *::after { box-sizing: inherit; }
     body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      height: 100dvh;
-      min-height: 100dvh;
-      position: relative;
-      overflow: hidden;
-      background-color: #04060d;
-      color: #f8fafc;
+      margin: 0; padding: 0; width: 100%; height: 100%; height: 100dvh;
+      position: relative; overflow: hidden; background-color: #04060d; color: #f8fafc;
     }
-
     .safe-bottom { bottom: calc(0.75rem + var(--sab)); }
     .safe-left { left: calc(0.75rem + var(--sal)); }
     .safe-right { right: calc(0.75rem + var(--sar)); }
     .safe-top { top: calc(0.5rem + var(--sat)); }
 
-    .game-interactive,
-    #joystick-base,
-    #joystick-thumb,
-    .glass-btn,
-    button {
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-touch-callout: none;
+    .game-interactive, #joystick-base, #joystick-thumb, .glass-btn, button {
+      user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
     }
-
-    #joystick-base,
-    #joystick-thumb,
-    #mobile-controls-cluster {
-      touch-action: none;
-    }
-
-    :focus-visible {
-      outline: 3px solid #fb923c;
-      outline-offset: 2px;
-    }
+    #joystick-base, #joystick-thumb, #mobile-controls-cluster { touch-action: none; }
+    :focus-visible { outline: 3px solid #fb923c; outline-offset: 2px; }
 
     .twilight-vignette {
       background: radial-gradient(circle at 50% 45%, rgba(251, 146, 60, 0.08) 10%, rgba(4, 6, 13, 0.95) 100%);
       pointer-events: none;
     }
-
     .pixel-scanlines {
       background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.22) 50%);
-      background-size: 100% 3px;
-      pointer-events: none;
-      opacity: 0.32;
+      background-size: 100% 3px; pointer-events: none; opacity: 0.32;
     }
-
     .glass-panel {
-      background: rgba(13, 17, 32, 0.94);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(251, 146, 60, 0.35);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
+      background: rgba(13, 17, 32, 0.94); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(251, 146, 60, 0.35); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
     }
-
     .glass-btn {
       background: linear-gradient(135deg, rgba(249, 115, 22, 0.85), rgba(225, 29, 72, 0.7));
-      border: 1.5px solid rgba(251, 146, 60, 0.8);
-      transition: transform 0.1s ease, background 0.12s ease;
+      border: 1.5px solid rgba(251, 146, 60, 0.8); transition: transform 0.1s ease, background 0.12s ease;
     }
     .glass-btn:active {
-      transform: scale(0.94);
-      background: linear-gradient(135deg, rgba(249, 115, 22, 1), rgba(225, 29, 72, 0.9));
+      transform: scale(0.94); background: linear-gradient(135deg, rgba(249, 115, 22, 1), rgba(225, 29, 72, 0.9));
     }
+    .cinematic-serif { font-family: 'Noto Serif TC', serif; }
 
-    .cinematic-serif {
-      font-family: 'Noto Serif TC', serif;
-    }
-
-    #landscape-orientation-overlay {
-      display: none;
-    }
+    #landscape-orientation-overlay { display: none; }
     @media screen and (orientation: portrait) and (max-width: 900px) {
-      #landscape-orientation-overlay {
-        display: flex !important;
-      }
+      #landscape-orientation-overlay { display: flex !important; }
     }
 
     .test-tube-rack {
       background: radial-gradient(circle at 50% 30%, #1e293b 0%, #090d16 100%);
-      border: 1.5px solid rgba(56, 189, 248, 0.3);
-      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6);
+      border: 1.5px solid rgba(56, 189, 248, 0.3); box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6);
     }
-
     .test-tube-glass {
-      width: 48px;
-      height: 110px;
-      border: 2.5px solid rgba(255, 255, 255, 0.6);
-      border-top: none;
-      border-radius: 0 0 24px 24px;
-      position: relative;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.06);
-      backdrop-filter: blur(4px);
-      box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.2), 0 4px 10px rgba(0, 0, 0, 0.5);
+      width: 48px; height: 110px; border: 2.5px solid rgba(255, 255, 255, 0.6); border-top: none;
+      border-radius: 0 0 24px 24px; position: relative; overflow: hidden; background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(4px); box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.2), 0 4px 10px rgba(0, 0, 0, 0.5);
     }
-
     .test-tube-liquid {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 65%;
-      border-radius: 0 0 21px 21px;
+      position: absolute; bottom: 0; left: 0; right: 0; height: 65%; border-radius: 0 0 21px 21px;
       transition: background-color 0.6s ease, height 0.4s ease, filter 0.6s ease;
     }
-
     .tube-meniscus {
-      position: absolute;
-      top: -3px;
-      left: 0;
-      right: 0;
-      height: 5px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.5);
+      position: absolute; top: -3px; left: 0; right: 0; height: 5px; border-radius: 50%; background: rgba(255, 255, 255, 0.5);
     }
-
     .joystick-base {
       background: radial-gradient(circle, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.96) 100%);
-      border: 2.5px solid rgba(251, 146, 60, 0.65);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.75);
+      border: 2.5px solid rgba(251, 146, 60, 0.65); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.75);
     }
     .joystick-thumb {
-      background: radial-gradient(circle, #fb923c 0%, #c2410c 100%);
-      box-shadow: 0 4px 18px rgba(249, 115, 22, 0.85);
+      background: radial-gradient(circle, #fb923c 0%, #c2410c 100%); box-shadow: 0 4px 18px rgba(249, 115, 22, 0.85);
     }
-
-    .dialogue-type-monologue {
-      border-color: rgba(56, 189, 248, 0.6) !important;
-      background: rgba(12, 25, 44, 0.96) !important;
-    }
-    .dialogue-type-narration {
-      border-color: rgba(251, 146, 60, 0.6) !important;
-      background: rgba(28, 19, 13, 0.96) !important;
-    }
-    .dialogue-type-call {
-      border-color: rgba(244, 63, 94, 0.75) !important;
-      background: rgba(36, 10, 20, 0.96) !important;
-    }
-
+    .dialogue-type-monologue { border-color: rgba(56, 189, 248, 0.6) !important; background: rgba(12, 25, 44, 0.96) !important; }
+    .dialogue-type-narration { border-color: rgba(251, 146, 60, 0.6) !important; background: rgba(28, 19, 13, 0.96) !important; }
+    .dialogue-type-call { border-color: rgba(244, 63, 94, 0.75) !important; background: rgba(36, 10, 20, 0.96) !important; }
     .tumbler-dial {
       background: linear-gradient(180deg, #090d16 0%, #1e293b 50%, #090d16 100%);
-      box-shadow: inset 0 0 12px rgba(0,0,0,0.95), 0 2px 10px rgba(249,115,22,0.3);
-      border: 1.5px solid #475569;
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.95), 0 2px 10px rgba(249,115,22,0.3); border: 1.5px solid #475569;
     }
-
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       20%, 60% { transform: translateX(-6px); }
       40%, 80% { transform: translateX(6px); }
     }
-    .animate-shake {
-      animation: shake 0.35s ease-in-out;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .pixel-scanlines, .animate-ping, .animate-bounce, .animate-pulse, .animate-shake {
-        animation: none !important;
-        transition: none !important;
-      }
-    }
+    .animate-shake { animation: shake 0.35s ease-in-out; }
   </style>
 </head>
 <body class="relative w-full h-full bg-slate-950 overflow-hidden">
-  <a href="#game-canvas" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-orange-600 focus:text-white focus:rounded-xl focus:font-bold">
-    跳至主要校園搜查區域
-  </a>
-
+  <a href="#game-canvas" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-orange-600 focus:text-white focus:rounded-xl focus:font-bold">跳至搜查區域</a>
   <div id="screen-reader-announcer" class="sr-only" aria-live="polite"></div>
 
-  <!-- 手機豎屏旋轉提示 -->
   <div id="landscape-orientation-overlay" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center" role="alert">
     <div class="max-w-xs p-6 glass-panel rounded-3xl border-orange-500/60 flex flex-col items-center gap-4">
       <div class="text-5xl animate-bounce">📱 🔄</div>
-      <h2 class="text-base font-black text-white">請將手機旋轉為橫屏</h2>
-      <p class="text-xs text-slate-300 leading-relaxed">
-        《暮光迴響》專為手機橫向視野打造。請旋轉手機為橫向以享有最佳的雙手觸控與校園探案體驗！
-      </p>
-      <button id="btn-force-portrait-continue" class="text-xs text-orange-400 underline underline-offset-4 pt-1">
-        仍要強制在豎屏下遊玩
-      </button>
+      <h2 class="text-base font-black text-white">請旋轉手機為橫屏</h2>
+      <p class="text-xs text-slate-300 leading-relaxed">本作專為橫向雙手觸控與校園調查視角設計，橫屏體驗最佳。</p>
+      <button id="btn-force-portrait-continue" class="text-xs text-orange-400 underline underline-offset-4 pt-1">仍要強制在豎屏下遊玩</button>
     </div>
   </div>
 
-  <!-- 主畫布 -->
-  <main id="main-content" role="main" class="fixed inset-0 w-full h-full overflow-hidden">
+  <main id="main-content" class="fixed inset-0 w-full h-full overflow-hidden">
     <div id="canvas-container" class="w-full h-full overflow-hidden">
-      <canvas id="game-canvas" role="application" aria-label="3D立體三層校園搜查場景：咪制書院" tabindex="0" class="w-full h-full block touch-none"></canvas>
+      <canvas id="game-canvas" class="w-full h-full block touch-none" tabindex="0"></canvas>
     </div>
-
     <div class="twilight-vignette fixed inset-0 z-10 pointer-events-none"></div>
     <div class="pixel-scanlines fixed inset-0 z-10 pointer-events-none"></div>
   </main>
 
-  <!-- 頂部 HUD -->
   <header class="fixed safe-top left-0 right-0 z-20 flex items-start justify-between px-3 md:px-6 pointer-events-none">
     <div class="pointer-events-auto flex flex-col gap-1.5 max-w-[55%] sm:max-w-md">
       <div class="glass-panel px-3 py-1.5 rounded-2xl flex items-center gap-2">
@@ -238,87 +131,72 @@
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500"></span>
         </span>
-        <div class="truncate">
-          <div class="text-xs font-black text-orange-400 flex items-center gap-1.5">
-            <span id="hud-location-icon">🏛️</span>
-            <span id="hud-location-name">1F 咪制書院 中庭大堂</span>
-          </div>
+        <div class="truncate text-xs font-black text-orange-400 flex items-center gap-1.5">
+          <span id="hud-location-icon">🏛️</span>
+          <span id="hud-location-name">1F 咪制書院 中庭大堂</span>
         </div>
       </div>
-
       <div class="glass-panel px-3 py-1.5 rounded-2xl text-xs text-amber-100 flex items-center gap-2 shadow-md border-l-4 border-l-orange-500">
-        <span class="text-xs">🎯</span>
-        <div class="truncate">目標：<span id="hud-current-objective" class="text-amber-300 font-bold">跟隨綠色導航標，排查體育更衣室外霍展霆遺物 (1/6)</span></div>
+        <span>🎯</span>
+        <div class="truncate">目標：<span id="hud-current-objective" class="text-amber-300 font-bold">跟隨綠色導標，排查體育更衣室外霍展霆遺物 (1/6)</span></div>
       </div>
     </div>
 
     <div class="pointer-events-auto flex items-center gap-2">
       <div class="glass-panel p-1 rounded-2xl flex flex-col items-center shadow-xl border-orange-500/40 relative">
         <div class="flex items-center justify-between w-full px-2 py-0.5 text-[10px] font-mono">
-          <span class="text-amber-400 font-bold flex items-center gap-1">
-            <span>🧭</span>
-            <span id="minimap-floor-label">1F 大堂層</span>
-          </span>
+          <span class="text-amber-400 font-bold flex items-center gap-1">🧭 <span id="minimap-floor-label">1F 大堂層</span></span>
           <span class="text-slate-300 text-[10px]" id="minimap-clue-indicator">物證: 0/6</span>
         </div>
-        <canvas id="minimap-canvas" width="112" height="70" class="rounded-xl bg-slate-950/90 border border-slate-800" aria-label="3層校舍雷達小地圖"></canvas>
+        <canvas id="minimap-canvas" width="112" height="70" class="rounded-xl bg-slate-950/90 border border-slate-800"></canvas>
       </div>
 
       <button id="btn-restart-hud" class="glass-panel px-2.5 py-2 rounded-2xl text-xs font-bold text-rose-300 hover:text-rose-200 active:scale-95 flex items-center gap-1" title="重啟調查">
-        <span>🔄</span>
-        <span class="hidden md:inline">重啟</span>
+        <span>🔄</span><span class="hidden md:inline">重啟</span>
       </button>
-
-      <button id="btn-cam-cycle" class="glass-panel px-2.5 py-2 rounded-2xl text-xs font-bold text-orange-200 active:scale-95 flex items-center gap-1" aria-label="切換鏡頭視角">
-        <span>🎥</span>
-        <span id="cam-mode-text" class="hidden md:inline">斜角俯視</span>
+      <button id="btn-cam-cycle" class="glass-panel px-2.5 py-2 rounded-2xl text-xs font-bold text-orange-200 active:scale-95 flex items-center gap-1">
+        <span>🎥</span><span id="cam-mode-text" class="hidden md:inline">斜角俯視</span>
       </button>
-
-      <button id="btn-open-notebook" class="glass-btn px-3 py-2 rounded-2xl flex items-center gap-1.5 text-xs font-black text-white shadow-xl active:scale-95" aria-label="打開案件手冊與物證日誌">
+      <button id="btn-open-notebook" class="glass-btn px-3 py-2 rounded-2xl flex items-center gap-1.5 text-xs font-black text-white shadow-xl active:scale-95">
         <span>📋 案件簿</span>
         <span id="hud-clue-badge" class="bg-orange-600 text-white text-[10px] px-1.5 py-0.5 rounded-full font-black">0/6</span>
       </button>
-
-      <button id="btn-toggle-sound" class="glass-panel p-2 rounded-2xl text-slate-300 hover:text-white active:scale-95 transition" aria-label="切換靜音">
+      <button id="btn-toggle-sound" class="glass-panel p-2 rounded-2xl text-slate-300 hover:text-white active:scale-95 transition">
         <svg id="icon-sound-on" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
       </button>
     </div>
   </header>
 
-  <!-- 手機專用虛擬搖桿 -->
   <div id="touch-joystick-container" class="fixed safe-bottom safe-left z-30 pointer-events-auto touch-none">
     <div id="joystick-base" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full joystick-base relative flex items-center justify-center">
       <div id="joystick-thumb" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full joystick-thumb absolute pointer-events-none transition-transform duration-75"></div>
     </div>
   </div>
 
-  <!-- 手機右側操作區 -->
   <div id="mobile-controls-cluster" class="fixed safe-bottom safe-right z-30 pointer-events-auto flex flex-col items-end gap-2 touch-none">
     <div class="flex items-center gap-2">
-      <button id="btn-rotate-left" class="glass-panel w-10 h-10 sm:w-11 sm:h-11 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md" title="向左轉鏡頭" aria-label="向左旋轉視角 45 度">⟲</button>
-      <button id="btn-rotate-right" class="glass-panel w-10 h-10 sm:w-11 sm:h-11 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md" title="向右轉鏡頭" aria-label="向右旋轉視角 45 度">⟳</button>
+      <button id="btn-rotate-left" class="glass-panel w-10 h-10 sm:w-11 sm:h-11 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md">⟲</button>
+      <button id="btn-rotate-right" class="glass-panel w-10 h-10 sm:w-11 sm:h-11 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md">⟳</button>
     </div>
-    <button id="mobile-interact-btn" class="glass-btn w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex flex-col items-center justify-center text-white font-black shadow-[0_0_20px_rgba(249,115,22,0.6)] active:scale-90 border-2 border-orange-400 cursor-pointer" aria-label="執行調查或繼續劇情">
+    <button id="mobile-interact-btn" class="glass-btn w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex flex-col items-center justify-center text-white font-black shadow-[0_0_20px_rgba(249,115,22,0.6)] active:scale-90 border-2 border-orange-400 cursor-pointer">
       <span class="text-2xl sm:text-3xl pointer-events-none">🔍</span>
       <span class="text-xs font-black tracking-wider mt-0.5 pointer-events-none">搜查</span>
     </button>
   </div>
 
-  <!-- 接近互動提示 -->
   <div id="interaction-prompt" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 transition-all duration-200 transform scale-95 flex items-center gap-2 glass-panel px-4 py-2 rounded-full border-orange-500/60 shadow-xl">
     <span id="prompt-input-badge" class="w-5 h-5 rounded-full bg-orange-600 flex items-center justify-center font-black text-white text-xs animate-pulse">👆</span>
     <span id="prompt-action-text" class="text-xs font-bold text-slate-100">調查現場</span>
   </div>
 
-  <!-- 劇情對話框 -->
-  <div id="dialogue-box" class="fixed safe-bottom left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-2xl z-40 pointer-events-none opacity-0 translate-y-6 transition-all duration-300 flex flex-col" role="region" aria-label="劇情對話框">
+  <div id="dialogue-box" class="fixed safe-bottom left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-2xl z-40 pointer-events-none opacity-0 translate-y-6 transition-all duration-300 flex flex-col" role="region">
     <div id="dialogue-panel-card" class="glass-panel p-3 sm:p-4 rounded-2xl border-orange-400/40 relative shadow-2xl flex flex-col transition-colors duration-200">
       <div class="flex items-center justify-between mb-1.5 border-b border-slate-700/60 pb-1.5 shrink-0">
         <div class="flex items-center gap-2">
           <div id="dialogue-avatar" class="w-8 h-8 rounded-xl bg-orange-600/20 border border-orange-400/60 flex items-center justify-center text-base shadow-inner">🧑‍💼</div>
           <div class="flex items-center gap-1.5">
             <span id="dialogue-speaker" class="font-black text-amber-300 text-sm">梁澤銘</span>
-            <span id="dialogue-role-tag" class="text-[10px] bg-slate-800 text-orange-300 px-2 py-0.5 rounded-full border border-orange-500/30 font-bold">特約校園安全調查員</span>
+            <span id="dialogue-role-tag" class="text-[10px] bg-slate-800 text-orange-300 px-2 py-0.5 rounded-full border border-orange-500/30 font-bold">特約安全調查員</span>
           </div>
         </div>
         <span class="text-xs text-amber-400/90 font-bold">點擊繼續 ▶</span>
@@ -327,15 +205,14 @@
     </div>
   </div>
 
-  <!-- 17 號儲物櫃密碼鎖解鎖面板 -->
-  <div id="locker-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="locker-modal-title" tabindex="-1">
+  <div id="locker-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" tabindex="-1">
     <div id="locker-modal-card" class="glass-panel w-full max-w-sm rounded-3xl p-4 border-amber-500/50 flex flex-col items-center justify-between relative shadow-2xl">
       <div class="w-full flex items-center justify-between pb-2 border-b border-slate-700/80 mb-3">
         <div class="flex items-center gap-2">
           <span class="text-xl">🔐</span>
           <div>
-            <h3 id="locker-modal-title" class="text-sm font-black text-white">2F 走廊 17 號儲物櫃</h3>
-            <p class="text-xs text-amber-400">毒販死信箱：三位數金屬滾輪密碼鎖</p>
+            <h3 class="text-sm font-black text-white">2F 走廊 17 號儲物櫃</h3>
+            <p class="text-xs text-amber-400">三位數金屬滾輪密碼鎖</p>
           </div>
         </div>
         <button id="btn-close-locker" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition text-xs font-bold">✕</button>
@@ -343,14 +220,12 @@
 
       <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-700/80 w-full mb-3 text-center">
         <p class="text-xs text-slate-300 leading-relaxed mb-1">
-          毒販設在校內的單向投毒中轉櫃。<br>
-          詠蕎課桌手機的求救備忘錄寫著：<br>
+          詠蕎課桌手機最後留下的未發出文字：<br>
           <span class="text-amber-300 font-bold font-mono text-sm">「……17號櫃……黑話420……救我……」</span>
         </p>
-        <div id="locker-hint-text" class="text-[11px] text-cyan-300 font-mono">（毒販以大麻黑話『420』設定密碼，誘騙受害學生以為只是提神草本）</div>
+        <div class="text-[11px] text-cyan-300 font-mono">（提示：1F 中庭抗毒宣傳板記錄了各類黑話代號）</div>
       </div>
 
-      <!-- 3 位數滾輪 UI：加大人機工程觸控區 -->
       <div class="flex items-center justify-center gap-4 my-2">
         <div class="flex flex-col items-center">
           <button id="dial-0-up" class="w-12 h-9 rounded-t-xl bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-90 text-sm transition border border-slate-600">▲</button>
@@ -372,28 +247,23 @@
       <div id="locker-error-feedback" class="h-5 text-xs font-bold text-rose-400 text-center my-1"></div>
 
       <div class="w-full flex gap-2 pt-2 border-t border-slate-800 mt-2">
-        <button id="btn-locker-clue-hint" class="px-3 py-2.5 rounded-xl bg-slate-800 text-cyan-300 text-xs font-bold hover:bg-slate-700 active:scale-95 transition">
-          💡 線索提示
-        </button>
-        <button id="btn-submit-lock" class="flex-1 py-2.5 rounded-xl glass-btn text-white font-black text-xs shadow-lg active:scale-95 transition tracking-wider flex items-center justify-center gap-1">
-          <span>解鎖提取死信箱物證</span>
-        </button>
+        <button id="btn-locker-clue-hint" class="px-3 py-2.5 rounded-xl bg-slate-800 text-cyan-300 text-xs font-bold hover:bg-slate-700 active:scale-95 transition">💡 線索備忘</button>
+        <button id="btn-submit-lock" class="flex-1 py-2.5 rounded-xl glass-btn text-white font-black text-xs shadow-lg active:scale-95 transition tracking-wider">開鎖提取物證</button>
       </div>
     </div>
   </div>
 
-  <!-- 雙試管快篩鑑驗台 -->
-  <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="lab-modal-title" tabindex="-1">
+  <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" tabindex="-1">
     <div class="glass-panel w-full max-w-xl rounded-3xl p-3.5 sm:p-4 relative border-cyan-500/50 flex flex-col justify-between">
       <div class="shrink-0 flex items-center justify-between pb-2 border-b border-slate-700/80 mb-2">
         <div class="flex items-center gap-2">
           <span class="text-xl">🧪</span>
           <div>
-            <h3 id="lab-modal-title" class="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">毒理鑑證：雙試管極速快篩台</h3>
-            <p class="text-xs text-cyan-300">比對受害課桌漏出紫油（證物A）與毒販死信箱原液（證物B）的顯色反應</p>
+            <h3 class="text-xs sm:text-sm font-black text-white">毒理化驗：雙試管顯色排查</h3>
+            <p class="text-xs text-cyan-300">比對課桌紫油（樣品A）與暗角藏匿原液（樣品B）的化學顯色反應</p>
           </div>
         </div>
-        <button id="btn-close-lab" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉鑑驗台">✕</button>
+        <button id="btn-close-lab" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold">✕</button>
       </div>
 
       <div class="grid grid-cols-2 gap-3 items-center my-2">
@@ -404,17 +274,17 @@
               <div class="test-tube-glass">
                 <div id="tube-a-liquid" class="test-tube-liquid bg-purple-500/40"><div class="tube-meniscus"></div></div>
               </div>
-              <span class="text-[11px] text-slate-300 font-bold mt-1.5 bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700">課桌中毒殘留液</span>
+              <span class="text-[11px] text-slate-300 font-bold mt-1.5 bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700">課桌殘留液</span>
             </div>
             <div class="flex flex-col items-center">
               <span class="text-xs font-black text-cyan-300 mb-1">試管 B</span>
               <div class="test-tube-glass">
                 <div id="tube-b-liquid" class="test-tube-liquid bg-cyan-500/40"><div class="tube-meniscus"></div></div>
               </div>
-              <span class="text-[11px] text-slate-300 font-bold mt-1.5 bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700">死信箱毒煙彈原液</span>
+              <span class="text-[11px] text-slate-300 font-bold mt-1.5 bg-slate-900/80 px-2 py-0.5 rounded border border-slate-700">排水管暗角煙彈</span>
             </div>
           </div>
-          <div class="text-[10px] text-slate-400 font-mono mt-1.5">【丙二醇油性載體樣品已預載入】</div>
+          <div class="text-[10px] text-slate-400 font-mono mt-1.5">【兩份樣品已預載入溶劑】</div>
         </div>
 
         <div class="flex flex-col justify-between h-full space-y-2">
@@ -427,7 +297,6 @@
               請點擊下方 <strong class="text-cyan-400">1️⃣ 滴入 氯胺酮試劑</strong>，排查是否為常規 K仔。
             </div>
           </div>
-
           <div class="grid grid-cols-2 gap-1.5 text-xs text-center font-bold">
             <div id="spot-step-1" class="py-1.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-600">步驟 1: 篩查 氯胺酮</div>
             <div id="spot-step-2" class="py-1.5 rounded bg-slate-900 text-slate-500 border border-slate-800">步驟 2: 篩查 依托咪酯</div>
@@ -436,37 +305,30 @@
       </div>
 
       <div class="shrink-0 pt-2 border-t border-slate-800 flex gap-2">
-        <button id="btn-spot-reagent1" class="flex-1 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md">
-          1️⃣ 滴入 氯胺酮試劑
-        </button>
-        <button id="btn-spot-reagent2" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 transition cursor-not-allowed" disabled>
-          2️⃣ 滴入 依托咪酯試劑
-        </button>
+        <button id="btn-spot-reagent1" class="flex-1 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md">1️⃣ 滴入 氯胺酮試劑</button>
+        <button id="btn-spot-reagent2" class="flex-1 py-2.5 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs border border-slate-700 transition cursor-not-allowed" disabled>2️⃣ 滴入 依托咪酯試劑</button>
         <button id="btn-spot-reset" class="px-3 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold active:scale-95 transition">🔄 重置</button>
-        <button id="btn-spot-submit" class="flex-1 py-2.5 rounded-xl bg-cyan-600 text-white font-bold text-xs shadow-lg transition active:scale-95 disabled:opacity-30 disabled:pointer-events-none" disabled>
-          確認檢驗報告
-        </button>
+        <button id="btn-spot-submit" class="flex-1 py-2.5 rounded-xl bg-cyan-600 text-white font-bold text-xs shadow-lg transition active:scale-95 disabled:opacity-30 disabled:pointer-events-none" disabled>確認化驗結論</button>
       </div>
     </div>
   </div>
 
-  <!-- 調查員案件手冊與思維宮殿 -->
-  <div id="notebook-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="notebook-modal-title" tabindex="-1">
+  <div id="notebook-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" tabindex="-1">
     <div class="glass-panel w-full max-w-xl rounded-3xl p-3.5 sm:p-4 flex flex-col justify-between relative border-amber-500/40 max-h-[92vh] overflow-y-auto">
       <div class="shrink-0 flex items-center justify-between pb-2 border-b border-slate-700">
         <div class="flex items-center gap-2">
           <span class="text-lg">📋</span>
           <div>
-            <h2 id="notebook-modal-title" class="text-xs sm:text-sm font-black text-white">咪制書院校園安全專案手冊</h2>
-            <p class="text-xs text-orange-400">依托咪酯毒理專案卷宗 • 6大核心物證鏈</p>
+            <h2 class="text-xs sm:text-sm font-black text-white">咪制書院校園調查卷宗</h2>
+            <p class="text-xs text-orange-400">現場物證鏈與因果分析</p>
           </div>
         </div>
         
         <div class="flex gap-1.5">
-          <button id="tab-btn-clues" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-orange-500 text-white transition">現場物證 (<span id="clue-count-text">0</span>/6)</button>
+          <button id="tab-btn-clues" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-orange-500 text-white transition">物證鏈 (<span id="clue-count-text">0</span>/6)</button>
           <button id="tab-btn-mindpalace" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">思維宮殿定案</button>
-          <button id="tab-btn-profiles" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">涉案名冊</button>
-          <button id="btn-close-notebook" class="ml-1.5 px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉案件手冊">✕</button>
+          <button id="tab-btn-profiles" class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition">涉案人員</button>
+          <button id="btn-close-notebook" class="ml-1.5 px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold">✕</button>
         </div>
       </div>
 
@@ -483,23 +345,23 @@
           </div>
           <button id="btn-close-clue-detail" class="text-slate-300 hover:text-white text-xs px-2.5 py-1 rounded bg-slate-800 font-bold">收起 ✕</button>
         </div>
-        <p id="detail-clue-body" class="text-xs text-slate-200 leading-relaxed m-0 mb-2">詳細案情說明</p>
-        <div id="detail-clue-forensic" class="text-xs text-cyan-300 bg-cyan-950/40 p-2 rounded-lg border border-cyan-500/30">毒理鑑識結論</div>
+        <p id="detail-clue-body" class="text-xs text-slate-200 leading-relaxed m-0 mb-2"></p>
+        <div id="detail-clue-forensic" class="text-xs text-cyan-300 bg-cyan-950/40 p-2 rounded-lg border border-cyan-500/30"></div>
       </div>
 
       <div id="tab-content-mindpalace" class="hidden my-2 space-y-2">
         <div id="mindpalace-locked-notice" class="bg-rose-950/30 p-4 rounded-2xl border border-rose-500/40 text-center flex flex-col items-center gap-2">
           <div class="text-3xl animate-pulse">🔒</div>
-          <div class="text-xs sm:text-sm font-black text-rose-300">思維宮殿定案鏈尚未就緒</div>
+          <div class="text-xs sm:text-sm font-black text-rose-300">思維宮殿定案鏈尚未完整</div>
           <p class="text-xs text-slate-300 leading-relaxed max-w-sm">
-            現場偵查尚未完備（目前進度 <span id="locked-clue-progress" class="text-amber-400 font-bold">0/6</span>）。請先集齊 6 大核心物證並於天台截獲幕後通聯，方可正式定案！
+            現場偵查尚未完備（目前進度 <span id="locked-clue-progress" class="text-amber-400 font-bold">0/6</span>）。請集齊 6 項物證並在天台完成訊號鎖定後進行定案。
           </p>
         </div>
 
         <div id="mindpalace-form-area" class="hidden bg-slate-900/90 p-3 rounded-2xl border border-slate-800 space-y-2">
           <div class="flex items-center justify-between text-xs font-bold text-amber-300 mb-1">
-            <span id="deduce-header">🔍 邏輯因果定案鏈：完成執法通報</span>
-            <span class="text-xs text-emerald-400 font-bold">✓ 6項核心物證已全數核實</span>
+            <span id="deduce-header">🔍 邏輯定案：通報執法部門並收網</span>
+            <span class="text-xs text-emerald-400 font-bold">✓ 6 項關鍵物證全數核實</span>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
@@ -507,34 +369,34 @@
               <label for="deduce-vector" class="text-slate-200 font-bold">1. 雙試管確診物質：</label>
               <select id="deduce-vector" class="bg-slate-900 text-xs text-orange-300 p-1.5 rounded border border-slate-700 outline-none">
                 <option value="none">-- 請選擇 --</option>
-                <option value="wrong1">普通葡萄能量飲料</option>
+                <option value="wrong1">普通提神能量飲料成分</option>
                 <option value="correct">混入電子煙之受管制危險藥物「依托咪酯」</option>
-                <option value="wrong2">純薄荷調味甘油</option>
+                <option value="wrong2">純薄荷調味甘油原液</option>
               </select>
             </div>
 
             <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1.5">
-              <label for="deduce-symptoms" class="text-slate-200 font-bold">2. 典型臨床中毒反應：</label>
+              <label for="deduce-symptoms" class="text-slate-200 font-bold">2. 現場中毒臨床反應：</label>
               <select id="deduce-symptoms" class="bg-slate-900 text-xs text-orange-300 p-1.5 rounded border border-slate-700 outline-none">
                 <option value="none">-- 請選擇 --</option>
-                <option value="wrong1">單純考前眼睛疲倦</option>
-                <option value="correct">肌陣攣全身劇烈抽搐、意識斷片</option>
-                <option value="wrong2">專注力明顯提升</option>
+                <option value="wrong1">考前單純焦慮疲憊</option>
+                <option value="correct">急性肌陣攣全身劇烈抽搐、意識斷片</option>
+                <option value="wrong2">精神短暫過度亢奮</option>
               </select>
             </div>
 
             <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1.5">
-              <label for="deduce-action" class="text-slate-200 font-bold">3. 禁毒口號與舉報熱線：</label>
+              <label for="deduce-action" class="text-slate-200 font-bold">3. 禁毒通報口號與專線：</label>
               <select id="deduce-action" class="bg-slate-900 text-xs text-orange-300 p-1.5 rounded border border-slate-700 outline-none">
                 <option value="none">-- 請選擇 --</option>
-                <option value="correct">【毒品咪制！】打熱線 2527-1234 或打擊依托咪酯專線 6629-2966</option>
-                <option value="wrong1">只要吸食間隔長就不會成癮</option>
+                <option value="correct">【毒品咪制！】舉報熱線 2527-1234 / 專線 6629-2966</option>
+                <option value="wrong1">私下觀察學生後續反應再作處理</option>
               </select>
             </div>
           </div>
 
           <button id="btn-submit-deduction" class="w-full py-2.5 rounded-xl glass-btn font-black text-amber-200 text-xs tracking-wider flex items-center justify-center gap-1 active:scale-95 shadow-lg">
-            <span>確認定案鏈並向執法部門發出通報</span>
+            <span>提交定案報告並啟動執法收網</span>
           </button>
         </div>
       </div>
@@ -548,7 +410,7 @@
               <div class="text-[11px] text-cyan-300">特約安全調查員</div>
             </div>
           </div>
-          <p class="text-xs text-slate-300 leading-relaxed">受託進入校園封鎖線，搜集客觀物證還原受害真相，拯救中毒學生。</p>
+          <p class="text-xs text-slate-300 leading-relaxed">受託進入校園封鎖線，搜集客觀物證還原事發經過，查明中毒根源。</p>
         </div>
 
         <div class="glass-panel p-2.5 rounded-xl border-purple-500/40 flex flex-col">
@@ -559,7 +421,7 @@
               <div class="text-[11px] text-purple-300">中六B班受害學生</div>
             </div>
           </div>
-          <p class="text-xs text-slate-300 leading-relaxed">純粹受害者。詠蕎受文憑試升學重壓所困，展霆則受腰腿舊患所苦。兩人被毒販『提神止痛、天然草本』的話術欺騙，誤吸毒煙彈致急性肌陣攣抽搐送院！</p>
+          <p class="text-xs text-slate-300 leading-relaxed">詠蕎長期承受升學壓力，模擬試成績波動；展霆在學界賽前面臨膝傷復發。兩人在身心重壓下，誤信了「天然草本、提神止痛」的偽裝煙油承諾，誘發急性肌陣攣抽搐送院。</p>
         </div>
 
         <div class="glass-panel p-2.5 rounded-xl border-rose-500/40 bg-rose-950/20 flex flex-col">
@@ -570,13 +432,12 @@
               <div class="text-[11px] text-rose-300">黑市投毒主謀</div>
             </div>
           </div>
-          <p class="text-xs text-slate-300 leading-relaxed">校外犯罪分子。偽裝普通煙彈滲透校園死信箱，針對受壓學生投毒，並企圖以偷拍學生抽搐影片進行勒索。</p>
+          <p class="text-xs text-slate-300 leading-relaxed">潛伏校園周邊的分銷者。利用考生的焦慮與傷患心理，以死信箱散布偽裝煙彈，並企圖以偷拍學生抽搐發作的短片實施勒索。</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 開場畫面 -->
   <div id="title-screen" class="fixed inset-0 z-50 bg-[#04060d] flex items-center justify-center p-3 text-center">
     <div class="max-w-xl w-full p-4 sm:p-6 glass-panel rounded-3xl border-orange-500/50 flex flex-col items-center">
       <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-orange-950/80 border border-orange-500/50 text-orange-400 text-xs font-bold uppercase tracking-widest mb-1.5 shadow-md">
@@ -590,7 +451,8 @@
         Twilight Echoes: 沉淪之霧 • 校園特別調查
       </h2>
       <p class="text-xs text-slate-300 leading-relaxed mb-4 text-left bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
-        放學後的咪制書院突發兩起嚴重急性中毒事件！中六尖子<strong class="text-amber-300">岑詠蕎</strong>在課堂上突發全身劇烈肌陣攣抽搐倒地；同一時間，籃球隊長<strong class="text-cyan-300">霍展霆</strong>亦在更衣室倒地休克！兩位無辜學生均被毒販宣稱能「提神止痛」的偽裝煙油誘騙。特約調查員梁澤銘受託進入封鎖現場，請排查現場 6 大關鍵物證，揭開神秘煙油背後的依托咪酯真相，保護受害學生！
+        放學後的咪制書院接連發生兩起嚴重急性中毒休克事件。中六拔尖生<strong class="text-amber-300">岑詠蕎</strong>在模擬試途中突發全身劇烈肌陣攣抽搐倒地；同一時間，籃球隊長<strong class="text-cyan-300">霍展霆</strong>亦在更衣室昏迷休克。<br><br>
+        校舍已被緊急封鎖，特約安全調查員梁澤銘受託進入現場，在情況惡化前保全證據。六件關鍵物證散落在校舍各處——查明真相，在悲劇重演前揭露源頭。
       </p>
 
       <button id="btn-start-game" class="w-full max-w-xs py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 text-white font-black text-xs sm:text-sm tracking-wider shadow-[0_0_25px_rgba(249,115,22,0.5)] active:scale-95 transition cursor-pointer">
@@ -607,7 +469,6 @@
     </div>
   </div>
 
-  <!-- 結案畫面 -->
   <div id="victory-screen" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-2xl flex items-center justify-center p-2 sm:p-4 opacity-0 pointer-events-none transition-all duration-500" role="dialog" aria-modal="true">
     <div class="glass-panel max-w-2xl w-full rounded-3xl p-3.5 sm:p-5 border-emerald-500/60 text-center relative overflow-hidden flex flex-col justify-between">
       <div class="shrink-0 flex items-center justify-between pb-2 border-b border-slate-700/80 mb-2.5">
@@ -615,7 +476,7 @@
           <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-lg shadow-[0_0_20px_rgba(16,185,129,0.35)]">🏆</div>
           <div class="text-left">
             <h2 class="text-xs sm:text-sm font-black text-white">案情告破：真相水落石出！</h2>
-            <div class="text-xs text-emerald-400 font-bold">【S級 金牌特約調查員】依托咪酯全鏈條物證通報核實</div>
+            <div class="text-xs text-emerald-400 font-bold">全鏈條物證通報核實完成</div>
           </div>
         </div>
         <div class="px-2.5 py-1 rounded-full bg-rose-950 border border-rose-500 text-rose-300 text-xs font-black tracking-wider">
@@ -627,10 +488,10 @@
         <div class="bg-slate-900/90 p-3 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-2">
           <div class="space-y-1.5 text-xs text-slate-300 leading-relaxed">
             <div>
-              <strong class="text-amber-300">雷霆收網：</strong>依據梁澤銘於 1F 更衣室起獲之殘破煙彈、2F 課桌漏油、解鎖 17 號儲物櫃（420）起獲之投放單，以及化學室外排水管查獲之密封煙彈，經雙試管交叉檢驗，確診毒物為受《危險藥物條例》嚴格管制之麻醉藥<strong>「依托咪酯」</strong>！專案組已將校外主謀「暗夜調劑師」及其犯罪網絡連根拔起！
+              <strong class="text-amber-300">雷霆收網：</strong>依據梁澤銘於更衣室起獲之淡紫煙彈殘骸、課桌撕裂答題紙與漏液、17 號儲物櫃投放單，以及排水管暗角搜出之密封煙彈，經雙試管交叉檢驗，確診毒物為受《危險藥物條例》嚴格管制之麻醉藥<strong>「依托咪酯」</strong>。天台截獲之通聯錄音已協助警方將幕後犯罪鏈條瓦解。
             </div>
             <div>
-              <strong class="text-cyan-300">及時救治：</strong>岑詠蕎與霍展霆因第一時間精準確診為依托咪酯急性中毒，醫院施以對症拮抗治療，已徹底脫離危險！校方已為受害學生提供全面的心理輔導與學業支援！
+              <strong class="text-cyan-300">及時救治：</strong>岑詠蕎與霍展霆因第一時間精準確診為依托咪酯急性中毒，醫院施以對症拮抗治療，已徹底脫離危險。
             </div>
           </div>
 
@@ -652,7 +513,7 @@
           </div>
 
           <div class="text-xs text-orange-300 bg-orange-950/30 p-2 rounded-xl border border-orange-500/30 leading-relaxed">
-            拒絕毒販美化話術！學生是我們的保護對象！依托咪酯受《危險藥物條例》嚴格管轄！齊心守護無毒校園，牢記<strong>【毒品咪制！】</strong>！
+            拒絕任何宣稱「提神、解壓、無害」的偽裝煙油。依托咪酯受《危險藥物條例》嚴格管轄。守護校園，牢記<strong>【毒品咪制！】</strong>。
           </div>
         </div>
       </div>
@@ -660,9 +521,6 @@
   </div>
 
   <script>
-    // ==========================================
-    // 1. 觸覺震動回饋輔助
-    // ==========================================
     function haptic(pattern = 15) {
       try {
         if (typeof navigator !== 'undefined' && navigator.vibrate) {
@@ -671,9 +529,6 @@
       } catch (e) {}
     }
 
-    // ==========================================
-    // 2. Web Audio 程序化音效引擎
-    // ==========================================
     class RetroSoundEngine {
       constructor() {
         this.ctx = null;
@@ -692,7 +547,6 @@
           try {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             this.ctx = new AudioContext();
-
             this.masterGain = this.ctx.createGain();
             this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime);
             this.masterGain.connect(this.ctx.destination);
@@ -704,11 +558,8 @@
             this.sfxGain = this.ctx.createGain();
             this.sfxGain.gain.setValueAtTime(0.6, this.ctx.currentTime);
             this.sfxGain.connect(this.masterGain);
-
             this.startBGM();
-          } catch(e) {
-            console.warn("音頻引擎初始化受阻:", e);
-          }
+          } catch(e) {}
         } else if (this.ctx.state === 'suspended') {
           this.ctx.resume().then(() => {
             if (!this.isPlayingBGM) this.startBGM();
@@ -719,7 +570,6 @@
       startBGM() {
         if (!this.ctx || this.isPlayingBGM) return;
         this.isPlayingBGM = true;
-
         try {
           const filter = this.ctx.createBiquadFilter();
           filter.type = 'lowpass';
@@ -747,22 +597,18 @@
 
         const notes = [261.63, 311.13, 392.00, 466.16, 523.25, 466.16];
         let noteIdx = 0;
-
         const playChime = () => {
           if (!this.isPlayingBGM || !this.ctx || this.ctx.state !== 'running') return;
           try {
             const freq = notes[noteIdx];
             noteIdx = (noteIdx + 1) % notes.length;
-
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'sine';
             osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-
             gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
             gain.gain.linearRampToValueAtTime(0.08, this.ctx.currentTime + 0.3);
             gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 2.4);
-
             osc.connect(gain);
             gain.connect(this.bgmGain);
             osc.start();
@@ -905,10 +751,6 @@
     }
 
     const sound = new RetroSoundEngine();
-
-    // ==========================================
-    // 3. 核心遊戲狀態與數據庫
-    // ==========================================
     const TOTAL_CLUES = 6;
 
     const GAME_STATE = {
@@ -930,84 +772,83 @@
       lockerDigits: [0, 0, 0]
     };
 
-    // 6 大核心物證鏈（學生 100% 為無辜受害者定位）
     const CLUES_DATA = {
       clue_gym_fok: {
         id: "clue_gym_fok",
         stage: 1,
-        name: "1F 體育更衣室外霍展霆遺留之改裝煙彈殘骸",
+        name: "1F 更衣室長椅下的改裝煙彈殘骸與留言便條",
         zone: "1F 體育更衣室走廊",
         icon: "🩹",
         pos: { x: -9.5, y: 1.25, z: 4.0 },
         floor: 1,
-        shortDesc: "隊長展霆在此倒地。起獲摔裂的偽裝提神煙彈，隨附紙條揭示毒販以止痛話術針對展霆與中六B班岑詠蕎下毒手！",
-        fullDesc: "隊長霍展霆在此急性中毒送醫。長椅下起獲摔裂的電子煙彈，煙油呈淡紫色。隨附一張冷血的毒販打印便條：『練球舊患痛就抽兩口保證止痛放鬆。你同中六B班岑詠蕎一樣，都承受緊難以忍受嘅痛楚同壓力吧？——暗夜調劑師』。毒販專門窺探校內承受巨大壓力與傷痛的學生，誘騙他們吸食！",
-        forensic: "煙嘴殘留特異性中樞麻醉酯類氣味，載體含有高黏度丙二醇溶劑。"
+        shortDesc: "長椅夾縫起獲摔裂的電子煙彈，煙油泛淡紫色。隨附便條指涉展霆的膝傷與中六B班岑詠蕎。",
+        fullDesc: "更衣室長椅夾縫起獲一枚摔裂的電子煙彈，殘存液體呈奇異的淡紫色，旁邊遺留著球隊冰敷袋。長椅上壓著一張打印便條：『膝傷痛就抽兩口，保證止痛放鬆、學界照樣上場。你同中六B班岑詠蕎一樣，何必死頂？——調劑師』。",
+        forensic: "煙嘴檢出特殊酯類化合物殘留氣味，載體含有高黏度丙二醇溶劑。"
       },
       clue_desk: {
         id: "clue_desk",
         stage: 2,
-        name: "2F 中六B班 岑詠蕎抽搐劃破之答題紙與求救手機",
+        name: "2F 課桌撕裂之答題紙與求救手機螢幕",
         zone: "2F 中六B班房",
         icon: "📝",
         pos: { x: -8.5, y: 5.05, z: -7.5 },
         floor: 2,
-        shortDesc: "課桌上起獲漏出的紫色煙液（證物 A）與撕裂答題紙！手機停留在求救備忘錄：『好暈……全身係咁抽筋……呢個根本唔係提神精油……17號……420……救我……』！",
-        fullDesc: "課桌上漏出一灘深紫色油性煙液（證物 A）。模擬試答題紙後半段公式劇烈扭曲劃破——完全符合吸食不明煙油引發的急性肌陣攣全身抽搐！旁邊手機螢幕停留著詠蕎中毒休克前最後打下的求救文字：『好暈……全身係咁抽筋……呢個根本唔係提神精油……毒販話放喺2F 17號櫃……黑話420……救我……』！她完全是被毒販話術誘騙的無辜受害者！",
-        forensic: "桌面漏液呈淡紫油狀，高脂溶性，微酸性。提取為現場【證物 A】送檢化驗。"
+        shortDesc: "課桌漏出深紫油液（樣品A）。答題紙末尾呈劇烈痙攣劃痕；手機未發出文字提及『17號櫃』與『黑話420』。",
+        fullDesc: "課桌上漏出一灘未乾涸的油性紫液（樣品 A）。模擬試卷的數學公式在後半段突然化為劇烈顫抖的撕裂劃痕；旁邊手機停留在未鎖的備忘錄草稿：『心跳好快……手腳完全唔受控咁抽搐……呢個根本唔係草本精油……17號櫃……黑話420……邊個可以救我……』。",
+        forensic: "桌面漏液呈淡紫油狀，高脂溶性，微酸性。提取為現場【樣品 A】以供化驗。"
       },
       clue_corridor: {
         id: "clue_corridor",
         stage: 3,
-        name: "2F 走廊 17 號儲物櫃內的毒販死信箱單據",
+        name: "2F 17 號儲物櫃內的死信箱投放清單",
         zone: "2F 教學樓儲物櫃",
         icon: "🏷️",
         pos: { x: 5.5, y: 5.05, z: 0.1 },
         floor: 2,
-        shortDesc: "成功解開 17 號儲物櫃！起獲暗網毒販投放單：『咪制書院死信箱中轉站：專門誘騙學生……新一批煙彈已藏於化學室外排水管暗角』！",
-        fullDesc: "成功解鎖 17 號儲物櫃！櫃內起獲暗夜調劑師的暗網投放單：『咪制書院死信箱：針對校內尖子及受傷運動員之提神試用品已投放完畢。新一批調製電子煙彈藏於【化學室外排水管固定架暗角】……』證明儲物櫃只是毒販單向投毒的死信箱，學生純屬受害者！",
-        forensic: "紙張表面帶有防窺印刷暗碼，邊緣檢出麻醉酯類揮發痕跡。"
+        shortDesc: "成功解開 17 號櫃。起獲代號交收單，指明新一批原液藏於化學室外排水管暗角。",
+        fullDesc: "儲物櫃內並無書本，只有暗格夾層與一張帶防窺印刷的代號交收單：『咪制書院節點：試用裝已投放目標儲物格。下批特調原液已暫存【化學室外排水管支架暗角】，閱後即焚。』",
+        forensic: "紙張帶有特種油墨，邊緣檢出揮發性酯類氣味殘留。"
       },
       clue_pipe_stash: {
         id: "clue_pipe_stash",
         stage: 4,
-        name: "2F 化學室外排水管支架暗角的未開封煙彈原液",
-        zone: "2F 理科化學室外走廊暗角",
+        name: "2F 排水管支架暗角搜出之密封煙彈",
+        zone: "2F 化學室外走廊暗角",
         icon: "🧪",
         pos: { x: 6.5, y: 5.05, z: 5.2 },
         floor: 2,
-        shortDesc: "在排水管固定鐵架暗角搜出毒販藏匿的密封煙彈（證物 B）！兩份樣品齊備，立即進入實驗室快篩！",
-        fullDesc: "在外露排水管與牆身固定鐵架暗角搜出一盒密封的電子煙彈（證物 B），標籤偽裝為『天然草本提神原液』，內裡液體透著與課桌漏油相同的幽微紫光。毒販所謂提神原液即將在實驗室被徹底揭穿！",
-        forensic: "煙彈內液體經化驗管抽取，揮發性載體與課桌漏油完全一致，具備高濃度中樞抑制管制藥物特徵。"
+        shortDesc: "搜出密封改裝煙彈（樣品B），標籤偽裝為草本提神物。兩份樣品已備齊，可前往化驗室比對。",
+        fullDesc: "在排水管固定鐵架暗角搜出未拆封的真空包裝煙彈（樣品 B）。外包裝印著極具迷惑性的『100%草本提取、無焦油極速提神』標籤，內部液體透著與課桌漏液完全相同的微紫色澤。",
+        forensic: "煙彈抽取液揮發特徵與課桌漏液完全一致，具備高濃度中樞抑制藥物物理性質。"
       },
       clue_spot_plate: {
         id: "clue_spot_plate",
         stage: 5,
-        name: "2F 理科實驗室 雙試管快篩確診報告（依托咪酯）",
-        zone: "2F 理科綜合化學實驗室",
+        name: "2F 理科實驗室 雙試管化驗報告",
+        zone: "2F 理科綜合實驗室",
         icon: "🔬",
         pos: { x: 9.0, y: 5.05, z: 7.0 },
         floor: 2,
-        shortDesc: "排除氯胺酮，雙試管確診兩份煙油樣品皆為受管制危險藥物「依托咪酯」！毒販偽裝提神的謊言破滅！天台傳來震動鈴聲！",
-        fullDesc: "雙試管交叉顯色完成！排除氯胺酮，確診課桌漏油（證物 A）與排水管煙彈（證物 B）皆為受香港特區《危險藥物條例》嚴格管制的【依托咪酯 (Etomidate)】！毒販宣稱的提神放鬆根本就是致命陷阱！此時天台方向傳來急促的手機鈴聲！",
-        forensic: "咪唑羧酸酯特異顯色反應呈強陽性深紫褐色沉澱，證實為超量管制危險藥物依托咪酯。"
+        shortDesc: "排除氯胺酮，雙試管確診兩份煙油均為受嚴格管制之「依托咪酯」。天台方向傳來急促震動鈴聲。",
+        fullDesc: "雙試管交叉比對結果出爐：氯胺酮試劑呈陰性無色；而第二組特異顯色反應瞬間轉化為深紫褐色沉澱。兩份樣品均含有高濃度受嚴格管制的麻醉危險藥物「依托咪酯 (Etomidate)」。此時，頭頂天台傳來一陣急促的通聯震動聲。",
+        forensic: "咪唑羧酸酯特異顯色呈強陽性深紫褐色沉澱，證實為超量管制危險藥物依托咪酯。"
       },
       clue_rooftop_burner: {
         id: "clue_rooftop_burner",
         stage: 6,
-        name: "3F 天台排風箱後震動響鈴的通聯手機",
+        name: "3F 天台排風箱後震動響鈴之通聯手機",
         zone: "3F 教學樓天台",
         icon: "📱",
         pos: { x: -5.0, y: 8.85, z: -2.5 },
         floor: 3,
-        shortDesc: "接聽天台手機，錄下主謀「暗夜調劑師」企圖勒索受害學生的通話鐵證！全案定案鏈就緒！",
-        fullDesc: "在天台排風箱深處起獲震動中的暗網通聯手機。接聽並啟動錄音：『喂？！咪制書院班傻仔學生上當未？岑詠蕎同霍展霆倒低咗未？趁佢哋神志不清，將佢哋全身抽搐倒地嘅短片發上網勒索保密費！』主謀企圖毒害並勒索學生的罪證全數落網！",
-        forensic: "通話基站與暗網帳號已由技術人員鎖定，幕後毒品分銷鏈條徹底瓦解。"
+        shortDesc: "接聽天台手機並錄音，成功鎖定暗夜調劑師策劃投毒與企圖勒索之音軌證據。全案定案鏈就緒。",
+        fullDesc: "天台排風箱深處起獲震動中的暗網通聯手機。接通電話並自動錄音：『喂？貨試咗未？咪制書院嗰兩個傻仔抽筋倒地未？記住拍低佢哋倒地抽搐嘅短片，唔畀錢買解藥或者保密，就直接發畀全校同升學委員會。』",
+        forensic: "通話基站與暗網帳號已由技術小組固定，幕後分銷網絡已鎖定。"
       }
     };
 
     const DUMMY_LOCKERS = {
-      locker_11: { id: "locker_11", num: 11, name: "2F 走廊 11 號儲物櫃", pos: { x: -2.0, y: 5.0, z: 0.1 }, desc: "這是 11 號儲物櫃。裡面整齊疊放著普通校服與模擬試卷，未發現可疑物品。" },
+      locker_11: { id: "locker_11", num: 11, name: "2F 走廊 11 號儲物櫃", pos: { x: -2.0, y: 5.0, z: 0.1 }, desc: "這是 11 號儲物櫃。裡面整齊疊放著普通校服與模擬試卷，未發現異常物品。" },
       locker_13: { id: "locker_13", num: 13, name: "2F 走廊 13 號儲物櫃", pos: { x: 0.5, y: 5.0, z: 0.1 }, desc: "這是 13 號儲物櫃。門外貼著學界賽程表，鎖具完好無撬痕。" },
       locker_15: { id: "locker_15", num: 15, name: "2F 走廊 15 號儲物櫃", pos: { x: 3.0, y: 5.0, z: 0.1 }, desc: "這是 15 號儲物櫃。裡面放置著雨傘與水樽，無可疑物痕跡。" },
       locker_19: { id: "locker_19", num: 19, name: "2F 走廊 19 號儲物櫃", pos: { x: 7.5, y: 5.0, z: 0.1 }, desc: "這是 19 號儲物櫃。鎖頭有些微生鏽，近期未有開啟痕跡。" }
@@ -1015,67 +856,58 @@
 
     const EASTER_EGGS = {
       notice_board: {
-        id: "notice_board", name: "1F 校園抗毒海報", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
-        desc: "【校園抗毒海報：識破毒品黑話與受管制藥物陷阱】\n• 警惕「依托咪酯（Etomidate）」：不法分子常將其偽裝成普通提神或止痛煙彈，誘騙青少年吸食。實際上依托咪酯是受《危險藥物條例》嚴格管制的麻醉劑，濫用會導致肌陣攣劇烈抽搐、記憶斷片、呼吸衰竭及成癮猝死！\n• 識破毒品黑話：毒販常利用黑話掩飾罪行，例如大麻常被隱蔽指代為「草」，在國際上常用數字代號「420」！",
-        monologue: "（這張抗毒海報揭露了毒販話術——受管制藥物依托咪酯常被包裝成提神煙彈！海報上還特別提及大麻代號是『420』，這對解讀毒販代號極為關鍵！）"
+        id: "notice_board", name: "1F 校園抗毒宣傳板", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
+        desc: "【校園抗毒公告：警惕偽裝煙彈與黑話陷阱】\n• 警惕「依托咪酯（Etomidate）」：不法分子常將其偽裝成提神精油或草本煙彈，誘騙青少年。濫用會導致急性肌陣攣抽搐、思維斷片、成癮猝死。\n• 黑話代號識別：不法分子常借用代號掩飾交易，例如大麻在黑市常以『草』或數字『420』代稱。",
+        monologue: "（這塊展板記錄了依托咪酯的臨床中毒症狀，還提到大麻在黑市常用的代號『420』……這或許能派上用場。）"
       },
       trophy_case: {
         id: "trophy_case", name: "1F 大堂學界榮譽陳列櫃", pos: { x: 0.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🏆",
-        desc: "陳列櫃擺放著咪制書院的獎盃。正中央是霍展霆與岑詠蕎的優秀學生合影。",
-        monologue: "（展霆是球隊核心，詠蕎是全校尖子……他們面對升學與傷患壓力，卻被無良毒販以『提神止痛』的謊言蓄意誘害，必須盡快查明真相為他們伸張正義！）"
+        desc: "陳列櫃擺放著咪制書院的各項獎盃。正中央是霍展霆與岑詠蕎的優秀學生合影。",
+        monologue: "（展霆是籃球主力，詠蕎是級別尖子……他們在繁重的訓練和升學壓力下，成了犯罪分子的目標。）"
       },
       vending_machine: {
-        id: "vending_machine", name: "1F 小食部自動販賣機", pos: { x: 8.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🥤",
-        desc: "販賣機陳列著烏龍茶與能量飲料。側面貼著學生便條：『DSE 順利！』",
-        monologue: "（考生承受著巨大升學壓力……毒販往往正是利用學生渴望提神的心態，將毒品包裝成提神物乘虛而入。）"
+        id: "vending_machine", name: "1F 自動販賣機", pos: { x: 8.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🥤",
+        desc: "販賣機陳列著烏龍茶與能量飲料。側面貼著便條：『DSE 加油！』",
+        monologue: "（考生面對重壓容易焦慮……偽裝成『無害提神』的危險藥物正是藉此滲透校園。）"
       },
       lost_and_found: {
         id: "lost_and_found", name: "2F 走廊失物認領箱", pos: { x: -1.0, y: 5.0, z: 2.5 }, floor: 2, icon: "📦",
-        desc: "走廊拐角處擺放的失物箱。裡面堆放著外套與水杯，上方貼著：『失物可領，莫失青春』標語。",
-        monologue: "（中學裡遺失的物品尚能找回，但若是因非法煙油損害了神經與前途，後果不堪設想。）"
+        desc: "角落的失物箱。裡面堆放著外套與水杯，上方貼著：『失物可領，莫失青春』。",
+        monologue: "（丟失的物品尚能找回，若神經中樞受損，代價無法挽回。）"
       },
       lab_microscope: {
-        id: "lab_microscope", name: "2F 理科實驗室顯微鏡台", pos: { x: 12.0, y: 5.0, z: 7.0 }, floor: 2, icon: "🔬",
-        desc: "實驗桌上的雙目顯微鏡旁壓著《化學實驗守則》。載玻片上是植物切片，秩序井然。",
-        monologue: "（化學本是求真的殿堂，卻被黑網之徒用於非法調製摧毀青年神經的管制藥物。）"
+        id: "lab_microscope", name: "2F 實驗室顯微鏡台", pos: { x: 12.0, y: 5.0, z: 7.0 }, floor: 2, icon: "🔬",
+        desc: "實驗桌上的雙目顯微鏡旁壓著《化學實驗守則》。載玻片整齊排列。",
+        monologue: "（嚴密的化學分析，能讓任何偽裝的毒物原形畢露。）"
       },
       rooftop_telescope: {
-        id: "rooftop_telescope", name: "3F 天台天文觀測折射鏡", pos: { x: 8.0, y: 8.8, z: -6.5 }, floor: 3, icon: "🔭",
-        desc: "一台立在天台邊緣的望遠鏡，能俯瞰維港全景。鏡架卡著紙飛機，寫著：『願我們畢業晴空萬里。』",
-        monologue: "（這片屬於青少年的校園天空，不容任何毒霧污染。）"
+        id: "rooftop_telescope", name: "3F 天台折射望遠鏡", pos: { x: 8.0, y: 8.8, z: -6.5 }, floor: 3, icon: "🔭",
+        desc: "一台立在天台邊緣的望遠鏡，能俯瞰整個校園與周邊街道。",
+        monologue: "（站在高處，校舍進出動線一覽無遺……難怪涉案人會選在天台留置通聯設備。）"
       },
       rooftop_guitar: {
-        id: "rooftop_guitar", name: "3F 天台角落樂隊練習設備", pos: { x: -8.0, y: 8.8, z: 4.5 }, floor: 3, icon: "🎸",
+        id: "rooftop_guitar", name: "3F 天台角落音箱設備", pos: { x: -8.0, y: 8.8, z: 4.5 }, floor: 3, icon: "🎸",
         desc: "一把缺弦的吉他倚在音箱旁。這裡原是放學後學生樂隊排練的角落。",
-        monologue: "（原本充滿青春夢想的校園角落，卻被不法之徒當作藏匿通聯電話的犯罪跳板。）"
+        monologue: "（課餘的活動空間，卻被涉案人當作隱蔽的犯罪跳板。）"
       }
     };
 
-    // ==========================================
-    // 4. 3D 場景配置與實體
-    // ==========================================
     let renderer, scene, camera, player;
     let floor1Group, floor2Group, floor3Group;
     let interactableMeshes = [];
     let duskParticles;
-    let stairABarrierMesh = null;
-    let stairBBarrierMesh = null;
+    let stairABarrierMesh = null, stairBBarrierMesh = null;
     let objectiveArrowMesh = null;
 
     const SOLID_OBSTACLES = [
-      // 1F
       { minX: -2.2, maxX: 2.2, minZ: -8.5, maxZ: -6.5, floor: 1 },
       { minX: 6.8, maxX: 9.2, minZ: -8.5, maxZ: -6.5, floor: 1 },
       { minX: -12.2, maxX: -6.8, minZ: 3.2, maxZ: 4.8, floor: 1 },
       { minX: 4.2, maxX: 6.8, minZ: -8.9, maxZ: -8.1, floor: 1 },
-
-      // 2F
       { minX: -3.0, maxX: 9.0, minZ: -9.0, maxZ: -0.1, floor: 2 },
       { minX: -3.0, maxX: 8.5, minZ: -0.4, maxZ: 0.6, floor: 2 },
       { minX: -2.7, maxX: -2.3, minZ: -9.0, maxZ: 1.0, floor: 2 },
       { minX: 5.5, maxX: 12.5, minZ: 5.8, maxZ: 8.2, floor: 2 },
-
-      // 3F
       { minX: 5.8, maxX: 10.2, minZ: 1.8, maxZ: 6.2, floor: 3 },
       { minX: -7.0, maxX: -3.0, minZ: -4.8, maxZ: -2.2, floor: 3 },
       { minX: 6.8, maxX: 9.2, minZ: -7.5, maxZ: -5.5, floor: 3 }
@@ -1088,38 +920,29 @@
     ];
 
     const keys = {};
-
     let minimapCanvas, minimapCtx;
     let dialogueBox, dialoguePanelCard, dialogueSpeaker, dialogueRoleTag, dialogueText, dialogueAvatar;
     let interactionPrompt, promptActionText, promptInputBadge;
     let labModal, notebookModal, victoryScreen, lockerModal;
-
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
     function createIconSprite(emoji, bgColor = 'rgba(15, 23, 42, 0.92)', borderColor = '#fb923c') {
       const c = document.createElement('canvas');
-      c.width = 128;
-      c.height = 128;
+      c.width = 128; c.height = 128;
       const ctx = c.getContext('2d');
       ctx.clearRect(0, 0, 128, 128);
 
       ctx.beginPath();
       ctx.arc(64, 64, 52, 0, Math.PI * 2);
-      ctx.fillStyle = bgColor;
-      ctx.fill();
-      ctx.lineWidth = 5;
-      ctx.strokeStyle = borderColor;
-      ctx.stroke();
+      ctx.fillStyle = bgColor; ctx.fill();
+      ctx.lineWidth = 5; ctx.strokeStyle = borderColor; ctx.stroke();
 
       ctx.beginPath();
       ctx.arc(64, 64, 46, 0, Math.PI * 2);
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = '#ffffff';
-      ctx.stroke();
+      ctx.lineWidth = 2; ctx.strokeStyle = '#ffffff'; ctx.stroke();
 
       ctx.font = '54px "Noto Sans TC", "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(emoji, 64, 68);
 
       const tex = new THREE.CanvasTexture(c);
@@ -1139,16 +962,16 @@
         const skin = new THREE.MeshStandardMaterial({ color: 0xffd1b3 });
         const uniform = new THREE.MeshStandardMaterial({ color: 0x1e293b });
         const hair = new THREE.MeshStandardMaterial({ color: 0x1a1a24 });
-        const inspectorBadge = new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.8 });
+        const badgeMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.8 });
 
         this.torso = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.9, 0.45), uniform);
         this.torso.position.y = 1.05;
         this.torso.castShadow = true;
         this.mesh.add(this.torso);
 
-        const badgeMesh = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.28, 0.05), inspectorBadge);
-        badgeMesh.position.set(0, 1.15, 0.24);
-        this.mesh.add(badgeMesh);
+        const badge = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.28, 0.05), badgeMat);
+        badge.position.set(0, 1.15, 0.24);
+        this.mesh.add(badge);
 
         this.head = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.48, 0.48), skin);
         this.head.position.y = 1.8;
@@ -1268,14 +1091,8 @@
             return false;
           }
         }
-
-        if (f === 1 && x > 8.5 && z >= -1.0 && z <= 3.0 && GAME_STATE.questStage < 2) {
-          return false;
-        }
-        if (f === 2 && x < -8.2 && z >= 5.0 && z <= 9.0 && GAME_STATE.questStage < 6) {
-          return false;
-        }
-
+        if (f === 1 && x > 8.5 && z >= -1.0 && z <= 3.0 && GAME_STATE.questStage < 2) return false;
+        if (f === 2 && x < -8.2 && z >= 5.0 && z <= 9.0 && GAME_STATE.questStage < 6) return false;
         return true;
       }
 
@@ -1328,14 +1145,12 @@
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.BasicShadowMap;
       } catch (err) {
-        console.error("WebGL 初始化失敗:", err);
         return false;
       }
 
       scene = new THREE.Scene();
       scene.background = new THREE.Color(0x060914);
       scene.fog = new THREE.FogExp2(0x0a1024, 0.015);
-
       camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
 
       const ambientLight = new THREE.AmbientLight(0xdba686, 0.95);
@@ -1387,7 +1202,6 @@
       scene.add(floor3Group);
 
       buildArchitecture();
-
       player = new InvestigatorAvatar();
       updateFloorVisibility();
       updateObjectiveArrow();
@@ -1396,16 +1210,13 @@
 
     function buildObjectiveArrow() {
       objectiveArrowMesh = new THREE.Group();
-
       const coneGeo = new THREE.ConeGeometry(0.38, 0.8, 12);
       coneGeo.rotateX(Math.PI);
-      const coneMat = new THREE.MeshBasicMaterial({ color: 0x10b981 });
-      const cone = new THREE.Mesh(coneGeo, coneMat);
+      const cone = new THREE.Mesh(coneGeo, new THREE.MeshBasicMaterial({ color: 0x10b981 }));
 
       const haloGeo = new THREE.RingGeometry(0.45, 0.6, 16);
       haloGeo.rotateX(-Math.PI / 2);
-      const haloMat = new THREE.MeshBasicMaterial({ color: 0x10b981, side: THREE.DoubleSide, transparent: true, opacity: 0.8 });
-      const halo = new THREE.Mesh(haloGeo, haloMat);
+      const halo = new THREE.Mesh(haloGeo, new THREE.MeshBasicMaterial({ color: 0x10b981, side: THREE.DoubleSide, transparent: true, opacity: 0.8 }));
       halo.position.y = -0.5;
 
       const sprite = createIconSprite('🎯', 'rgba(6, 78, 59, 0.95)', '#10b981');
@@ -1425,23 +1236,17 @@
       let targetFloor = 1;
 
       if (GAME_STATE.questStage === 1) {
-        targetPos = CLUES_DATA.clue_gym_fok.pos;
-        targetFloor = 1;
+        targetPos = CLUES_DATA.clue_gym_fok.pos; targetFloor = 1;
       } else if (GAME_STATE.questStage === 2) {
-        targetPos = CLUES_DATA.clue_desk.pos;
-        targetFloor = 2;
+        targetPos = CLUES_DATA.clue_desk.pos; targetFloor = 2;
       } else if (GAME_STATE.questStage === 3) {
-        targetPos = { x: 2.8, y: 5.0, z: 2.2 };
-        targetFloor = 2;
+        targetPos = { x: 2.8, y: 5.0, z: 2.2 }; targetFloor = 2;
       } else if (GAME_STATE.questStage === 4) {
-        targetPos = CLUES_DATA.clue_pipe_stash.pos;
-        targetFloor = 2;
+        targetPos = CLUES_DATA.clue_pipe_stash.pos; targetFloor = 2;
       } else if (GAME_STATE.questStage === 5) {
-        targetPos = CLUES_DATA.clue_spot_plate.pos;
-        targetFloor = 2;
+        targetPos = CLUES_DATA.clue_spot_plate.pos; targetFloor = 2;
       } else if (GAME_STATE.questStage === 6) {
-        targetPos = CLUES_DATA.clue_rooftop_burner.pos;
-        targetFloor = 3;
+        targetPos = CLUES_DATA.clue_rooftop_burner.pos; targetFloor = 3;
       }
 
       if (targetPos && GAME_STATE.currentFloor === targetFloor) {
@@ -1473,48 +1278,35 @@
         tapeYellow: new THREE.MeshBasicMaterial({ color: 0xfacc15, side: THREE.DoubleSide })
       };
 
-      // 1F 大堂
       const f1Floor = new THREE.Mesh(new THREE.PlaneGeometry(28, 18), mats.foyerFloor);
       f1Floor.rotation.x = -Math.PI / 2;
       floor1Group.add(f1Floor);
 
       const f1WallN = new THREE.Mesh(new THREE.BoxGeometry(28, 3.2, 0.4), mats.wallMat);
-      f1WallN.position.set(0, 1.6, -9);
-      floor1Group.add(f1WallN);
+      f1WallN.position.set(0, 1.6, -9); floor1Group.add(f1WallN);
       const f1WallW = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), mats.wallMat);
-      f1WallW.position.set(-14, 1.6, 0);
-      floor1Group.add(f1WallW);
+      f1WallW.position.set(-14, 1.6, 0); floor1Group.add(f1WallW);
       const f1WallS = new THREE.Mesh(new THREE.BoxGeometry(28, 1.2, 0.4), mats.halfWallMat);
-      f1WallS.position.set(0, 0.6, 9);
-      floor1Group.add(f1WallS);
+      f1WallS.position.set(0, 0.6, 9); floor1Group.add(f1WallS);
       const f1WallE = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), mats.wallMat);
-      f1WallE.position.set(14, 1.6, 0);
-      floor1Group.add(f1WallE);
+      f1WallE.position.set(14, 1.6, 0); floor1Group.add(f1WallE);
 
       const trophyMesh = new THREE.Mesh(new THREE.BoxGeometry(3.6, 2.2, 0.8), mats.darkMetal);
-      trophyMesh.position.set(0, 1.1, -7.5);
-      floor1Group.add(trophyMesh);
+      trophyMesh.position.set(0, 1.1, -7.5); floor1Group.add(trophyMesh);
 
       const bench = new THREE.Mesh(new THREE.BoxGeometry(5.0, 0.6, 1.2), mats.woodFloor);
-      bench.position.set(-9.5, 0.3, 4.0);
-      floor1Group.add(bench);
+      bench.position.set(-9.5, 0.3, 4.0); floor1Group.add(bench);
 
       const basketball = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 10), new THREE.MeshStandardMaterial({ color: 0xea580c }));
-      basketball.position.set(-8.0, 0.22, 4.0);
-      floor1Group.add(basketball);
+      basketball.position.set(-8.0, 0.22, 4.0); floor1Group.add(basketball);
 
       const vending = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.6, 1.0), mats.vendingMat);
-      vending.position.set(8.0, 1.3, -7.5);
-      floor1Group.add(vending);
+      vending.position.set(8.0, 1.3, -7.5); floor1Group.add(vending);
 
       const bulletin = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.4, 0.08), mats.darkMetal);
-      bulletin.position.set(5.5, 1.6, -8.76);
-      floor1Group.add(bulletin);
+      bulletin.position.set(5.5, 1.6, -8.76); floor1Group.add(bulletin);
 
-      // 1F -> 2F 階梯 A
-      const stair1Steps = 10;
-      const s1Rise = 3.8 / stair1Steps;
-      const s1Run = 5.0 / stair1Steps;
+      const stair1Steps = 10, s1Rise = 3.8 / 10, s1Run = 5.0 / 10;
       for (let s = 0; s < stair1Steps; s++) {
         const sx = 8.0 + s * s1Run + s1Run / 2;
         const sh = (s + 1) * s1Rise;
@@ -1524,91 +1316,46 @@
       }
 
       stairABarrierMesh = new THREE.Group();
-      const postA1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal);
-      postA1.position.set(8.1, 0.6, -0.7);
-      const postA2 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal);
-      postA2.position.set(8.1, 0.6, 2.7);
-      const tapeA = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.18, 3.4), mats.tapeYellow);
-      tapeA.position.set(8.1, 0.75, 1.0);
+      const postA1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal); postA1.position.set(8.1, 0.6, -0.7);
+      const postA2 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal); postA2.position.set(8.1, 0.6, 2.7);
+      const tapeA = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.18, 3.4), mats.tapeYellow); tapeA.position.set(8.1, 0.75, 1.0);
       stairABarrierMesh.add(postA1, postA2, tapeA);
       floor1Group.add(stairABarrierMesh);
 
-      // 2F 教學與化驗區
       const f2West = new THREE.Mesh(new THREE.PlaneGeometry(21.5, 18), mats.corridorFloor);
-      f2West.rotation.x = -Math.PI / 2;
-      f2West.position.set(-3.25, 3.8, 0);
-      floor2Group.add(f2West);
+      f2West.rotation.x = -Math.PI / 2; f2West.position.set(-3.25, 3.8, 0); floor2Group.add(f2West);
 
       const f2EastN = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 7.8), mats.corridorFloor);
-      f2EastN.rotation.x = -Math.PI / 2;
-      f2EastN.position.set(10.75, 3.8, -5.1);
-      floor2Group.add(f2EastN);
+      f2EastN.rotation.x = -Math.PI / 2; f2EastN.position.set(10.75, 3.8, -5.1); floor2Group.add(f2EastN);
 
       const f2EastS = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 5.8), mats.corridorFloor);
-      f2EastS.rotation.x = -Math.PI / 2;
-      f2EastS.position.set(10.75, 3.8, 6.1);
-      floor2Group.add(f2EastS);
+      f2EastS.rotation.x = -Math.PI / 2; f2EastS.position.set(10.75, 3.8, 6.1); floor2Group.add(f2EastS);
 
-      const f2RailN = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.0, 0.1), mats.railingMat);
-      f2RailN.position.set(10.5, 4.3, -1.2);
-      floor2Group.add(f2RailN);
-      const f2RailS = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.0, 0.1), mats.railingMat);
-      f2RailS.position.set(10.5, 4.3, 3.2);
-      floor2Group.add(f2RailS);
-      const f2RailW = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.0, 4.4), mats.railingMat);
-      f2RailW.position.set(7.6, 4.3, 1.0);
-      floor2Group.add(f2RailW);
+      const f2RailN = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.0, 0.1), mats.railingMat); f2RailN.position.set(10.5, 4.3, -1.2); floor2Group.add(f2RailN);
+      const f2RailS = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.0, 0.1), mats.railingMat); f2RailS.position.set(10.5, 4.3, 3.2); floor2Group.add(f2RailS);
+      const f2RailW = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.0, 4.4), mats.railingMat); f2RailW.position.set(7.6, 4.3, 1.0); floor2Group.add(f2RailW);
 
-      const f2WallN = new THREE.Mesh(new THREE.BoxGeometry(28, 3.2, 0.4), mats.wallMat);
-      f2WallN.position.set(0, 5.4, -9);
-      floor2Group.add(f2WallN);
-      const f2WallW = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), mats.wallMat);
-      f2WallW.position.set(-14, 5.4, 0);
-      floor2Group.add(f2WallW);
-      const f2WallS = new THREE.Mesh(new THREE.BoxGeometry(28, 1.2, 0.4), mats.halfWallMat);
-      f2WallS.position.set(0, 4.4, 9);
-      floor2Group.add(f2WallS);
-      const f2WallE = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), mats.wallMat);
-      f2WallE.position.set(14, 5.4, 0);
-      floor2Group.add(f2WallE);
+      const f2WallN = new THREE.Mesh(new THREE.BoxGeometry(28, 3.2, 0.4), mats.wallMat); f2WallN.position.set(0, 5.4, -9); floor2Group.add(f2WallN);
+      const f2WallW = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), mats.wallMat); f2WallW.position.set(-14, 5.4, 0); floor2Group.add(f2WallW);
+      const f2WallS = new THREE.Mesh(new THREE.BoxGeometry(28, 1.2, 0.4), mats.halfWallMat); f2WallS.position.set(0, 4.4, 9); floor2Group.add(f2WallS);
+      const f2WallE = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), mats.wallMat); f2WallE.position.set(14, 5.4, 0); floor2Group.add(f2WallE);
 
-      const f2BackWall = new THREE.Mesh(new THREE.BoxGeometry(16.0, 3.2, 0.4), mats.wallMat);
-      f2BackWall.position.set(2.5, 5.4, -0.3);
-      floor2Group.add(f2BackWall);
+      const f2BackWall = new THREE.Mesh(new THREE.BoxGeometry(16.0, 3.2, 0.4), mats.wallMat); f2BackWall.position.set(2.5, 5.4, -0.3); floor2Group.add(f2BackWall);
+      const f2StairPartition = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 8.8), mats.wallMat); f2StairPartition.position.set(8.5, 5.4, -4.6); floor2Group.add(f2StairPartition);
+      const f2Divider = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 10), mats.wallMat); f2Divider.position.set(-2.5, 5.4, -4.0); floor2Group.add(f2Divider);
 
-      const f2StairPartition = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 8.8), mats.wallMat);
-      f2StairPartition.position.set(8.5, 5.4, -4.6);
-      floor2Group.add(f2StairPartition);
+      const board = new THREE.Mesh(new THREE.BoxGeometry(6, 1.6, 0.1), mats.chalkboard); board.position.set(-8.5, 5.4, -8.8); floor2Group.add(board);
 
-      const f2Divider = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 10), mats.wallMat);
-      f2Divider.position.set(-2.5, 5.4, -4.0);
-      floor2Group.add(f2Divider);
-
-      const board = new THREE.Mesh(new THREE.BoxGeometry(6, 1.6, 0.1), mats.chalkboard);
-      board.position.set(-8.5, 5.4, -8.8);
-      floor2Group.add(board);
-
-      const deskCols = [-11, -8.5, -6];
-      const deskRows = [-7.5, -5.5, -3.5];
+      const deskCols = [-11, -8.5, -6], deskRows = [-7.5, -5.5, -3.5];
       deskCols.forEach(dx => {
         deskRows.forEach(dz => {
           const isTarget = (dx === -8.5 && dz === -7.5);
           const dg = new THREE.Group();
           const dtop = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.08, 0.65), isTarget ? mats.targetDeskWood : mats.deskWood);
-          dtop.position.set(0, 0.72, 0);
-          dg.add(dtop);
-
-          const book = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.04, 0.22), mats.posterColor1);
-          book.position.set(0.2, 0.78, 0.05);
-          dg.add(book);
-
-          const chair = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.05, 0.45), mats.deskWood);
-          chair.position.set(0, 0.42, 0.55);
-          dg.add(chair);
-
-          dg.position.set(dx, 3.8, dz);
-          floor2Group.add(dg);
-
+          dtop.position.set(0, 0.72, 0); dg.add(dtop);
+          const book = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.04, 0.22), mats.posterColor1); book.position.set(0.2, 0.78, 0.05); dg.add(book);
+          const chair = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.05, 0.45), mats.deskWood); chair.position.set(0, 0.42, 0.55); dg.add(chair);
+          dg.position.set(dx, 3.8, dz); floor2Group.add(dg);
           SOLID_OBSTACLES.push({ minX: dx - 0.6, maxX: dx + 0.6, minZ: dz - 0.35, maxZ: dz + 0.35, floor: 2 });
         });
       });
@@ -1616,78 +1363,49 @@
       const lockers = [-2.0, 0.5, 3.0, 5.5, 7.5];
       lockers.forEach(lx => {
         const lg = new THREE.Group();
-        const body = new THREE.Mesh(new THREE.BoxGeometry(1.3, 2.2, 0.65), mats.darkMetal);
-        lg.add(body);
-        const handle = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.22, 0.05), mats.railingMat);
-        handle.position.set(0.45, 0, 0.35);
-        lg.add(handle);
-        lg.position.set(lx, 4.9, 0.1);
-        floor2Group.add(lg);
+        const body = new THREE.Mesh(new THREE.BoxGeometry(1.3, 2.2, 0.65), mats.darkMetal); lg.add(body);
+        const handle = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.22, 0.05), mats.railingMat); handle.position.set(0.45, 0, 0.35); lg.add(handle);
+        lg.position.set(lx, 4.9, 0.1); floor2Group.add(lg);
       });
 
       const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 3.0, 12), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8 }));
-      pipe.position.set(6.5, 5.3, 5.2);
-      floor2Group.add(pipe);
+      pipe.position.set(6.5, 5.3, 5.2); floor2Group.add(pipe);
 
       const labTable = new THREE.Mesh(new THREE.BoxGeometry(6.0, 1.0, 1.6), new THREE.MeshStandardMaterial({ color: 0x0f172a }));
-      labTable.position.set(9.0, 4.35, 7.0);
-      floor2Group.add(labTable);
+      labTable.position.set(9.0, 4.35, 7.0); floor2Group.add(labTable);
 
-      const stair2Steps = 10;
-      const s2Rise = 3.8 / stair2Steps;
-      const s2Run = 5.0 / stair2Steps;
+      const stair2Steps = 10, s2Rise = 3.8 / 10, s2Run = 5.0 / 10;
       for (let s = 0; s < stair2Steps; s++) {
         const sx = -8.0 - s * s2Run - s2Run / 2;
         const sh = 3.8 + (s + 1) * s2Rise;
         const step = new THREE.Mesh(new THREE.BoxGeometry(s2Run * 1.02, sh, 3.5), mats.stairMat);
-        step.position.set(sx, sh / 2, 7.0);
-        floor2Group.add(step);
+        step.position.set(sx, sh / 2, 7.0); floor2Group.add(step);
       }
 
       stairBBarrierMesh = new THREE.Group();
-      const postB1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal);
-      postB1.position.set(-8.0, 4.4, 5.3);
-      const postB2 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal);
-      postB2.position.set(-8.0, 4.4, 8.7);
-      const tapeB = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.18, 3.4), mats.tapeYellow);
-      tapeB.position.set(-8.0, 4.55, 7.0);
-      stairBBarrierMesh.add(postB1, postB2, tapeB);
-      floor2Group.add(stairBBarrierMesh);
+      const postB1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal); postB1.position.set(-8.0, 4.4, 5.3);
+      const postB2 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal); postB2.position.set(-8.0, 4.4, 8.7);
+      const tapeB = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.18, 3.4), mats.tapeYellow); tapeB.position.set(-8.0, 4.55, 7.0);
+      stairBBarrierMesh.add(postB1, postB2, tapeB); floor2Group.add(stairBBarrierMesh);
 
-      // 3F 天台
       const roofMain = new THREE.Mesh(new THREE.PlaneGeometry(21.5, 18), mats.rooftopFloor);
-      roofMain.rotation.x = -Math.PI / 2;
-      roofMain.position.set(3.25, 7.6, 0);
-      floor3Group.add(roofMain);
+      roofMain.rotation.x = -Math.PI / 2; roofMain.position.set(3.25, 7.6, 0); floor3Group.add(roofMain);
 
       const roofWN = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 13.8), mats.rooftopFloor);
-      roofWN.rotation.x = -Math.PI / 2;
-      roofWN.position.set(-10.75, 7.6, -2.1);
-      floor3Group.add(roofWN);
+      roofWN.rotation.x = -Math.PI / 2; roofWN.position.set(-10.75, 7.6, -2.1); floor3Group.add(roofWN);
 
       const fenceMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8 });
-      const fenceN = new THREE.Mesh(new THREE.BoxGeometry(28, 1.3, 0.2), fenceMat);
-      fenceN.position.set(0, 8.25, -9);
-      floor3Group.add(fenceN);
-      const fenceS = new THREE.Mesh(new THREE.BoxGeometry(28, 1.3, 0.2), fenceMat);
-      fenceS.position.set(0, 8.25, 9);
-      floor3Group.add(fenceS);
-      const fenceE = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.3, 18), fenceMat);
-      fenceE.position.set(14, 8.25, 0);
-      floor3Group.add(fenceE);
-      const fenceW = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.3, 18), fenceMat);
-      fenceW.position.set(-14, 8.25, 0);
-      floor3Group.add(fenceW);
+      const fenceN = new THREE.Mesh(new THREE.BoxGeometry(28, 1.3, 0.2), fenceMat); fenceN.position.set(0, 8.25, -9); floor3Group.add(fenceN);
+      const fenceS = new THREE.Mesh(new THREE.BoxGeometry(28, 1.3, 0.2), fenceMat); fenceS.position.set(0, 8.25, 9); floor3Group.add(fenceS);
+      const fenceE = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.3, 18), fenceMat); fenceE.position.set(14, 8.25, 0); floor3Group.add(fenceE);
+      const fenceW = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.3, 18), fenceMat); fenceW.position.set(-14, 8.25, 0); floor3Group.add(fenceW);
 
       const tank = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 2.0, 3.2, 16), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.6 }));
-      tank.position.set(8.0, 9.2, 4.0);
-      floor3Group.add(tank);
+      tank.position.set(8.0, 9.2, 4.0); floor3Group.add(tank);
 
       const vent = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.6, 1.8), new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.7 }));
-      vent.position.set(-5.0, 8.4, -3.5);
-      floor3Group.add(vent);
+      vent.position.set(-5.0, 8.4, -3.5); floor3Group.add(vent);
 
-      // 放置互動標記
       spawnMarker('clue_gym_fok', -9.5, 1.25, 4.0, 1, 'clue', '🩹');
       spawnMarker('notice_board', 5.5, 1.2, -8.0, 1, 'egg', '📌');
       spawnMarker('trophy_case', 0.0, 1.2, -7.5, 1, 'egg', '🏆');
@@ -1702,7 +1420,6 @@
 
       spawnMarker('clue_pipe_stash', 6.5, 5.05, 5.2, 2, 'clue', '🧪');
       spawnMarker('clue_spot_plate', 9.0, 5.05, 7.0, 2, 'clue', '🔬');
-
       spawnMarker('lost_and_found', -1.0, 5.0, 2.5, 2, 'egg', '📦');
       spawnMarker('lab_microscope', 12.0, 5.0, 7.0, 2, 'egg', '🔬');
 
@@ -1720,37 +1437,24 @@
           color: 0xf59e0b, emissive: 0xff6600, emissiveIntensity: 1.1, roughness: 0.1
         }));
         g.add(gem);
-
         const ring = new THREE.Mesh(new THREE.RingGeometry(0.45, 0.65, 16), new THREE.MeshBasicMaterial({ color: 0xf59e0b, side: THREE.DoubleSide, transparent: true, opacity: 0.75 }));
-        ring.rotateX(-Math.PI / 2);
-        ring.position.y = -1.1;
-        g.add(ring);
-
+        ring.rotateX(-Math.PI / 2); ring.position.y = -1.1; g.add(ring);
         const sprite = createIconSprite(symbol, 'rgba(30, 27, 75, 0.95)', '#f59e0b');
-        sprite.position.y = 0.6;
-        g.add(sprite);
-
+        sprite.position.y = 0.6; g.add(sprite);
         g.userData = { clueId: key, floor: targetFloor, gemMesh: gem, ringMesh: ring, spriteMesh: sprite, initialY: y, type };
       } else if (type === 'egg') {
         const prism = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.28, 6), new THREE.MeshStandardMaterial({
           color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.8, roughness: 0.2
         }));
         g.add(prism);
-
         const ring = new THREE.Mesh(new THREE.RingGeometry(0.35, 0.5, 16), new THREE.MeshBasicMaterial({ color: 0x0284c7, side: THREE.DoubleSide, transparent: true, opacity: 0.6 }));
-        ring.rotateX(-Math.PI / 2);
-        ring.position.y = -0.9;
-        g.add(ring);
-
+        ring.rotateX(-Math.PI / 2); ring.position.y = -0.9; g.add(ring);
         const sprite = createIconSprite(symbol, 'rgba(12, 25, 44, 0.95)', '#38bdf8');
-        sprite.position.y = 0.55;
-        g.add(sprite);
-
+        sprite.position.y = 0.55; g.add(sprite);
         g.userData = { clueId: key, floor: targetFloor, gemMesh: prism, ringMesh: ring, spriteMesh: sprite, initialY: y, type };
       } else {
         const sprite = createIconSprite(symbol, 'rgba(15, 23, 42, 0.95)', '#94a3b8');
-        sprite.scale.set(0.65, 0.65, 1.0);
-        sprite.position.y = 0.4;
+        sprite.scale.set(0.65, 0.65, 1.0); sprite.position.y = 0.4;
         g.userData = { clueId: key, floor: targetFloor, spriteMesh: sprite, initialY: y, type };
       }
 
@@ -1770,65 +1474,44 @@
     }
 
     function updateStairBarriers() {
-      if (stairABarrierMesh) {
-        stairABarrierMesh.visible = (GAME_STATE.questStage < 2);
-      }
-      if (stairBBarrierMesh) {
-        stairBBarrierMesh.visible = (GAME_STATE.questStage < 6);
-      }
+      if (stairABarrierMesh) stairABarrierMesh.visible = (GAME_STATE.questStage < 2);
+      if (stairBBarrierMesh) stairBBarrierMesh.visible = (GAME_STATE.questStage < 6);
     }
 
     function renderMinimap() {
       if (!minimapCtx || !minimapCanvas || !player) return;
-      const w = minimapCanvas.width;
-      const h = minimapCanvas.height;
-
+      const w = minimapCanvas.width, h = minimapCanvas.height;
       minimapCtx.clearRect(0, 0, w, h);
-      minimapCtx.fillStyle = "#070a14";
-      minimapCtx.fillRect(0, 0, w, h);
+      minimapCtx.fillStyle = "#070a14"; minimapCtx.fillRect(0, 0, w, h);
 
       const mapX = (wx) => ((wx + 14) / 28) * w;
       const mapZ = (wz) => ((wz + 9) / 18) * h;
       const f = GAME_STATE.currentFloor;
 
       if (f === 1) {
-        minimapCtx.fillStyle = "#1e293b";
-        minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(14) - mapX(-14), mapZ(9) - mapZ(-9));
-        minimapCtx.fillStyle = "#eab308";
-        minimapCtx.fillRect(mapX(8), mapZ(-1), mapX(13) - mapX(8), mapZ(3) - mapZ(-1));
+        minimapCtx.fillStyle = "#1e293b"; minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(14) - mapX(-14), mapZ(9) - mapZ(-9));
+        minimapCtx.fillStyle = "#eab308"; minimapCtx.fillRect(mapX(8), mapZ(-1), mapX(13) - mapX(8), mapZ(3) - mapZ(-1));
       } else if (f === 2) {
-        minimapCtx.fillStyle = "#1e293b";
-        minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(-2.5) - mapX(-14), mapZ(1) - mapZ(-9));
-        minimapCtx.fillStyle = "#172554";
-        minimapCtx.fillRect(mapX(-14), mapZ(1), mapX(14) - mapX(-14), mapZ(5) - mapZ(1));
-        minimapCtx.fillStyle = "#0c4a6e";
-        minimapCtx.fillRect(mapX(2), mapZ(5), mapX(14) - mapX(2), mapZ(9) - mapZ(5));
+        minimapCtx.fillStyle = "#1e293b"; minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(-2.5) - mapX(-14), mapZ(1) - mapZ(-9));
+        minimapCtx.fillStyle = "#172554"; minimapCtx.fillRect(mapX(-14), mapZ(1), mapX(14) - mapX(-14), mapZ(5) - mapZ(1));
+        minimapCtx.fillStyle = "#0c4a6e"; minimapCtx.fillRect(mapX(2), mapZ(5), mapX(14) - mapX(2), mapZ(9) - mapZ(5));
       } else if (f === 3) {
-        minimapCtx.fillStyle = "#3b0764";
-        minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(14) - mapX(-14), mapZ(9) - mapZ(-9));
+        minimapCtx.fillStyle = "#3b0764"; minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(14) - mapX(-14), mapZ(9) - mapZ(-9));
       }
 
       Object.values(EASTER_EGGS).forEach(egg => {
         if (egg.floor === f) {
           minimapCtx.beginPath();
           minimapCtx.arc(mapX(egg.pos.x), mapZ(egg.pos.z), 2.8, 0, Math.PI * 2);
-          minimapCtx.fillStyle = "#38bdf8";
-          minimapCtx.fill();
-          minimapCtx.lineWidth = 1;
-          minimapCtx.strokeStyle = "rgba(255, 255, 255, 0.7)";
-          minimapCtx.stroke();
+          minimapCtx.fillStyle = "#38bdf8"; minimapCtx.fill();
         }
       });
 
       Object.values(CLUES_DATA).forEach(clue => {
         const found = GAME_STATE.cluesFound.has(clue.id);
         if (clue.floor === f) {
-          let drawX = clue.pos.x;
-          let drawZ = clue.pos.z;
-          if (clue.id === 'clue_corridor' && !found) {
-            drawX = 2.8;
-            drawZ = 2.2;
-          }
+          let drawX = clue.pos.x, drawZ = clue.pos.z;
+          if (clue.id === 'clue_corridor' && !found) { drawX = 2.8; drawZ = 2.2; }
           minimapCtx.beginPath();
           minimapCtx.arc(mapX(drawX), mapZ(drawZ), found ? 2.5 : 4.0, 0, Math.PI * 2);
           minimapCtx.fillStyle = found ? "#10b981" : (clue.stage === GAME_STATE.questStage ? "#22c55e" : "#f59e0b");
@@ -1836,17 +1519,13 @@
         }
       });
 
-      const px = mapX(player.mesh.position.x);
-      const pz = mapZ(player.mesh.position.z);
+      const px = mapX(player.mesh.position.x), pz = mapZ(player.mesh.position.z);
       const heading = player.mesh.rotation.y;
-
       minimapCtx.save();
       minimapCtx.translate(px, pz);
       minimapCtx.rotate(heading);
       minimapCtx.beginPath();
-      minimapCtx.moveTo(0, 5);
-      minimapCtx.lineTo(-3.5, -4);
-      minimapCtx.lineTo(3.5, -4);
+      minimapCtx.moveTo(0, 5); minimapCtx.lineTo(-3.5, -4); minimapCtx.lineTo(3.5, -4);
       minimapCtx.closePath();
       minimapCtx.fillStyle = "#f97316";
       minimapCtx.fill();
@@ -1866,13 +1545,8 @@
       sound.playDialogueBlip();
     }
 
-    // ==========================================
-    // 5. 觸控與手勢操控
-    // ==========================================
     const touchJoystickInput = { x: 0, z: 0 };
-    let joystickActive = false;
-    let joystickTouchId = null;
-    let joystickCenter = { x: 0, y: 0 };
+    let joystickActive = false, joystickTouchId = null, joystickCenter = { x: 0, y: 0 };
 
     function updateJoystickCenter() {
       const jb = document.getElementById('joystick-base');
@@ -1881,9 +1555,7 @@
       joystickCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
     }
 
-    let rightTouchId = null;
-    let lastTouchX = 0;
-
+    let rightTouchId = null, lastTouchX = 0;
     let lastInteractionTimestamp = 0;
     function canTriggerInput() {
       const now = performance.now();
@@ -1892,9 +1564,6 @@
       return true;
     }
 
-    // ==========================================
-    // 6. 對話系統
-    // ==========================================
     function startDialogueQueue(lines, callback = null) {
       GAME_STATE.dialogueQueue = lines.slice();
       GAME_STATE.dialogueCallback = callback;
@@ -1948,9 +1617,6 @@
       }
     }
 
-    // ==========================================
-    // 7. 搜查與互動邏輯（純粹受害者敘事）
-    // ==========================================
     function checkProximity() {
       if (!GAME_STATE.started || GAME_STATE.isDialogueOpen || GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen || GAME_STATE.isLockerModalOpen || !player) {
         if (interactionPrompt) interactionPrompt.style.opacity = '0';
@@ -1958,40 +1624,28 @@
         return;
       }
 
-      const px = player.mesh.position.x;
-      const pz = player.mesh.position.z;
+      const px = player.mesh.position.x, pz = player.mesh.position.z;
       const currentFloor = GAME_STATE.currentFloor;
-
-      let closestObj = null;
-      let minDist = 3.2;
+      let closestObj = null, minDist = 3.2;
 
       for (const clue of Object.values(CLUES_DATA)) {
         if (clue.floor === currentFloor) {
           const dist = Math.hypot(px - clue.pos.x, pz - clue.pos.z);
-          if (dist < minDist) {
-            minDist = dist;
-            closestObj = { type: 'clue', data: clue };
-          }
+          if (dist < minDist) { minDist = dist; closestObj = { type: 'clue', data: clue }; }
         }
       }
 
       if (currentFloor === 2) {
         for (const locker of Object.values(DUMMY_LOCKERS)) {
           const dist = Math.hypot(px - locker.pos.x, pz - locker.pos.z);
-          if (dist < minDist) {
-            minDist = dist;
-            closestObj = { type: 'dummy_locker', data: locker };
-          }
+          if (dist < minDist) { minDist = dist; closestObj = { type: 'dummy_locker', data: locker }; }
         }
       }
 
       for (const egg of Object.values(EASTER_EGGS)) {
         if (egg.floor === currentFloor) {
           const dist = Math.hypot(px - egg.pos.x, pz - egg.pos.z);
-          if (dist < minDist) {
-            minDist = dist;
-            closestObj = { type: 'easter_egg', data: egg };
-          }
+          if (dist < minDist) { minDist = dist; closestObj = { type: 'easter_egg', data: egg }; }
         }
       }
 
@@ -2000,28 +1654,23 @@
       if (closestObj && interactionPrompt && promptActionText) {
         let actionLabel = "調查現場";
         const hasDeskClue = GAME_STATE.cluesFound.has('clue_desk');
-
         if (closestObj.type === 'clue') {
           if (closestObj.data.id === 'clue_corridor') {
-            actionLabel = GAME_STATE.cluesFound.has('clue_corridor') 
-              ? "已解鎖：17 號死信箱櫃" 
-              : (hasDeskClue ? "排查：17 號毒販死信箱" : "檢視：17 號儲物櫃");
+            actionLabel = GAME_STATE.cluesFound.has('clue_corridor') ? "已解鎖：17 號儲物櫃" : (hasDeskClue ? "排查：17 號儲物櫃" : "檢視：17 號儲物櫃");
           } else if (GAME_STATE.cluesFound.has(closestObj.data.id)) {
-            actionLabel = `覆盤重讀：${closestObj.data.name.split(' ')[0]}`;
+            actionLabel = `查看：${closestObj.data.name.split(' ')[0]}`;
           } else if (closestObj.data.stage === GAME_STATE.questStage) {
             actionLabel = `搜查：${closestObj.data.name.split(' ')[0]}`;
           } else {
             actionLabel = `查看：${closestObj.data.name.split(' ')[0]}`;
           }
         } else if (closestObj.type === 'dummy_locker') {
-          actionLabel = hasDeskClue ? `排查：${closestObj.data.num} 號櫃` : `查看：${closestObj.data.num} 號櫃`;
+          actionLabel = `排查：${closestObj.data.num} 號櫃`;
         } else if (closestObj.type === 'easter_egg') {
           actionLabel = `檢視：${closestObj.data.name.split(' ')[0]}`;
         }
         promptActionText.textContent = actionLabel;
-        if (promptInputBadge) {
-          promptInputBadge.textContent = isTouchDevice ? '👆' : 'E';
-        }
+        if (promptInputBadge) promptInputBadge.textContent = isTouchDevice ? '👆' : 'E';
         interactionPrompt.style.opacity = '1';
         interactionPrompt.style.transform = 'translate(-50%, 0) scale(1)';
       } else if (interactionPrompt) {
@@ -2065,7 +1714,6 @@
         if (lockedNotice) lockedNotice.classList.remove('hidden');
         if (formArea) formArea.classList.add('hidden');
       }
-
       renderNotebookClues();
     }
 
@@ -2073,30 +1721,24 @@
       if (!canTriggerInput()) return;
       haptic(15);
 
-      if (GAME_STATE.isDialogueOpen) {
-        nextDialogue();
-        return;
-      }
-      if (GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen || GAME_STATE.isLockerModalOpen) {
-        return;
-      }
+      if (GAME_STATE.isDialogueOpen) { nextDialogue(); return; }
+      if (GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen || GAME_STATE.isLockerModalOpen) return;
 
       const target = GAME_STATE.activeInteractable;
       if (!target) return;
-
       sound.playDialogueBlip();
 
       if (GAME_STATE.questStage === 1 && target.type !== 'clue') {
         startDialogueQueue([
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "優先目標提示", text: "（展霆休克後留下的急救痕跡在西側更衣室長椅。跟著綠色導航標先去排查，查明受害真相！）" }
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "優先目標", text: "（展霆休克前所在的西側更衣室長椅就在前方。先去排查現場遺物。）" }
         ]);
         return;
       }
 
       if (target.type === 'easter_egg') {
         startDialogueQueue([
-          { type: "narration", speaker: "咪制書院校園紀錄", role: target.data.name, text: target.data.desc },
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員感觸", text: target.data.monologue }
+          { type: "narration", speaker: "校園環境紀錄", role: target.data.name, text: target.data.desc },
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員手記", text: target.data.monologue }
         ]);
         return;
       }
@@ -2105,13 +1747,13 @@
         const hasDeskClue = GAME_STATE.cluesFound.has('clue_desk');
         if (!hasDeskClue) {
           startDialogueQueue([
-            { type: "narration", speaker: "走廊儲物櫃排查", role: "儲物櫃排查", text: `這是走廊的 ${target.data.num} 號儲物櫃。整排儲物櫃按單數順序排列。` },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員分析", text: "（目前尚未掌握特定櫃號線索，先前往中六B班搜查詠蕎的課桌，尋找受害線索！）" }
+            { type: "narration", speaker: "儲物櫃排查", role: "儲物櫃排查", text: `這是走廊的 ${target.data.num} 號儲物櫃。整排儲物櫃按單數順序排列。` },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "調查分析", text: "（目前缺少具體的櫃號線索，先前往中六B班搜查詠蕎的課桌。）" }
           ]);
         } else {
           startDialogueQueue([
-            { type: "narration", speaker: "現場儲物櫃排查紀錄", role: "儲物櫃翻查", text: target.data.desc },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員分析", text: `（這是 ${target.data.num} 號櫃，門內是普通學生物品。毒販設立的死信箱是 17 號櫃，繼續沿走廊查看門牌。）` }
+            { type: "narration", speaker: "儲物櫃排查紀錄", role: "儲物櫃翻查", text: target.data.desc },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "調查分析", text: `（這是 ${target.data.num} 號櫃，門內是普通學生物品。詠蕎備忘錄提到的是 17 號櫃。）` }
           ]);
         }
         return;
@@ -2119,11 +1761,10 @@
 
       if (target.type === 'clue') {
         const clue = target.data;
-
         if (GAME_STATE.cluesFound.has(clue.id)) {
           startDialogueQueue([
-            { type: "narration", speaker: "卷宗覆盤閱覽", role: clue.zone, text: `【${clue.name}】已成功封存入卷宗：\n${clue.fullDesc}` },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "毒理鑑證備忘", text: `（鑑識備忘：${clue.forensic}）` }
+            { type: "narration", speaker: "物證回顧", role: clue.zone, text: `【${clue.name}】已歸檔：\n${clue.fullDesc}` },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "鑑證備忘", text: `（鑑識細節：${clue.forensic}）` }
           ]);
           return;
         }
@@ -2131,22 +1772,18 @@
         if (clue.stage > GAME_STATE.questStage) {
           if (clue.id === 'clue_corridor') {
             startDialogueQueue([
-              { type: "narration", speaker: "現場儲物櫃排查紀錄", role: "儲物櫃排查", text: "這是 17 號儲物櫃，櫃門掛著三位數金屬滾輪密碼鎖。" },
-              { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員分析", text: "（目前尚不清楚密碼。應先登上 2F 中六B班房搜查岑詠蕎的課桌，查看她留下的求救線索！）" }
+              { type: "narration", speaker: "現場紀錄", role: "儲物櫃排查", text: "這是 17 號儲物櫃，櫃門掛著三位數金屬滾輪密碼鎖。" },
+              { type: "monologue", speaker: "梁澤銘（心想）", role: "調查分析", text: "（密碼鎖緊閉。應先搜查 2F 班房岑詠蕎的課桌，尋找開鎖線索。）" }
             ]);
             return;
           }
-
-          let hint = "應先留意右上角當前偵查目標。";
-          if (GAME_STATE.questStage === 1) hint = "跟著綠色光標先去更衣室排查展霆遺留的物品！";
-          else if (GAME_STATE.questStage === 2) hint = "登上 2F 中六B班房搜查岑詠蕎的課桌！";
-          else if (GAME_STATE.questStage === 3) hint = "在 2F 走廊排查找出 17 號毒販死信箱！";
-          else if (GAME_STATE.questStage === 4) hint = "在化學室外排水管後方固定管架暗角搜查樣品！";
-          else if (GAME_STATE.questStage === 5) hint = "兩份樣品已齊備，先進入化學實驗台完成快篩！";
-
-          startDialogueQueue([
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "偵查順序推理", text: `（${hint}）` }
-          ]);
+          let hint = "留意右上角當前目標。";
+          if (GAME_STATE.questStage === 1) hint = "先前往更衣室排查展霆遺留的物品。";
+          else if (GAME_STATE.questStage === 2) hint = "登上 2F 中六B班房搜查岑詠蕎的課桌。";
+          else if (GAME_STATE.questStage === 3) hint = "在 2F 走廊找出 17 號儲物櫃。";
+          else if (GAME_STATE.questStage === 4) hint = "在化學室外排水管暗角搜查樣品。";
+          else if (GAME_STATE.questStage === 5) hint = "兩份樣品已備齊，前往實驗室快篩。";
+          startDialogueQueue([{ type: "monologue", speaker: "梁澤銘（心想）", role: "偵查順序", text: `（${hint}）` }]);
           return;
         }
 
@@ -2154,28 +1791,28 @@
           collectClue(clue.id);
           GAME_STATE.questStage = 2;
           updateStairBarriers();
-          updateObjective("沿東側階梯 A 登上 2F，搜查中六B班房岑詠蕎的課桌 (2/6)");
+          updateObjective("沿東側階梯登上 2F，搜查中六B班房岑詠蕎的課桌 (2/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "更衣室起獲物證", text: "長椅下起獲摔裂的電子煙彈，煙油呈淡紫色。隨附打印便條：『練球舊患痛就抽兩口保證止痛放鬆。你同中六B班岑詠蕎一樣，都承受緊難以忍受嘅痛楚同壓力吧？——暗夜調劑師』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（展霆和詠蕎都是受害者！毒販『暗夜調劑師』刻意針對學生的傷患和考試焦慮投毒！東側階梯封鎖已解除，立刻上 2F 搜查詠蕎的課桌，看看她到底遭遇了什麼！）" }
+            { type: "narration", speaker: "物證發現", role: "更衣室長椅", text: "長椅夾縫起獲摔裂的電子煙彈，煙油呈淡紫色。長椅上留有一張打印便條：『膝傷痛就抽兩口，保證止痛放鬆、學界照樣上場。你同中六B班岑詠蕎一樣，何必死頂？——調劑師』" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果分析", text: "（便條直接點出展霆的舊患與中六B班的岑詠蕎。兩起事件具有高度關聯。東側階梯封鎖已解除，立刻上 2F 查看詠蕎的課桌。）" }
           ]);
         } else if (clue.stage === 2) {
           collectClue(clue.id);
           GAME_STATE.questStage = 3;
-          updateObjective("排查 2F 走廊儲物櫃，找出並解鎖 17 號毒販死信箱 (3/6)");
+          updateObjective("排查 2F 走廊儲物櫃，找出並解鎖 17 號櫃 (3/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "課桌起獲物證", text: "課桌上漏出一灘深紫色油性煙液（證物 A）！答題紙後半段公式劇烈扭曲撕裂；旁邊手機螢幕沾滿油漬，未鎖畫面上停留著詠蕎中毒抽搐前發出的求救備忘錄：『好暈……全身係咁抽筋……呢個根本唔係提神精油……毒販話放喺2F 17號櫃……黑話420……救我……』！" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "病理與時序推理", text: "（答題紙撕裂完全是肌陣攣劇烈痙攣的痕跡！詠蕎誤信提神謊言，吸食後立刻急性中毒倒地！求救備忘錄指明了毒販的校內死信箱——17 號櫃，密碼是大麻黑話 420。立刻前往走廊排查 17 號櫃！）" }
+            { type: "narration", speaker: "物證發現", role: "中六B班課桌", text: "課桌上漏出一灘深紫色油性煙液（樣品 A）。答題紙後半段公式突然化為劇烈顫抖的撕裂劃痕；手機螢幕停留在未鎖的備忘錄：『心跳好快……手腳完全唔受控咁抽搐……呢個根本唔係草本精油……17號櫃……黑話420……邊個可以救我……』" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "病理推斷", text: "（答題紙撕裂與手腳抽搐，完全符合中樞神經受損的急性肌陣攣特徵。備忘錄提及了 17 號櫃與『黑話420』。走廊儲物櫃就在教室外。）" }
           ]);
         } else if (clue.stage === 3) {
           openLockerModal();
         } else if (clue.stage === 4) {
           collectClue(clue.id);
           GAME_STATE.questStage = 5;
-          updateObjective("進入 2F 理科綜合化學實驗室，進行雙試管快篩確診 (5/6)");
+          updateObjective("進入 2F 理科實驗室，進行雙試管快篩化驗 (5/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "排水管支架起獲物證", text: "在排水管固定鐵架暗角搜出密封的改裝煙彈（證物 B）！煙油泛著與課桌漏油完全一致的紫光。" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（兩份物證——課桌漏出的煙油液滴與暗角起獲的全新煙彈均已齊備！立刻進入旁邊的理科實驗室，上檢驗台做交叉比對，拆穿毒販謊言！）" }
+            { type: "narration", speaker: "物證發現", role: "排水管暗角", text: "在排水管固定鐵架暗角搜出未開封的真空包裝煙彈（樣品 B），標籤印著『100%草本提取提神原液』，液體透著微紫光澤。" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "化驗準備", text: "（課桌漏液與暗角起獲的原裝煙彈樣品齊備。進入旁邊的理科實驗室進行雙試管交叉比對。）" }
           ]);
         } else if (clue.stage === 5) {
           openLabModal();
@@ -2184,11 +1821,11 @@
           collectClue(clue.id);
           GAME_STATE.questStage = 7;
           updateClueBadges();
-          updateObjective("打開【案件手冊】進入【思維宮殿】，完成定案通報執法部門！ (6/6)");
+          updateObjective("打開【案件簿】進入【思維宮殿】，定案並通報執法部門 (6/6)");
           startDialogueQueue([
-            { type: "call", speaker: "暗夜調劑師（黑網通話）", role: "幕後毒販主謀", text: "『喂？！咪制書院班傻仔學生上當未？岑詠蕎同霍展霆倒低咗未？趁佢哋神志不清，將佢哋全身抽搐倒地嘅短片發上網勒索保密費！』" },
-            { type: "dialogue", speaker: "梁澤銘", role: "調查員取證通報", text: "錄音器已成功鎖定音軌！暗夜調劑師，你蓄意投毒謀害學生的所有罪證全數固定，執法部門已在收網路上！" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "思維宮殿定案", text: "（6 大核心物證鏈條齊備！打開【📋 案件簿】的【思維宮殿定案】，核實因果鏈後立刻通報執法部門救人收網！）" }
+            { type: "call", speaker: "通話音軌錄取", role: "排風箱通聯手機", text: "『喂？貨試咗未？咪制書院嗰兩個傻仔抽筋倒地未？記住拍低佢哋倒地抽搐嘅短片，唔畀錢買解藥或者保密，就直接發畀全校同升學委員會。』" },
+            { type: "dialogue", speaker: "梁澤銘", role: "錄音存檔", text: "錄音取證完畢。音頻信號與暗網通聯特徵已由後方技術組鎖定。" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "定案整理", text: "（6 大關鍵物證已全部到位。打開【📋 案件簿】的【思維宮殿定案】，核實因果鏈後通報執法部門。）" }
           ], () => {
             toggleNotebook();
             switchNotebookTab('mindpalace');
@@ -2197,9 +1834,6 @@
       }
     }
 
-    // ==========================================
-    // 8. 儲物櫃 3 位數密碼鎖邏輯
-    // ==========================================
     function openLockerModal() {
       if (lockerModal) {
         lockerModal.classList.remove('pointer-events-none', 'opacity-0');
@@ -2242,11 +1876,10 @@
         closeLockerModal();
         collectClue('clue_corridor');
         GAME_STATE.questStage = 4;
-        updateObjective("搜查 2F 理科化學室外排水管後方固定管架暗角 (4/6)");
-
+        updateObjective("搜查 2F 化學室外排水管支架暗角 (4/6)");
         startDialogueQueue([
-          { type: "narration", speaker: "密碼鎖咔噠彈開！", role: "17號死信箱已解鎖", text: "轉動至【4】【2】【0】，鎖芯應聲彈開！起獲暗網投放單：『針對校內學生之試用品投放完畢。新一批煙彈已藏於【化學室外排水管後方固定架暗角】，速取銷毀痕跡。』" },
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（密碼果然是大麻常用的黑話代號『420』！毒販把未拆封的原裝毒煙彈藏在化學室外的排水管支架暗角！必須立刻前往取回樣品！）" }
+          { type: "narration", speaker: "鎖具彈開", role: "17號儲物櫃", text: "輸入【4】【2】【0】，鎖芯彈開。起獲暗網交收單：『咪制書院節點：試用裝已投放完畢。下批特調原液已暫存【化學室外排水管支架暗角】，速取銷毀。』" },
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "因果分析", text: "（密碼果然是大麻代號『420』。涉案人將未拆封的原裝煙彈藏在化學室外排水管暗角，立即前往取證。）" }
         ]);
       } else {
         sound.playLockBuzzer();
@@ -2255,9 +1888,7 @@
           void card.offsetWidth;
           card.classList.add('animate-shake');
         }
-        if (err) {
-          err.textContent = "❌ 鎖芯紋絲不動！密碼不符。（詠蕎手機寫著：『黑話420……救我……』）";
-        }
+        if (err) err.textContent = "❌ 鎖芯未轉動。密碼不符。（提示：詠蕎備忘錄提及『黑話420』）";
       }
     }
 
@@ -2265,18 +1896,10 @@
       sound.playDialogueBlip();
       closeLockerModal();
       startDialogueQueue([
-        {
-          type: "monologue",
-          speaker: "梁澤銘（心想）",
-          role: "密碼解讀思維",
-          text: "（詠蕎在求救備忘錄裡寫下了『黑話420』。毒販最喜歡用大麻代號420掩飾新型危險藥物。1F 大堂中庭的【📌 校園抗毒海報】也詳細記載了這個黑話常識！）"
-        }
+        { type: "monologue", speaker: "梁澤銘（心想）", role: "思維線索", text: "（詠蕎備忘錄記錄了『黑話420』。1F 中庭的抗毒公告板也特別提到了大麻代號『420』，這正是儲物櫃的開鎖密碼。）" }
       ]);
     }
 
-    // ==========================================
-    // 9. 快篩鑑驗台邏輯
-    // ==========================================
     function openLabModal() {
       if (labModal) {
         labModal.classList.remove('pointer-events-none', 'opacity-0');
@@ -2308,7 +1931,7 @@
         statusBadge.className = "px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/50 text-[11px]";
       }
       if (verdictText) {
-        verdictText.innerHTML = "兩支試管均無顯色反應，維持清澈！<strong class=\"text-emerald-400\">【陰性反應】</strong>排除常規氯胺酮。請點擊 <strong class=\"text-cyan-400\">2️⃣ 滴入 依托咪酯試劑</strong>！";
+        verdictText.innerHTML = "兩支試管均無顯色反應，維持澄清。<strong class=\"text-emerald-400\">【陰性反應】</strong>排除常規氯胺酮。請點擊 <strong class=\"text-cyan-400\">2️⃣ 滴入 依托咪酯試劑</strong>。";
       }
       if (step1) {
         step1.className = "py-1.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600";
@@ -2336,20 +1959,14 @@
       const btn2 = document.getElementById('btn-spot-reagent2');
       const submitBtn = document.getElementById('btn-spot-submit');
 
-      if (tubeA) {
-        tubeA.style.backgroundColor = '#701a75';
-        tubeA.style.filter = 'brightness(1.2) drop-shadow(0 0 6px rgba(192, 38, 211, 0.8))';
-      }
-      if (tubeB) {
-        tubeB.style.backgroundColor = '#581c87';
-        tubeB.style.filter = 'brightness(1.2) drop-shadow(0 0 6px rgba(168, 85, 247, 0.8))';
-      }
+      if (tubeA) { tubeA.style.backgroundColor = '#701a75'; tubeA.style.filter = 'brightness(1.2) drop-shadow(0 0 6px rgba(192, 38, 211, 0.8))'; }
+      if (tubeB) { tubeB.style.backgroundColor = '#581c87'; tubeB.style.filter = 'brightness(1.2) drop-shadow(0 0 6px rgba(168, 85, 247, 0.8))'; }
       if (statusBadge) {
         statusBadge.textContent = "確診 依托咪酯 (陽性)";
         statusBadge.className = "px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600 text-[11px] font-black animate-pulse";
       }
       if (verdictText) {
-        verdictText.innerHTML = "<strong class=\"text-rose-400\">【強陽性反應！】</strong>兩支試管均劇烈顯色並生成深紫褐色沉澱！確診受害學生吸入的毒物為受管制危險藥物<strong class=\"text-amber-300\">「依托咪酯」</strong>！";
+        verdictText.innerHTML = "<strong class=\"text-rose-400\">【強陽性反應】</strong>兩支試管均劇烈顯色並生成深紫褐色沉澱。確診現場樣品為受《危險藥物條例》嚴格管制之麻醉藥<strong class=\"text-amber-300\">「依托咪酯」</strong>。";
       }
       if (step2) {
         step2.className = "py-1.5 rounded bg-rose-950 text-rose-300 border border-rose-600";
@@ -2382,17 +1999,9 @@
         statusBadge.textContent = "待化驗";
         statusBadge.className = "px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[11px]";
       }
-      if (verdictText) {
-        verdictText.innerHTML = "請點擊下方 <strong class=\"text-cyan-400\">1️⃣ 滴入 氯胺酮試劑</strong>，排查是否為常規 K仔。";
-      }
-      if (step1) {
-        step1.className = "py-1.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-600";
-        step1.textContent = "步驟 1: 篩查 氯胺酮";
-      }
-      if (step2) {
-        step2.className = "py-1.5 rounded bg-slate-900 text-slate-500 border border-slate-800";
-        step2.textContent = "步驟 2: 篩查 依托咪酯";
-      }
+      if (verdictText) verdictText.innerHTML = "請點擊下方 <strong class=\"text-cyan-400\">1️⃣ 滴入 氯胺酮試劑</strong>，排查是否為常規 K仔。";
+      if (step1) { step1.className = "py-1.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-600"; step1.textContent = "步驟 1: 篩查 氯胺酮"; }
+      if (step2) { step2.className = "py-1.5 rounded bg-slate-900 text-slate-500 border border-slate-800"; step2.textContent = "步驟 2: 篩查 依托咪酯"; }
       if (btn1) {
         btn1.disabled = false;
         btn1.className = "flex-1 py-2.5 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs border border-sky-400 active:scale-95 transition shadow-md cursor-pointer";
@@ -2413,18 +2022,15 @@
       GAME_STATE.hasIdentifiedEtomidate = true;
       GAME_STATE.questStage = 6;
       updateStairBarriers();
-      updateObjective("循著震動鈴聲登上 3F 天台，搜查排風箱 (6/6)");
+      updateObjective("循著震動鈴聲登上 3F 天台，排查排風箱 (6/6)");
       sound.playPhoneRing();
 
       startDialogueQueue([
-        { type: "narration", speaker: "毒理檢驗報告", role: "定性鑑證結論", text: "雙試管交叉比對確診！課桌漏出的紫色滴液與暗角起獲的煙彈均含有受《危險藥物條例》嚴管的麻醉藥【依托咪酯】！毒販宣稱的無害提神只不過是誘害學生的致命騙局！" },
-        { type: "monologue", speaker: "梁澤銘（心想）", role: "突發警覺", text: "（等等！頭頂 3F 天台方向傳來急促的手機震動鈴聲！天台階梯封鎖已解除，立刻登上天台截獲通聯訊號！）" }
+        { type: "narration", speaker: "化驗報告", role: "定性鑑證", text: "交叉顯色化驗完成：課桌殘留液與排水管暗角煙彈均驗出高濃度管制藥物【依托咪酯】。所謂『草本提神』純屬偽裝。" },
+        { type: "monologue", speaker: "梁澤銘（心想）", role: "警覺", text: "（等等……天台方向傳來急促的手機震動聲！天台階梯封鎖已解除，立刻上去截獲通訊設備！）" }
       ]);
     }
 
-    // ==========================================
-    // 10. 案件手冊與思維宮殿
-    // ==========================================
     function toggleNotebook() {
       if (!notebookModal) return;
       const isOpen = !notebookModal.classList.contains('pointer-events-none');
@@ -2454,9 +2060,7 @@
       [btnClues, btnMind, btnProfiles].forEach(b => {
         if (b) b.className = "px-2.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 transition cursor-pointer";
       });
-      [tabClues, tabMind, tabProfiles].forEach(t => {
-        if (t) t.classList.add('hidden');
-      });
+      [tabClues, tabMind, tabProfiles].forEach(t => { if (t) t.classList.add('hidden'); });
       if (detailPanel) detailPanel.classList.add('hidden');
 
       if (tab === 'clues') {
@@ -2482,13 +2086,11 @@
       const icon = document.getElementById('detail-clue-icon');
 
       if (!panel || !title || !body || !forensic) return;
-
       icon.textContent = clue.icon;
       title.textContent = clue.name;
       meta.textContent = `📍 搜查地點：${clue.zone} • 第 ${clue.floor} 層`;
       body.textContent = clue.fullDesc;
-      forensic.innerHTML = `<strong>🔬 毒理與藥物特異分析：</strong>${clue.forensic}`;
-
+      forensic.innerHTML = `<strong>🔬 毒理與藥物分析：</strong>${clue.forensic}`;
       panel.classList.remove('hidden');
       sound.playDialogueBlip();
     }
@@ -2499,12 +2101,8 @@
       container.innerHTML = '';
 
       const cluesList = [
-        CLUES_DATA.clue_gym_fok,
-        CLUES_DATA.clue_desk,
-        CLUES_DATA.clue_corridor,
-        CLUES_DATA.clue_pipe_stash,
-        CLUES_DATA.clue_spot_plate,
-        CLUES_DATA.clue_rooftop_burner
+        CLUES_DATA.clue_gym_fok, CLUES_DATA.clue_desk, CLUES_DATA.clue_corridor,
+        CLUES_DATA.clue_pipe_stash, CLUES_DATA.clue_spot_plate, CLUES_DATA.clue_rooftop_burner
       ];
 
       cluesList.forEach((c) => {
@@ -2527,19 +2125,13 @@
             ${isFound ? '✓ 點擊閱覽' : '待搜查'}
           </div>
         `;
-
-        if (isFound) {
-          card.addEventListener('click', () => showClueDetail(c));
-        }
+        if (isFound) card.addEventListener('click', () => showClueDetail(c));
         container.appendChild(card);
       });
     }
 
     function submitFinalDeduction() {
-      if (GAME_STATE.cluesFound.size < TOTAL_CLUES) {
-        sound.playDialogueBlip();
-        return;
-      }
+      if (GAME_STATE.cluesFound.size < TOTAL_CLUES) { sound.playDialogueBlip(); return; }
 
       const v1 = document.getElementById('deduce-vector')?.value;
       const v2 = document.getElementById('deduce-symptoms')?.value;
@@ -2551,7 +2143,6 @@
           notebookModal.classList.add('pointer-events-none', 'opacity-0');
         }
         GAME_STATE.isNotebookOpen = false;
-
         if (victoryScreen) {
           victoryScreen.classList.remove('pointer-events-none', 'opacity-0');
           victoryScreen.classList.add('pointer-events-auto', 'opacity-100');
@@ -2561,26 +2152,21 @@
         sound.playDialogueBlip();
         const deduceHeader = document.getElementById('deduce-header');
         if (deduceHeader) {
-          deduceHeader.textContent = "❌ 定案鏈存在漏洞，請根據雙試管報告與特區法規核對！";
+          deduceHeader.textContent = "❌ 定案邏輯有誤，請依據化驗結論與症狀比對！";
           deduceHeader.className = "text-xs font-bold text-rose-400 mb-1.5 animate-pulse";
         }
       }
     }
 
     function handleRestartConfirm() {
-      if (confirm("確定要重啟調查專案嗎？所有現場搜查進度將重新開始。")) {
+      if (confirm("確定要重啟調查嗎？現場搜查進度將重新開始。")) {
         window.location.reload();
       }
     }
 
-    // ==========================================
-    // 11. 核心啟動函數
-    // ==========================================
     function startGame() {
       const title = document.getElementById('title-screen');
-      if (title) {
-        title.style.display = 'none';
-      }
+      if (title) title.style.display = 'none';
       GAME_STATE.started = true;
       sound.init();
 
@@ -2594,28 +2180,20 @@
       setTimeout(() => {
         startDialogueQueue([
           {
-            type: "dialogue",
-            speaker: "梁澤銘",
-            role: "特約安全調查員",
-            text: "我是特約安全調查員梁澤銘。現場封鎖線已完全生效，專案搜查正在咪制書院校舍展開。"
+            type: "dialogue", speaker: "梁澤銘", role: "特約安全調查員",
+            text: "我是特約安全調查員梁澤銘。現場封鎖線已生效，專案搜查正式展開。"
           },
           {
-            type: "monologue",
-            speaker: "梁澤銘（心想）",
-            role: "案情初判",
-            text: "（霍展霆在體育更衣室倒下，岑詠蕎則在課堂中劇烈抽搐休克……他們都只是被毒販欺騙的受害學生！請緊跟綠色導航標，先前往西側更衣室排查展霆遺留的物品！）"
+            type: "monologue", speaker: "梁澤銘（心想）", role: "現場勘查",
+            text: "（霍展霆在體育更衣室倒下，岑詠蕎在模擬試途中痙攣昏迷……兩人此前均無突發病史。先跟隨導標前往西側更衣室排查現場遺物。）"
           }
         ]);
       }, 400);
     }
 
-    // ==========================================
-    // 12. 事件監聽綁定
-    // ==========================================
     function setupEventListeners() {
       document.getElementById('btn-start-game')?.addEventListener('click', startGame);
       document.getElementById('btn-restart-hud')?.addEventListener('click', handleRestartConfirm);
-
       document.getElementById('btn-cam-cycle')?.addEventListener('click', cycleCameraPreset);
       document.getElementById('btn-open-notebook')?.addEventListener('click', toggleNotebook);
       document.getElementById('btn-close-notebook')?.addEventListener('click', toggleNotebook);
@@ -2624,22 +2202,18 @@
       });
       document.getElementById('btn-rotate-left')?.addEventListener('click', () => rotateCameraByDegrees(-45));
       document.getElementById('btn-rotate-right')?.addEventListener('click', () => rotateCameraByDegrees(45));
-      
+
       const interactBtn = document.getElementById('mobile-interact-btn');
       if (interactBtn) {
         interactBtn.addEventListener('pointerdown', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
+          e.preventDefault(); e.stopPropagation();
           triggerInvestigation();
         });
       }
 
       dialogueBox?.addEventListener('pointerdown', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (canTriggerInput()) {
-          nextDialogue();
-        }
+        e.preventDefault(); e.stopPropagation();
+        if (canTriggerInput()) nextDialogue();
       });
 
       document.getElementById('btn-toggle-sound')?.addEventListener('click', () => {
@@ -2677,26 +2251,18 @@
 
       window.addEventListener('keydown', (e) => {
         keys[e.code] = true;
-        if (e.code === 'KeyE' || e.code === 'Space') {
-          triggerInvestigation();
-        } else if (e.code === 'KeyQ') {
-          rotateCameraByDegrees(-45);
-        } else if (e.code === 'KeyR') {
-          rotateCameraByDegrees(45);
-        } else if (e.code === 'Tab') {
-          e.preventDefault();
-          toggleNotebook();
-        } else if (e.code === 'Escape') {
+        if (e.code === 'KeyE' || e.code === 'Space') triggerInvestigation();
+        else if (e.code === 'KeyQ') rotateCameraByDegrees(-45);
+        else if (e.code === 'KeyR') rotateCameraByDegrees(45);
+        else if (e.code === 'Tab') { e.preventDefault(); toggleNotebook(); }
+        else if (e.code === 'Escape') {
           if (GAME_STATE.isLockerModalOpen) closeLockerModal();
           else if (GAME_STATE.isLabModalOpen) closeLabModal();
           else if (GAME_STATE.isNotebookOpen) toggleNotebook();
         }
       });
 
-      window.addEventListener('keyup', (e) => {
-        keys[e.code] = false;
-      });
-
+      window.addEventListener('keyup', (e) => { keys[e.code] = false; });
       window.addEventListener('resize', () => {
         if (!renderer || !camera) return;
         camera.aspect = window.innerWidth / window.innerHeight;
@@ -2724,37 +2290,26 @@
           let touch = null;
           if (e.changedTouches) {
             for (let i = 0; i < e.changedTouches.length; i++) {
-              if (e.changedTouches[i].identifier === joystickTouchId) {
-                touch = e.changedTouches[i];
-                break;
-              }
+              if (e.changedTouches[i].identifier === joystickTouchId) { touch = e.changedTouches[i]; break; }
             }
           }
           if (!touch) return;
-
           const maxDist = 44;
-          const dx = touch.clientX - joystickCenter.x;
-          const dy = touch.clientY - joystickCenter.y;
+          const dx = touch.clientX - joystickCenter.x, dy = touch.clientY - joystickCenter.y;
           const dist = Math.hypot(dx, dy);
           const clamped = Math.min(dist, maxDist);
           const angle = Math.atan2(dy, dx);
-
-          const tx = Math.cos(angle) * clamped;
-          const ty = Math.sin(angle) * clamped;
+          const tx = Math.cos(angle) * clamped, ty = Math.sin(angle) * clamped;
           jThumb.style.transform = `translate(${tx}px, ${ty}px)`;
-
           touchJoystickInput.x = tx / maxDist;
           touchJoystickInput.z = ty / maxDist;
         }, { passive: false });
 
         const endJoystick = () => {
-          joystickActive = false;
-          joystickTouchId = null;
-          touchJoystickInput.x = 0;
-          touchJoystickInput.z = 0;
+          joystickActive = false; joystickTouchId = null;
+          touchJoystickInput.x = 0; touchJoystickInput.z = 0;
           if (jThumb) jThumb.style.transform = `translate(0px, 0px)`;
         };
-
         window.addEventListener('touchend', endJoystick, { passive: false });
         window.addEventListener('touchcancel', endJoystick, { passive: false });
       }
@@ -2763,9 +2318,7 @@
         for (let i = 0; i < e.changedTouches.length; i++) {
           const t = e.changedTouches[i];
           const target = document.elementFromPoint(t.clientX, t.clientY) || t.target;
-          if (target && target.closest('button, #touch-joystick-container, #mobile-controls-cluster, #dialogue-box, #lab-modal, #notebook-modal, #locker-modal, header, .glass-panel, .glass-btn')) {
-            continue;
-          }
+          if (target && target.closest('button, #touch-joystick-container, #mobile-controls-cluster, #dialogue-box, #lab-modal, #notebook-modal, #locker-modal, header, .glass-panel, .glass-btn')) continue;
           if (t.clientX > window.innerWidth * 0.40 && rightTouchId === null) {
             rightTouchId = t.identifier;
             lastTouchX = t.clientX;
@@ -2789,38 +2342,28 @@
       window.addEventListener('touchend', (e) => {
         if (rightTouchId === null) return;
         for (let i = 0; i < e.changedTouches.length; i++) {
-          if (e.changedTouches[i].identifier === rightTouchId) {
-            rightTouchId = null;
-            break;
-          }
+          if (e.changedTouches[i].identifier === rightTouchId) { rightTouchId = null; break; }
         }
       }, { passive: true });
     }
 
-    // ==========================================
-    // 13. 主渲染循環與後台掛起優化
-    // ==========================================
     const clock = new THREE.Clock();
-    let isTabVisible = true;
-    let animationFrameId = null;
+    let isTabVisible = true, animationFrameId = null;
 
     function gameLoop() {
       if (!isTabVisible) return;
       animationFrameId = requestAnimationFrame(gameLoop);
-
       const delta = Math.min(clock.getDelta(), 0.1);
 
       if (GAME_STATE.started && player) {
-        let moveX = 0;
-        let moveZ = 0;
+        let moveX = 0, moveZ = 0;
         if (keys['KeyW'] || keys['ArrowUp']) moveZ -= 1;
         if (keys['KeyS'] || keys['ArrowDown']) moveZ += 1;
         if (keys['KeyA'] || keys['ArrowLeft']) moveX -= 1;
         if (keys['KeyD'] || keys['ArrowRight']) moveX += 1;
 
         if (Math.hypot(touchJoystickInput.x, touchJoystickInput.z) > 0.05) {
-          moveX = touchJoystickInput.x;
-          moveZ = touchJoystickInput.z;
+          moveX = touchJoystickInput.x; moveZ = touchJoystickInput.z;
         }
 
         if (!GAME_STATE.isDialogueOpen && !GAME_STATE.isNotebookOpen && !GAME_STATE.isLabModalOpen && !GAME_STATE.isLockerModalOpen) {
@@ -2845,9 +2388,7 @@
             m.userData.gemMesh.rotation.y += 2.0 * delta;
             m.position.y = m.userData.initialY + Math.sin(time * 3.2) * 0.12;
           }
-          if (m.userData.ringMesh) {
-            m.userData.ringMesh.rotation.z += 0.8 * delta;
-          }
+          if (m.userData.ringMesh) m.userData.ringMesh.rotation.z += 0.8 * delta;
           if (m.userData.spriteMesh) {
             m.userData.spriteMesh.position.y = (m.userData.type === 'clue' ? 0.6 : 0.4) + Math.sin(time * 4.0) * 0.06;
           }
@@ -2858,18 +2399,13 @@
           const baseY = objectiveArrowMesh.userData.baseY || 3.0;
           objectiveArrowMesh.position.y = baseY + Math.sin(time * 4.5) * 0.25;
         }
-
-        if (duskParticles) {
-          duskParticles.rotation.y = time * 0.02;
-        }
+        if (duskParticles) duskParticles.rotation.y = time * 0.02;
 
         checkProximity();
         renderMinimap();
       }
 
-      if (renderer && scene && camera) {
-        renderer.render(scene, camera);
-      }
+      if (renderer && scene && camera) renderer.render(scene, camera);
     }
 
     document.addEventListener('visibilitychange', () => {
@@ -2888,9 +2424,6 @@
       }
     });
 
-    // ==========================================
-    // 14. 應用入口
-    // ==========================================
     function bootApp() {
       minimapCanvas = document.getElementById('minimap-canvas');
       minimapCtx = minimapCanvas ? minimapCanvas.getContext('2d') : null;
@@ -2912,8 +2445,7 @@
       updateJoystickCenter();
       updateClueBadges();
 
-      const ready = init3DWorld();
-      if (ready) {
+      if (init3DWorld()) {
         gameLoop();
       }
     }
