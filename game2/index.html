@@ -119,7 +119,7 @@
     }
     .animate-shake { animation: shake 0.35s ease-in-out; }
 
-    /* 對話框立繪優化樣式：避免擠壓穿模，僅在必要角色對話時顯示 */
+    /* 對話框立繪樣式 */
     .dialogue-portrait-img {
       position: absolute;
       bottom: calc(100% - 10px);
@@ -275,7 +275,7 @@
             <span>REC • 16:40:<span id="cctv-timer-sec">12</span></span>
           </div>
           <div id="cctv-suspect-tag" class="absolute hidden border-2 border-rose-500 bg-rose-950/80 text-rose-300 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded pointer-events-none transition-all shadow-lg">
-            ⚠️ 鎖定涉案黑影 [往 17 號空置儲物櫃放貨]
+            ⚠️ 鎖定涉案黑影正在開啟 17 號櫃
           </div>
         </div>
 
@@ -287,9 +287,9 @@
             </div>
             <div>
               <input id="cctv-scrubber" type="range" min="0" max="100" value="20" class="w-full accent-emerald-500 cursor-pointer h-2 my-1">
-              <div class="flex justify-between text-[8.5px] font-mono text-slate-400 px-0.5">
+              <div class="flex justify-between text-[9px] font-mono text-slate-400 px-0.5">
                 <span>16:40:12</span>
-                <span class="text-rose-400 font-bold">16:40:32 (可疑動向)</span>
+                <span class="text-slate-500">16:40:32</span>
                 <span>16:40:57</span>
               </div>
             </div>
@@ -324,7 +324,7 @@
         <div class="bg-black/60 p-2 rounded-xl border border-rose-950/60 font-mono text-[11px] text-amber-200/90 leading-tight space-y-0.5 select-text">
           <p>心跳快到就爆……手手手震gggggg</p>
           <p>停唔到 根本唔係提神精油……</p>
-          <p class="text-rose-400 font-bold">叫我喺走廊無人用的儲物櫃攞貨……密碼係……1樓展板寫嘅大麻黑話代號……</p>
+          <p class="text-rose-400 font-bold">叫我喺走廊無人用的儲物櫃攞貨……密碼係……1樓展板寫嘅大麻俗稱代號……</p>
           <p>救命 叫救護車快d……asdhjffffffffffffff</p>
         </div>
       </div>
@@ -544,7 +544,7 @@
               <div class="text-[10px] text-rose-300">校外主謀與校內接應</div>
             </div>
           </div>
-          <p class="text-[11px] text-slate-300 leading-relaxed">主謀利用儲物櫃滲透毒品，指使阿強偷拍醜態勒索五十萬。阿強誤信「未成年只是跑腿不會坐監」，實質觸犯香港法例第 134 章《危險藥物條例》，法庭重申<strong>【年輕非減刑理由】</strong>，最高可被判處罰款 500 萬港元及終身監禁。</p>
+          <p class="text-[11px] text-slate-300 leading-relaxed">主謀利用儲物櫃滲透毒品，指使阿強偷拍醜態勒索五十萬。阿強誤信「未成年只是跑腿不會坐監」，實質觸犯香港法例第 134 章《危險藥物條例》，法庭重申<strong>【年輕絕非減刑理由】</strong>，販運危險藥物最高可被判處罰款 5,000,000 港元及終身監禁。</p>
         </div>
       </div>
     </div>
@@ -638,9 +638,9 @@
               警方依據天台截獲的通話錄音與 16:40:32 CCTV 監控記錄，已在校外將「暗夜調劑師」與接應跑腿阿強全數拘捕歸案。其利用抽搐醜態影片勒索五十萬封口費的犯罪圖謀已被全面粉碎。
             </p>
 
-            <div class="p-2 rounded-xl bg-rose-950/40 border border-rose-500/40 text-[10.5px] text-rose-200 leading-snug mb-2">
-              <strong class="text-rose-400 block mb-0.5">⚠️ 法律嚴正聲明：【年輕非減刑理由】</strong>
-              香港法例第 134 章《危險藥物條例》明確規定：任何協助搬運、交收或藏匿危險藥物（包括依托咪酯）之行為均屬「販運危險藥物」，<strong>最高刑罰為罰款 500 萬港元及終身監禁</strong>！法庭多次嚴正申明年輕絕非求情或減刑理由，切勿誤信「未成年跑腿免責」之謊言！
+            <div class="p-2.5 rounded-xl bg-rose-950/40 border border-rose-500/40 text-[11px] text-rose-200 leading-relaxed mb-2">
+              <strong class="text-rose-400 block text-xs mb-1">⚠️ 法律嚴正聲明：【年輕絕非減刑理由】</strong>
+              香港法例第 134 章《危險藥物條例》明確規定：任何協助搬運、交收或藏匿危險藥物（包括依托咪酯）之行為均屬「販運危險藥物」，<strong>最高刑罰為罰款 5,000,000 港元及終身監禁</strong>！法庭多次嚴正申明<strong>年輕絕非求情或減刑理由</strong>，切勿誤信「未成年跑腿免責」之謊言！
             </div>
 
             <div class="text-amber-300 font-bold text-xs flex items-center gap-1 mb-1 pt-1 border-t border-slate-800">
@@ -928,7 +928,7 @@
     function saveGameProgress() {
       try {
         const payload = {
-          questStage: Math.min(GAME_STATE.questStage, 7),
+          questStage: Math.min(GAME_STATE.questStage, 8),
           cluesFound: Array.from(GAME_STATE.cluesFound),
           currentFloor: GAME_STATE.currentFloor,
           hasCctvClue: GAME_STATE.hasCctvClue,
@@ -968,7 +968,7 @@
         pos: { x: -8.5, y: 5.05, z: -7.5 },
         floor: 2,
         shortDesc: "課桌漏出深紫油液。桌角貼著倒數作息表；手機草稿滿是手指痙攣失控打出的求救字句，提及走廊空置儲物櫃與大麻代號。",
-        fullDesc: "課桌上漏出一灘未乾涸的油性紫液（樣品 A）。模擬試卷前半段答題極其工整，後半段卻被原子筆失控刺穿數十道裂痕，呈現出劇烈肌陣攣顫抖的痕跡。桌角貼著寫滿『不可鬆懈！』的倒數作息表（每日睡眠僅 3.5 小時），旁邊堆著四罐喝空的提神咖啡。手機螢幕停留在未鎖草稿，字句錯亂：『心跳快到就爆……手手手震gggggg……根本唔係提神精油……叫我喺走廊……無人用的儲物櫃攞貨……密碼係……1樓展板寫嘅大麻黑話代號……救命……asdhjffffffffffffff……』。",
+        fullDesc: "課桌上漏出一灘未乾涸的油性紫液（樣品 A）。模擬試卷前半段答題極其工整，後半段卻被原子筆失控刺穿數十道裂痕，呈現出劇烈肌陣攣顫抖的痕跡。桌角貼著寫滿『不可鬆懈！』的倒數作息表（每日睡眠僅 3.5 小時），旁邊堆著四罐喝空的提神咖啡。手機螢幕停留在未鎖草稿，字句錯亂：『心跳快到就爆……手手手震gggggg……根本唔係提神精油……叫我喺走廊……無人用的儲物櫃攞貨……密碼係……1樓展板寫嘅大麻俗稱代號……救命……asdhjffffffffffffff……』。",
         forensic: "桌面漏液呈淡紫油狀，高脂溶性，微酸性。已提取封存為【樣品 A】以供進一步毒理化驗。"
       },
       clue_cctv: {
@@ -992,7 +992,7 @@
         pos: { x: 5.5, y: 5.05, z: 0.1 },
         floor: 2,
         shortDesc: "解開 17 號空置儲物櫃。起獲涉案便條，載明新一批未拆封特調原液已暫存於化學室外排水管支架角落。",
-        fullDesc: "輸入涉毒黑話代號【420】解開密碼鎖。在儲物櫃底層起獲接頭便條：『咪制書院節點：試用裝已按約定放入空櫃。下批特調原液已暫存【化學室外排水管支架暗角】，取後即銷毀。』",
+        fullDesc: "輸入大麻俗稱代號【420】解開密碼鎖。在儲物櫃底層起獲接頭便條：『咪制書院節點：試用裝已按約定放入空櫃。下批特調原液已暫存【化學室外排水管支架暗角】，取後即銷毀。』",
         forensic: "紙張帶有特種油墨，邊緣檢出揮發性特異有機氣味殘留，物理性狀與更衣室起獲的煙彈一致。"
       },
       clue_pipe_stash: {
@@ -1048,8 +1048,8 @@
       },
       notice_board: {
         id: "notice_board", name: "1F 校園抗毒宣傳板", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
-        desc: "【校園抗毒公告：警惕偽裝煙彈與黑市代號】\n• 警惕新型偽裝煙油：常被不法分子吹噓成『草本提神精油』或『速效放鬆劑』。濫用此類含有依托咪酯的毒品會導致急性肌陣攣抽搐、呼吸衰竭、中樞神經永久受損。\n• 涉毒黑話與代號警示：毒販常藉由隱晦黑話掩飾交易，例如在涉毒黑市中常以數字『420』指代大麻毒品。\n• 緊記防毒口號：毒品咪制！",
-        monologue: "（展板詳細列明了新型偽裝煙油的中毒特徵，還提到涉毒黑市中指代大麻的黑話代號是 420……這些毒販伎倆必須時刻警惕。）"
+        desc: "【校園抗毒公告：警惕偽裝煙彈與涉毒代號】\n• 警惕新型偽裝煙油：常被不法分子吹噓成『草本提神精油』或『速效放鬆劑』。濫用此類含有依托咪酯的毒品會導致急性肌陣攣抽搐、呼吸衰竭、中樞神經永久受損。\n• 大麻俗稱代號警示：毒販常藉由隱晦代號掩飾交易，例如在涉毒圈子中常以數字『420』作為大麻俗稱代號。\n• 緊記防毒口號：毒品咪制！",
+        monologue: "（展板詳細列明了新型偽裝煙油的中毒特徵，還提到大麻俗稱的數字代號是 420……這些毒販伎倆必須時刻警惕。）"
       },
       trophy_case: {
         id: "trophy_case", name: "1F 大堂學界榮譽陳列櫃", pos: { x: -2.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🏆",
@@ -1590,8 +1590,9 @@
       const roofMain = new THREE.Mesh(new THREE.PlaneGeometry(21.5, 18), mats.rooftopFloor);
       roofMain.rotation.x = -Math.PI / 2; roofMain.position.set(3.25, 7.6, 0); floor3Group.add(roofMain);
 
-      const roofWN = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 13.8), mats.rooftopFloor);
-      roofWN.rotation.x = -Math.PI / 2; roofWN.position.set(-10.75, 7.6, -2.1); floor3Group.add(roofWN);
+      // 【修復天台西側樓梯出口懸空】：將平面寬度延展至 18，覆蓋完整 Z 軸 (-9 到 +9)，徹底解決樓梯口踏空問題
+      const roofWN = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 18), mats.rooftopFloor);
+      roofWN.rotation.x = -Math.PI / 2; roofWN.position.set(-10.75, 7.6, 0); floor3Group.add(roofWN);
 
       const fenceMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8 });
       const fenceN = new THREE.Mesh(new THREE.BoxGeometry(28, 1.3, 0.2), fenceMat); fenceN.position.set(0, 8.25, -9); floor3Group.add(fenceN);
@@ -2053,7 +2054,7 @@
           GAME_STATE.questStage = 3;
           updateObjective("前往 1F 大堂保安監控終端，回放 2F 走廊閉路電視 (3/7)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證起獲", role: "中六B班課桌", text: "課桌漏出深紫油液（樣品 A）。試卷後半部滿是原子筆刺破的痙攣痕跡，桌角貼著每天僅睡3小時的倒數作息表；手機螢幕停留在未鎖草稿，滿是手指抽搐打出的求救字句：『心跳快到就爆……手手手震gggggg……叫我喺走廊無人用的儲物櫃攞貨……密碼係1樓展板寫嘅大麻黑話代號……救命……asdhjffffffffff……』" },
+            { type: "narration", speaker: "現場物證起獲", role: "中六B班課桌", text: "課桌漏出深紫油液（樣品 A）。試卷後半部滿是原子筆刺破的痙攣痕跡，桌角貼著每天僅睡3小時的倒數作息表；手機螢幕停留在未鎖草稿，滿是手指抽搐打出的求救字句：『心跳快到就爆……手手手震gggggg……叫我喺走廊無人用的儲物櫃攞貨……密碼係1樓展板寫嘅大麻俗稱代號……救命……asdhjffffffffff……』" },
             { type: "monologue", speaker: "梁澤銘", role: "關鍵動向", portrait: "梁澤銘", text: "（詠蕎在意識模糊前提及走廊『無人用的儲物櫃』……走廊櫃子眾多，先回 1F 大堂保安監控終端調取錄像，看清楚可疑人員究竟將物件投放進了哪一個櫃！）" }
           ]);
         } else if (clue.stage === 3) {
@@ -2087,7 +2088,7 @@
             },
             { 
               type: "monologue", speaker: "梁澤銘", role: "法律威懾與現場定案", portrait: "梁澤銘", 
-              text: "（荒謬至極！許多心智未成熟的青少年以為充當跑腿『無吸食就唔算販毒』，甚至妄想『未成年就唔會坐監』——這完全是不法分子的致命謊言！\n香港法庭多次嚴正宣告：【年輕非減刑理由】！根據香港法例第 134 章《危險藥物條例》，任何協助運送、交收、儲存毒品的行為，法律上一律等同『販運危險藥物』！最高刑罰為【罰款 500 萬港元及終身監禁】！阿強為了一點蠅頭小利，賠上的是整個人生！\n全案 7 大物證已全部集齊，立即打開【📋 案件簿】的【思維宮殿定案】，核實犯罪鏈條並收網！）" 
+              text: "（荒謬至極！許多心智未成熟的青少年以為充當跑腿『無吸食就唔算販毒』，甚至妄想『未成年就唔會坐監』——這完全是不法分子的致命謊言！\n香港法庭多次嚴正宣告：【年輕絕非減刑理由】！根據香港法例第 134 章《危險藥物條例》，任何協助運送、交收、儲存毒品的行為，法律上一律等同『販運危險藥物』！\n最高刑罰為【罰款 5,000,000 港元及終身監禁】！阿強為了一點蠅頭小利，賠上的是整個人生！\n全案 7 大物證已全部集齊，立即打開【📋 卷宗】進入【思維宮殿】，定案收網！）" 
             }
           ], () => {
             toggleNotebook();
@@ -2207,7 +2208,8 @@
       if (timeSec) timeSec.textContent = secStr;
       if (timeDisplay) timeDisplay.textContent = `16:40:${secStr}`;
 
-      if (progress >= 42 && progress <= 76) {
+      // 【優化體驗】：移除劇透，縮小判定區間至 43~47（精確鎖定 16:40:31~16:40:33）
+      if (progress >= 43 && progress <= 47) {
         const charX = locker17ScreenPos.x + 12;
         const charY = locker17ScreenPos.y + 10;
 
@@ -2235,7 +2237,7 @@
           suspectTag.style.top = `${((charY - 60) / h) * 100}%`;
         }
         if (logText) {
-          logText.innerHTML = "<strong class=\"text-rose-400\">【發現異常動向】</strong>一名戴黑色鴨舌帽的可疑人正在 17 號儲物櫃前停留，將深色包裝物塞入櫃內！";
+          logText.innerHTML = "<strong class=\"text-emerald-400\">【影像捕捉】</strong>一名戴黑色鴨舌帽的可疑人員正將不明深色物件塞入 17 號儲物櫃！請立即截圖存證。";
         }
       } else {
         if (suspectTag) suspectTag.classList.add('hidden');
@@ -2246,14 +2248,14 @@
     }
 
     function captureCctvFrame() {
-      if (GAME_STATE.cctvProgress >= 42 && GAME_STATE.cctvProgress <= 76) {
+      if (GAME_STATE.cctvProgress >= 43 && GAME_STATE.cctvProgress <= 47) {
         sound.playClueFound();
         haptic([30, 40]);
         closeCctvModal();
         collectClue('clue_cctv');
         GAME_STATE.hasCctvClue = true;
         GAME_STATE.questStage = 4;
-        updateObjective("依據 CCTV 截圖線索，在 2F 走廊找出並排查涉案儲物櫃 (4/7)");
+        updateObjective("依據 CCTV 截圖線索，在 2F 走廊找出並排查 17 號儲物櫃 (4/7)");
         startDialogueQueue([
           { type: "narration", speaker: "閉路電視截圖取證", role: "物證歸檔", text: "成功截獲 16:40:32 關鍵幀！清晰記錄涉案人員將改裝煙彈塞入 2F 走廊【17 號儲物櫃】。" },
           { type: "monologue", speaker: "梁澤銘", role: "偵查鎖定", portrait: "梁澤銘", text: "（涉案目標已鎖定為 17 號儲物櫃。立刻登上 2F 走廊，親自找出並解開 17 號櫃！）" }
@@ -2262,7 +2264,7 @@
         sound.playLockBuzzer();
         const logText = document.getElementById('cctv-log-text');
         if (logText) {
-          logText.innerHTML = "<span class=\"text-rose-400 font-bold animate-pulse\">⚠️ 取證失敗：當前時間幀無異常黑影！請拖動時間軸至可疑人投放物件時再截圖。</span>";
+          logText.innerHTML = "<span class=\"text-rose-400 font-bold animate-pulse\">⚠️ 取證無效：當前時間幀未發現可疑動向，請繼續滑動時間軸搜尋。</span>";
         }
       }
     }
@@ -2321,7 +2323,7 @@
           void card.offsetWidth;
           card.classList.add('animate-shake');
         }
-        if (err) err.textContent = "❌ 密碼不符。（詠蕎草稿提及大麻代號，請回想 1F 抗毒宣傳板上的黑話代號）";
+        if (err) err.textContent = "❌ 密碼不符。（詠蕎草稿提及大麻代號，請回想 1F 抗毒宣傳板上的俗稱代號）";
       }
     }
 
@@ -2329,7 +2331,7 @@
       sound.playDialogueBlip();
       closeLockerModal();
       startDialogueQueue([
-        { type: "monologue", speaker: "梁澤銘", role: "思維回想", portrait: "梁澤銘", text: "（詠蕎草稿裡寫著『密碼係1樓展板寫嘅大麻黑話代號』……剛才在 1 樓大堂抗毒宣傳板上看過，涉毒黑市中指代大麻的黑話數字代號正是 420！）" }
+        { type: "monologue", speaker: "梁澤銘", role: "思維回想", portrait: "梁澤銘", text: "（詠蕎草稿裡寫著『密碼係1樓展板寫嘅大麻俗稱代號』……剛才在 1 樓大堂抗毒宣傳板上看過，大麻俗稱的數字代號正是 420！）" }
       ]);
     }
 
@@ -2617,7 +2619,7 @@
       if (resume) {
         const saved = checkSavedProgress();
         if (saved) {
-          GAME_STATE.questStage = Math.min(saved.questStage || 1, 7);
+          GAME_STATE.questStage = Math.min(saved.questStage || 1, 8);
           GAME_STATE.cluesFound = new Set(saved.cluesFound || []);
           GAME_STATE.currentFloor = saved.currentFloor || 1;
           GAME_STATE.hasCctvClue = !!saved.hasCctvClue;
@@ -2629,7 +2631,7 @@
           let resumeHint = "排查現場";
           if (GAME_STATE.questStage === 2) resumeHint = "沿東側階梯登上 2F，搜查中六B班房岑詠蕎的課桌 (2/7)";
           else if (GAME_STATE.questStage === 3) resumeHint = "前往 1F 大堂保安監控終端，回放 2F 走廊閉路電視 (3/7)";
-          else if (GAME_STATE.questStage === 4) resumeHint = "依據 CCTV 截圖線索，在 2F 走廊找出並排查涉案儲物櫃 (4/7)";
+          else if (GAME_STATE.questStage === 4) resumeHint = "依據 CCTV 截圖線索，在 2F 走廊找出並排查 17 號儲物櫃 (4/7)";
           else if (GAME_STATE.questStage === 5) resumeHint = "搜查 2F 化學室外排水管支架暗角 (5/7)";
           else if (GAME_STATE.questStage === 6) resumeHint = "進入 2F 理科實驗室，進行雙試管快篩化驗 (6/7)";
           else if (GAME_STATE.questStage === 7) resumeHint = "循著急促鈴聲登上 3F 天台，排查排風箱通聯手機 (7/7)";
@@ -2935,7 +2937,7 @@
         const resumeBtn = document.getElementById('btn-resume-game');
         const stageLbl = document.getElementById('saved-stage-label');
         if (resumeBtn) resumeBtn.classList.remove('hidden');
-        if (stageLbl) stageLbl.textContent = `進度 ${Math.min(saved.questStage, 7)}/7`;
+        if (stageLbl) stageLbl.textContent = `進度 ${Math.min(saved.questStage, 8)}/7`;
       }
 
       if (init3DWorld()) {
