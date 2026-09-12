@@ -174,8 +174,24 @@
       background: rgba(36, 10, 20, 0.96) !important;
     }
 
+    /* 密碼轉盤樣式 */
+    .tumbler-dial {
+      background: linear-gradient(180deg, #090d16 0%, #1e293b 50%, #090d16 100%);
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.9), 0 2px 8px rgba(249,115,22,0.3);
+      border: 1.5px solid #475569;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .animate-shake {
+      animation: shake 0.35s ease-in-out;
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      .pixel-scanlines, .animate-ping, .animate-bounce, .animate-pulse {
+      .pixel-scanlines, .animate-ping, .animate-bounce, .animate-pulse, .animate-shake {
         animation: none !important;
         transition: none !important;
       }
@@ -310,6 +326,63 @@
     </div>
   </div>
 
+  <!-- 17 號儲物櫃密碼鎖解鎖面板 -->
+  <div id="locker-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="locker-modal-title" tabindex="-1">
+    <div id="locker-modal-card" class="glass-panel w-full max-w-sm rounded-3xl p-4 border-amber-500/50 flex flex-col items-center justify-between relative shadow-2xl">
+      <div class="w-full flex items-center justify-between pb-2 border-b border-slate-700/80 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🔐</span>
+          <div>
+            <h3 id="locker-modal-title" class="text-sm font-black text-white">2F 走廊 17 號儲物櫃</h3>
+            <p class="text-[10px] text-amber-400">三位數金屬滾輪密碼鎖</p>
+          </div>
+        </div>
+        <button id="btn-close-locker" class="px-2 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition text-xs font-bold">✕</button>
+      </div>
+
+      <div class="bg-slate-900/90 p-2.5 rounded-2xl border border-slate-700/80 w-full mb-3 text-center">
+        <p class="text-[11px] text-slate-300 leading-tight mb-1">
+          櫃門鎖扣嚴密。詠蕎答題紙邊角顫抖寫著：<br>
+          <span class="text-amber-300 font-bold font-mono">「17號櫃密碼是大麻的……」</span>
+        </p>
+        <div id="locker-hint-text" class="text-[10px] text-cyan-300 font-mono">（字跡受漏出的煙油浸染模糊，可翻查校園宣傳海報尋找代號）</div>
+      </div>
+
+      <!-- 3 位數滾輪 UI -->
+      <div class="flex items-center justify-center gap-3 my-2">
+        <!-- 滾輪 1 -->
+        <div class="flex flex-col items-center">
+          <button id="dial-0-up" class="w-10 h-7 rounded-t-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▲</button>
+          <div id="dial-0-val" class="w-10 h-14 tumbler-dial flex items-center justify-center text-2xl font-black text-amber-300 font-mono">0</div>
+          <button id="dial-0-down" class="w-10 h-7 rounded-b-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▼</button>
+        </div>
+        <!-- 滾輪 2 -->
+        <div class="flex flex-col items-center">
+          <button id="dial-1-up" class="w-10 h-7 rounded-t-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▲</button>
+          <div id="dial-1-val" class="w-10 h-14 tumbler-dial flex items-center justify-center text-2xl font-black text-amber-300 font-mono">0</div>
+          <button id="dial-1-down" class="w-10 h-7 rounded-b-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▼</button>
+        </div>
+        <!-- 滾輪 3 -->
+        <div class="flex flex-col items-center">
+          <button id="dial-2-up" class="w-10 h-7 rounded-t-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▲</button>
+          <div id="dial-2-val" class="w-10 h-14 tumbler-dial flex items-center justify-center text-2xl font-black text-amber-300 font-mono">0</div>
+          <button id="dial-2-down" class="w-10 h-7 rounded-b-lg bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-95 text-xs transition border border-slate-600">▼</button>
+        </div>
+      </div>
+
+      <div id="locker-error-feedback" class="h-5 text-[11px] font-bold text-rose-400 text-center my-1"></div>
+
+      <div class="w-full flex gap-2 pt-2 border-t border-slate-800 mt-2">
+        <button id="btn-locker-clue-hint" class="px-3 py-2 rounded-xl bg-slate-800 text-cyan-300 text-xs font-bold hover:bg-slate-700 active:scale-95 transition">
+          💡 線索提示
+        </button>
+        <button id="btn-submit-lock" class="flex-1 py-2 rounded-xl glass-btn text-white font-black text-xs shadow-lg active:scale-95 transition tracking-wider flex items-center justify-center gap-1">
+          <span>扭轉鎖芯解鎖</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- 雙試管快篩鑑驗台 -->
   <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" aria-labelledby="lab-modal-title" tabindex="-1">
     <div class="glass-panel w-full max-w-xl rounded-3xl p-3 sm:p-3.5 relative border-cyan-500/50 flex flex-col justify-between">
@@ -318,7 +391,7 @@
           <span class="text-lg">🧪</span>
           <div>
             <h3 id="lab-modal-title" class="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">毒理鑑證：雙試管極速快篩台</h3>
-            <p class="text-[10px] text-cyan-300">比對中六課桌未知紫液與水管暗角軟糖提取液的化學顯色反應</p>
+            <p class="text-[10px] text-cyan-300">比對中六課桌漏出紫油（證物A）與外管夾角煙彈原液（證物B）的顯色反應</p>
           </div>
         </div>
         <button id="btn-close-lab" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉鑑驗台">✕</button>
@@ -332,17 +405,17 @@
               <div class="test-tube-glass">
                 <div id="tube-a-liquid" class="test-tube-liquid bg-purple-500/40"><div class="tube-meniscus"></div></div>
               </div>
-              <span class="text-[9px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">課桌殘留液</span>
+              <span class="text-[9px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">課桌漏油提取液</span>
             </div>
             <div class="flex flex-col items-center">
               <span class="text-[10px] font-black text-cyan-300 mb-1">試管 B</span>
               <div class="test-tube-glass">
                 <div id="tube-b-liquid" class="test-tube-liquid bg-cyan-500/40"><div class="tube-meniscus"></div></div>
               </div>
-              <span class="text-[9px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">暗角軟糖液</span>
+              <span class="text-[9px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">暗角煙彈原液</span>
             </div>
           </div>
-          <div class="text-[9px] text-slate-400 font-mono mt-1">【現場未知樣品已預載入試管】</div>
+          <div class="text-[9px] text-slate-400 font-mono mt-1">【丙二醇油性載體樣品已預載入】</div>
         </div>
 
         <div class="flex flex-col justify-between h-full space-y-2">
@@ -386,7 +459,7 @@
           <span class="text-base">📋</span>
           <div>
             <h2 id="notebook-modal-title" class="text-xs sm:text-sm font-black text-white">咪制書院校園安全專案手冊</h2>
-            <p class="text-[10px] text-orange-400">三層立體搜查卷宗 • 6大核心物證鏈</p>
+            <p class="text-[10px] text-orange-400">太空油特別搜查卷宗 • 6大核心物證鏈</p>
           </div>
         </div>
         
@@ -436,8 +509,8 @@
               <select id="deduce-vector" class="bg-slate-900 text-[10px] text-orange-300 p-1 rounded border border-slate-700 outline-none">
                 <option value="none">-- 請選擇 --</option>
                 <option value="wrong1">普通葡萄運動飲料</option>
-                <option value="correct">危險藥物「依托咪酯 (Etomidate)」</option>
-                <option value="wrong2">薄荷調味甘油</option>
+                <option value="correct">混入電子煙之「依托咪酯 (太空油)」</option>
+                <option value="wrong2">純薄荷調味甘油</option>
               </select>
             </div>
 
@@ -487,7 +560,7 @@
               <div class="text-[9px] text-purple-300">中六B班受害學生</div>
             </div>
           </div>
-          <p class="text-[10px] text-slate-300 leading-tight">詠蕎深受成癮困擾於考前超量含服；展霆為緩解舊患劇痛誤服毒糖，均引發肌陣攣休克送醫。</p>
+          <p class="text-[10px] text-slate-300 leading-tight">詠蕎受考前焦慮所困深陷太空油成癮，開考前在洗手間吸食引發肌陣攣抽搐休克；展霆則為緩解賽事舊患痛誤吸毒煙彈倒地。</p>
         </div>
 
         <div class="glass-panel p-2 rounded-xl border-rose-500/40 bg-rose-950/20 flex flex-col">
@@ -498,7 +571,7 @@
               <div class="text-[9px] text-rose-300">黑市通緝主謀</div>
             </div>
           </div>
-          <p class="text-[10px] text-slate-300 leading-tight">以加密通訊向受壓學生兜售偽裝成「放鬆聰明糖」的管制藥依托咪酯。</p>
+          <p class="text-[10px] text-slate-300 leading-tight">以加密通訊向學生散播偽裝成提神煙彈的「依托咪酯太空油」，並以偷拍影片進行網絡敲詐。</p>
         </div>
       </div>
     </div>
@@ -518,7 +591,7 @@
         Twilight Echoes: 沉淪之霧 • 校園特別調查
       </h2>
       <p class="text-xs text-slate-300 leading-relaxed mb-3 text-left bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-        放學後的咪制書院突發兩起嚴重急性中毒事件！中六尖子<strong class="text-amber-300">岑詠蕎</strong>在課後模擬試中，因急性藥物中毒引發全身劇烈肌陣攣抽搐並休克；同一時間，籃球隊長<strong class="text-cyan-300">霍展霆</strong>亦在更衣室倒地！黑市毒販<strong class="text-rose-400">「暗夜調劑師」</strong>利用升學與賽事焦慮將毒品偽裝成提神糖滲入校園。特約調查員梁澤銘受託進入封鎖現場，請跟隨<strong>綠色導引光錐</strong>，查清真相！
+        放學後的咪制書院突發兩起嚴重急性中毒事件！中六尖子<strong class="text-amber-300">岑詠蕎</strong>在課後模擬試開考前，在洗手間吸食電子煙後返回課室，突發全身劇烈肌陣攣抽搐倒地；同一時間，籃球隊長<strong class="text-cyan-300">霍展霆</strong>亦在更衣室倒地休克！黑市毒販<strong class="text-rose-400">「暗夜調劑師」</strong>利用升學與舊患焦慮，將毒品<strong>依托咪酯（太空油）</strong>偽裝成提神煙彈滲入校園。特約調查員梁澤銘受託進入封鎖現場，請跟隨<strong>綠色導引光錐</strong>，查清真相！
       </p>
 
       <button id="btn-start-game" class="w-full max-w-xs py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 text-white font-black text-xs sm:text-sm tracking-wider shadow-[0_0_25px_rgba(249,115,22,0.5)] active:scale-95 transition cursor-pointer">
@@ -543,7 +616,7 @@
           <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-lg shadow-[0_0_20px_rgba(16,185,129,0.35)]">🏆</div>
           <div class="text-left">
             <h2 class="text-xs sm:text-sm font-black text-white">案情告破：真相水落石出！</h2>
-            <div class="text-[10px] text-emerald-400 font-bold">【S級 金牌特約調查員】三層物證全鏈條通報核實</div>
+            <div class="text-[10px] text-emerald-400 font-bold">【S級 金牌特約調查員】太空油全鏈條物證通報核實</div>
           </div>
         </div>
         <div class="px-2.5 py-1 rounded-full bg-rose-950 border border-rose-500 text-rose-300 text-[10px] font-black tracking-wider">
@@ -555,10 +628,10 @@
         <div class="bg-slate-900/90 p-2.5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-1.5">
           <div class="space-y-1 text-[11px] text-slate-300 leading-snug">
             <div>
-              <strong class="text-amber-300">雷霆收網：</strong>依據梁澤銘於 1F 更衣室、2F 課桌、儲物櫃與排水管支架暗角起獲之軟糖樣品，經實驗室雙試管確診<strong>「依托咪酯」</strong>，並結合天台截獲之勒索錄音，執法專案組已將「暗夜調劑師」及其校外分銷網絡連根拔起！
+              <strong class="text-amber-300">雷霆收網：</strong>依據梁澤銘於 1F 更衣室殘破煙彈、2F 課桌漏油草稿、破解 17 號儲物櫃密碼（420）起獲之提貨單，以及實驗室外排水管查獲之未開封太空油煙彈，經雙試管確診<strong>「依托咪酯」</strong>！專案組已將「暗夜調劑師」及其校外走私分銷網絡連根拔起！
             </div>
             <div>
-              <strong class="text-cyan-300">及時救治：</strong>岑詠蕎與霍展霆因第一時間精準確診為依托咪酯急性中毒，醫院施以對症治療，已脫離生命危險，學校社工亦已介入提供專業戒毒輔導！
+              <strong class="text-cyan-300">及時救治：</strong>岑詠蕎與霍展霆因第一時間精準確診為依托咪酯（太空油）急性中毒，醫院施以對症拮抗支持治療，已脫離生命危險，學校社工已全面介入提供專業戒毒輔導！
             </div>
           </div>
 
@@ -571,16 +644,16 @@
           <div>
             <div class="text-amber-300 font-bold text-xs flex items-center gap-1 mb-1">
               <span>📞</span>
-              <span>官方禁毒與依托咪酯舉報途徑：</span>
+              <span>官方禁毒與打擊太空油舉報途徑：</span>
             </div>
             <div class="text-[11px] text-slate-200 space-y-1 pl-1">
               <div>• 毒品舉報熱線：<strong class="text-white font-mono bg-slate-800 px-1.5 py-0.5 rounded">2527-1234</strong></div>
-              <div>• 打擊依托咪酯舉報專線：<strong class="text-rose-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">6629-2966</strong></div>
+              <div>• 打擊依托咪酯（太空油）專線：<strong class="text-rose-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">6629-2966</strong></div>
             </div>
           </div>
 
           <div class="text-[10px] text-orange-300 bg-orange-950/30 p-1.5 rounded-lg border border-orange-500/30 leading-tight">
-            依托咪酯受《危險藥物條例》嚴格管轄！齊心守護無毒校園，牢記<strong>【毒品咪制！】</strong>！
+            依托咪酯受《危險藥物條例》嚴格管轄！齊心守護無毒校園，遠離非法電子煙彈，牢記<strong>【毒品咪制！】</strong>！
           </div>
         </div>
       </div>
@@ -637,7 +710,6 @@
         if (!this.ctx || this.isPlayingBGM) return;
         this.isPlayingBGM = true;
 
-        // 1. 低頻懸疑背景 Drone
         try {
           const filter = this.ctx.createBiquadFilter();
           filter.type = 'lowpass';
@@ -663,7 +735,6 @@
           this.droneOsc2.start();
         } catch(e){}
 
-        // 2. 探案動態環境琴音循環
         const notes = [261.63, 311.13, 392.00, 466.16, 523.25, 466.16]; // Cm7
         let noteIdx = 0;
 
@@ -744,6 +815,39 @@
         } catch(e){}
       }
 
+      playDialClick() {
+        if (!this.ctx || this.isMuted) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.03);
+          gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.03);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.03);
+        } catch(e){}
+      }
+
+      playLockBuzzer() {
+        if (!this.ctx || this.isMuted) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(130, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.25);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.25);
+        } catch(e){}
+      }
+
       playPhoneRing() {
         if (!this.ctx || this.isMuted) return;
         try {
@@ -801,74 +905,76 @@
       isDialogueOpen: false,
       isNotebookOpen: false,
       isLabModalOpen: false,
+      isLockerModalOpen: false,
       hasIdentifiedEtomidate: false,
       dialogueQueue: [],
       dialogueCallback: null,
       activeInteractable: null,
       cameraAngleY: 0,
       cameraPresetIdx: 0,
-      currentFloor: 1
+      currentFloor: 1,
+      lockerDigits: [0, 0, 0]
     };
 
     const CLUES_DATA = {
       clue_gym_fok: {
         id: "clue_gym_fok",
         stage: 1,
-        name: "1F 體育更衣室外霍展霆的遺物與糖果空袋",
+        name: "1F 體育更衣室外霍展霆遺留之改裝煙彈殘骸",
         zone: "1F 體育更衣室走廊",
         icon: "🩹",
         pos: { x: -9.5, y: 1.25, z: 4.0 },
         floor: 1,
-        shortDesc: "籃球隊長霍展霆在此休克。拾獲撕開的奇異果糖包裝紙，背後赫然附有暗夜調劑師的私訊便條：『展霆，備戰舊患痛就吃這個……不夠找中六B班詠蕎拿新貨』！",
-        fullDesc: "校隊隊長霍展霆在此處急救送醫。拾獲撕開的「奇異果提神止痛軟糖」空包裝，內壁附著淡紫色微粒；護膝內夾著一張加密對話打印便條：『From 暗夜調劑師：展霆，練球舊患痛就含一顆，保證無痛亢奮。不夠的話，中六B班詠蕎手上有最新一批貨……』證實毒物來自黑市『暗夜調劑師』，並指向 2F 課堂！",
-        forensic: "包裝殘留粉末微粒具強烈親脂性，非食用香精，呈未標記脂溶性中樞麻醉藥劑特徵。"
+        shortDesc: "校隊隊長展霆在此倒地。起獲摔裂的電子煙彈（太空油），底部帶暗網骷髏暗印便條：『練球舊患痛就抽兩口……不夠找中六B班詠蕎拿新貨』！",
+        fullDesc: "隊長霍展霆在此急性中毒送醫。長椅下起獲摔裂的偽裝提神電子煙彈，煙油呈淡紫色，並檢出一張加密暗號字條：『舊患痛抽兩口保證止痛放鬆。不夠的話，中六B班詠蕎手上有新一批貨……』證實毒物為含麻醉劑的改裝電子煙油（太空油），源頭直指 2F 課室！",
+        forensic: "煙嘴及殘裂處附著高黏度丙二醇（PG）與植物甘油（VG）溶劑，帶有特異性中樞麻醉酯類氣味。"
       },
       clue_desk: {
         id: "clue_desk",
         stage: 2,
-        name: "2F 中六B班 岑詠蕎的課前自白備忘錄與紫晶液",
+        name: "2F 中六B班 岑詠蕎抽搐劃破之答題紙與漏液手機",
         zone: "2F 中六B班房",
         icon: "📝",
         pos: { x: -8.5, y: 5.05, z: -7.5 },
         floor: 2,
-        shortDesc: "課桌上起獲深紫色滴液（證物 A）與詠蕎開考前手寫的備忘手記！手記揭露她深陷依賴，開考前因手抖焦慮超量服用，剛起效便全身抽搐；紙條還註明了 17 號儲物櫃！",
-        fullDesc: "在事發 2 號桌提取到深紫色未知滴液（證物 A）。桌屜內起獲詠蕎在開考前半小時寫下的手記草稿：『最近為了衝刺模擬試，聽信暗夜調劑師的宣傳買了這種聰明糖……才兩天我就徹底上癮了！一旦停用就全身冷汗顫抖、焦慮到崩潰！剛才開考前手抖得握不住筆，我忍不住在洗手間一次性含了兩整顆……他還塞紙條叫我去 17 號儲物櫃取新配方……』證實詠蕎早已藥物成癮，並在考前超量急性濫用引發肌陣攣休克！",
-        forensic: "滴液呈現淡紫晶瑩狀，微酸性，具高揮發性有機酯特徵。提取為現場【證物 A】送檢。"
+        shortDesc: "課桌上起獲漏出的紫色煙油（證物 A）與開考前撕裂的答題紙！筆跡由公式劇烈扭曲成痙攣劃痕；手機未鎖屏備忘錄赫然寫著：『17號櫃密碼是大麻的……』！",
+        fullDesc: "課桌上漏出一灘深紫色油性煙液（證物 A）。桌上模擬試化學答題紙前兩行公式突然嚴重扭曲變形，最後劃破紙張留下一道長長墨跡——證實詠蕎開考前在洗手間吸食太空油後，一回到課桌即急性毒發，誘發劇烈肌陣攣全身抽搐！旁邊手機未鎖屏備忘錄寫著：『17號儲物櫃密碼是大麻的……（後續字樣被漏出的黏稠煙油浸化模糊）』！",
+        forensic: "桌面漏液呈淡紫透明油狀，高脂溶性，微酸性。提取為現場【證物 A】送檢。"
       },
       clue_corridor: {
         id: "clue_corridor",
         stage: 3,
-        name: "2F 走廊 17 號儲物櫃內的暗號提貨單",
+        name: "2F 走廊 17 號儲物櫃內的暗網提貨單",
         zone: "2F 教學樓儲物櫃",
         icon: "🏷️",
         pos: { x: 3.0, y: 5.05, z: 0.1 },
         floor: 2,
-        shortDesc: "排查 17 號儲物櫃起獲打印的提貨暗號單，印有暗夜調劑師專屬標誌：『特調軟糖已藏於【化學實驗室外排水管後方固定管架暗角】，速取銷毀！』",
-        fullDesc: "開啟 17 號儲物櫃，起獲打印的加密單據，上方印有暗網毒販『暗夜調劑師』的火印暗記：『新特調奇異果軟糖已藏於【化學實驗室外排水管後方固定管架暗角】，速取，閱後銷毀。』",
+        shortDesc: "輸入密碼 420 成功解開 17 號儲物櫃！起獲打印提貨單：『新一批太空油煙彈已藏於化學實驗室外排水管後方固定管架暗角，速取銷毀！』",
+        fullDesc: "成功解鎖 17 號儲物櫃！櫃內起獲暗網打印單據，蓋有暗夜調劑師骷髏火印：『新調製太空油電子煙彈已藏於【化學實驗室外排水管後方固定管架暗角】，速取，閱後銷毀。』",
         forensic: "紙張表面帶有防窺印刷暗碼，邊緣檢出非校內人員殘留指紋。"
       },
       clue_pipe_stash: {
         id: "clue_pipe_stash",
         stage: 4,
-        name: "2F 化學室外排水管固定支架暗角的可疑軟糖",
+        name: "2F 化學室外排水管支架暗角的未開封太空油煙彈",
         zone: "2F 理科化學室外走廊暗角",
-        icon: "🍬",
+        icon: "🧪",
         pos: { x: 6.5, y: 5.05, z: 5.2 },
         floor: 2,
-        shortDesc: "在排水管固定金屬架暗處取回未開封的奇異果軟糖（證物 B）！兩份樣品已齊備，立即進入旁邊化學室進行雙試管定性快篩！",
-        fullDesc: "在走廊外露排水管與牆身固定鐵架夾角搜出一包真空密封軟糖（證物 B）。包裝標註為進口果糖，但透著與課桌紫液相同的幽微紫色。兩份樣品就緒，必須進入實驗室分析。",
-        forensic: "膠體表面滲出均勻油性薄膜，釋放強烈中樞性麻醉抑制劑特異成分。"
+        shortDesc: "在排水管金屬架夾角起獲未開封的密封太空油煙彈（證物 B）！兩份樣品齊備，立即進入旁邊化學室進行雙試管快篩！",
+        fullDesc: "在外露排水管與牆身固定鐵架暗角搜出一盒密封的電子煙彈（證物 B），標籤偽裝為『天然提神草本煙油』，內裡液體透著與課桌漏油相同的幽微紫光。兩份檢體就緒，必須進入實驗室分析。",
+        forensic: "煙彈內液體經化驗管抽取，揮發性載體與課桌漏油完全一致，具備高濃度中樞抑制藥物特徵。"
       },
       clue_spot_plate: {
         id: "clue_spot_plate",
         stage: 5,
-        name: "2F 理科實驗室 雙試管快篩定性確診報告",
+        name: "2F 理科實驗室 雙試管快篩確診報告（依托咪酯）",
         zone: "2F 理科綜合化學實驗室",
-        icon: "🧪",
+        icon: "🔬",
         pos: { x: 9.0, y: 5.05, z: 7.0 },
         floor: 2,
-        shortDesc: "排除氯胺酮，雙試管確診兩份樣品均為受管制的危險藥物「依托咪酯」！此時 3F 天台傳來急促震動鈴聲！",
-        fullDesc: "雙試管交叉顯色完成！排除氯胺酮（K仔），確診證物 A 與證物 B 皆為受香港特區《危險藥物條例》嚴格管制的【依托咪酯 (Etomidate)】！此時天台方向傳來急響的手機鈴聲！",
+        shortDesc: "排除氯胺酮，雙試管確診兩份煙油樣品皆為受嚴格管制的危險藥物「依托咪酯（太空油）」！此時 3F 天台傳來急促震動鈴聲！",
+        fullDesc: "雙試管交叉顯色完成！排除氯胺酮（K仔），確診課桌漏油（證物 A）與排水管煙彈（證物 B）皆為受香港特區《危險藥物條例》嚴格管制的【依托咪酯 (Etomidate)】！此時天台方向傳來急響的手機鈴聲！",
         forensic: "咪唑羧酸酯特異顯色反應呈強陽性深紫褐色沉澱，證實為超量管制藥依托咪酯。"
       },
       clue_rooftop_burner: {
@@ -879,53 +985,53 @@
         icon: "📱",
         pos: { x: -5.0, y: 8.85, z: -2.5 },
         floor: 3,
-        shortDesc: "接聽排風箱後的加密黑網手機，成功錄下主謀「暗夜調劑師」勒索學生的通話鐵證！全案定案鏈就緒！",
-        fullDesc: "在天台排風箱深處起獲震動中的暗網通聯手機。接聽並啟動錄音：『喂？！貨拿到了沒有？！尾款今晚交不出來，就把你們吸到全身抽搐翻白眼的影片發給家長！』主謀暗夜調劑師罪證全數落網！",
+        shortDesc: "接聽排風箱後的加密手機，成功錄下主謀「暗夜調劑師」勒索學生的通話鐵證！全案定案鏈就緒！",
+        fullDesc: "在天台排風箱深處起獲震動中的暗網通聯手機。接聽並啟動錄音：『喂？！新煙彈拿到了沒有？！尾款今晚交不出來，就把你們吸到全身抽搐翻白眼的影片發給全校家長！』主謀暗夜調劑師罪證全數落網！",
         forensic: "通話基站與暗網帳號已由警方技術人員鎖定，幕後販毒鏈條徹底瓦解。"
       }
     };
 
     const DUMMY_LOCKERS = {
-      locker_11: { id: "locker_11", num: 11, name: "2F 走廊 11 號儲物櫃", pos: { x: -2.0, y: 5.0, z: 0.1 }, desc: "這是 11 號儲物櫃。裡面整齊疊放著校服與模擬試卷，未發現可疑物品。" },
-      locker_14: { id: "locker_14", num: 14, name: "2F 走廊 14 號儲物櫃", pos: { x: 0.5, y: 5.0, z: 0.1 }, desc: "這是 14 號儲物櫃。門外貼著學界賽程表，鎖具完好，無異常。" },
-      locker_20: { id: "locker_20", num: 20, name: "2F 走廊 20 號儲物櫃", pos: { x: 5.5, y: 5.0, z: 0.1 }, desc: "這是 20 號儲物櫃。裡面放置著雨傘與水樽，縫隙乾淨，並非交收點。" },
+      locker_11: { id: "locker_11", num: 11, name: "2F 走廊 11 號儲物櫃", pos: { x: -2.0, y: 5.0, z: 0.1 }, desc: "這是 11 號儲物櫃。裡面整齊疊放著校服與模擬試卷，未發現可疑物品。草稿紙上寫的並非此櫃。" },
+      locker_14: { id: "locker_14", num: 14, name: "2F 走廊 14 號儲物櫃", pos: { x: 0.5, y: 5.0, z: 0.1 }, desc: "這是 14 號儲物櫃。門外貼著學界賽程表，鎖具完好無撬痕。草稿紙註明的是 17 號。" },
+      locker_20: { id: "locker_20", num: 20, name: "2F 走廊 20 號儲物櫃", pos: { x: 5.5, y: 5.0, z: 0.1 }, desc: "這是 20 號儲物櫃。裡面放置著雨傘與水樽，無毒品或煙彈交收痕跡。" },
       locker_23: { id: "locker_23", num: 23, name: "2F 走廊 23 號儲物櫃", pos: { x: 7.5, y: 5.0, z: 0.1 }, desc: "這是 23 號儲物櫃。鎖頭有些微生鏽，近期未有開啟痕跡。" }
     };
 
     const EASTER_EGGS = {
+      notice_board: {
+        id: "notice_board", name: "1F 警方與禁毒處校園宣傳展板", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
+        desc: "【警務處禁毒處特刊：識破毒品黑話與太空油陷阱】\n• 大麻受《危險藥物條例》嚴格管制，常被黑市冠以別名與青少年黑話誘騙學生：常見俗稱有「草」、「花」、「牛」，以及國際流行之大麻代號數字「420」！\n• 警惕「太空油」：毒販常將管制麻醉藥依托咪酯混入果味電子煙彈，吸食會導致嚴重肌陣攣抽搐、休克與成癮，殘害終生！",
+        monologue: "（這份禁毒海報詳細列出了毒品黑話……大麻的代號包含了『草、牛、花』，還有數字代號『420』！這對破解詠蕎手機裡的密碼線索至關重要！）"
+      },
       trophy_case: {
         id: "trophy_case", name: "1F 大堂學界榮譽陳列櫃", pos: { x: 0.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🏆",
-        desc: "陳列櫃擺放著咪制書院的獎盃。正中央是霍展霆與岑詠蕎的傑出學生照片。",
-        monologue: "（展霆是球隊核心，詠蕎是全校尖子……他們正面臨前所未有的學業與比賽壓力，極易成為毒販的獵物。）"
+        desc: "陳列櫃擺放著咪制書院的獎盃。正中央是霍展霆與岑詠蕎的優秀學生合影。",
+        monologue: "（展霆是球隊核心，詠蕎是全校尖子……他們正面臨前所未有的學業與比賽壓力，極易被宣稱能『放鬆止痛』的非法煙彈誘騙。）"
       },
       vending_machine: {
         id: "vending_machine", name: "1F 小食部自動販賣機", pos: { x: 8.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🥤",
         desc: "販賣機陳列著烏龍茶與能量飲料。側面貼著學生祈願便條：『DSE 順利！』",
-        monologue: "（考生承受著巨大升學焦慮……毒販往往正是利用這種想走捷徑的心理乘虛而入。）"
-      },
-      notice_board: {
-        id: "notice_board", name: "1F 學生會校園資訊與宣傳欄", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
-        desc: "宣傳欄張貼著警方與禁毒處的最新防罪通告：『警惕黑市以「聰明糖」、「放鬆煙油」名義散播依托咪酯！』下方附有舉報電話。",
-        monologue: "（通告特別提到了近期活躍於學生社交群組的「暗夜調劑師」……看來這次意外絕非偶然。）"
+        monologue: "（考生承受著巨大升學焦慮……毒販往往正是利用這種想走捷徑的心態，將毒品包裝成提神物乘虛而入。）"
       },
       lost_and_found: {
         id: "lost_and_found", name: "2F 走廊失物認領箱", pos: { x: -1.0, y: 5.0, z: 2.5 }, floor: 2, icon: "📦",
-        desc: "走廊拐角處擺放的失物箱。裡面堆放著未領取的校服外套與水杯，上方貼著：『失物可領，莫失青春』標語。",
-        monologue: "（中學裡遺失的物品尚能找回，但若是因毒品損害了中樞神經與大好前途，就再也無法彌補了。）"
+        desc: "走廊拐角處擺放的失物箱。裡面堆放著外套與水杯，上方貼著：『失物可領，莫失青春』標語。",
+        monologue: "（中學裡遺失的物品尚能找回，但若是因非法煙油損害了神經與前途，就再也無法彌補了。）"
       },
       lab_microscope: {
         id: "lab_microscope", name: "2F 理科實驗室顯微鏡台", pos: { x: 12.0, y: 5.0, z: 7.0 }, floor: 2, icon: "🔬",
-        desc: "實驗桌上的雙目顯微鏡旁壓著《化學實驗守則》。載玻片上是常規切片，秩序井然。",
-        monologue: "（化學是探究真理的學問，卻被黑市之徒挪用於調配摧毀健康的非法毒劑。）"
+        desc: "實驗桌上的雙目顯微鏡旁壓著《化學實驗守則》。載玻片上是植物切片，秩序井然。",
+        monologue: "（化學本是求真的殿堂，卻被黑網之徒用於非法調劑摧毀青年中樞神經的太空油。）"
       },
       rooftop_telescope: {
         id: "rooftop_telescope", name: "3F 天台天文觀測折射鏡", pos: { x: 8.0, y: 8.8, z: -6.5 }, floor: 3, icon: "🔭",
-        desc: "一台立在天台邊緣的赤道儀望遠鏡，能俯瞰九龍全景。鏡架旁卡著一隻紙飛機，寫著：『願我們畢業晴空萬里。』",
+        desc: "一台立在天台邊緣的望遠鏡，能俯瞰維港全景。鏡架卡著紙飛機，寫著：『願我們畢業晴空萬里。』",
         monologue: "（這片屬於青少年的校園天空，不容任何毒霧污染。）"
       },
       rooftop_guitar: {
         id: "rooftop_guitar", name: "3F 天台角落樂隊練習設備", pos: { x: -8.0, y: 8.8, z: 4.5 }, floor: 3, icon: "🎸",
-        desc: "一把缺弦的吉他倚在音箱旁。這裡原是放學後學生樂隊排練的地方。",
+        desc: "一把缺弦的吉他倚在音箱旁。這裡原是放學後學生樂隊排練的角落。",
         monologue: "（原本充滿熱血與夢想的校園角落，卻被不法之徒當作藏匿通聯電話的犯罪跳板。）"
       }
     };
@@ -948,7 +1054,7 @@
       { minX: -12.2, maxX: -6.8, minZ: 3.2, maxZ: 4.8, floor: 1 },
       { minX: 4.2, maxX: 6.8, minZ: -8.9, maxZ: -8.1, floor: 1 },
 
-      // 2F (已修正失物箱周邊碰撞，確保走廊通暢)
+      // 2F
       { minX: -3.0, maxX: 9.0, minZ: -9.0, maxZ: -0.1, floor: 2 },
       { minX: -3.0, maxX: 8.5, minZ: -0.4, maxZ: 0.6, floor: 2 },
       { minX: -2.7, maxX: -2.3, minZ: -9.0, maxZ: 1.0, floor: 2 },
@@ -971,7 +1077,7 @@
     let minimapCanvas, minimapCtx;
     let dialogueBox, dialoguePanelCard, dialogueSpeaker, dialogueRoleTag, dialogueText, dialogueAvatar;
     let interactionPrompt, promptActionText, promptInputBadge;
-    let labModal, notebookModal, victoryScreen;
+    let labModal, notebookModal, victoryScreen, lockerModal;
 
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
@@ -1309,6 +1415,7 @@
       scene.add(objectiveArrowMesh);
     }
 
+    // 關鍵修復：儲物櫃階段（Stage 3）箭頭指向走廊中央，不直接指著 17 號櫃！
     function updateObjectiveArrow() {
       if (!objectiveArrowMesh) return;
       let targetPos = null;
@@ -1321,7 +1428,8 @@
         targetPos = CLUES_DATA.clue_desk.pos;
         targetFloor = 2;
       } else if (GAME_STATE.questStage === 3) {
-        targetPos = CLUES_DATA.clue_corridor.pos;
+        // 修正：指向儲物櫃走廊中央開闊處，讓玩家自行辨認與解開 17 號
+        targetPos = { x: 2.5, y: 5.0, z: 2.2 };
         targetFloor = 2;
       } else if (GAME_STATE.questStage === 4) {
         targetPos = CLUES_DATA.clue_pipe_stash.pos;
@@ -1584,20 +1692,20 @@
       // 放置互動標記
       // 1F
       spawnMarker('clue_gym_fok', -9.5, 1.25, 4.0, 1, 'clue', '🩹');
+      spawnMarker('notice_board', 5.5, 1.2, -8.0, 1, 'egg', '📌');
       spawnMarker('trophy_case', 0.0, 1.2, -7.5, 1, 'egg', '🏆');
       spawnMarker('vending_machine', 8.0, 1.2, -7.5, 1, 'egg', '🥤');
-      spawnMarker('notice_board', 5.5, 1.2, -8.0, 1, 'egg', '📌');
 
-      // 2F (失物箱放置在走廊開闊處 x: -1.0, z: 2.5)
+      // 2F (17 號儲物櫃及其他供翻查的 Locker)
       spawnMarker('clue_desk', -8.5, 5.05, -7.5, 2, 'clue', '📝');
-      spawnMarker('clue_corridor', 3.0, 5.05, 0.1, 2, 'clue', '🏷️');
-      spawnMarker('clue_pipe_stash', 6.5, 5.05, 5.2, 2, 'clue', '🍬');
-      spawnMarker('clue_spot_plate', 9.0, 5.05, 7.0, 2, 'clue', '🧪');
-
       spawnMarker('locker_11', -2.0, 5.0, 0.1, 2, 'locker', '11');
       spawnMarker('locker_14', 0.5, 5.0, 0.1, 2, 'locker', '14');
+      spawnMarker('clue_corridor', 3.0, 5.05, 0.1, 2, 'clue', '17'); // 17 號鎖具
       spawnMarker('locker_20', 5.5, 5.0, 0.1, 2, 'locker', '20');
       spawnMarker('locker_23', 7.5, 5.0, 0.1, 2, 'locker', '23');
+
+      spawnMarker('clue_pipe_stash', 6.5, 5.05, 5.2, 2, 'clue', '🧪');
+      spawnMarker('clue_spot_plate', 9.0, 5.05, 7.0, 2, 'clue', '🔬');
 
       spawnMarker('lost_and_found', -1.0, 5.0, 2.5, 2, 'egg', '📦');
       spawnMarker('lab_microscope', 12.0, 5.0, 7.0, 2, 'egg', '🔬');
@@ -1835,7 +1943,7 @@
     // 10. 案件搜查互動
     // ==========================================
     function checkProximity() {
-      if (!GAME_STATE.started || GAME_STATE.isDialogueOpen || GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen || !player) {
+      if (!GAME_STATE.started || GAME_STATE.isDialogueOpen || GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen || GAME_STATE.isLockerModalOpen || !player) {
         if (interactionPrompt) interactionPrompt.style.opacity = '0';
         GAME_STATE.activeInteractable = null;
         return;
@@ -1883,7 +1991,9 @@
       if (closestObj && interactionPrompt && promptActionText) {
         let actionLabel = "調查現場";
         if (closestObj.type === 'clue') {
-          if (GAME_STATE.cluesFound.has(closestObj.data.id)) {
+          if (closestObj.data.id === 'clue_corridor' && !GAME_STATE.cluesFound.has('clue_corridor')) {
+            actionLabel = "破解：17號儲物櫃密碼鎖";
+          } else if (GAME_STATE.cluesFound.has(closestObj.data.id)) {
             actionLabel = `覆盤重讀：${closestObj.data.name.split(' ')[0]}`;
           } else if (closestObj.data.stage === GAME_STATE.questStage) {
             actionLabel = `搜查：${closestObj.data.name.split(' ')[0]}`;
@@ -1953,7 +2063,7 @@
         nextDialogue();
         return;
       }
-      if (GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen) {
+      if (GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen || GAME_STATE.isLockerModalOpen) {
         return;
       }
 
@@ -1962,10 +2072,9 @@
 
       sound.playDialogueBlip();
 
-      // 引導限制：若未完成第 1 階段，點擊 1F 其他物件時予以引導提示
       if (GAME_STATE.questStage === 1 && target.type !== 'clue') {
         startDialogueQueue([
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "優先目標提示", text: "（展霆休克後留下的急救痕跡在西側更衣室長椅。跟著綠色導引光錐先去排查，切勿分心！）" }
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "優先目標提示", text: "（展霆休克後留下的急救痕跡在西側更衣室長椅。跟著綠色導引光標先去排查，切勿分心！）" }
         ]);
         return;
       }
@@ -1980,7 +2089,8 @@
 
       if (target.type === 'dummy_locker') {
         startDialogueQueue([
-          { type: "narration", speaker: "現場排查紀錄", role: "儲物櫃翻查", text: target.data.desc }
+          { type: "narration", speaker: "現場儲物櫃排查紀錄", role: "儲物櫃翻查", text: target.data.desc },
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "調查員分析", text: "（這不是 17 號櫃。詠蕎草稿上清楚寫的是 17 號，旁邊的櫃門還鎖著滾輪密碼鎖。）" }
         ]);
         return;
       }
@@ -2000,7 +2110,7 @@
           let hint = "應先留意右上角當前偵查目標。";
           if (GAME_STATE.questStage === 1) hint = "跟著綠色光標先去更衣室排查展霆遺物！";
           else if (GAME_STATE.questStage === 2) hint = "登上 2F 中六B班房搜查岑詠蕎的課桌！";
-          else if (GAME_STATE.questStage === 3) hint = "根據課桌日記，排查 2F 走廊 17 號儲物櫃！";
+          else if (GAME_STATE.questStage === 3) hint = "在 2F 走廊儲物櫃長廊排查 17 號櫃！";
           else if (GAME_STATE.questStage === 4) hint = "在化學室外排水管後方固定管架暗角搜查樣品！";
           else if (GAME_STATE.questStage === 5) hint = "兩份樣品已齊備，先進入化學實驗台完成快篩！";
 
@@ -2016,32 +2126,27 @@
           updateStairBarriers();
           updateObjective("沿東側階梯 A 登上 2F，搜查中六B班房岑詠蕎的課桌 (2/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "更衣室起獲物證", text: "長椅上起獲撕開的奇異果糖包裝紙，背後附便條：『From 暗夜調劑師：展霆，練球舊患痛就含一顆。不夠找中六B班詠蕎拿新貨……』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（果然是『暗夜調劑師』在背後作祟！他將毒品包裝成止痛糖誘騙受傷的展霆，而源頭指向了中六B班的詠蕎。階梯 A 封鎖已解除，我必須立刻上 2F 搜查課桌！）" }
+            { type: "narration", speaker: "現場物證紀錄", role: "更衣室起獲物證", text: "長椅下起獲摔裂的電子煙彈（太空油），內壁附著紫色油狀物；隨附暗網骷髏字條：『練球舊患痛就抽兩口，包你放鬆提神無痛感。唔夠就搵中六B班詠蕎攞新煙彈……』" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（果然是黑市『太空油』！毒販把含有麻醉藥依托咪酯的煙油包裝成『止痛提神煙彈』誘騙受傷的展霆，而分銷源頭指向中六B班的詠蕎。東側階梯封鎖已解除，立即上 2F 搜查課桌！）" }
           ]);
         } else if (clue.stage === 2) {
           collectClue(clue.id);
           GAME_STATE.questStage = 3;
-          updateObjective("排查 2F 走廊儲物櫃，尋找 17 號暗號提貨單 (3/6)");
+          updateObjective("在 2F 走廊排查 17 號儲物櫃並破解 3 位數密碼鎖 (3/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "課桌起獲物證", text: "提取到深紫色液滴（證物 A），抽屜內起獲詠蕎在考前半小時手寫的自白手記：『聽信暗夜調劑師買了聰明糖……才兩天我就徹底上癮，停用就全身冷汗手抖！剛才開考前手抖得握不住筆，我在洗手間一次性含了兩整顆……他還塞紙條叫我去 17 號儲物櫃……』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（這份手記徹底講通了！詠蕎早已身陷藥物依賴，考前因戒斷反應超量含服，才會在考場急性毒發肌陣攣休克！手記提及的 17 號儲物櫃必定是交貨點，立即前往排查！）" }
+            { type: "narration", speaker: "現場物證紀錄", role: "課桌起獲物證", text: "課桌上漏出一灘深紫色油性煙液（證物 A）！桌上的模擬試化學答題紙前幾行公式突然劇烈扭曲變形，最後因手部失控劃破紙張；旁邊手機未鎖屏備忘錄寫著：『17號櫃密碼是大麻的……（字跡被漏液浸染模糊）』！" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "病理與時序推理", text: "（答題紙的撕裂劃痕完全符合依托咪酯誘發的急性肌陣攣抽搐！詠蕎是在開考前在洗手間吸食，返回座位後剛坐下便劇烈抽搐倒地！手機備忘錄提到了 17 號儲物櫃與大麻代號，走廊那排儲物櫃就在外面，去破解 17 號櫃！）" }
           ]);
         } else if (clue.stage === 3) {
-          collectClue(clue.id);
-          GAME_STATE.questStage = 4;
-          updateObjective("搜查 2F 理科化學室外排水管後方固定管架暗角 (4/6)");
-          startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "儲物櫃起獲物證", text: "成功開啟 17 號儲物櫃！起獲印有暗夜調劑師暗記的提貨單：『特調軟糖已藏於【化學實驗室外排水管後方固定管架暗角】，速取，銷毀痕跡。』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（暗夜調劑師把未拆封的軟糖藏在化學室外的排水管支架暗角！必須立刻取回樣品，上檢驗台做成分定性！）" }
-          ]);
+          // 打開密碼鎖小遊戲
+          openLockerModal();
         } else if (clue.stage === 4) {
           collectClue(clue.id);
           GAME_STATE.questStage = 5;
           updateObjective("進入 2F 理科綜合化學實驗室，進行雙試管快篩確診 (5/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "排水管支架起獲物證", text: "在排水管固定鐵架暗角搜出一包密封的奇異果味軟糖（證物 B）！糖身泛著與課桌液體完全一致的妖異紫光。" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（兩份物證——課桌殘留液與暗角軟糖均已到手！立刻進入旁邊的理科實驗室，上檢驗台做交叉比對！）" }
+            { type: "narration", speaker: "現場物證紀錄", role: "排水管支架起獲物證", text: "在排水管固定鐵架暗角搜出一盒密封的電子煙彈（證物 B）！煙油泛著與課桌漏油完全一致的紫色光澤。" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（兩份物證——課桌漏出的煙油液滴與暗角起獲的全新煙彈均已齊備！立刻進入旁邊的理科實驗室，上檢驗台做交叉比對！）" }
           ]);
         } else if (clue.stage === 5) {
           openLabModal();
@@ -2052,7 +2157,7 @@
           updateClueBadges();
           updateObjective("打開【案件手冊】進入【思維宮殿】，完成定案通報執法部門！ (6/6)");
           startDialogueQueue([
-            { type: "call", speaker: "暗夜調劑師（黑網通話）", role: "幕後主謀", text: "『喂？！貨拿到了沒有？！尾款今晚交不出來，就把你們吸到全身抽搐翻白眼的影片發給全校家長！』" },
+            { type: "call", speaker: "暗夜調劑師（黑網通話）", role: "幕後主謀", text: "『喂？！新煙彈拿到了沒有？！尾款今晚交不出來，就把你們吸到全身抽搐翻白眼的影片發給全校家長！』" },
             { type: "dialogue", speaker: "梁澤銘", role: "調查員取證通報", text: "錄音器已成功鎖定音軌！暗夜調劑師，你的網絡通訊基站與勒索罪證全部固定，警方專案組已在收網路上！" },
             { type: "monologue", speaker: "梁澤銘（心想）", role: "思維宮殿定案", text: "（6 大核心物證鏈條齊備！打開【📋 案件簿】的【思維宮殿定案】，核實因果鏈後立刻通報執法部門！）" }
           ], () => {
@@ -2064,7 +2169,84 @@
     }
 
     // ==========================================
-    // 11. 快篩鑑驗台邏輯
+    // 11. 儲物櫃 3 位數密碼鎖邏輯
+    // ==========================================
+    function openLockerModal() {
+      if (lockerModal) {
+        lockerModal.classList.remove('pointer-events-none', 'opacity-0');
+        lockerModal.classList.add('pointer-events-auto', 'opacity-100');
+        GAME_STATE.isLockerModalOpen = true;
+        renderLockerDials();
+        const err = document.getElementById('locker-error-feedback');
+        if (err) err.textContent = "";
+      }
+    }
+
+    function closeLockerModal() {
+      if (lockerModal) {
+        lockerModal.classList.remove('pointer-events-auto', 'opacity-100');
+        lockerModal.classList.add('pointer-events-none', 'opacity-0');
+        GAME_STATE.isLockerModalOpen = false;
+      }
+    }
+
+    function changeLockerDigit(index, delta) {
+      sound.playDialClick();
+      GAME_STATE.lockerDigits[index] = (GAME_STATE.lockerDigits[index] + delta + 10) % 10;
+      renderLockerDials();
+    }
+
+    function renderLockerDials() {
+      for (let i = 0; i < 3; i++) {
+        const valElem = document.getElementById(`dial-${i}-val`);
+        if (valElem) valElem.textContent = GAME_STATE.lockerDigits[i];
+      }
+    }
+
+    function submitLockerCode() {
+      const code = GAME_STATE.lockerDigits.join('');
+      const card = document.getElementById('locker-modal-card');
+      const err = document.getElementById('locker-error-feedback');
+
+      if (code === "420") {
+        sound.playClueFound();
+        closeLockerModal();
+        collectClue('clue_corridor');
+        GAME_STATE.questStage = 4;
+        updateObjective("搜查 2F 理科化學室外排水管後方固定管架暗角 (4/6)");
+
+        startDialogueQueue([
+          { type: "narration", speaker: "密碼鎖咔噠彈開！", role: "17號儲物櫃已解鎖", text: "轉動至【4】【2】【0】，鎖芯應聲彈開！起獲打印的暗網提貨單：『新一批太空油煙彈已藏於【化學實驗室外排水管後方固定管架暗角】，速取，銷毀痕跡。』" },
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（密碼果然是大麻的黑市代號『420』！暗夜調劑師把未拆封的太空油煙彈藏在化學室外的排水管支架暗角！必須立刻前往取回樣品！）" }
+        ]);
+      } else {
+        sound.playLockBuzzer();
+        if (card) {
+          card.classList.remove('animate-shake');
+          void card.offsetWidth;
+          card.classList.add('animate-shake');
+        }
+        if (err) {
+          err.textContent = "❌ 鎖芯紋絲不動！密碼不符。（詠蕎草稿留下了『密碼是大麻的...』）";
+        }
+      }
+    }
+
+    function showLockerHint() {
+      sound.playDialogueBlip();
+      closeLockerModal();
+      startDialogueQueue([
+        {
+          type: "monologue",
+          speaker: "梁澤銘（心想）",
+          role: "密碼解讀思維",
+          text: "（詠蕎的化學草稿紙邊緣寫著：『密碼是大麻的……』但後面的字被漏出的煙油浸染。大麻在黑市與青少年群組裡有特定的數字代號！記得 1F 大堂中庭的【📌 警方與禁毒處校園宣傳展板】上，詳細記載了毒品黑話與常見數字代號，我應該去那裡看看！）"
+        }
+      ]);
+    }
+
+    // ==========================================
+    // 12. 快篩鑑驗台邏輯
     // ==========================================
     function openLabModal() {
       if (labModal) {
@@ -2137,7 +2319,7 @@
         statusBadge.className = "px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600 text-[10px] font-black animate-pulse";
       }
       if (verdictText) {
-        verdictText.innerHTML = "<strong class=\"text-rose-400\">【陽性反應！】</strong>兩支試管均劇烈反應並生成深紫褐色沉澱！確診毒物為受管制的危險藥物<strong class=\"text-amber-300\">「依托咪酯 (Etomidate)」</strong>！";
+        verdictText.innerHTML = "<strong class=\"text-rose-400\">【陽性反應！】</strong>兩支試管均劇烈顯色並生成深紫褐色沉澱！確診煙油毒物為混入電子煙的受管制危險藥物<strong class=\"text-amber-300\">「依托咪酯 (太空油)」</strong>！";
       }
       if (step2) {
         step2.className = "py-1 rounded bg-rose-950 text-rose-300 border border-rose-600";
@@ -2205,13 +2387,13 @@
       sound.playPhoneRing();
 
       startDialogueQueue([
-        { type: "narration", speaker: "毒理檢驗報告", role: "定性鑑證結論", text: "雙試管交叉比對確診！岑詠蕎課桌殘留液與暗角軟糖均含有《危險藥物條例》嚴格管制的【依托咪酯】！" },
+        { type: "narration", speaker: "毒理檢驗報告", role: "定性鑑證結論", text: "雙試管交叉比對確診！岑詠蕎課桌漏出的油性滴液與暗角起獲的煙彈均含有《危險藥物條例》嚴格管制的【依托咪酯（太空油）】！" },
         { type: "monologue", speaker: "梁澤銘（心想）", role: "突發警覺", text: "（等等！頭頂 3F 天台方向傳來急促的手機震動鈴聲！天台階梯封鎖已解除，立刻登上天台截獲通聯訊號！）" }
       ]);
     }
 
     // ==========================================
-    // 12. 案件手冊與思維宮殿邏輯
+    // 13. 案件手冊與思維宮殿邏輯
     // ==========================================
     function toggleNotebook() {
       if (!notebookModal) return;
@@ -2362,7 +2544,7 @@
     }
 
     // ==========================================
-    // 13. 核心啟動函數
+    // 14. 核心啟動函數
     // ==========================================
     function startGame() {
       const title = document.getElementById('title-screen');
@@ -2398,7 +2580,7 @@
     }
 
     // ==========================================
-    // 14. 事件監聽綁定
+    // 15. 事件監聽綁定
     // ==========================================
     function setupEventListeners() {
       document.getElementById('btn-start-game')?.addEventListener('click', startGame);
@@ -2436,6 +2618,18 @@
         if (icon) icon.style.opacity = isMuted ? '0.3' : '1';
       });
 
+      // 儲物櫃滾輪事件
+      document.getElementById('btn-close-locker')?.addEventListener('click', closeLockerModal);
+      document.getElementById('dial-0-up')?.addEventListener('click', () => changeLockerDigit(0, 1));
+      document.getElementById('dial-0-down')?.addEventListener('click', () => changeLockerDigit(0, -1));
+      document.getElementById('dial-1-up')?.addEventListener('click', () => changeLockerDigit(1, 1));
+      document.getElementById('dial-1-down')?.addEventListener('click', () => changeLockerDigit(1, -1));
+      document.getElementById('dial-2-up')?.addEventListener('click', () => changeLockerDigit(2, 1));
+      document.getElementById('dial-2-down')?.addEventListener('click', () => changeLockerDigit(2, -1));
+      document.getElementById('btn-submit-lock')?.addEventListener('click', submitLockerCode);
+      document.getElementById('btn-locker-clue-hint')?.addEventListener('click', showLockerHint);
+
+      // 化學快篩事件
       document.getElementById('btn-close-lab')?.addEventListener('click', closeLabModal);
       document.getElementById('btn-spot-reagent1')?.addEventListener('click', spotStepApplyReagent1);
       document.getElementById('btn-spot-reagent2')?.addEventListener('click', spotStepApplyReagent2);
@@ -2537,7 +2731,7 @@
         for (let i = 0; i < e.changedTouches.length; i++) {
           const t = e.changedTouches[i];
           const target = document.elementFromPoint(t.clientX, t.clientY) || t.target;
-          if (target && target.closest('button, #touch-joystick-container, #mobile-controls-cluster, #dialogue-box, #lab-modal, #notebook-modal, header, .glass-panel')) {
+          if (target && target.closest('button, #touch-joystick-container, #mobile-controls-cluster, #dialogue-box, #lab-modal, #notebook-modal, #locker-modal, header, .glass-panel')) {
             continue;
           }
           if (t.clientX > window.innerWidth * 0.40 && rightTouchId === null) {
@@ -2572,7 +2766,7 @@
     }
 
     // ==========================================
-    // 15. 主渲染循環
+    // 16. 主渲染循環
     // ==========================================
     const clock = new THREE.Clock();
     let isTabVisible = true;
@@ -2597,7 +2791,7 @@
           moveZ = touchJoystickInput.z;
         }
 
-        if (!GAME_STATE.isDialogueOpen && !GAME_STATE.isNotebookOpen && !GAME_STATE.isLabModalOpen) {
+        if (!GAME_STATE.isDialogueOpen && !GAME_STATE.isNotebookOpen && !GAME_STATE.isLabModalOpen && !GAME_STATE.isLockerModalOpen) {
           player.update(delta, moveX, moveZ);
         } else {
           player.update(delta, 0, 0);
@@ -2657,7 +2851,7 @@
     });
 
     // ==========================================
-    // 16. 安全啟動入口
+    // 17. 安全啟動入口
     // ==========================================
     function bootApp() {
       minimapCanvas = document.getElementById('minimap-canvas');
@@ -2674,6 +2868,7 @@
       labModal = document.getElementById('lab-modal');
       notebookModal = document.getElementById('notebook-modal');
       victoryScreen = document.getElementById('victory-screen');
+      lockerModal = document.getElementById('locker-modal');
 
       setupEventListeners();
       updateJoystickCenter();
