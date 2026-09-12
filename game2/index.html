@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="description" content="暮光迴響：沉淪之霧 - 咪制書院校園安全特別調查專案">
   <meta name="theme-color" content="#04060d">
-  <title>暮光迴響：沉淪之霧 - 咪制書院校園安全特別調查專案旗艦修復版</title>
+  <title>暮光迴響：沉淪之霧 - 咪制書院校園安全特別調查專案</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -195,24 +195,10 @@
       <div class="text-5xl animate-bounce">📱 🔄</div>
       <h2 class="text-base font-black text-white">請將手機旋轉為橫屏</h2>
       <p class="text-xs text-slate-300 leading-relaxed">
-        《暮光迴響》支援 16:9 廣角鏡頭與雙手操作。旋轉手機為橫向即可享有最佳探案體驗！
+        《暮光迴響》支援 16:9 廣角視角與雙手觸控。請旋轉手機為橫向以享有最佳探案體驗！
       </p>
       <button id="btn-force-portrait-continue" class="text-[11px] text-orange-400 underline underline-offset-4 pt-1">
         仍要強制在豎屏下遊玩
-      </button>
-    </div>
-  </div>
-
-  <!-- WebGL 降級提示 -->
-  <div id="webgl-fallback" class="hidden fixed inset-0 z-50 bg-slate-950 flex flex-col items-center justify-center p-6 text-center" role="alert">
-    <div class="max-w-md p-6 glass-panel rounded-3xl border-rose-500/50">
-      <div class="text-4xl mb-3">⚠️</div>
-      <h2 class="text-base font-black text-white mb-2">瀏覽器尚未啟用 WebGL 支援</h2>
-      <p class="text-xs text-slate-300 leading-relaxed mb-4">
-        請在裝置設定中開啟硬體加速，或使用最新版 Chrome/Safari 進行遊玩。
-      </p>
-      <button id="btn-webgl-reload" class="glass-btn px-4 py-2 rounded-xl text-xs font-bold text-white">
-        重新嘗試加載
       </button>
     </div>
   </div>
@@ -229,7 +215,7 @@
 
   <!-- 頂部 HUD -->
   <header class="fixed safe-top left-0 right-0 z-20 flex items-start justify-between px-3 md:px-6 pointer-events-none">
-    <div class="pointer-events-auto flex flex-col gap-1.5 max-w-[58%] sm:max-w-md">
+    <div class="pointer-events-auto flex flex-col gap-1.5 max-w-[55%] sm:max-w-md">
       <div class="glass-panel px-3 py-1.5 rounded-2xl flex items-center gap-2">
         <span class="relative flex h-2.5 w-2.5">
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
@@ -238,14 +224,14 @@
         <div class="truncate">
           <div class="text-xs font-black text-orange-400 flex items-center gap-1.5">
             <span id="hud-location-icon">🏛️</span>
-            <span id="hud-location-name">1F 咪制書院 中庭接待大堂</span>
+            <span id="hud-location-name">1F 咪制書院 中庭大堂</span>
           </div>
         </div>
       </div>
 
       <div class="glass-panel px-3 py-1.5 rounded-2xl text-xs text-amber-100 flex items-center gap-2 shadow-md border-l-4 border-l-orange-500">
         <span class="text-xs">🎯</span>
-        <div class="truncate">目標：<span id="hud-current-objective" class="text-amber-300 font-bold">順從動態導引，先去體育部更衣室排查霍展霆遺留物 (1/6)</span></div>
+        <div class="truncate">目標：<span id="hud-current-objective" class="text-amber-300 font-bold">跟隨綠色光標，排查體育部更衣室外霍展霆遺物 (1/6)</span></div>
       </div>
     </div>
 
@@ -260,6 +246,11 @@
         </div>
         <canvas id="minimap-canvas" width="108" height="68" class="rounded-xl bg-slate-950/90 border border-slate-800" aria-label="3層校舍雷達小地圖"></canvas>
       </div>
+
+      <button id="btn-restart-hud" class="glass-panel px-2.5 py-2 rounded-2xl text-xs font-bold text-rose-300 hover:text-rose-200 active:scale-95 flex items-center gap-1" title="重啟調查">
+        <span>🔄</span>
+        <span class="hidden md:inline">重啟</span>
+      </button>
 
       <button id="btn-cam-cycle" class="glass-panel px-2.5 py-2 rounded-2xl text-xs font-bold text-orange-200 active:scale-95 flex items-center gap-1" aria-label="切換鏡頭視角">
         <span>🎥</span>
@@ -315,7 +306,7 @@
         </div>
         <span class="text-[10px] text-amber-400/90 font-bold">點擊繼續 ▶</span>
       </div>
-      <p id="dialogue-text" class="text-slate-100 text-xs sm:text-sm leading-snug cinematic-serif m-0">抵達咪制書院現場。</p>
+      <p id="dialogue-text" class="text-slate-100 text-xs sm:text-sm leading-snug cinematic-serif m-0">抵達現場。</p>
     </div>
   </div>
 
@@ -327,7 +318,7 @@
           <span class="text-lg">🧪</span>
           <div>
             <h3 id="lab-modal-title" class="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">毒理鑑證：雙試管極速快篩台</h3>
-            <p class="text-[10px] text-cyan-300">比對中六課桌未知紫液與水管暗處軟糖液的化學顯色反應</p>
+            <p class="text-[10px] text-cyan-300">比對中六課桌未知紫液與水管暗角軟糖提取液的化學顯色反應</p>
           </div>
         </div>
         <button id="btn-close-lab" class="px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold" aria-label="關閉鑑驗台">✕</button>
@@ -341,14 +332,14 @@
               <div class="test-tube-glass">
                 <div id="tube-a-liquid" class="test-tube-liquid bg-purple-500/40"><div class="tube-meniscus"></div></div>
               </div>
-              <span class="text-[9px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">課桌紫晶液</span>
+              <span class="text-[9px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">課桌殘留液</span>
             </div>
             <div class="flex flex-col items-center">
               <span class="text-[10px] font-black text-cyan-300 mb-1">試管 B</span>
               <div class="test-tube-glass">
                 <div id="tube-b-liquid" class="test-tube-liquid bg-cyan-500/40"><div class="tube-meniscus"></div></div>
               </div>
-              <span class="text-[9px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">暗處軟糖液</span>
+              <span class="text-[9px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">暗角軟糖液</span>
             </div>
           </div>
           <div class="text-[9px] text-slate-400 font-mono mt-1">【現場未知樣品已預載入試管】</div>
@@ -451,10 +442,10 @@
             </div>
 
             <div class="p-1.5 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1">
-              <label for="deduce-symptoms" class="text-slate-200 font-bold">2. 典型中毒臨床反應：</label>
+              <label for="deduce-symptoms" class="text-slate-200 font-bold">2. 典型臨床中毒反應：</label>
               <select id="deduce-symptoms" class="bg-slate-900 text-[10px] text-orange-300 p-1 rounded border border-slate-700 outline-none">
                 <option value="none">-- 請選擇 --</option>
-                <option value="wrong1">考前眼睛疲倦</option>
+                <option value="wrong1">考前眼睛乾澀疲倦</option>
                 <option value="correct">肌陣攣全身劇烈抽搐、意識斷片</option>
                 <option value="wrong2">專注力明顯提升</option>
               </select>
@@ -485,7 +476,7 @@
               <div class="text-[9px] text-cyan-300">特約安全調查員</div>
             </div>
           </div>
-          <p class="text-[10px] text-slate-300 leading-tight">受託於黃昏封鎖線進入咪制書院，搜集微量物證並還原真相。</p>
+          <p class="text-[10px] text-slate-300 leading-tight">受託進入校園封鎖線，搜集物證並還原真相。</p>
         </div>
 
         <div class="glass-panel p-2 rounded-xl border-purple-500/40 flex flex-col">
@@ -496,7 +487,7 @@
               <div class="text-[9px] text-purple-300">中六B班受害學生</div>
             </div>
           </div>
-          <p class="text-[10px] text-slate-300 leading-tight">詠蕎備考成癮、展霆腿傷劇痛，均誤信「放鬆提神糖」，考前/更衣室急性濫用引發肌陣攣休克送醫。</p>
+          <p class="text-[10px] text-slate-300 leading-tight">詠蕎深受成癮困擾於考前超量含服；展霆為緩解舊患劇痛誤服毒糖，均引發肌陣攣休克送醫。</p>
         </div>
 
         <div class="glass-panel p-2 rounded-xl border-rose-500/40 bg-rose-950/20 flex flex-col">
@@ -507,7 +498,7 @@
               <div class="text-[9px] text-rose-300">黑市通緝主謀</div>
             </div>
           </div>
-          <p class="text-[10px] text-slate-300 leading-tight">利用學生焦慮將管制藥依托咪酯偽裝成提神果味軟糖與煙油滲透校園。</p>
+          <p class="text-[10px] text-slate-300 leading-tight">以加密通訊向受壓學生兜售偽裝成「放鬆聰明糖」的管制藥依托咪酯。</p>
         </div>
       </div>
     </div>
@@ -524,14 +515,14 @@
         暮光迴響
       </h1>
       <h2 class="text-xs font-bold text-slate-300 mb-2 tracking-wide cinematic-serif">
-        Twilight Echoes: 沉淪之霧 • 旗艦修復版
+        Twilight Echoes: 沉淪之霧 • 校園特別調查
       </h2>
       <p class="text-xs text-slate-300 leading-relaxed mb-3 text-left bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
-        秋日黃昏 17:30，咪制書院突發兩起嚴重急性中毒事件！中六尖子<strong class="text-amber-300">岑詠蕎</strong>在黃昏加課模擬試中因毒癮發作並超量服藥，引發劇烈肌陣攣抽搐休克；體育部更衣室內，籃球隊長<strong class="text-cyan-300">霍展霆</strong>亦服下不明糖果倒地！特約調查員梁澤銘受託踏入黃昏封鎖線，請緊隨<strong>導引箭頭</strong>直奔現場查清真相！
+        放學後的咪制書院突發兩起嚴重急性中毒事件！中六尖子<strong class="text-amber-300">岑詠蕎</strong>在課後模擬試中，因急性藥物中毒引發全身劇烈肌陣攣抽搐並休克；同一時間，籃球隊長<strong class="text-cyan-300">霍展霆</strong>亦在更衣室倒地！黑市毒販<strong class="text-rose-400">「暗夜調劑師」</strong>利用升學與賽事焦慮將毒品偽裝成提神糖滲入校園。特約調查員梁澤銘受託進入封鎖現場，請跟隨<strong>綠色導引光錐</strong>，查清真相！
       </p>
 
       <button id="btn-start-game" class="w-full max-w-xs py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 text-white font-black text-xs sm:text-sm tracking-wider shadow-[0_0_25px_rgba(249,115,22,0.5)] active:scale-95 transition cursor-pointer">
-        踏入黃昏 1F 校舍大堂展開搜查
+        進入校舍大堂展開搜查
       </button>
 
       <div class="mt-2 flex items-center justify-center gap-3 text-[10px] text-slate-400 font-mono">
@@ -539,7 +530,7 @@
         <span>•</span>
         <span>右側滑動轉向</span>
         <span>•</span>
-        <span>緊跟綠色目標光標</span>
+        <span>跟隨綠色導航標</span>
       </div>
     </div>
   </div>
@@ -551,7 +542,7 @@
         <div class="flex items-center gap-2">
           <div class="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-lg shadow-[0_0_20px_rgba(16,185,129,0.35)]">🏆</div>
           <div class="text-left">
-            <h2 class="text-xs sm:text-sm font-black text-white">案情終極告破：校園迷霧散盡！</h2>
+            <h2 class="text-xs sm:text-sm font-black text-white">案情告破：真相水落石出！</h2>
             <div class="text-[10px] text-emerald-400 font-bold">【S級 金牌特約調查員】三層物證全鏈條通報核實</div>
           </div>
         </div>
@@ -564,10 +555,10 @@
         <div class="bg-slate-900/90 p-2.5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-1.5">
           <div class="space-y-1 text-[11px] text-slate-300 leading-snug">
             <div>
-              <strong class="text-amber-300">雷霆收網：</strong>依據梁澤銘於 1F 更衣室、2F 課桌、儲物櫃與水管後方管槽起獲之軟糖樣品，經 2F 實驗室雙試管確診<strong>「依托咪酯」</strong>，並結合 3F 天台截獲之通聯錄音，執法部門專案組已將「暗夜調劑師」及其校外黑市分銷網絡全數剿滅！
+              <strong class="text-amber-300">雷霆收網：</strong>依據梁澤銘於 1F 更衣室、2F 課桌、儲物櫃與排水管支架暗角起獲之軟糖樣品，經實驗室雙試管確診<strong>「依托咪酯」</strong>，並結合天台截獲之勒索錄音，執法專案組已將「暗夜調劑師」及其校外分銷網絡連根拔起！
             </div>
             <div>
-              <strong class="text-cyan-300">精準施救：</strong>詠蕎與展霆因第一時間排除常規毒品並精準確診為依托咪酯急性中毒，醫院迅速施以中樞機能支持與解痙治療，現已脫離危險，心理輔導機構亦介入跟進其成癮復康！
+              <strong class="text-cyan-300">及時救治：</strong>岑詠蕎與霍展霆因第一時間精準確診為依托咪酯急性中毒，醫院施以對症治療，已脫離生命危險，學校社工亦已介入提供專業戒毒輔導！
             </div>
           </div>
 
@@ -589,7 +580,7 @@
           </div>
 
           <div class="text-[10px] text-orange-300 bg-orange-950/30 p-1.5 rounded-lg border border-orange-500/30 leading-tight">
-            依托咪酯受《危險藥物條例》嚴格規管！切勿誤信「提神無害」謊言，時刻牢記<strong>【毒品咪制！】</strong>！
+            依托咪酯受《危險藥物條例》嚴格管轄！齊心守護無毒校園，牢記<strong>【毒品咪制！】</strong>！
           </div>
         </div>
       </div>
@@ -598,14 +589,19 @@
 
   <script>
     // ==========================================
-    // 1. 專業音頻引擎
+    // 1. 專業 Web Audio 配樂與音效引擎
     // ==========================================
     class RetroSoundEngine {
       constructor() {
         this.ctx = null;
         this.masterGain = null;
+        this.bgmGain = null;
+        this.sfxGain = null;
         this.isMuted = false;
         this.bgmTimer = null;
+        this.droneOsc1 = null;
+        this.droneOsc2 = null;
+        this.isPlayingBGM = false;
       }
 
       init() {
@@ -613,16 +609,87 @@
           try {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             this.ctx = new AudioContext();
+
             this.masterGain = this.ctx.createGain();
             this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime);
             this.masterGain.connect(this.ctx.destination);
-            this.startTwilightSoundscape();
+
+            this.bgmGain = this.ctx.createGain();
+            this.bgmGain.gain.setValueAtTime(0.22, this.ctx.currentTime);
+            this.bgmGain.connect(this.masterGain);
+
+            this.sfxGain = this.ctx.createGain();
+            this.sfxGain.gain.setValueAtTime(0.6, this.ctx.currentTime);
+            this.sfxGain.connect(this.masterGain);
+
+            this.startBGM();
           } catch(e) {
             console.warn("音頻引擎初始化受阻:", e);
           }
         } else if (this.ctx.state === 'suspended') {
-          this.ctx.resume().catch(()=>{});
+          this.ctx.resume().then(() => {
+            if (!this.isPlayingBGM) this.startBGM();
+          }).catch(()=>{});
         }
+      }
+
+      startBGM() {
+        if (!this.ctx || this.isPlayingBGM) return;
+        this.isPlayingBGM = true;
+
+        // 1. 低頻懸疑背景 Drone
+        try {
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(260, this.ctx.currentTime);
+
+          this.droneOsc1 = this.ctx.createOscillator();
+          this.droneOsc1.type = 'sawtooth';
+          this.droneOsc1.frequency.setValueAtTime(65.4, this.ctx.currentTime); // C2
+
+          this.droneOsc2 = this.ctx.createOscillator();
+          this.droneOsc2.type = 'sine';
+          this.droneOsc2.frequency.setValueAtTime(98.0, this.ctx.currentTime); // G2
+
+          const droneGain = this.ctx.createGain();
+          droneGain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+
+          this.droneOsc1.connect(filter);
+          this.droneOsc2.connect(filter);
+          filter.connect(droneGain);
+          droneGain.connect(this.bgmGain);
+
+          this.droneOsc1.start();
+          this.droneOsc2.start();
+        } catch(e){}
+
+        // 2. 探案動態環境琴音循環
+        const notes = [261.63, 311.13, 392.00, 466.16, 523.25, 466.16]; // Cm7
+        let noteIdx = 0;
+
+        const playChime = () => {
+          if (!this.isPlayingBGM || !this.ctx || this.ctx.state !== 'running') return;
+          try {
+            const freq = notes[noteIdx];
+            noteIdx = (noteIdx + 1) % notes.length;
+
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+            gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.08, this.ctx.currentTime + 0.3);
+            gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 2.4);
+
+            osc.connect(gain);
+            gain.connect(this.bgmGain);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 2.5);
+          } catch(e){}
+          this.bgmTimer = setTimeout(playChime, 1800);
+        };
+        playChime();
       }
 
       playFootstep() {
@@ -633,10 +700,10 @@
           osc.type = 'triangle';
           osc.frequency.setValueAtTime(75 + Math.random() * 20, this.ctx.currentTime);
           osc.frequency.exponentialRampToValueAtTime(25, this.ctx.currentTime + 0.06);
-          gain.gain.setValueAtTime(0.02, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
           gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.06);
           osc.connect(gain);
-          gain.connect(this.masterGain);
+          gain.connect(this.sfxGain);
           osc.start();
           osc.stop(this.ctx.currentTime + 0.06);
         } catch(e){}
@@ -651,10 +718,10 @@
           osc.type = 'sine';
           osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.06);
           gain.gain.setValueAtTime(0, this.ctx.currentTime + idx * 0.06);
-          gain.gain.linearRampToValueAtTime(0.09, this.ctx.currentTime + idx * 0.06 + 0.02);
+          gain.gain.linearRampToValueAtTime(0.12, this.ctx.currentTime + idx * 0.06 + 0.02);
           gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + idx * 0.06 + 0.3);
           osc.connect(gain);
-          gain.connect(this.masterGain);
+          gain.connect(this.sfxGain);
           osc.start(this.ctx.currentTime + idx * 0.06);
           osc.stop(this.ctx.currentTime + idx * 0.06 + 0.35);
         });
@@ -668,10 +735,10 @@
           osc.type = 'sine';
           osc.frequency.setValueAtTime(1400, this.ctx.currentTime);
           osc.frequency.exponentialRampToValueAtTime(420, this.ctx.currentTime + 0.08);
-          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
           gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
           osc.connect(gain);
-          gain.connect(this.masterGain);
+          gain.connect(this.sfxGain);
           osc.start();
           osc.stop(this.ctx.currentTime + 0.08);
         } catch(e){}
@@ -684,10 +751,10 @@
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.frequency.setValueAtTime(f, this.ctx.currentTime);
-            gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
+            gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
             gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.5);
             osc.connect(gain);
-            gain.connect(this.masterGain);
+            gain.connect(this.sfxGain);
             osc.start();
             osc.stop(this.ctx.currentTime + 0.5);
           });
@@ -701,46 +768,13 @@
           const gain = this.ctx.createGain();
           osc.type = 'sine';
           osc.frequency.setValueAtTime(560, this.ctx.currentTime);
-          gain.gain.setValueAtTime(0.02, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
           gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
           osc.connect(gain);
-          gain.connect(this.masterGain);
+          gain.connect(this.sfxGain);
           osc.start();
           osc.stop(this.ctx.currentTime + 0.04);
         } catch(e){}
-      }
-
-      startTwilightSoundscape() {
-        if (this.bgmTimer) return;
-        const progression = [
-          [220, 261.63, 329.63, 392],
-          [174.61, 220, 261.63, 329.63],
-          [196, 246.94, 293.66, 392],
-          [164.81, 196, 246.94, 293.66]
-        ];
-        let step = 0;
-
-        const loop = () => {
-          if (this.ctx && this.ctx.state === 'running') {
-            const currentChord = progression[step];
-            currentChord.forEach((freq, idx) => {
-              const osc = this.ctx.createOscillator();
-              const gain = this.ctx.createGain();
-              osc.type = 'sine';
-              osc.frequency.setValueAtTime(freq * 0.5, this.ctx.currentTime);
-              gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
-              gain.gain.linearRampToValueAtTime(0.015, this.ctx.currentTime + 1.8);
-              gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 5.5);
-              osc.connect(gain);
-              gain.connect(this.masterGain);
-              osc.start(this.ctx.currentTime + idx * 0.1);
-              osc.stop(this.ctx.currentTime + 6.0);
-            });
-            step = (step + 1) % progression.length;
-          }
-          this.bgmTimer = setTimeout(loop, 6000);
-        };
-        loop();
       }
 
       toggleMute() {
@@ -780,26 +814,26 @@
       clue_gym_fok: {
         id: "clue_gym_fok",
         stage: 1,
-        name: "1F 體育更衣室外霍展霆的護膝與水果糖包裝",
+        name: "1F 體育更衣室外霍展霆的遺物與糖果空袋",
         zone: "1F 體育更衣室走廊",
         icon: "🩹",
         pos: { x: -9.5, y: 1.25, z: 4.0 },
         floor: 1,
-        shortDesc: "校隊隊長霍展霆在此休克送院。拾獲撕開的水果糖包裝紙與沾有淡紫粉末的護膝，便條寫著：『展霆，中六B班詠蕎那裡還有存貨……』解鎖 2F 教學樓！",
-        fullDesc: "校隊隊長霍展霆在此處急救送醫。拾獲撕開的「奇異果提神止痛軟糖」空包裝，內壁附著淡紫色粉末；遺落的護膝內夾著字條：『展霆，中六B班詠蕎那裡還有存貨……』證實兩人受害源頭完全一致。解鎖 2F 教學樓階梯！",
-        forensic: "粉末微粒具有親脂性特徵，無典型薄荷或糖精氣味，懷疑含未標記脂溶性中樞麻醉抑制劑。"
+        shortDesc: "籃球隊長霍展霆在此休克。拾獲撕開的奇異果糖包裝紙，背後赫然附有暗夜調劑師的私訊便條：『展霆，備戰舊患痛就吃這個……不夠找中六B班詠蕎拿新貨』！",
+        fullDesc: "校隊隊長霍展霆在此處急救送醫。拾獲撕開的「奇異果提神止痛軟糖」空包裝，內壁附著淡紫色微粒；護膝內夾著一張加密對話打印便條：『From 暗夜調劑師：展霆，練球舊患痛就含一顆，保證無痛亢奮。不夠的話，中六B班詠蕎手上有最新一批貨……』證實毒物來自黑市『暗夜調劑師』，並指向 2F 課堂！",
+        forensic: "包裝殘留粉末微粒具強烈親脂性，非食用香精，呈未標記脂溶性中樞麻醉藥劑特徵。"
       },
       clue_desk: {
         id: "clue_desk",
         stage: 2,
-        name: "2F 中六B班 岑詠蕎抽屜的成癮自述日記與紫晶液",
+        name: "2F 中六B班 岑詠蕎的課前自白備忘錄與紫晶液",
         zone: "2F 中六B班房",
         icon: "📝",
         pos: { x: -8.5, y: 5.05, z: -7.5 },
         floor: 2,
-        shortDesc: "考場 2 號桌抽屜起獲詠蕎的事前日記本與深紫色未知液滴（證物 A）。日記揭露她深陷毒癮無法自拔，考前急性超量服藥以致肌陣攣休克，並記載了 17 號儲物櫃！",
-        fullDesc: "在 2 號課桌提取到深紫色未知液滴（證物 A）。抽屜內起獲詠蕎的日記：『這根本不是普通提神糖……我已經成癮了，不吃就會全身發冷、情緒崩潰！剛才開考前手抖得厲害，我忍不住又偷含了一整顆……現在手臂開始不受控劇烈抽搐……字條叫我去 17 號儲物櫃……』證實詠蕎是在成癮耐受後，於考前急性濫用導致肌陣攣休克！",
-        forensic: "液滴呈現淡紫晶瑩狀，pH 約 6.8，具高揮發性。提取為現場【證物 A】送檢。"
+        shortDesc: "課桌上起獲深紫色滴液（證物 A）與詠蕎開考前手寫的備忘手記！手記揭露她深陷依賴，開考前因手抖焦慮超量服用，剛起效便全身抽搐；紙條還註明了 17 號儲物櫃！",
+        fullDesc: "在事發 2 號桌提取到深紫色未知滴液（證物 A）。桌屜內起獲詠蕎在開考前半小時寫下的手記草稿：『最近為了衝刺模擬試，聽信暗夜調劑師的宣傳買了這種聰明糖……才兩天我就徹底上癮了！一旦停用就全身冷汗顫抖、焦慮到崩潰！剛才開考前手抖得握不住筆，我忍不住在洗手間一次性含了兩整顆……他還塞紙條叫我去 17 號儲物櫃取新配方……』證實詠蕎早已藥物成癮，並在考前超量急性濫用引發肌陣攣休克！",
+        forensic: "滴液呈現淡紫晶瑩狀，微酸性，具高揮發性有機酯特徵。提取為現場【證物 A】送檢。"
       },
       clue_corridor: {
         id: "clue_corridor",
@@ -809,21 +843,21 @@
         icon: "🏷️",
         pos: { x: 3.0, y: 5.05, z: 0.1 },
         floor: 2,
-        shortDesc: "排查 17 號儲物櫃起獲暗號提貨單：『新一批特調奇異果軟糖已藏於【化學實驗室外走廊水管後方管槽暗角】，速取。』",
-        fullDesc: "排查 17 號儲物櫃起獲打印的加密暗號單：『新一批特調奇異果軟糖已藏於【化學實驗室外走廊水管後方管槽暗角】，速取，銷毀痕跡。』明確指出毒物藏匿地點。",
-        forensic: "提貨單帶有防窺暗碼印刷，指紋檢測提取到非校內人士殘留痕跡。"
+        shortDesc: "排查 17 號儲物櫃起獲打印的提貨暗號單，印有暗夜調劑師專屬標誌：『特調軟糖已藏於【化學實驗室外排水管後方固定管架暗角】，速取銷毀！』",
+        fullDesc: "開啟 17 號儲物櫃，起獲打印的加密單據，上方印有暗網毒販『暗夜調劑師』的火印暗記：『新特調奇異果軟糖已藏於【化學實驗室外排水管後方固定管架暗角】，速取，閱後銷毀。』",
+        forensic: "紙張表面帶有防窺印刷暗碼，邊緣檢出非校內人員殘留指紋。"
       },
       clue_pipe_stash: {
         id: "clue_pipe_stash",
         stage: 4,
-        name: "2F 化學室外水管後方管槽暗角藏匿的特調軟糖",
-        zone: "2F 理科化學室外走廊管槽",
+        name: "2F 化學室外排水管固定支架暗角的可疑軟糖",
+        zone: "2F 理科化學室外走廊暗角",
         icon: "🍬",
         pos: { x: 6.5, y: 5.05, z: 5.2 },
         floor: 2,
-        shortDesc: "在水管與牆身固定架暗角起獲未開封的軟糖（證物 B）！兩份樣品齊備，立即進入旁邊化學室進行雙試管快篩！",
-        fullDesc: "在外露排水管與牆體固定支架暗角搜出一包密封軟糖（證物 B）。外包裝標註為進口水果糖，但膠質泛著與課桌紫液相同的妖異紫光！兩份樣品已就緒，需進實驗室化驗。",
-        forensic: "軟糖表面滲出均勻油膜，具有強烈中樞性麻醉抑制劑特異溶出特性。"
+        shortDesc: "在排水管固定金屬架暗處取回未開封的奇異果軟糖（證物 B）！兩份樣品已齊備，立即進入旁邊化學室進行雙試管定性快篩！",
+        fullDesc: "在走廊外露排水管與牆身固定鐵架夾角搜出一包真空密封軟糖（證物 B）。包裝標註為進口果糖，但透著與課桌紫液相同的幽微紫色。兩份樣品就緒，必須進入實驗室分析。",
+        forensic: "膠體表面滲出均勻油性薄膜，釋放強烈中樞性麻醉抑制劑特異成分。"
       },
       clue_spot_plate: {
         id: "clue_spot_plate",
@@ -833,71 +867,71 @@
         icon: "🧪",
         pos: { x: 9.0, y: 5.05, z: 7.0 },
         floor: 2,
-        shortDesc: "排除氯胺酮，確診兩份樣品均含有受管制的危險藥物「依托咪酯」！此時 3F 天台傳來急促通話鈴聲！",
-        fullDesc: "雙試管交叉顯色試驗完成！排除氯胺酮（K仔），確診證物 A 與證物 B 皆為受香港特區《危險藥物條例》嚴格管制的【依托咪酯 (Etomidate)】！",
-        forensic: "咪唑羧酸酯特異性顯色反應呈強陽性（深紫褐色沉澱），確診為高濃度依托咪酯。"
+        shortDesc: "排除氯胺酮，雙試管確診兩份樣品均為受管制的危險藥物「依托咪酯」！此時 3F 天台傳來急促震動鈴聲！",
+        fullDesc: "雙試管交叉顯色完成！排除氯胺酮（K仔），確診證物 A 與證物 B 皆為受香港特區《危險藥物條例》嚴格管制的【依托咪酯 (Etomidate)】！此時天台方向傳來急響的手機鈴聲！",
+        forensic: "咪唑羧酸酯特異顯色反應呈強陽性深紫褐色沉澱，證實為超量管制藥依托咪酯。"
       },
       clue_rooftop_burner: {
         id: "clue_rooftop_burner",
         stage: 6,
-        name: "3F 暮光天台排風箱後震動響鈴的毒販通聯手機",
-        zone: "3F 教學樓暮光天台",
+        name: "3F 天台排風箱後震動響鈴的通聯手機",
+        zone: "3F 教學樓天台",
         icon: "📱",
         pos: { x: -5.0, y: 8.85, z: -2.5 },
         floor: 3,
-        shortDesc: "接聽排風箱後的加密手機，成功錄下主謀「暗夜調劑師」勒索學生的通話錄音！定罪鏈全數完成！",
-        fullDesc: "在天台排風箱深處起獲不斷震動的暗網通聯手機。按下接聽並啟動錄音器，成功錄下主謀「暗夜調劑師」以中毒抽搐影片勒索封口費的鐵證通話！",
-        forensic: "手機通話基站與加密帳戶已被電子鑑證人員逆向鎖定，毒販網絡核心鏈條徹底截獲。"
+        shortDesc: "接聽排風箱後的加密黑網手機，成功錄下主謀「暗夜調劑師」勒索學生的通話鐵證！全案定案鏈就緒！",
+        fullDesc: "在天台排風箱深處起獲震動中的暗網通聯手機。接聽並啟動錄音：『喂？！貨拿到了沒有？！尾款今晚交不出來，就把你們吸到全身抽搐翻白眼的影片發給家長！』主謀暗夜調劑師罪證全數落網！",
+        forensic: "通話基站與暗網帳號已由警方技術人員鎖定，幕後販毒鏈條徹底瓦解。"
       }
     };
 
     const DUMMY_LOCKERS = {
-      locker_11: { id: "locker_11", num: 11, name: "2F 走廊 11 號儲物櫃", pos: { x: -2.0, y: 5.0, z: 0.1 }, desc: "這是 11 號儲物櫃。裡面整齊疊放著校服與幾本歷屆試題，未發現可疑暗號。" },
-      locker_14: { id: "locker_14", num: 14, name: "2F 走廊 14 號儲物櫃", pos: { x: 0.5, y: 5.0, z: 0.1 }, desc: "這是 14 號儲物櫃。門外貼著學界籃球錦標賽賽程表，鎖具完好，無異常。" },
-      locker_20: { id: "locker_20", num: 20, name: "2F 走廊 20 號儲物櫃", pos: { x: 5.5, y: 5.0, z: 0.1 }, desc: "這是 20 號儲物櫃。裡面放置著雨傘與水樽，縫隙乾淨，不是藏匿地點。" },
-      locker_23: { id: "locker_23", num: 23, name: "2F 走廊 23 號儲物櫃", pos: { x: 7.5, y: 5.0, z: 0.1 }, desc: "這是 23 號儲物櫃。鎖頭有些許鏽蝕，顯然近期無人動過。" }
+      locker_11: { id: "locker_11", num: 11, name: "2F 走廊 11 號儲物櫃", pos: { x: -2.0, y: 5.0, z: 0.1 }, desc: "這是 11 號儲物櫃。裡面整齊疊放著校服與模擬試卷，未發現可疑物品。" },
+      locker_14: { id: "locker_14", num: 14, name: "2F 走廊 14 號儲物櫃", pos: { x: 0.5, y: 5.0, z: 0.1 }, desc: "這是 14 號儲物櫃。門外貼著學界賽程表，鎖具完好，無異常。" },
+      locker_20: { id: "locker_20", num: 20, name: "2F 走廊 20 號儲物櫃", pos: { x: 5.5, y: 5.0, z: 0.1 }, desc: "這是 20 號儲物櫃。裡面放置著雨傘與水樽，縫隙乾淨，並非交收點。" },
+      locker_23: { id: "locker_23", num: 23, name: "2F 走廊 23 號儲物櫃", pos: { x: 7.5, y: 5.0, z: 0.1 }, desc: "這是 23 號儲物櫃。鎖頭有些微生鏽，近期未有開啟痕跡。" }
     };
 
     const EASTER_EGGS = {
       trophy_case: {
         id: "trophy_case", name: "1F 大堂學界榮譽陳列櫃", pos: { x: 0.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🏆",
-        desc: "陳列櫃擺放著咪制書院的銀禧獎盃。其中『全港學界男子組 MVP 霍展霆』與『傑出學生 岑詠蕎』的照片格外醒目。",
-        monologue: "（展霆是球隊靈魂，詠蕎是全校尖子……到底是什麼原因導致兩名精英在今天傍晚相繼急性休克？）"
+        desc: "陳列櫃擺放著咪制書院的獎盃。正中央是霍展霆與岑詠蕎的傑出學生照片。",
+        monologue: "（展霆是球隊核心，詠蕎是全校尖子……他們正面臨前所未有的學業與比賽壓力，極易成為毒販的獵物。）"
       },
       vending_machine: {
         id: "vending_machine", name: "1F 小食部自動販賣機", pos: { x: 8.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🥤",
-        desc: "販賣機亮著微弱黃光，陳列著港式凍檸茶、維他奶和能量飲料。機身側面貼滿了學生手寫貼紙：『DSE 祈福：科科 5 星星！』",
-        monologue: "（中六考生的焦慮與疲憊全寫在上面了……希望不是有人利用這種備考高壓在校園散播非法藥物。）"
+        desc: "販賣機陳列著烏龍茶與能量飲料。側面貼著學生祈願便條：『DSE 順利！』",
+        monologue: "（考生承受著巨大升學焦慮……毒販往往正是利用這種想走捷徑的心理乘虛而入。）"
       },
       notice_board: {
-        id: "notice_board", name: "1F 學生會校園資訊與願望牆", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
-        desc: "告示欄張貼著下月學界決賽海報。正中間貼著霍展霆手寫的便條：『今年帶咪制書院衝冠！』然而他今天卻躺進了急症室……",
-        monologue: "（原本觸手可及的冠軍夢，今天卻險些破滅……現場調查第一步，必須先查明更衣室留下的物證。）"
+        id: "notice_board", name: "1F 學生會校園資訊與宣傳欄", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
+        desc: "宣傳欄張貼著警方與禁毒處的最新防罪通告：『警惕黑市以「聰明糖」、「放鬆煙油」名義散播依托咪酯！』下方附有舉報電話。",
+        monologue: "（通告特別提到了近期活躍於學生社交群組的「暗夜調劑師」……看來這次意外絕非偶然。）"
       },
       lost_and_found: {
-        id: "lost_and_found", name: "2F 走廊角落失物認領箱", pos: { x: -2.0, y: 5.0, z: -8.0 }, floor: 2, icon: "📦",
-        desc: "裡面堆放著未寫名字的外套與黑框眼鏡。箱子上方掛著訓導處溫馨提示：『物品妥善保管，勿遺失青春』。",
-        monologue: "（中學校園裡丟失的物品還能找回，但要是因沾染毒品毀了神經與健康，就再也無法挽回了。）"
+        id: "lost_and_found", name: "2F 走廊失物認領箱", pos: { x: -1.0, y: 5.0, z: 2.5 }, floor: 2, icon: "📦",
+        desc: "走廊拐角處擺放的失物箱。裡面堆放著未領取的校服外套與水杯，上方貼著：『失物可領，莫失青春』標語。",
+        monologue: "（中學裡遺失的物品尚能找回，但若是因毒品損害了中樞神經與大好前途，就再也無法彌補了。）"
       },
       lab_microscope: {
-        id: "lab_microscope", name: "2F 理科實驗室顯微鏡與安全指引", pos: { x: 12.0, y: 5.0, z: 7.0 }, floor: 2, icon: "🔬",
-        desc: "實驗桌上的雙目顯微鏡旁壓著《實驗室指引》。載玻片上仍殘留著常規植物細胞切片，秩序井然。",
-        monologue: "（化學本是用於探索真理的工具，卻被校外黑心之徒用來調配摧毀青少年身心的非法試劑。）"
+        id: "lab_microscope", name: "2F 理科實驗室顯微鏡台", pos: { x: 12.0, y: 5.0, z: 7.0 }, floor: 2, icon: "🔬",
+        desc: "實驗桌上的雙目顯微鏡旁壓著《化學實驗守則》。載玻片上是常規切片，秩序井然。",
+        monologue: "（化學是探究真理的學問，卻被黑市之徒挪用於調配摧毀健康的非法毒劑。）"
       },
       rooftop_telescope: {
-        id: "rooftop_telescope", name: "3F 天台天文學會觀星折射鏡與紙飛機", pos: { x: 8.0, y: 8.8, z: -6.5 }, floor: 3, icon: "🔭",
-        desc: "一台赤道儀折射望遠鏡迎著遠方的維港黃昏。鏡筒腳架邊卡著一隻紙飛機，機翼寫著：『願我們畢業那天，晴空萬里。』",
-        monologue: "（站在這裡能俯瞰整座咪制書院校園與九龍暮色……這片屬於少年的純淨天空，絕容不得毒霧污染。）"
+        id: "rooftop_telescope", name: "3F 天台天文觀測折射鏡", pos: { x: 8.0, y: 8.8, z: -6.5 }, floor: 3, icon: "🔭",
+        desc: "一台立在天台邊緣的赤道儀望遠鏡，能俯瞰九龍全景。鏡架旁卡著一隻紙飛機，寫著：『願我們畢業晴空萬里。』",
+        monologue: "（這片屬於青少年的校園天空，不容任何毒霧污染。）"
       },
       rooftop_guitar: {
-        id: "rooftop_guitar", name: "3F 天台角落廢棄樂隊音箱與舊吉他", pos: { x: -8.0, y: 8.8, z: 4.5 }, floor: 3, icon: "🎸",
-        desc: "一把缺了兩根弦的吉他倚靠在落滿灰塵的音箱旁。晚風吹過琴弦，發出細微的共鳴。",
-        monologue: "（這裏曾是學生們放學後揮灑熱血的地方……現在卻成了毒販勒索交易的黑暗跳板。）"
+        id: "rooftop_guitar", name: "3F 天台角落樂隊練習設備", pos: { x: -8.0, y: 8.8, z: 4.5 }, floor: 3, icon: "🎸",
+        desc: "一把缺弦的吉他倚在音箱旁。這裡原是放學後學生樂隊排練的地方。",
+        monologue: "（原本充滿熱血與夢想的校園角落，卻被不法之徒當作藏匿通聯電話的犯罪跳板。）"
       }
     };
 
     // ==========================================
-    // 3. 3D 場景與實體幾何碰撞庫
+    // 3. 3D 場景與障礙物幾何
     // ==========================================
     let renderer, scene, camera, player;
     let floor1Group, floor2Group, floor3Group;
@@ -905,7 +939,7 @@
     let duskParticles;
     let stairABarrierMesh = null;
     let stairBBarrierMesh = null;
-    let objectiveArrowMesh = null; // 導引箭頭
+    let objectiveArrowMesh = null;
 
     const SOLID_OBSTACLES = [
       // 1F
@@ -914,7 +948,7 @@
       { minX: -12.2, maxX: -6.8, minZ: 3.2, maxZ: 4.8, floor: 1 },
       { minX: 4.2, maxX: 6.8, minZ: -8.9, maxZ: -8.1, floor: 1 },
 
-      // 2F
+      // 2F (已修正失物箱周邊碰撞，確保走廊通暢)
       { minX: -3.0, maxX: 9.0, minZ: -9.0, maxZ: -0.1, floor: 2 },
       { minX: -3.0, maxX: 8.5, minZ: -0.4, maxZ: 0.6, floor: 2 },
       { minX: -2.7, maxX: -2.3, minZ: -9.0, maxZ: 1.0, floor: 2 },
@@ -942,7 +976,7 @@
     const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
     // ==========================================
-    // 4. 動態生成 3D Billboard 圖示
+    // 4. 生成 3D Billboard 圖示
     // ==========================================
     function createIconSprite(emoji, bgColor = 'rgba(15, 23, 42, 0.92)', borderColor = '#fb923c') {
       const c = document.createElement('canvas');
@@ -979,7 +1013,7 @@
     }
 
     // ==========================================
-    // 5. 調查員 3D 控制類
+    // 5. 調查員控制類
     // ==========================================
     class InvestigatorAvatar {
       constructor() {
@@ -1134,7 +1168,6 @@
 
       checkCurrentZone() {
         const x = this.mesh.position.x;
-        const z = this.mesh.position.z;
         const f = GAME_STATE.currentFloor;
         let zone = "1F 咪制書院 中庭大堂";
         let icon = "🏛️";
@@ -1142,14 +1175,14 @@
         if (f === 1) {
           if (x < -4.0) { zone = "1F 體育更衣室走廊"; icon = "🏀"; }
           else if (x > 8.0) { zone = "1F 景觀階梯 A"; icon = "🪜"; }
-          else { zone = "1F 中庭接待大堂"; icon = "🏛️"; }
+          else { zone = "1F 中庭大堂"; icon = "🏛️"; }
         } else if (f === 2) {
-          if (x < -2.5) { zone = "2F 中六B班房 (黃昏事發現場)"; icon = "📚"; }
-          else if (z > 5.0 && x > 2.0) { zone = "2F 理科綜合化學實驗室"; icon = "🧪"; }
-          else if (x < -8.0 && z > 5.0) { zone = "2F 天台階梯 B"; icon = "🪜"; }
+          if (x < -2.5) { zone = "2F 中六B班房"; icon = "📚"; }
+          else if (this.mesh.position.z > 5.0 && x > 2.0) { zone = "2F 理科綜合化學實驗室"; icon = "🧪"; }
+          else if (x < -8.0 && this.mesh.position.z > 5.0) { zone = "2F 天台階梯 B"; icon = "🪜"; }
           else { zone = "2F 教學樓儲物櫃長廊"; icon = "🚪"; }
         } else if (f === 3) {
-          zone = "3F 教學樓暮光天台";
+          zone = "3F 教學樓天台";
           icon = "🌇";
         }
 
@@ -1163,7 +1196,7 @@
           if (floorLbl) {
             let fl = "1F 大堂層";
             if (f === 2) fl = "2F 教學化驗區";
-            if (f === 3) fl = "3F 暮光天台";
+            if (f === 3) fl = "3F 天台層";
             floorLbl.textContent = fl;
           }
         }
@@ -1171,7 +1204,7 @@
     }
 
     // ==========================================
-    // 6. 3D 場景建構函數
+    // 6. 3D 場景建構
     // ==========================================
     function init3DWorld() {
       const canvasElem = document.getElementById('game-canvas');
@@ -1186,7 +1219,6 @@
         renderer.shadowMap.type = THREE.BasicShadowMap;
       } catch (err) {
         console.error("WebGL 初始化失敗:", err);
-        document.getElementById('webgl-fallback')?.classList.remove('hidden');
         return false;
       }
 
@@ -1224,7 +1256,6 @@
       duskParticles = new THREE.Points(particleGeo, new THREE.PointsMaterial({ color: 0xf59e0b, size: 0.16, transparent: true, opacity: 0.55 }));
       scene.add(duskParticles);
 
-      // 構建懸浮導航目標光箭頭
       buildObjectiveArrow();
 
       const skylineGroup = new THREE.Group();
@@ -1257,7 +1288,7 @@
       objectiveArrowMesh = new THREE.Group();
 
       const coneGeo = new THREE.ConeGeometry(0.38, 0.8, 12);
-      coneGeo.rotateX(Math.PI); // 箭頭向下指
+      coneGeo.rotateX(Math.PI);
       const coneMat = new THREE.MeshBasicMaterial({ color: 0x10b981 });
       const cone = new THREE.Mesh(coneGeo, coneMat);
 
@@ -1473,7 +1504,7 @@
         });
       });
 
-      // 2F 儲物櫃 (簡化模型)
+      // 2F 儲物櫃
       const lockers = [-2.0, 0.5, 3.0, 5.5, 7.5];
       lockers.forEach(lx => {
         const lg = new THREE.Group();
@@ -1486,7 +1517,7 @@
         floor2Group.add(lg);
       });
 
-      // 2F 外露排水管與暗槽
+      // 2F 外露排水管與固定管架
       const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 3.0, 12), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8 }));
       pipe.position.set(6.5, 5.3, 5.2);
       floor2Group.add(pipe);
@@ -1550,14 +1581,14 @@
       vent.position.set(-5.0, 8.4, -3.5);
       floor3Group.add(vent);
 
-      // 互動標記配置
+      // 放置互動標記
       // 1F
       spawnMarker('clue_gym_fok', -9.5, 1.25, 4.0, 1, 'clue', '🩹');
       spawnMarker('trophy_case', 0.0, 1.2, -7.5, 1, 'egg', '🏆');
       spawnMarker('vending_machine', 8.0, 1.2, -7.5, 1, 'egg', '🥤');
       spawnMarker('notice_board', 5.5, 1.2, -8.0, 1, 'egg', '📌');
 
-      // 2F
+      // 2F (失物箱放置在走廊開闊處 x: -1.0, z: 2.5)
       spawnMarker('clue_desk', -8.5, 5.05, -7.5, 2, 'clue', '📝');
       spawnMarker('clue_corridor', 3.0, 5.05, 0.1, 2, 'clue', '🏷️');
       spawnMarker('clue_pipe_stash', 6.5, 5.05, 5.2, 2, 'clue', '🍬');
@@ -1568,7 +1599,7 @@
       spawnMarker('locker_20', 5.5, 5.0, 0.1, 2, 'locker', '20');
       spawnMarker('locker_23', 7.5, 5.0, 0.1, 2, 'locker', '23');
 
-      spawnMarker('lost_and_found', -2.0, 5.0, -8.0, 2, 'egg', '📦');
+      spawnMarker('lost_and_found', -1.0, 5.0, 2.5, 2, 'egg', '📦');
       spawnMarker('lab_microscope', 12.0, 5.0, 7.0, 2, 'egg', '🔬');
 
       // 3F
@@ -1801,7 +1832,7 @@
     }
 
     // ==========================================
-    // 10. 案件進度與搜查互動
+    // 10. 案件搜查互動
     // ==========================================
     function checkProximity() {
       if (!GAME_STATE.started || GAME_STATE.isDialogueOpen || GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen || !player) {
@@ -1931,10 +1962,10 @@
 
       sound.playDialogueBlip();
 
-      // 如果尚未完成第 1 階段，點擊 1F 其他物件時予以導引限制
+      // 引導限制：若未完成第 1 階段，點擊 1F 其他物件時予以引導提示
       if (GAME_STATE.questStage === 1 && target.type !== 'clue') {
         startDialogueQueue([
-          { type: "monologue", speaker: "梁澤銘（心想）", role: "優先目標提示", text: "（目前更衣室外霍展霆留下的隨身物品是唯一確切線索。跟著綠色光標先去西側更衣室，切勿在其他地方浪費時間！）" }
+          { type: "monologue", speaker: "梁澤銘（心想）", role: "優先目標提示", text: "（展霆休克後留下的急救痕跡在西側更衣室長椅。跟著綠色導引光錐先去排查，切勿分心！）" }
         ]);
         return;
       }
@@ -1967,11 +1998,11 @@
 
         if (clue.stage > GAME_STATE.questStage) {
           let hint = "應先留意右上角當前偵查目標。";
-          if (GAME_STATE.questStage === 1) hint = "更衣室外霍展霆的遺留物尚未查驗，跟著綠色箭頭先去西側排查！";
-          else if (GAME_STATE.questStage === 2) hint = "應先登上 2F 中六B班房搜查岑詠蕎的課桌！";
-          else if (GAME_STATE.questStage === 3) hint = "根據課桌日記，應先排查 2F 長廊 17 號儲物櫃！";
-          else if (GAME_STATE.questStage === 4) hint = "先在化學室外走廊水管後方暗角取回軟糖樣品！";
-          else if (GAME_STATE.questStage === 5) hint = "已取回兩份樣品，先至化學實驗台完成快篩！";
+          if (GAME_STATE.questStage === 1) hint = "跟著綠色光標先去更衣室排查展霆遺物！";
+          else if (GAME_STATE.questStage === 2) hint = "登上 2F 中六B班房搜查岑詠蕎的課桌！";
+          else if (GAME_STATE.questStage === 3) hint = "根據課桌日記，排查 2F 走廊 17 號儲物櫃！";
+          else if (GAME_STATE.questStage === 4) hint = "在化學室外排水管後方固定管架暗角搜查樣品！";
+          else if (GAME_STATE.questStage === 5) hint = "兩份樣品已齊備，先進入化學實驗台完成快篩！";
 
           startDialogueQueue([
             { type: "monologue", speaker: "梁澤銘（心想）", role: "偵查順序推理", text: `（${hint}）` }
@@ -1985,32 +2016,32 @@
           updateStairBarriers();
           updateObjective("沿東側階梯 A 登上 2F，搜查中六B班房岑詠蕎的課桌 (2/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "更衣室起獲物證", text: "長椅上起獲籃球護膝與撕開的奇異果糖包裝紙。包裝內壁殘留紫色微粒，附便條寫著：『展霆，中六B班詠蕎那裡還有存貨……』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（果然！霍展霆的止痛糖與黃昏考場抽搐的岑詠蕎來自同一源頭！階梯 A 封鎖已解除，我必須立即登上 2F 搜查岑詠蕎的課桌！）" }
+            { type: "narration", speaker: "現場物證紀錄", role: "更衣室起獲物證", text: "長椅上起獲撕開的奇異果糖包裝紙，背後附便條：『From 暗夜調劑師：展霆，練球舊患痛就含一顆。不夠找中六B班詠蕎拿新貨……』" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（果然是『暗夜調劑師』在背後作祟！他將毒品包裝成止痛糖誘騙受傷的展霆，而源頭指向了中六B班的詠蕎。階梯 A 封鎖已解除，我必須立刻上 2F 搜查課桌！）" }
           ]);
         } else if (clue.stage === 2) {
           collectClue(clue.id);
           GAME_STATE.questStage = 3;
           updateObjective("排查 2F 走廊儲物櫃，尋找 17 號暗號提貨單 (3/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "事發課桌起獲物證", text: "在 2 號課桌提取到深紫色未知液滴（證物 A）！抽屜內起獲詠蕎日記：『這根本不是提神糖……我已經成癮了，不吃就會全身發冷、情緒崩潰！開考前我忍不住又偷含了一顆，現在手臂開始不受控劇烈抽搐……紙條叫我去 17 號儲物櫃……』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（原來詠蕎已深陷毒癮耐受，開考前因焦慮急性超量濫用，才導致肌陣攣在考場全面爆發！日記提及的 17 號儲物櫃必定是關鍵，立即前去排查！）" }
+            { type: "narration", speaker: "現場物證紀錄", role: "課桌起獲物證", text: "提取到深紫色液滴（證物 A），抽屜內起獲詠蕎在考前半小時手寫的自白手記：『聽信暗夜調劑師買了聰明糖……才兩天我就徹底上癮，停用就全身冷汗手抖！剛才開考前手抖得握不住筆，我在洗手間一次性含了兩整顆……他還塞紙條叫我去 17 號儲物櫃……』" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（這份手記徹底講通了！詠蕎早已身陷藥物依賴，考前因戒斷反應超量含服，才會在考場急性毒發肌陣攣休克！手記提及的 17 號儲物櫃必定是交貨點，立即前往排查！）" }
           ]);
         } else if (clue.stage === 3) {
           collectClue(clue.id);
           GAME_STATE.questStage = 4;
-          updateObjective("搜查 2F 理科化學室外走廊水管後方管槽暗角，取回軟糖 (4/6)");
+          updateObjective("搜查 2F 理科化學室外排水管後方固定管架暗角 (4/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "儲物櫃起獲物證", text: "成功開啟 17 號儲物櫃！底層夾縫搜獲加密提貨單：『新一批特調奇異果軟糖已藏於【化學實驗室外走廊水管後方管槽暗角】，速取。』" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（毒販把未拆封的軟糖藏在化學室外的水管管槽暗角！必須立即取回樣品，才能進行成分定性！）" }
+            { type: "narration", speaker: "現場物證紀錄", role: "儲物櫃起獲物證", text: "成功開啟 17 號儲物櫃！起獲印有暗夜調劑師暗記的提貨單：『特調軟糖已藏於【化學實驗室外排水管後方固定管架暗角】，速取，銷毀痕跡。』" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（暗夜調劑師把未拆封的軟糖藏在化學室外的排水管支架暗角！必須立刻取回樣品，上檢驗台做成分定性！）" }
           ]);
         } else if (clue.stage === 4) {
           collectClue(clue.id);
           GAME_STATE.questStage = 5;
           updateObjective("進入 2F 理科綜合化學實驗室，進行雙試管快篩確診 (5/6)");
           startDialogueQueue([
-            { type: "narration", speaker: "現場物證紀錄", role: "水管死角起獲物證", text: "在水管後方固定架暗角摸出一包真空密封的奇異果味軟糖（證物 B）！糖身泛著與課桌液體完全一致的妖異紫光。" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（兩份物證——課桌紫晶液與暗處軟糖均已到手！立刻進入旁邊的理科實驗室，上檢驗台做定性比對！）" }
+            { type: "narration", speaker: "現場物證紀錄", role: "排水管支架起獲物證", text: "在排水管固定鐵架暗角搜出一包密封的奇異果味軟糖（證物 B）！糖身泛著與課桌液體完全一致的妖異紫光。" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "因果推理", text: "（兩份物證——課桌殘留液與暗角軟糖均已到手！立刻進入旁邊的理科實驗室，上檢驗台做交叉比對！）" }
           ]);
         } else if (clue.stage === 5) {
           openLabModal();
@@ -2021,9 +2052,9 @@
           updateClueBadges();
           updateObjective("打開【案件手冊】進入【思維宮殿】，完成定案通報執法部門！ (6/6)");
           startDialogueQueue([
-            { type: "call", speaker: "加密通聯（排風箱暗處）", role: "毒販黑網電話", text: "『喂？！東西拿到了沒有？！尾款今晚交不出來，就把你們吸到抽搐翻白眼的影片傳給全校家長！』" },
-            { type: "dialogue", speaker: "梁澤銘", role: "調查員取證通報", text: "錄音器已成功鎖定音軌！毒販『暗夜調劑師』的通話基站與勒索罪證全部固定！" },
-            { type: "monologue", speaker: "梁澤銘（心想）", role: "思維宮殿定案", text: "（6 大核心物證鏈條全數齊備！打開【📋 案件簿】的【思維宮殿定案】，核實因果鏈後立刻發出通報！）" }
+            { type: "call", speaker: "暗夜調劑師（黑網通話）", role: "幕後主謀", text: "『喂？！貨拿到了沒有？！尾款今晚交不出來，就把你們吸到全身抽搐翻白眼的影片發給全校家長！』" },
+            { type: "dialogue", speaker: "梁澤銘", role: "調查員取證通報", text: "錄音器已成功鎖定音軌！暗夜調劑師，你的網絡通訊基站與勒索罪證全部固定，警方專案組已在收網路上！" },
+            { type: "monologue", speaker: "梁澤銘（心想）", role: "思維宮殿定案", text: "（6 大核心物證鏈條齊備！打開【📋 案件簿】的【思維宮殿定案】，核實因果鏈後立刻通報執法部門！）" }
           ], () => {
             toggleNotebook();
             switchNotebookTab('mindpalace');
@@ -2170,12 +2201,12 @@
       GAME_STATE.hasIdentifiedEtomidate = true;
       GAME_STATE.questStage = 6;
       updateStairBarriers();
-      updateObjective("循著震動鈴聲登上 3F 暮光天台，搜查排風箱 (6/6)");
+      updateObjective("循著震動鈴聲登上 3F 天台，搜查排風箱 (6/6)");
       sound.playPhoneRing();
 
       startDialogueQueue([
-        { type: "narration", speaker: "毒理檢驗報告", role: "定性鑑證結論", text: "雙試管交叉比對確診！岑詠蕎課桌紫液與水管暗處軟糖均含有《危險藥物條例》嚴格管制的【依托咪酯】！" },
-        { type: "monologue", speaker: "梁澤銘（心想）", role: "突發警覺", text: "（等等！頭頂 3F 天台方向傳來急促的手機震動鈴聲！天台階梯封鎖已解除，立刻登上 3F 天台截獲通聯訊號！）" }
+        { type: "narration", speaker: "毒理檢驗報告", role: "定性鑑證結論", text: "雙試管交叉比對確診！岑詠蕎課桌殘留液與暗角軟糖均含有《危險藥物條例》嚴格管制的【依托咪酯】！" },
+        { type: "monologue", speaker: "梁澤銘（心想）", role: "突發警覺", text: "（等等！頭頂 3F 天台方向傳來急促的手機震動鈴聲！天台階梯封鎖已解除，立刻登上天台截獲通聯訊號！）" }
       ]);
     }
 
@@ -2242,7 +2273,7 @@
 
       icon.textContent = clue.icon;
       title.textContent = clue.name;
-      meta.textContent = `📍 搜查地點：${clue.zone} • 所屬第 ${clue.floor} 層`;
+      meta.textContent = `📍 搜查地點：${clue.zone} • 第 ${clue.floor} 層`;
       body.textContent = clue.fullDesc;
       forensic.innerHTML = `<strong>🔬 毒理與藥物特異分析：</strong>${clue.forensic}`;
 
@@ -2278,10 +2309,10 @@
             <span class="text-[9px] font-bold truncate">${isFound ? (c.zone.split(' ')[1] || c.zone) : '未解鎖'}</span>
           </div>
           <p class="text-[8.5px] leading-tight mt-1 line-clamp-2 ${isFound ? 'text-slate-300' : 'text-slate-600'}">
-            ${isFound ? c.shortDesc : '依案件推進指引前往搜查...'}
+            ${isFound ? c.shortDesc : '依指引前往搜查...'}
           </p>
           <div class="text-[8px] font-mono mt-1 ${isFound ? 'text-orange-400 font-bold' : 'text-slate-600'}">
-            ${isFound ? '✓ 點擊閱覽檔案' : '待搜查'}
+            ${isFound ? '✓ 點擊閱覽' : '待搜查'}
           </div>
         `;
 
@@ -2324,6 +2355,12 @@
       }
     }
 
+    function handleRestartConfirm() {
+      if (confirm("確定要重啟調查專案嗎？所有現場搜查進度將重新開始。")) {
+        window.location.reload();
+      }
+    }
+
     // ==========================================
     // 13. 核心啟動函數
     // ==========================================
@@ -2348,13 +2385,13 @@
             type: "dialogue",
             speaker: "梁澤銘",
             role: "特約安全調查員",
-            text: "我是特約安全調查員梁澤銘。黃昏 17:30 咪制書院現場封鎖線已完全生效，專案搜查正在校舍展開。"
+            text: "我是特約安全調查員梁澤銘。現場封鎖線已完全生效，專案搜查正在咪制書院校舍展開。"
           },
           {
             type: "monologue",
             speaker: "梁澤銘（心想）",
             role: "案情初判",
-            text: "（霍展霆在體育部更衣室外倒下，岑詠蕎則在 2F 黃昏模擬考場劇烈抽搐休克……請緊跟著綠色光錐導引箭頭，首先前往西側更衣室排查展霆遺留的隨身物！）"
+            text: "（霍展霆在體育部更衣室外倒下，岑詠蕎則在 2F 課堂中劇烈抽搐休克……請緊跟著綠色導引光標，先前往西側更衣室排查展霆遺留的物品！）"
           }
         ]);
       }, 400);
@@ -2365,6 +2402,7 @@
     // ==========================================
     function setupEventListeners() {
       document.getElementById('btn-start-game')?.addEventListener('click', startGame);
+      document.getElementById('btn-restart-hud')?.addEventListener('click', handleRestartConfirm);
 
       document.getElementById('btn-cam-cycle')?.addEventListener('click', cycleCameraPreset);
       document.getElementById('btn-open-notebook')?.addEventListener('click', toggleNotebook);
@@ -2410,7 +2448,6 @@
       document.getElementById('btn-submit-deduction')?.addEventListener('click', submitFinalDeduction);
 
       document.getElementById('btn-restart-game')?.addEventListener('click', () => window.location.reload());
-      document.getElementById('btn-webgl-reload')?.addEventListener('click', () => window.location.reload());
       document.getElementById('btn-force-portrait-continue')?.addEventListener('click', () => {
         const overlay = document.getElementById('landscape-orientation-overlay');
         if (overlay) overlay.style.display = 'none';
@@ -2590,7 +2627,6 @@
           }
         });
 
-        // 導向箭頭動畫
         if (objectiveArrowMesh && objectiveArrowMesh.visible) {
           objectiveArrowMesh.rotation.y += 1.5 * delta;
           const baseY = objectiveArrowMesh.userData.baseY || 3.0;
