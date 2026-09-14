@@ -1,1 +1,2956 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="description" content="暮光迴響：沉淪之霧 - 咪制書院校園特別調查專案">
+  <meta name="theme-color" content="#04060d">
+  <title>暮光迴響：沉淪之霧 - 咪制書院校園特別調查</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" crossorigin="anonymous"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
 
+  <style>
+    :root {
+      --sab: env(safe-area-inset-bottom, 0px);
+      --sat: env(safe-area-inset-top, 0px);
+      --sal: env(safe-area-inset-left, 0px);
+      --sar: env(safe-area-inset-right, 0px);
+      box-sizing: border-box;
+      font-family: 'Noto Sans TC', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: inherit; }
+    body, html {
+      margin: 0; padding: 0; width: 100%; height: 100%; height: 100dvh;
+      position: relative; overflow: hidden; background-color: #04060d; color: #f8fafc;
+    }
+    .safe-bottom { bottom: calc(0.5rem + var(--sab)); }
+    .safe-left { left: calc(0.5rem + var(--sal)); }
+    .safe-right { right: calc(0.5rem + var(--sar)); }
+    .safe-top { top: calc(0.35rem + var(--sat)); }
+
+    .game-interactive, #joystick-base, #joystick-thumb, .glass-btn, button {
+      user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+    }
+    #joystick-base, #joystick-thumb, #mobile-controls-cluster, #touch-joystick-container { touch-action: none; }
+    :focus-visible { outline: 3px solid #fb923c; outline-offset: 2px; }
+
+    .twilight-vignette {
+      background: radial-gradient(circle at 50% 45%, rgba(251, 146, 60, 0.08) 10%, rgba(4, 6, 13, 0.95) 100%);
+      pointer-events: none;
+    }
+    .pixel-scanlines {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.22) 50%);
+      background-size: 100% 3px; pointer-events: none; opacity: 0.32;
+    }
+    .cctv-scanlines {
+      background: linear-gradient(rgba(18, 255, 16, 0) 50%, rgba(0, 0, 0, 0.45) 50%);
+      background-size: 100% 3px; pointer-events: none;
+    }
+    .glass-panel {
+      background: rgba(13, 17, 32, 0.95); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(251, 146, 60, 0.35); box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75);
+    }
+    .glass-btn {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.9), rgba(225, 29, 72, 0.75));
+      border: 1.5px solid rgba(251, 146, 60, 0.85); transition: transform 0.1s ease, background 0.12s ease;
+    }
+    .glass-btn:active {
+      transform: scale(0.95); background: linear-gradient(135deg, rgba(249, 115, 22, 1), rgba(225, 29, 72, 0.95));
+    }
+    .cinematic-serif { font-family: 'Noto Serif TC', serif; }
+
+    #landscape-orientation-overlay { display: none; }
+    @media screen and (orientation: portrait) and (max-width: 900px) {
+      #landscape-orientation-overlay { display: flex !important; }
+    }
+
+    .test-tube-rack {
+      background: radial-gradient(circle at 50% 30%, #1e293b 0%, #090d16 100%);
+      border: 1.5px solid rgba(56, 189, 248, 0.3); box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8), 0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+    .test-tube-glass {
+      width: 44px; height: 100px; border: 2.5px solid rgba(255, 255, 255, 0.6); border-top: none;
+      border-radius: 0 0 22px 22px; position: relative; overflow: hidden; background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(4px); box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.2), 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+    .test-tube-liquid {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 65%; border-radius: 0 0 20px 20px;
+      transition: background-color 0.6s ease, height 0.4s ease, filter 0.6s ease;
+    }
+    .tube-meniscus {
+      position: absolute; top: -3px; left: 0; right: 0; height: 5px; border-radius: 50%; background: rgba(255, 255, 255, 0.5);
+    }
+    
+    .joystick-base {
+      width: 92px !important;
+      height: 92px !important;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.96) 100%);
+      border: 2.5px solid rgba(251, 146, 60, 0.65);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.75);
+      touch-action: none;
+    }
+    .joystick-thumb {
+      width: 42px !important;
+      height: 42px !important;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fb923c 0%, #c2410c 100%);
+      box-shadow: 0 4px 18px rgba(249, 115, 22, 0.85);
+      touch-action: none;
+    }
+
+    .dialogue-type-monologue { border-color: rgba(56, 189, 248, 0.7) !important; background: rgba(12, 25, 44, 0.97) !important; }
+    .dialogue-type-narration { border-color: rgba(251, 146, 60, 0.7) !important; background: rgba(28, 19, 13, 0.97) !important; }
+    .dialogue-type-call { border-color: rgba(244, 63, 94, 0.8) !important; background: rgba(36, 10, 20, 0.97) !important; }
+    
+    .tumbler-dial {
+      background: linear-gradient(180deg, #090d16 0%, #1e293b 50%, #090d16 100%);
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.95), 0 2px 10px rgba(249,115,22,0.3); border: 1.5px solid #475569;
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-6px); }
+      40%, 80% { transform: translateX(6px); }
+    }
+    .animate-shake { animation: shake 0.35s ease-in-out; }
+
+    .dialogue-portrait-img {
+      position: absolute;
+      bottom: calc(100% - 12px);
+      left: 18px;
+      height: 120px;
+      max-height: 28vh;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.92));
+      transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+      z-index: 5;
+      display: none;
+    }
+    @media (min-width: 640px) {
+      .dialogue-portrait-img {
+        height: 155px;
+        left: 24px;
+      }
+    }
+
+    /* 自定義滾動條美化 */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(251, 146, 60, 0.6); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(251, 146, 60, 0.9); }
+  </style>
+</head>
+<body class="relative w-full h-full bg-slate-950 overflow-hidden">
+  <a href="#game-canvas" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-orange-600 focus:text-white focus:rounded-xl focus:font-bold">跳至搜查區域</a>
+  <div id="screen-reader-announcer" class="sr-only" aria-live="polite"></div>
+
+  <div id="landscape-orientation-overlay" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center" role="alert">
+    <div class="max-w-xs p-6 glass-panel rounded-3xl border-orange-500/60 flex flex-col items-center gap-4">
+      <div class="text-5xl animate-bounce">📱 🔄</div>
+      <h2 class="text-base font-black text-white">請旋轉手機為橫屏</h2>
+      <p class="text-xs text-slate-300 leading-relaxed">本作專為橫向雙手觸控與校園調查視角設計，橫屏體驗最佳。</p>
+      <button id="btn-force-portrait-continue" class="text-xs text-orange-400 underline underline-offset-4 pt-1">仍要強制在豎屏下遊玩</button>
+    </div>
+  </div>
+
+  <main id="main-content" class="fixed inset-0 w-full h-full overflow-hidden">
+    <div id="canvas-container" class="w-full h-full overflow-hidden">
+      <canvas id="game-canvas" class="w-full h-full block touch-none" tabindex="0"></canvas>
+    </div>
+    <div class="twilight-vignette fixed inset-0 z-10 pointer-events-none"></div>
+    <div class="pixel-scanlines fixed inset-0 z-10 pointer-events-none"></div>
+  </main>
+
+  <header class="fixed safe-top left-0 right-0 z-20 flex items-start justify-between px-3 md:px-6 pointer-events-none">
+    <div class="pointer-events-auto flex flex-col gap-1 max-w-[58%] sm:max-w-md">
+      <div class="glass-panel px-3 py-1 rounded-2xl flex items-center gap-2">
+        <span class="relative flex h-2.5 w-2.5">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-orange-500"></span>
+        </span>
+        <div class="truncate text-xs sm:text-sm font-black text-orange-400 flex items-center gap-1.5">
+          <span id="hud-location-icon">🏛️</span>
+          <span id="hud-location-name">1F 咪制書院 中庭大堂</span>
+        </div>
+      </div>
+      <div class="glass-panel px-3 py-1 rounded-2xl text-xs sm:text-sm text-amber-100 flex items-center gap-1.5 shadow-md border-l-4 border-l-orange-500">
+        <span>🎯</span>
+        <div class="truncate">目標：<span id="hud-current-objective" class="text-amber-300 font-bold">排查西側體育更衣室霍展霆遺留物 (1/7)</span></div>
+      </div>
+    </div>
+
+    <div class="pointer-events-auto flex items-center gap-1.5 sm:gap-2">
+      <div class="glass-panel p-1 rounded-2xl flex flex-col items-center shadow-xl border-orange-500/40 relative">
+        <div class="flex items-center justify-between w-full px-1.5 py-0.5 text-[10px] font-mono">
+          <span class="text-amber-400 font-bold flex items-center gap-1">🧭 <span id="minimap-floor-label">1F 大堂層</span></span>
+          <span class="text-slate-300" id="minimap-clue-indicator">物證: 0/7</span>
+        </div>
+        <canvas id="minimap-canvas" width="105" height="62" class="rounded-xl bg-slate-950/90 border border-slate-800"></canvas>
+      </div>
+
+      <button id="btn-restart-hud" class="glass-panel p-2 sm:px-2.5 sm:py-2 rounded-2xl text-xs font-bold text-rose-300 hover:text-rose-200 active:scale-95 flex items-center gap-1" title="重啟調查">
+        <span>🔄</span><span class="hidden md:inline">重啟</span>
+      </button>
+      <button id="btn-cam-cycle" class="glass-panel p-2 sm:px-2.5 sm:py-2 rounded-2xl text-xs font-bold text-orange-200 active:scale-95 flex items-center gap-1">
+        <span>🎥</span><span id="cam-mode-text" class="hidden md:inline">斜角俯視</span>
+      </button>
+      <button id="btn-open-notebook" class="glass-btn px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-2xl flex items-center gap-1.5 text-xs sm:text-sm font-black text-white shadow-xl active:scale-95">
+        <span>📋 卷宗</span>
+        <span id="hud-clue-badge" class="bg-orange-600 text-white text-[11px] px-1.5 py-0.5 rounded-full font-black">0/7</span>
+      </button>
+      <button id="btn-toggle-sound" class="glass-panel p-2 rounded-2xl text-slate-300 hover:text-white active:scale-95 transition">
+        <svg id="icon-sound-on" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 虛擬搖桿 -->
+  <div id="touch-joystick-container" class="fixed safe-bottom safe-left z-30 pointer-events-auto touch-none select-none p-1.5">
+    <div id="joystick-base" class="joystick-base relative flex items-center justify-center">
+      <div id="joystick-thumb" class="joystick-thumb absolute pointer-events-none transition-transform duration-75"></div>
+    </div>
+  </div>
+
+  <div id="mobile-controls-cluster" class="fixed safe-bottom safe-right z-30 pointer-events-auto flex flex-col items-end gap-1.5 touch-none">
+    <div class="flex items-center gap-1.5">
+      <button id="btn-rotate-left" class="glass-panel w-9 h-9 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md">⟲</button>
+      <button id="btn-rotate-right" class="glass-panel w-9 h-9 rounded-full text-orange-300 font-black text-xs flex items-center justify-center active:scale-90 shadow-md">⟳</button>
+    </div>
+    <button id="mobile-interact-btn" class="glass-btn w-16 h-16 sm:w-18 sm:h-18 rounded-3xl flex flex-col items-center justify-center text-white font-black shadow-[0_0_20px_rgba(249,115,22,0.6)] active:scale-90 border-2 border-orange-400 cursor-pointer">
+      <span class="text-2xl pointer-events-none">🔍</span>
+      <span class="text-xs font-black tracking-wider mt-0.5 pointer-events-none">搜查</span>
+    </button>
+  </div>
+
+  <div id="interaction-prompt" class="fixed bottom-16 sm:bottom-20 left-1/2 -translate-x-1/2 z-20 pointer-events-none opacity-0 transition-all duration-200 transform scale-95 flex items-center gap-2 glass-panel px-4 py-1.5 rounded-full border-orange-500/60 shadow-xl">
+    <span id="prompt-input-badge" class="w-4 h-4 rounded-full bg-orange-600 flex items-center justify-center font-black text-white text-xs animate-pulse">👆</span>
+    <span id="prompt-action-text" class="text-xs sm:text-sm font-bold text-slate-100">調查現場</span>
+  </div>
+
+  <!-- 對話框 + 角色半身立繪 -->
+  <div id="dialogue-box" class="fixed bottom-12 sm:bottom-5 left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-xl z-40 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 flex flex-col" role="region">
+    <div class="relative w-full h-0 pointer-events-none overflow-visible">
+      <img id="dialogue-portrait" 
+           src="" 
+           alt="角色立繪" 
+           class="dialogue-portrait-img opacity-0 translate-y-3">
+    </div>
+
+    <div id="dialogue-panel-card" class="glass-panel p-3 rounded-2xl border-orange-400/40 relative shadow-2xl flex flex-col transition-colors duration-200 cursor-pointer z-10">
+      <div class="flex items-center justify-between mb-1 border-b border-slate-700/60 pb-1 shrink-0">
+        <div class="flex items-center gap-2">
+          <div id="dialogue-avatar" class="w-7 h-7 rounded-xl bg-orange-600/20 border border-orange-400/60 flex items-center justify-center text-sm shadow-inner">🧑‍💼</div>
+          <div class="flex items-center gap-1.5">
+            <span id="dialogue-speaker" class="font-black text-amber-300 text-xs sm:text-sm">梁澤銘</span>
+            <span id="dialogue-role-tag" class="text-[10px] sm:text-xs bg-slate-800 text-orange-300 px-1.5 py-0.5 rounded-full border border-orange-500/30 font-bold">特約安全調查員</span>
+          </div>
+        </div>
+        <span class="text-xs text-amber-400/90 font-bold">點擊繼續 ▶</span>
+      </div>
+      <p id="dialogue-text" class="text-slate-100 text-xs sm:text-sm leading-relaxed cinematic-serif m-0">抵達現場。</p>
+    </div>
+  </div>
+
+  <!-- CCTV 監控回放介面 -->
+  <div id="cctv-modal" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-md flex items-center justify-center p-2 sm:p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" tabindex="-1">
+    <div class="glass-panel w-full max-w-2xl max-h-[92dvh] rounded-3xl p-3 border-emerald-500/50 flex flex-col justify-between relative shadow-2xl overflow-hidden">
+      <div class="shrink-0 w-full flex items-center justify-between pb-1 border-b border-slate-700/80 mb-1">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">📹</span>
+          <div>
+            <h3 class="text-xs sm:text-sm font-black text-white">咪制書院 閉路電視回放終端</h3>
+            <p class="text-[11px] text-emerald-400 font-mono">CAM_02 [2F 走廊儲物櫃區] 案發時段記錄</p>
+          </div>
+        </div>
+        <button id="btn-close-cctv" class="px-2 py-1 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition text-xs font-bold">✕</button>
+      </div>
+
+      <div class="flex flex-row gap-3 items-center flex-1 min-h-0 my-1">
+        <div class="relative w-[56%] h-full max-h-[210px] bg-black rounded-xl overflow-hidden border border-emerald-500/40 flex items-center justify-center shrink-0">
+          <canvas id="cctv-canvas" class="w-full h-full block object-contain"></canvas>
+          <div class="cctv-scanlines absolute inset-0 pointer-events-none"></div>
+          <div class="absolute top-1.5 left-2 font-mono text-[10px] text-emerald-400 bg-black/70 px-1.5 py-0.5 rounded border border-emerald-500/30 flex items-center gap-1 pointer-events-none">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+            <span>REC • 16:40:<span id="cctv-timer-sec">12</span></span>
+          </div>
+          <div id="cctv-suspect-tag" class="absolute hidden border-2 border-rose-500 bg-rose-950/80 text-rose-300 text-[10px] font-mono font-bold px-1.5 py-0.5 rounded pointer-events-none transition-all shadow-lg">
+            ⚠️ 鎖定涉案黑影正在開啟 17 號櫃
+          </div>
+        </div>
+
+        <div class="w-[44%] flex flex-col justify-between h-full space-y-1 py-0.5">
+          <div class="bg-slate-900/90 p-2.5 rounded-xl border border-slate-700/80 flex-1 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs">
+              <span class="text-slate-300 font-bold">⏱️ 滑動時間軸排查：</span>
+              <span id="cctv-time-display" class="font-mono text-emerald-300 font-black">16:40:12</span>
+            </div>
+            <div>
+              <input id="cctv-scrubber" type="range" min="0" max="100" value="20" class="w-full accent-emerald-500 cursor-pointer h-2 my-1">
+              <div class="flex justify-between text-[10px] font-mono text-slate-400 px-0.5">
+                <span>16:40:12</span>
+                <span class="text-slate-500">16:40:32</span>
+                <span>16:40:57</span>
+              </div>
+            </div>
+            <p id="cctv-log-text" class="text-xs text-slate-300 leading-snug m-0 line-clamp-3">
+              下午 16:40 分，2F 走廊空無一人。滑動時間軸尋找可疑黑影。
+            </p>
+          </div>
+          <button id="btn-cctv-capture" class="shrink-0 w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs sm:text-sm shadow-lg active:scale-95 transition tracking-wider flex items-center justify-center gap-1 cursor-pointer">
+            <span>📸 截圖鎖定涉案黑影</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 17 號儲物櫃密碼鎖介面 -->
+  <div id="locker-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" tabindex="-1">
+    <div id="locker-modal-card" class="glass-panel w-full max-w-sm rounded-3xl p-3 border-amber-500/50 flex flex-col items-center justify-between relative shadow-2xl max-h-[92dvh] overflow-y-auto">
+      <div class="w-full flex items-center justify-between pb-1 border-b border-slate-700/80 mb-1.5 shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🔐</span>
+          <div>
+            <h3 class="text-xs sm:text-sm font-black text-white">2F 走廊 17 號空置儲物櫃</h3>
+            <p class="text-[11px] text-amber-400">三位數金屬滾輪密碼鎖</p>
+          </div>
+        </div>
+        <button id="btn-close-locker" class="px-2 py-0.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition text-xs font-bold">✕</button>
+      </div>
+
+      <div class="bg-slate-900/90 p-2.5 rounded-2xl border border-slate-700/80 w-full mb-1.5 text-left shrink-0">
+        <div class="text-xs text-rose-300 font-bold mb-1">📱 岑詠蕎手機殘留草稿（因急性手震中斷）：</div>
+        <div class="bg-black/60 p-2 rounded-xl border border-rose-950/60 font-mono text-xs text-amber-200/95 leading-relaxed space-y-0.5 select-text">
+          <p class="text-rose-400 font-bold">心跳快到就爆……手震停唔到……</p>
+          <p>根本唔係提神精油……叫我喺走廊空櫃攞貨……</p>
+          <p class="text-amber-300 font-bold">密碼係……1樓展板寫嘅大麻俗稱代號……</p>
+          <p class="text-rose-400">救命……叫救護車快d……asdhjffff</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-center gap-3 my-1 shrink-0">
+        <div class="flex flex-col items-center">
+          <button id="dial-0-up" class="w-12 h-8 rounded-t-xl bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-90 text-xs transition border border-slate-600">▲</button>
+          <div id="dial-0-val" class="w-12 h-12 tumbler-dial flex items-center justify-center text-2xl font-black text-amber-300 font-mono">0</div>
+          <button id="dial-0-down" class="w-12 h-8 rounded-b-xl bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-90 text-xs transition border border-slate-600">▼</button>
+        </div>
+        <div class="flex flex-col items-center">
+          <button id="dial-1-up" class="w-12 h-8 rounded-t-xl bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-90 text-xs transition border border-slate-600">▲</button>
+          <div id="dial-1-val" class="w-12 h-12 tumbler-dial flex items-center justify-center text-2xl font-black text-amber-300 font-mono">0</div>
+          <button id="dial-1-down" class="w-12 h-8 rounded-b-xl bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-90 text-xs transition border border-slate-600">▼</button>
+        </div>
+        <div class="flex flex-col items-center">
+          <button id="dial-2-up" class="w-12 h-8 rounded-t-xl bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-90 text-xs transition border border-slate-600">▲</button>
+          <div id="dial-2-val" class="w-12 h-12 tumbler-dial flex items-center justify-center text-2xl font-black text-amber-300 font-mono">0</div>
+          <button id="dial-2-down" class="w-12 h-8 rounded-b-xl bg-slate-800 text-orange-400 font-black hover:bg-slate-700 active:scale-90 text-xs transition border border-slate-600">▼</button>
+        </div>
+      </div>
+
+      <div id="locker-error-feedback" class="h-4 text-xs font-bold text-rose-400 text-center my-0.5 shrink-0"></div>
+
+      <div class="w-full flex gap-2 pt-1 border-t border-slate-800 shrink-0">
+        <button id="btn-locker-clue-hint" class="px-3 py-2 rounded-xl bg-slate-800 text-cyan-300 text-xs font-bold hover:bg-slate-700 active:scale-95 transition">💡 思維回想</button>
+        <button id="btn-submit-lock" class="flex-1 py-2 rounded-xl glass-btn text-white font-black text-xs sm:text-sm shadow-lg active:scale-95 transition tracking-wider">轉動開鎖提取</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 雙試管化驗介面 -->
+  <div id="lab-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" tabindex="-1">
+    <div class="glass-panel w-full max-w-xl max-h-[92dvh] rounded-3xl p-3 border-cyan-500/50 flex flex-col justify-between overflow-hidden">
+      <div class="shrink-0 flex items-center justify-between pb-1 border-b border-slate-700/80 mb-1">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🧪</span>
+          <div>
+            <h3 class="text-xs sm:text-sm font-black text-white">毒理化驗：雙試管顯色排查</h3>
+            <p class="text-[11px] text-cyan-300">比對課桌油液（樣品A）與暗角原液（樣品B）的顯色反應</p>
+          </div>
+        </div>
+        <button id="btn-close-lab" class="px-2 py-0.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold">✕</button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5 items-center my-1 flex-1 min-h-0">
+        <div class="test-tube-rack p-2.5 rounded-2xl flex flex-col items-center justify-center h-full">
+          <div class="flex items-end justify-center gap-5 py-1">
+            <div class="flex flex-col items-center">
+              <span class="text-xs font-black text-purple-300 mb-1">試管 A</span>
+              <div class="test-tube-glass">
+                <div id="tube-a-liquid" class="test-tube-liquid bg-purple-500/40"><div class="tube-meniscus"></div></div>
+              </div>
+              <span class="text-[10px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">課桌殘留油液</span>
+            </div>
+            <div class="flex flex-col items-center">
+              <span class="text-xs font-black text-cyan-300 mb-1">試管 B</span>
+              <div class="test-tube-glass">
+                <div id="tube-b-liquid" class="test-tube-liquid bg-cyan-500/40"><div class="tube-meniscus"></div></div>
+              </div>
+              <span class="text-[10px] text-slate-300 font-bold mt-1 bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-700">暗角密封煙彈</span>
+            </div>
+          </div>
+          <div class="text-[10px] text-slate-400 font-mono mt-1">【樣品已載入高脂溶性溶劑】</div>
+        </div>
+
+        <div class="flex flex-col justify-between h-full space-y-1.5">
+          <div id="spot-verdict-box" class="p-2.5 rounded-2xl bg-slate-900/90 border border-slate-700 flex-1 flex flex-col justify-center">
+            <div class="flex items-center justify-between text-xs font-bold text-amber-300 mb-1">
+              <span>📋 顯色反應判定：</span>
+              <span id="spot-status-badge" class="px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[10px]">待檢驗</span>
+            </div>
+            <div id="spot-verdict-text" class="text-slate-200 text-xs sm:text-sm leading-relaxed">
+              請點擊下方 <strong class="text-cyan-400">1️⃣ 滴入 氯胺酮試劑</strong>，排查是否為常規毒品。
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-1 text-[11px] text-center font-bold">
+            <div id="spot-step-1" class="py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600">步驟 1: 排查 氯胺酮</div>
+            <div id="spot-step-2" class="py-1 rounded bg-slate-900 text-slate-500 border border-slate-800">步驟 2: 確診 依托咪酯</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="shrink-0 pt-1.5 border-t border-slate-800 flex gap-2">
+        <button id="btn-spot-reagent1" class="flex-1 py-2 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs sm:text-sm border border-sky-400 active:scale-95 transition shadow-md cursor-pointer">1️⃣ 滴入 氯胺酮試劑</button>
+        <button id="btn-spot-reagent2" class="flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm border border-slate-700 transition cursor-not-allowed" disabled>2️⃣ 滴入 依托咪酯試劑</button>
+        <button id="btn-spot-reset" class="px-2.5 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold active:scale-95 transition">🔄</button>
+        <button id="btn-spot-submit" class="flex-1 py-2 rounded-xl bg-cyan-600 text-white font-bold text-xs sm:text-sm shadow-lg transition active:scale-95 disabled:opacity-30 disabled:pointer-events-none" disabled>確認化驗報告</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 案件簿卷宗介面 -->
+  <div id="notebook-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-3 opacity-0 pointer-events-none transition-all duration-300" role="dialog" aria-modal="true" tabindex="-1">
+    <div class="glass-panel w-full max-w-xl rounded-3xl p-3 sm:p-4 flex flex-col justify-between relative border-amber-500/40 max-h-[92dvh] overflow-y-auto">
+      <div class="shrink-0 flex items-center justify-between pb-1.5 border-b border-slate-700">
+        <div class="flex items-center gap-2">
+          <span class="text-base sm:text-lg">📋</span>
+          <div>
+            <h2 class="text-xs sm:text-sm font-black text-white">咪制書院校園調查卷宗</h2>
+            <p class="text-[11px] text-orange-400">物證鏈與因果定案分析</p>
+          </div>
+        </div>
+        
+        <div class="flex gap-1">
+          <button id="tab-btn-clues" class="px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold bg-orange-500 text-white transition">物證鏈 (<span id="clue-count-text">0</span>/7)</button>
+          <button id="tab-btn-mindpalace" class="px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 transition">思維宮殿</button>
+          <button id="tab-btn-profiles" class="px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 transition">涉案人物</button>
+          <button id="btn-close-notebook" class="ml-1 px-2 py-1 rounded-lg bg-slate-800 text-slate-300 hover:text-white transition active:scale-95 text-xs font-bold">✕</button>
+        </div>
+      </div>
+
+      <div id="tab-content-clues" class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 my-2"></div>
+
+      <div id="clue-detail-panel" class="hidden p-3 rounded-2xl bg-slate-900/95 border border-amber-500/50 my-1 text-left flex flex-col justify-between">
+        <div class="flex items-center justify-between border-b border-slate-700 pb-1 mb-1.5">
+          <div class="flex items-center gap-2">
+            <span id="detail-clue-icon" class="text-lg">🔍</span>
+            <div>
+              <div id="detail-clue-title" class="text-xs sm:text-sm font-black text-amber-300">物證標題</div>
+              <div id="detail-clue-meta" class="text-[11px] text-slate-400 font-mono">時間/地點</div>
+            </div>
+          </div>
+          <button id="btn-close-clue-detail" class="text-slate-300 hover:text-white text-xs px-2 py-0.5 rounded bg-slate-800 font-bold">收起 ✕</button>
+        </div>
+        <p id="detail-clue-body" class="text-xs sm:text-sm text-slate-200 leading-relaxed m-0 mb-1.5"></p>
+        <div id="detail-clue-forensic" class="text-xs text-cyan-300 bg-cyan-950/40 p-2 rounded-lg border border-cyan-500/30"></div>
+      </div>
+
+      <div id="tab-content-mindpalace" class="hidden my-2 space-y-2">
+        <div id="mindpalace-locked-notice" class="bg-rose-950/30 p-3 rounded-2xl border border-rose-500/40 text-center flex flex-col items-center gap-1.5">
+          <div class="text-2xl animate-pulse">🔒</div>
+          <div class="text-xs sm:text-sm font-black text-rose-300">思維宮殿定案鏈尚未完備</div>
+          <p class="text-xs text-slate-300 leading-relaxed max-w-sm">
+            現場偵查尚未集齊全部物證（目前進度 <span id="locked-clue-progress" class="text-amber-400 font-bold">0/7</span>）。請完成雙試管化驗並在天台截獲阿強手記與手機後，進行全鏈條定案。
+          </p>
+        </div>
+
+        <div id="mindpalace-form-area" class="hidden bg-slate-900/90 p-2.5 rounded-2xl border border-slate-800 space-y-2">
+          <div class="flex items-center justify-between text-xs sm:text-sm font-bold text-amber-300 mb-1">
+            <span id="deduce-header">🔍 邏輯定案：核實犯罪鏈條並收網</span>
+            <span class="text-xs text-emerald-400 font-bold">✓ 7 項物證全數核實</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+            <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1">
+              <label for="deduce-vector" class="text-slate-200 font-bold">1. 雙試管確診物質：</label>
+              <select id="deduce-vector" class="bg-slate-900 text-xs text-orange-300 p-1.5 rounded border border-slate-700 outline-none">
+                <option value="none">-- 請選擇 --</option>
+                <option value="wrong1">普通提神草本薄荷成分</option>
+                <option value="correct">混入電子煙之管制危險藥物「依托咪酯」</option>
+                <option value="wrong2">常規運動肌肉酸痛放鬆劑</option>
+              </select>
+            </div>
+
+            <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1">
+              <label for="deduce-motive" class="text-slate-200 font-bold">2. 反派真正犯罪意圖：</label>
+              <select id="deduce-motive" class="bg-slate-900 text-xs text-orange-300 p-1.5 rounded border border-slate-700 outline-none">
+                <option value="none">-- 請選擇 --</option>
+                <option value="wrong1">單純向學生兜售提神替代品</option>
+                <option value="correct">誘發急性抽搐失控，以醜態影片向家長勒索高額封口費</option>
+                <option value="wrong2">測試新型化學合成物的人體反應</option>
+              </select>
+            </div>
+
+            <div class="p-2 rounded-xl bg-slate-800/80 border border-slate-700 flex flex-col gap-1">
+              <label for="deduce-action" class="text-slate-200 font-bold">3. 官方打擊專線處置：</label>
+              <select id="deduce-action" class="bg-slate-900 text-xs text-orange-300 p-1.5 rounded border border-slate-700 outline-none">
+                <option value="none">-- 請選擇 --</option>
+                <option value="correct">通報警方並撥打打擊依托咪酯專線 6629-2966</option>
+                <option value="wrong1">暫扣物證，等待學生家長私下協商</option>
+              </select>
+            </div>
+          </div>
+
+          <button id="btn-submit-deduction" class="w-full py-2.5 rounded-xl glass-btn font-black text-amber-200 text-xs sm:text-sm tracking-wider flex items-center justify-center gap-1 active:scale-95 shadow-lg">
+            <span>提交定案報告並啟動執法收網</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 涉案人員人物檔案 -->
+      <div id="tab-content-profiles" class="hidden grid grid-cols-1 sm:grid-cols-3 gap-2 my-2">
+        <div class="glass-panel p-2.5 rounded-xl border-cyan-500/40 flex flex-col">
+          <div class="flex items-center gap-2 mb-1.5">
+            <img src="assets/梁澤銘.webp" alt="梁澤銘" class="w-9 h-9 rounded-xl object-cover border border-cyan-400/50 bg-slate-900" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'36\' height=\'36\'><rect width=\'36\' height=\'36\' fill=\'%230284c7\'/></svg>'">
+            <div>
+              <div class="font-bold text-white text-xs sm:text-sm">梁澤銘</div>
+              <div class="text-[11px] text-cyan-300">特約安全調查員</div>
+            </div>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">受託封鎖咪制書院排查真相。嚴密分析現場化學痕跡與通聯音軌，瓦解毒害校園的地下黑產鏈條。</p>
+        </div>
+
+        <div class="glass-panel p-2.5 rounded-xl border-purple-500/40 flex flex-col">
+          <div class="flex items-center gap-2 mb-1.5">
+            <div class="flex -space-x-2 overflow-hidden">
+              <img src="assets/岑詠蕎.webp" alt="岑詠蕎" class="inline-block w-9 h-9 rounded-xl object-cover border border-purple-400/50 bg-slate-900" onerror="this.style.display='none'">
+              <img src="assets/霍展霆.webp" alt="霍展霆" class="inline-block w-9 h-9 rounded-xl object-cover border border-purple-400/50 bg-slate-900" onerror="this.style.display='none'">
+            </div>
+            <div>
+              <div class="font-bold text-white text-xs sm:text-sm">岑詠蕎 & 霍展霆</div>
+              <div class="text-[11px] text-purple-300">中六受害學生</div>
+            </div>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">背負升學焦慮與膝傷淘汰危機。在高壓下誤信「草本提神止痛」謊言，吸入改裝煙油後誘發急性肌陣攣痙攣送院。</p>
+        </div>
+
+        <div class="glass-panel p-2.5 rounded-xl border-rose-500/40 bg-rose-950/20 flex flex-col">
+          <div class="flex items-center gap-2 mb-1.5">
+            <div class="flex -space-x-2 overflow-hidden">
+              <img src="assets/暗夜調劑師.webp" alt="暗夜調劑師" class="inline-block w-9 h-9 rounded-xl object-cover border border-rose-500/50 bg-slate-900" onerror="this.style.display='none'">
+              <img src="assets/阿強.webp" alt="阿強" class="inline-block w-9 h-9 rounded-xl object-cover border border-rose-500/50 bg-slate-900" onerror="this.style.display='none'">
+            </div>
+            <div>
+              <div class="font-bold text-rose-400 text-xs sm:text-sm">「暗夜調劑師」與阿強</div>
+              <div class="text-[11px] text-rose-300">校外主謀與校內接應</div>
+            </div>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">主謀誘騙學生吸毒並指使阿強偷拍醜態勒索五十萬。阿強誤信「未成年只是跑腿不會坐監」，實質觸犯《危險藥物條例》，法庭重申<strong>【年輕絕非減刑理由】</strong>，販運毒品最高可判終身監禁。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 標題畫面 -->
+  <div id="title-screen" class="fixed inset-0 z-50 bg-[#04060d] flex items-center justify-center p-3 text-center">
+    <div class="max-w-xl w-full p-4 sm:p-5 glass-panel rounded-3xl border-orange-500/50 flex flex-col items-center max-h-[92dvh] overflow-y-auto">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-orange-950/80 border border-orange-500/50 text-orange-400 text-xs font-bold uppercase tracking-widest mb-1.5 shadow-md">
+        <span class="w-1.5 h-1.5 rounded-full bg-orange-400 animate-ping"></span>
+        咪制書院校園安全特別專案
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-rose-400 tracking-tight leading-tight mb-1" style="font-family: 'Cinzel', serif;">
+        暮光迴響
+      </h1>
+      <h2 class="text-xs sm:text-sm font-bold text-slate-300 mb-2 tracking-wide cinematic-serif">
+        Twilight Echoes: 沉淪之霧 • 校園特別調查
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-3 text-left bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+        放學後的咪制書院突發兩起休克事件——拔尖生<strong class="text-amber-300">岑詠蕎</strong>在試場劇烈痙攣倒地，籃球隊長<strong class="text-cyan-300">霍展霆</strong>在更衣室抽搐窒息！<br><br>
+        偽裝成「草本提神」的毒品正侵蝕校園。特約調查員梁澤銘受託封鎖現場，調取監控、化驗毒理、截獲通聯音軌——在悲劇擴散前鎖定真兇，連根拔起校園毒害鏈條！
+      </p>
+
+      <div class="w-full max-w-xs flex flex-col gap-2">
+        <button id="btn-start-game" class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 text-white font-black text-xs sm:text-sm tracking-wider shadow-[0_0_25px_rgba(249,115,22,0.5)] active:scale-95 transition cursor-pointer">
+          展開全新搜查
+        </button>
+        <button id="btn-resume-game" class="hidden w-full py-2 rounded-2xl bg-slate-800 border border-emerald-500 text-emerald-300 font-bold text-xs tracking-wider active:scale-95 transition">
+          📂 讀取存檔繼續調查 (<span id="saved-stage-label">進度 1/7</span>)
+        </button>
+      </div>
+
+      <div class="mt-2 flex items-center justify-center gap-3 text-xs text-slate-400 font-mono">
+        <span>左下搖桿移動</span>
+        <span>•</span>
+        <span>右側滑動視角</span>
+        <span>•</span>
+        <span>右下搜查交互</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 結案與勝利畫面 -->
+  <div id="victory-screen" class="fixed inset-0 z-50 bg-black/92 backdrop-blur-2xl flex items-center justify-center p-2 sm:p-3 opacity-0 pointer-events-none transition-all duration-500" role="dialog" aria-modal="true">
+    <div class="glass-panel max-w-2xl w-full rounded-3xl p-3 sm:p-4 border-emerald-500/60 text-center relative overflow-hidden flex flex-col justify-between max-h-[92dvh] overflow-y-auto">
+      <div class="shrink-0 flex items-center justify-between pb-1.5 border-b border-slate-700/80 mb-2">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-base shadow-[0_0_20px_rgba(16,185,129,0.35)]">🏆</div>
+          <div class="text-left">
+            <h2 class="text-xs sm:text-sm font-black text-white">案情破獲：全鏈條物證核實！</h2>
+            <div class="text-[11px] text-emerald-400 font-bold">執法部門雷霆收網 • 犯罪網絡連根拔起</div>
+          </div>
+        </div>
+        <div class="px-2.5 py-0.5 rounded-full bg-rose-950 border border-rose-500 text-rose-300 text-xs font-black tracking-wider">
+          🛑 核心口號：【毒品咪制！】
+        </div>
+      </div>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-left my-1">
+        <!-- 左側：病房感謝信 -->
+        <div class="bg-slate-900/95 p-3 rounded-2xl border border-amber-500/40 flex flex-col justify-between space-y-2 relative">
+          <div>
+            <div class="text-amber-300 font-bold text-xs sm:text-sm flex items-center gap-1.5 border-b border-slate-800 pb-1.5 mb-1.5">
+              <span>✉️</span>
+              <span>來自瑪麗醫院兒科病房的感謝信：</span>
+            </div>
+            <p class="text-xs sm:text-sm text-slate-200 leading-relaxed italic cinematic-serif">
+              「梁調查員：<br><br>
+              醫生說若非你在現場第一時間化驗確診毒物是管制麻醉藥<strong>『依托咪酯』</strong>，我們的大腦中樞神經恐已永久受損……<br><br>
+              所謂『速效提神止痛』，代價竟是抽搐失禁、尊嚴盡失的深淵。面對升學與比賽壓力，沒有任何捷徑值得拿一生去賭。謝謝你替我們找回真相，拉住了差點墜入深淵的我們。」
+            </p>
+            <div class="text-right text-xs text-amber-400 font-bold pt-1">
+              —— 岑詠蕎 & 霍展霆 敬上
+            </div>
+          </div>
+
+          <button id="btn-restart-game" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm tracking-wider shadow-md active:scale-95 transition cursor-pointer mt-1">
+            🔄 重新啟動案情複盤
+          </button>
+        </div>
+
+        <!-- 右側：執法通報與法例重申 -->
+        <div class="p-3 rounded-2xl bg-slate-950/95 border border-slate-800 flex flex-col justify-between space-y-2">
+          <div>
+            <div class="text-xs sm:text-sm font-bold text-white flex items-center gap-1 mb-1">
+              <span>⚖️</span>
+              <span class="text-emerald-300">執法通報與法例重申：</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed mb-1.5">
+              警方依據天台通話錄音與 16:40:32 CCTV 監控記錄，已全數拘捕「暗夜調劑師」與跑腿阿強，徹底粉碎其利用抽搐醜態影片勒索五十萬封口費的圖謀。
+            </p>
+
+            <div class="p-2 rounded-xl bg-rose-950/40 border border-rose-500/40 text-xs text-rose-200 leading-relaxed mb-2">
+              <strong class="text-rose-400 block text-xs sm:text-sm mb-0.5">⚠️ 法律嚴正聲明：【年輕絕非減刑理由】</strong>
+              依香港法例第 134 章《危險藥物條例》，搬運或藏匿依托咪酯均屬「販運危險藥物」，<strong>最高判處罰款 500 萬港元及終身監禁</strong>！法庭重申未成年絕非求情理由！
+            </div>
+
+            <div class="text-amber-300 font-bold text-xs flex items-center gap-1 mb-1 pt-1 border-t border-slate-800">
+              <span>📞</span>
+              <span>官方反毒與求助專線：</span>
+            </div>
+            <div class="text-xs text-slate-200 space-y-1 pl-1">
+              <div>• 警務處毒品舉報熱線：<strong class="text-white font-mono bg-slate-800 px-1.5 py-0.5 rounded">2527-1234</strong></div>
+              <div>• 打擊依托咪酯專線：<strong class="text-rose-400 font-mono bg-slate-800 px-1.5 py-0.5 rounded">6629-2966</strong></div>
+            </div>
+          </div>
+
+          <div class="text-xs text-orange-300 bg-orange-950/30 p-2 rounded-xl border border-orange-500/30 leading-relaxed">
+            任何宣稱「提神天然」的煙油皆是毒品陷阱。依托咪酯受嚴格管轄。守護校園，牢記<strong>【毒品咪制！】</strong>。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function haptic(pattern = 15) {
+      try {
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+          navigator.vibrate(pattern);
+        }
+      } catch (e) {}
+    }
+
+    class RetroSoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.masterGain = null;
+        this.bgmGain = null;
+        this.sfxGain = null;
+        this.isMuted = false;
+        this.bgmTimer = null;
+        this.droneOsc1 = null;
+        this.droneOsc2 = null;
+        this.isPlayingBGM = false;
+      }
+
+      init() {
+        if (!this.ctx) {
+          try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioContext();
+            this.masterGain = this.ctx.createGain();
+            this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime);
+            this.masterGain.connect(this.ctx.destination);
+
+            this.bgmGain = this.ctx.createGain();
+            this.bgmGain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+            this.bgmGain.connect(this.masterGain);
+
+            this.sfxGain = this.ctx.createGain();
+            this.sfxGain.gain.setValueAtTime(0.6, this.ctx.currentTime);
+            this.sfxGain.connect(this.masterGain);
+            this.startBGM();
+          } catch(e) {}
+        } else if (this.ctx.state === 'suspended') {
+          this.ctx.resume().then(() => {
+            if (!this.isPlayingBGM) this.startBGM();
+          }).catch(()=>{});
+        }
+      }
+
+      startBGM() {
+        if (!this.ctx || this.isPlayingBGM) return;
+        this.isPlayingBGM = true;
+        try {
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(260, this.ctx.currentTime);
+
+          this.droneOsc1 = this.ctx.createOscillator();
+          this.droneOsc1.type = 'sawtooth';
+          this.droneOsc1.frequency.setValueAtTime(65.4, this.ctx.currentTime);
+
+          this.droneOsc2 = this.ctx.createOscillator();
+          this.droneOsc2.type = 'sine';
+          this.droneOsc2.frequency.setValueAtTime(98.0, this.ctx.currentTime);
+
+          const droneGain = this.ctx.createGain();
+          droneGain.gain.setValueAtTime(0.16, this.ctx.currentTime);
+
+          this.droneOsc1.connect(filter);
+          this.droneOsc2.connect(filter);
+          filter.connect(droneGain);
+          droneGain.connect(this.bgmGain);
+
+          this.droneOsc1.start();
+          this.droneOsc2.start();
+        } catch(e){}
+
+        const notes = [261.63, 311.13, 392.00, 466.16, 523.25, 466.16];
+        let noteIdx = 0;
+        const playChime = () => {
+          if (!this.isPlayingBGM || !this.ctx || this.ctx.state !== 'running') return;
+          try {
+            const freq = notes[noteIdx];
+            noteIdx = (noteIdx + 1) % notes.length;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+            gain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.08, this.ctx.currentTime + 0.3);
+            gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 2.4);
+            osc.connect(gain);
+            gain.connect(this.bgmGain);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 2.5);
+          } catch(e){}
+          this.bgmTimer = setTimeout(playChime, 1800);
+        };
+        playChime();
+      }
+
+      playFootstep() {
+        if (!this.ctx || this.isMuted) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(75 + Math.random() * 20, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(25, this.ctx.currentTime + 0.06);
+          gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.06);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.06);
+        } catch(e){}
+      }
+
+      playClueFound() {
+        haptic([30, 40, 30]);
+        if (!this.ctx || this.isMuted) return;
+        const chords = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+        chords.forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.06);
+          gain.gain.setValueAtTime(0, this.ctx.currentTime + idx * 0.06);
+          gain.gain.linearRampToValueAtTime(0.12, this.ctx.currentTime + idx * 0.06 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + idx * 0.06 + 0.3);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start(this.ctx.currentTime + idx * 0.06);
+          osc.stop(this.ctx.currentTime + idx * 0.06 + 0.35);
+        });
+      }
+
+      playPipetteDrop() {
+        haptic(20);
+        if (!this.ctx || this.isMuted) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(1400, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(420, this.ctx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.08);
+        } catch(e){}
+      }
+
+      playDialClick() {
+        haptic(12);
+        if (!this.ctx || this.isMuted) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(800, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(200, this.ctx.currentTime + 0.03);
+          gain.gain.setValueAtTime(0.06, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.03);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.03);
+        } catch(e){}
+      }
+
+      playLockBuzzer() {
+        haptic([80, 50, 80]);
+        if (!this.ctx || this.isMuted) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(130, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.25);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.25);
+        } catch(e){}
+      }
+
+      playPhoneRing() {
+        if (!this.ctx || this.isMuted) return;
+        try {
+          [853, 960].forEach(f => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.frequency.setValueAtTime(f, this.ctx.currentTime);
+            gain.gain.setValueAtTime(0.04, this.ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.5);
+            osc.connect(gain);
+            gain.connect(this.sfxGain);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.5);
+          });
+        } catch(e){}
+      }
+
+      playDialogueBlip() {
+        if (!this.ctx || this.isMuted) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(560, this.ctx.currentTime);
+          gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.04);
+        } catch(e){}
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        if (this.masterGain && this.ctx) {
+          this.masterGain.gain.setValueAtTime(this.isMuted ? 0 : 1, this.ctx.currentTime);
+        }
+        return this.isMuted;
+      }
+    }
+
+    const sound = new RetroSoundEngine();
+    const TOTAL_CLUES = 7;
+    const SAVE_STORAGE_KEY = "twilight_echoes_save_data";
+
+    const PORTRAIT_MAP = {
+      "梁澤銘": "assets/梁澤銘.webp",
+      "霍展霆": "assets/霍展霆.webp",
+      "岑詠蕎": "assets/岑詠蕎.webp",
+      "暗夜調劑師": "assets/暗夜調劑師.webp",
+      "阿強": "assets/阿強.webp"
+    };
+
+    const GAME_STATE = {
+      started: false,
+      questStage: 1,
+      currentZone: 'foyer',
+      cluesFound: new Set(),
+      isDialogueOpen: false,
+      isNotebookOpen: false,
+      isLabModalOpen: false,
+      isLockerModalOpen: false,
+      isCctvModalOpen: false,
+      hasIdentifiedEtomidate: false,
+      hasCctvClue: false,
+      dialogueQueue: [],
+      dialogueCallback: null,
+      activeInteractable: null,
+      cameraAngleY: 0,
+      cameraPresetIdx: 0,
+      currentFloor: 1,
+      lockerDigits: [0, 0, 0],
+      cctvProgress: 20
+    };
+
+    function saveGameProgress() {
+      try {
+        const payload = {
+          questStage: Math.min(GAME_STATE.questStage, 8),
+          cluesFound: Array.from(GAME_STATE.cluesFound),
+          currentFloor: GAME_STATE.currentFloor,
+          hasCctvClue: GAME_STATE.hasCctvClue,
+          hasIdentifiedEtomidate: GAME_STATE.hasIdentifiedEtomidate
+        };
+        localStorage.setItem(SAVE_STORAGE_KEY, JSON.stringify(payload));
+      } catch(e) {}
+    }
+
+    function checkSavedProgress() {
+      try {
+        const raw = localStorage.getItem(SAVE_STORAGE_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch(e) { return null; }
+    }
+
+    const CLUES_DATA = {
+      clue_gym_fok: {
+        id: "clue_gym_fok",
+        stage: 1,
+        name: "1F 更衣室改裝煙彈與誘騙便條",
+        zone: "1F 體育更衣室走廊",
+        icon: "🩹",
+        pos: { x: -9.5, y: 1.25, z: 4.0 },
+        floor: 1,
+        shortDesc: "長椅夾縫起獲摔裂煙彈與除名名冊，壓著調劑師指名中六B班岑詠蕎的便條。",
+        fullDesc: "更衣室長椅下起獲摔裂的改裝煙彈，殘油泛淡紫光。旁邊散落著展霆破裂的護膝與除名通知。黏在背後的便條寫道：『膝傷痛就抽兩口，保證止痛放鬆、學界照樣上場。你同中六B班岑詠蕎一樣，何必死頂？——調劑師』。",
+        forensic: "煙嘴檢出特殊有機化合物氣味，以高黏度丙二醇為載體，具強烈中樞神經抑制毒性。"
+      },
+      clue_desk: {
+        id: "clue_desk",
+        stage: 2,
+        name: "2F 課桌痙攣撕裂試卷與求救草稿",
+        zone: "2F 中六B班房",
+        icon: "📝",
+        pos: { x: -8.5, y: 5.05, z: -7.5 },
+        floor: 2,
+        shortDesc: "課桌漏出深紫油液。手機草稿滿是抽搐錯字，提及走廊空置儲物櫃與大麻代號。",
+        fullDesc: "課桌漏出未乾涸的油性紫液（樣品 A）。試卷後半段被原子筆失控刺穿，呈現劇烈肌陣攣顫抖痕跡。手機草稿寫道：『心跳快到就爆……手手手震停唔到……叫我喺走廊無人用的儲物櫃攞貨……密碼係1樓展板寫嘅大麻俗稱代號……救命……』。",
+        forensic: "桌面漏液呈淡紫油狀，高脂溶性，微酸性。已提取封存為【樣品 A】以供進一步毒理化驗。"
+      },
+      clue_cctv: {
+        id: "clue_cctv",
+        stage: 3,
+        name: "1F 保安終端 閉路電視交收截圖",
+        zone: "1F 大堂保安監控終端",
+        icon: "📹",
+        pos: { x: 2.0, y: 1.2, z: -7.5 },
+        floor: 1,
+        shortDesc: "監控錄像鎖定涉案黑影於 16:40:32 在 2F 走廊 17 號儲物櫃投放可疑物品。",
+        fullDesc: "調取 CAM_02 錄像，在 16:40:32 成功截獲關鍵幀：黑帽黑影將可疑包裝塞入無人使用的 17 號儲物櫃，直接鎖定該櫃為犯罪交收核心點。",
+        forensic: "投放時間戳與兩名學生突發痙攣抽搐倒地時間高度吻合。"
+      },
+      clue_corridor: {
+        id: "clue_corridor",
+        stage: 4,
+        name: "2F 17 號儲物櫃內起獲的接頭便條",
+        zone: "2F 走廊 17 號儲物櫃",
+        icon: "🏷️",
+        pos: { x: 5.5, y: 5.05, z: 0.1 },
+        floor: 2,
+        shortDesc: "輸入大麻代號 420 解開 17 號櫃，起獲指明暗角藏匿原液的接頭紙條。",
+        fullDesc: "輸入大麻俗稱代號【420】解開密碼鎖。起獲便條：『咪制書院節點：試用裝已放入空櫃。下批特調原液已暫存【化學室外排水管支架暗角】，取後即銷毀。』",
+        forensic: "紙張檢出揮發性特異有機氣味殘留，物理性狀與更衣室起獲煙彈一致。"
+      },
+      clue_pipe_stash: {
+        id: "clue_pipe_stash",
+        stage: 5,
+        name: "2F 排水管暗角搜出之偽裝提神煙彈",
+        zone: "2F 化學室外走廊暗角",
+        icon: "🧪",
+        pos: { x: 6.5, y: 5.05, z: 5.2 },
+        floor: 2,
+        shortDesc: "起獲密封煙彈（樣品B），標籤偽裝為草本提神物。兩份樣品齊備可送交化驗。",
+        fullDesc: "在排水管鐵架暗角搜出真空包裝煙彈（樣品 B）。外包裝印著極具迷惑性的『100%草本提取、無焦油極速提神』標籤，內部透著微紫色澤。",
+        forensic: "煙彈抽取液與課桌漏液完全一致，封存為【樣品 B】送交實驗室化驗。"
+      },
+      clue_spot_plate: {
+        id: "clue_spot_plate",
+        stage: 6,
+        name: "2F 理科實驗室 雙試管化驗報告",
+        zone: "2F 理科綜合實驗室",
+        icon: "🔬",
+        pos: { x: 9.0, y: 5.05, z: 7.0 },
+        floor: 2,
+        shortDesc: "排除氯胺酮，雙試管強陽性確診樣品為受嚴格管制危險藥物「依托咪酯」。",
+        fullDesc: "化驗結果出爐：氯胺酮呈陰性；特異顯色瞬間轉化為深紫褐色沉澱！樣品均含有高濃度受管制麻醉藥「依托咪酯」！此時天台傳來一陣急促的手機鈴聲。",
+        forensic: "咪唑羧酸酯特異顯色呈強陽性深紫褐色沉澱，證實為超量管制危險藥物依托咪酯。"
+      },
+      clue_rooftop_burner: {
+        id: "clue_rooftop_burner",
+        stage: 7,
+        name: "3F 天台起獲之阿強手記與通聯手機",
+        zone: "3F 教學樓天台",
+        icon: "📱",
+        pos: { x: -5.0, y: 8.85, z: -2.5 },
+        floor: 3,
+        shortDesc: "起獲跑腿阿強的學生證與手寫紙條。手機錄下調劑師以抽搐影片勒索五十萬之鐵證。",
+        fullDesc: "天台起獲校內跑腿阿強的學生證與字條：『只係做跑腿借櫃交收，未滿十八歲最多警誡掛？』通話錄下調劑師的勒索通話：若不給五十萬，便將學生抽搐醜態影片發給全港中學！",
+        forensic: "阿強自白直接證實其協助運毒；通話音軌、基站信號與勒索錄音已由警方全面鎖定。"
+      }
+    };
+
+    const DUMMY_LOCKERS = {
+      locker_11: { id: "locker_11", num: 11, name: "2F 走廊 11 號儲物櫃", pos: { x: -2.0, y: 5.0, z: 0.1 }, desc: "這是 11 號儲物櫃。裡面整齊疊放著普通校服與課本，無可疑跡象。" },
+      locker_13: { id: "locker_13", num: 13, name: "2F 走廊 13 號儲物櫃", pos: { x: 0.5, y: 5.0, z: 0.1 }, desc: "這是 13 號儲物櫃。貼著學界籃球賽程表，鎖頭掛得整齊，無撬動痕跡。" },
+      locker_15: { id: "locker_15", num: 15, name: "2F 走廊 15 號儲物櫃", pos: { x: 3.0, y: 5.0, z: 0.1 }, desc: "這是 15 號儲物櫃。放置著雨傘與水樽，底部平整無異常痕跡。" },
+      locker_19: { id: "locker_19", num: 19, name: "2F 走廊 19 號儲物櫃", pos: { x: 7.5, y: 5.0, z: 0.1 }, desc: "這是 19 號儲物櫃。鎖頭生鏽積灰，近期未曾有人開啟過。" }
+    };
+
+    const EASTER_EGGS = {
+      cctv_terminal: {
+        id: "cctv_terminal", name: "1F 大堂保安監控終端", pos: { x: 2.0, y: 1.2, z: -7.5 }, floor: 1, icon: "📹",
+        desc: "大堂保安工作台上的監控終端。螢幕顯示 2F 走廊閉路電視錄像已就緒，可回溯案發影像。",
+        monologue: "（這台終端記錄了 2F 走廊影像……想查清是誰在儲物櫃前活動，這裡就是關鍵。）"
+      },
+      notice_board: {
+        id: "notice_board", name: "1F 校園抗毒宣傳板", pos: { x: 5.5, y: 1.2, z: -8.0 }, floor: 1, icon: "📌",
+        desc: "【校園抗毒公告：警惕偽裝煙彈與涉毒代號】\n• 警惕新型煙油：吹噓成『草本提神』或『速效放鬆』。含有依托咪酯會導致急性肌陣攣抽搐、呼吸衰竭。\n• 大麻代號警示：毒販圈子常以數字『420』作為大麻俗稱代號。\n• 堅決防毒：毒品咪制！",
+        monologue: "（展板詳細列明了新型煙油中毒特徵，大麻俗稱代號是 420……必須時刻警惕。）"
+      },
+      trophy_case: {
+        id: "trophy_case", name: "1F 大堂學界榮譽陳列櫃", pos: { x: -2.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🏆",
+        desc: "陳列櫃擺放著獎盃。正中央是霍展霆與岑詠蕎的優秀學生合影。",
+        monologue: "（展霆是籃球主力，詠蕎是拔尖生……在訓練和升學重壓下成了毒販獵物。）"
+      },
+      vending_machine: {
+        id: "vending_machine", name: "1F 自動販賣機", pos: { x: 8.0, y: 1.2, z: -7.5 }, floor: 1, icon: "🥤",
+        desc: "陳列著烏龍茶與能量飲料。側面貼著便條：『DSE 加油！』",
+        monologue: "（考生面對重壓容易焦慮……偽裝成『無害提神』的毒品正是藉此滲透。）"
+      },
+      lost_and_found: {
+        id: "lost_and_found", name: "2F 走廊失物認領箱", pos: { x: -1.0, y: 5.0, z: 2.5 }, floor: 2, icon: "📦",
+        desc: "角落的失物箱。上方貼著標語：『失物可領，莫失青春』。",
+        monologue: "（失物尚能找回，若神經受到偽裝毒品永久傷害，代價將無法挽回。）"
+      },
+      lab_microscope: {
+        id: "lab_microscope", name: "2F 實驗室顯微鏡台", pos: { x: 12.0, y: 5.0, z: 7.0 }, floor: 2, icon: "🔬",
+        desc: "桌上的雙目顯微鏡旁壓著《化學實驗守則》。載玻片整齊排列。",
+        monologue: "（嚴密的化學分析，能讓任何偽裝成提神物的毒品原形畢露。）"
+      },
+      rooftop_telescope: {
+        id: "rooftop_telescope", name: "3F 天台折射望遠鏡", pos: { x: 8.0, y: 8.8, z: -6.5 }, floor: 3, icon: "🔭",
+        desc: "立在天台邊緣的望遠鏡，能俯瞰整個校園與周邊街道。",
+        monologue: "（站在高處，校舍動線一覽無遺……難怪涉案人會選在天台留置通聯設備。）"
+      },
+      rooftop_guitar: {
+        id: "rooftop_guitar", name: "3F 天台角落音箱設備", pos: { x: -8.0, y: 8.8, z: 4.5 }, floor: 3, icon: "🎸",
+        desc: "一把缺弦吉他倚在音箱旁。這裡原是放學後樂隊排練角落。",
+        monologue: "（原本充滿青春活力的角落，差點淪為不法分子散布毒品的陰暗跳板。）"
+      }
+    };
+
+    let renderer, scene, camera, player;
+    let floor1Group, floor2Group, floor3Group;
+    let interactableMeshes = [];
+    let duskParticles;
+    let stairABarrierMesh = null, stairBBarrierMesh = null;
+    let objectiveArrowMesh = null;
+
+    const SOLID_OBSTACLES = [
+      { minX: -3.5, maxX: 0.5, minZ: -8.5, maxZ: -6.5, floor: 1 },
+      { minX: 1.0, maxX: 3.5, minZ: -8.5, maxZ: -6.5, floor: 1 },
+      { minX: 6.8, maxX: 9.2, minZ: -8.5, maxZ: -6.5, floor: 1 },
+      { minX: -12.2, maxX: -6.8, minZ: 3.2, maxZ: 4.8, floor: 1 },
+      { minX: 4.2, maxX: 6.8, minZ: -8.9, maxZ: -8.1, floor: 1 },
+      { minX: -3.0, maxX: 9.0, minZ: -9.0, maxZ: -0.1, floor: 2 },
+      { minX: -3.0, maxX: 8.5, minZ: -0.4, maxZ: 0.6, floor: 2 },
+      { minX: -2.7, maxX: -2.3, minZ: -9.0, maxZ: 1.0, floor: 2 },
+      { minX: 5.5, maxX: 12.5, minZ: 5.8, maxZ: 8.2, floor: 2 },
+      { minX: 5.8, maxX: 10.2, minZ: 1.8, maxZ: 6.2, floor: 3 },
+      { minX: -7.0, maxX: -3.0, minZ: -4.8, maxZ: -2.2, floor: 3 },
+      { minX: 6.8, maxX: 9.2, minZ: -7.5, maxZ: -5.5, floor: 3 }
+    ];
+
+    const CAMERA_PRESETS = [
+      { name: "斜角俯視", dist: 8.5, height: 7.0 },
+      { name: "特寫跟隨", dist: 5.6, height: 4.5 },
+      { name: "高空全覽", dist: 13.0, height: 11.0 }
+    ];
+
+    const keys = {};
+    let minimapCanvas, minimapCtx;
+    let dialogueBox, dialoguePanelCard, dialogueSpeaker, dialogueRoleTag, dialogueText, dialogueAvatar, dialoguePortrait;
+    let interactionPrompt, promptActionText, promptInputBadge;
+    let labModal, notebookModal, victoryScreen, lockerModal, cctvModal;
+    let cctvCanvas, cctvCtx;
+    const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    function createIconSprite(emoji, bgColor = 'rgba(15, 23, 42, 0.92)', borderColor = '#fb923c') {
+      const c = document.createElement('canvas');
+      c.width = 128; c.height = 128;
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, 128, 128);
+
+      ctx.beginPath();
+      ctx.arc(64, 64, 52, 0, Math.PI * 2);
+      ctx.fillStyle = bgColor; ctx.fill();
+      ctx.lineWidth = 5; ctx.strokeStyle = borderColor; ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(64, 64, 46, 0, Math.PI * 2);
+      ctx.lineWidth = 2; ctx.strokeStyle = '#ffffff'; ctx.stroke();
+
+      ctx.font = '54px "Noto Sans TC", "Segoe UI Emoji", "Apple Color Emoji", sans-serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(emoji, 64, 68);
+
+      const tex = new THREE.CanvasTexture(c);
+      tex.needsUpdate = true;
+      const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false });
+      const sprite = new THREE.Sprite(mat);
+      sprite.scale.set(0.9, 0.9, 1.0);
+      return sprite;
+    }
+
+    class InvestigatorAvatar {
+      constructor() {
+        this.mesh = new THREE.Group();
+        this.speed = 6.4;
+        this.walkCycle = 0;
+
+        const skin = new THREE.MeshStandardMaterial({ color: 0xffd1b3 });
+        const uniform = new THREE.MeshStandardMaterial({ color: 0x1e293b });
+        const hair = new THREE.MeshStandardMaterial({ color: 0x1a1a24 });
+        const badgeMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.8 });
+
+        this.torso = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.9, 0.45), uniform);
+        this.torso.position.y = 1.05;
+        this.torso.castShadow = true;
+        this.mesh.add(this.torso);
+
+        const badge = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.28, 0.05), badgeMat);
+        badge.position.set(0, 1.15, 0.24);
+        this.mesh.add(badge);
+
+        this.head = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.48, 0.48), skin);
+        this.head.position.y = 1.8;
+        this.head.castShadow = true;
+        this.mesh.add(this.head);
+
+        this.hair = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.26, 0.54), hair);
+        this.hair.position.y = 2.0;
+        this.mesh.add(this.hair);
+
+        const legGeo = new THREE.BoxGeometry(0.24, 0.7, 0.24);
+        this.leftLeg = new THREE.Mesh(legGeo, uniform);
+        this.leftLeg.position.set(-0.18, 0.35, 0);
+        this.leftLeg.castShadow = true;
+        this.mesh.add(this.leftLeg);
+
+        this.rightLeg = new THREE.Mesh(legGeo, uniform);
+        this.rightLeg.position.set(0.18, 0.35, 0);
+        this.rightLeg.castShadow = true;
+        this.mesh.add(this.rightLeg);
+
+        const bag = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.45, 0.42), new THREE.MeshStandardMaterial({ color: 0x9a3412 }));
+        bag.position.set(0.4, 0.98, -0.05);
+        this.mesh.add(bag);
+
+        this.mesh.position.set(0.0, 0, 2.0);
+        scene.add(this.mesh);
+      }
+
+      update(delta, inputX, inputZ) {
+        const inputLen = Math.hypot(inputX, inputZ);
+        if (inputLen > 0.05) {
+          const normX = inputX / (inputLen > 1 ? inputLen : 1);
+          const normZ = inputZ / (inputLen > 1 ? inputLen : 1);
+
+          const fwdX = -Math.sin(GAME_STATE.cameraAngleY);
+          const fwdZ = -Math.cos(GAME_STATE.cameraAngleY);
+          const rightX = Math.cos(GAME_STATE.cameraAngleY);
+          const rightZ = -Math.sin(GAME_STATE.cameraAngleY);
+
+          const forwardAmount = -normZ;
+          const rightAmount = normX;
+
+          const worldDirX = rightX * rightAmount + fwdX * forwardAmount;
+          const worldDirZ = rightZ * rightAmount + fwdZ * forwardAmount;
+
+          const nextX = this.mesh.position.x + worldDirX * this.speed * delta;
+          const nextZ = this.mesh.position.z + worldDirZ * this.speed * delta;
+
+          if (this.canWalk(nextX, nextZ)) {
+            this.mesh.position.x = nextX;
+            this.mesh.position.z = nextZ;
+          }
+
+          const targetAngle = Math.atan2(worldDirX, worldDirZ);
+          this.mesh.rotation.y = THREE.MathUtils.lerp(this.mesh.rotation.y, targetAngle, 14 * delta);
+
+          this.walkCycle += delta * 15;
+          this.leftLeg.rotation.x = Math.sin(this.walkCycle) * 0.65;
+          this.rightLeg.rotation.x = -Math.sin(this.walkCycle) * 0.65;
+          this.torso.position.y = 1.05 + Math.abs(Math.sin(this.walkCycle)) * 0.05;
+
+          if (Math.abs(Math.sin(this.walkCycle)) > 0.94) {
+            sound.playFootstep();
+          }
+        } else {
+          this.leftLeg.rotation.x = 0;
+          this.rightLeg.rotation.x = 0;
+          this.torso.position.y = 1.05;
+        }
+
+        this.updateElevation(delta);
+        this.checkCurrentZone();
+      }
+
+      updateElevation(delta) {
+        const x = this.mesh.position.x;
+        const currentFloor = GAME_STATE.currentFloor;
+        let targetY = 0;
+        let newFloor = currentFloor;
+
+        const inStairABounds = (x >= 8.0 && x <= 13.0 && this.mesh.position.z >= -1.0 && this.mesh.position.z <= 3.0);
+        const onStairA = inStairABounds && (currentFloor === 1 || (currentFloor === 2 && this.mesh.position.y <= 4.2));
+
+        const inStairBBounds = (x >= -13.0 && x <= -8.0 && this.mesh.position.z >= 5.0 && this.mesh.position.z <= 9.0);
+        const onStairB = inStairBBounds && (currentFloor === 3 || (currentFloor === 2 && this.mesh.position.y >= 3.4));
+
+        if (onStairB) {
+          const progress = Math.min(Math.max((-8.0 - x) / 5.0, 0), 1);
+          targetY = 3.8 + progress * 3.8;
+          newFloor = progress > 0.5 ? 3 : 2;
+        } else if (onStairA) {
+          const progress = Math.min(Math.max((x - 8.0) / 5.0, 0), 1);
+          targetY = progress * 3.8;
+          newFloor = progress > 0.5 ? 2 : 1;
+        } else {
+          if (currentFloor === 3) targetY = 7.6;
+          else if (currentFloor === 2) targetY = 3.8;
+          else targetY = 0;
+          newFloor = currentFloor;
+        }
+
+        if (newFloor !== GAME_STATE.currentFloor) {
+          GAME_STATE.currentFloor = newFloor;
+          updateFloorVisibility();
+        }
+
+        this.mesh.position.y = THREE.MathUtils.lerp(this.mesh.position.y, targetY, 15 * delta);
+      }
+
+      canWalk(x, z) {
+        const f = GAME_STATE.currentFloor;
+        if (x < -13.5 || x > 13.5 || z < -8.5 || z > 8.5) return false;
+
+        for (const obs of SOLID_OBSTACLES) {
+          if (obs.floor === f && x >= obs.minX && x <= obs.maxX && z >= obs.minZ && z <= obs.maxZ) {
+            return false;
+          }
+        }
+        if (f === 1 && x > 8.5 && z >= -1.0 && z <= 3.0 && GAME_STATE.questStage < 2) return false;
+        if (f === 2 && x < -8.2 && z >= 5.0 && z <= 9.0 && GAME_STATE.questStage < 7) return false;
+        return true;
+      }
+
+      checkCurrentZone() {
+        const x = this.mesh.position.x;
+        const f = GAME_STATE.currentFloor;
+        let zone = "1F 咪制書院 中庭大堂";
+        let icon = "🏛️";
+
+        if (f === 1) {
+          if (x < -4.0) { zone = "1F 體育更衣室走廊"; icon = "🏀"; }
+          else if (x > 8.0) { zone = "1F 景觀階梯 A"; icon = "🪜"; }
+          else { zone = "1F 中庭大堂"; icon = "🏛️"; }
+        } else if (f === 2) {
+          if (x < -2.5) { zone = "2F 中六B班房"; icon = "📚"; }
+          else if (this.mesh.position.z > 5.0 && x > 2.0) { zone = "2F 理科綜合實驗室"; icon = "🧪"; }
+          else if (x < -8.0 && this.mesh.position.z > 5.0) { zone = "2F 天台階梯 B"; icon = "🪜"; }
+          else { zone = "2F 走廊儲物櫃長廊"; icon = "🚪"; }
+        } else if (f === 3) {
+          zone = "3F 教學樓天台";
+          icon = "🌇";
+        }
+
+        if (GAME_STATE.currentZone !== zone) {
+          GAME_STATE.currentZone = zone;
+          const locName = document.getElementById('hud-location-name');
+          const locIcon = document.getElementById('hud-location-icon');
+          const floorLbl = document.getElementById('minimap-floor-label');
+          if (locName) locName.textContent = zone;
+          if (locIcon) locIcon.textContent = icon;
+          if (floorLbl) {
+            let fl = "1F 大堂層";
+            if (f === 2) fl = "2F 教學化驗區";
+            if (f === 3) fl = "3F 天台層";
+            floorLbl.textContent = fl;
+          }
+        }
+      }
+    }
+
+    function init3DWorld() {
+      const canvasElem = document.getElementById('game-canvas');
+      if (!canvasElem) return false;
+
+      try {
+        renderer = new THREE.WebGLRenderer({ canvas: canvasElem, antialias: false, powerPreference: "high-performance" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const dpr = Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1.5 : 2.0);
+        renderer.setPixelRatio(dpr);
+        renderer.shadowMap.enabled = !isTouchDevice;
+        if (renderer.shadowMap.enabled) renderer.shadowMap.type = THREE.BasicShadowMap;
+      } catch (err) {
+        return false;
+      }
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x060914);
+      scene.fog = new THREE.FogExp2(0x0a1024, 0.015);
+      camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+      const ambientLight = new THREE.AmbientLight(0xdba686, 0.95);
+      scene.add(ambientLight);
+
+      const hemiLight = new THREE.HemisphereLight(0xffa07a, 0x1e1b4b, 0.45);
+      scene.add(hemiLight);
+
+      const sunLight = new THREE.DirectionalLight(0xfb923c, 1.4);
+      sunLight.position.set(-18, 32, -22);
+      sunLight.castShadow = !isTouchDevice;
+      scene.add(sunLight);
+
+      const roofPointLight = new THREE.PointLight(0xc084fc, 1.3, 26);
+      roofPointLight.position.set(-5, 11, -2);
+      scene.add(roofPointLight);
+
+      const particleGeo = new THREE.BufferGeometry();
+      const posArr = new Float32Array(50 * 3);
+      for(let i=0; i<150; i+=3) {
+        posArr[i] = (Math.random() - 0.5) * 30;
+        posArr[i+1] = Math.random() * 10;
+        posArr[i+2] = (Math.random() - 0.5) * 20;
+      }
+      particleGeo.setAttribute('position', new THREE.BufferAttribute(posArr, 3));
+      duskParticles = new THREE.Points(particleGeo, new THREE.PointsMaterial({ color: 0xf59e0b, size: 0.16, transparent: true, opacity: 0.55 }));
+      scene.add(duskParticles);
+
+      buildObjectiveArrow();
+
+      const skylineGroup = new THREE.Group();
+      const bldgMat = new THREE.MeshBasicMaterial({ color: 0x090d18 });
+      const bldgHeights = [14, 22, 18, 28, 16, 24, 32, 20, 15, 26, 19];
+      for (let bi = 0; bi < bldgHeights.length; bi++) {
+        const bh = bldgHeights[bi];
+        const bldg = new THREE.Mesh(new THREE.BoxGeometry(4.2, bh, 3), bldgMat);
+        bldg.position.set(-28 + bi * 5.8, bh / 2 - 2, -26);
+        skylineGroup.add(bldg);
+      }
+      scene.add(skylineGroup);
+
+      floor1Group = new THREE.Group();
+      floor2Group = new THREE.Group();
+      floor3Group = new THREE.Group();
+      scene.add(floor1Group);
+      scene.add(floor2Group);
+      scene.add(floor3Group);
+
+      buildArchitecture();
+      player = new InvestigatorAvatar();
+      updateFloorVisibility();
+      updateObjectiveArrow();
+      return true;
+    }
+
+    function buildObjectiveArrow() {
+      objectiveArrowMesh = new THREE.Group();
+      const coneGeo = new THREE.ConeGeometry(0.38, 0.8, 12);
+      coneGeo.rotateX(Math.PI);
+      const cone = new THREE.Mesh(coneGeo, new THREE.MeshBasicMaterial({ color: 0x10b981 }));
+
+      const haloGeo = new THREE.RingGeometry(0.45, 0.6, 16);
+      haloGeo.rotateX(-Math.PI / 2);
+      const halo = new THREE.Mesh(haloGeo, new THREE.MeshBasicMaterial({ color: 0x10b981, side: THREE.DoubleSide, transparent: true, opacity: 0.8 }));
+      halo.position.y = -0.5;
+
+      const sprite = createIconSprite('🎯', 'rgba(6, 78, 59, 0.95)', '#10b981');
+      sprite.position.y = 0.8;
+      sprite.scale.set(0.85, 0.85, 1);
+
+      objectiveArrowMesh.add(cone);
+      objectiveArrowMesh.add(halo);
+      objectiveArrowMesh.add(sprite);
+      objectiveArrowMesh.position.set(-9.5, 3.2, 4.0);
+      scene.add(objectiveArrowMesh);
+    }
+
+    function updateObjectiveArrow() {
+      if (!objectiveArrowMesh) return;
+      let targetPos = null;
+      let targetFloor = 1;
+
+      if (GAME_STATE.questStage === 1) {
+        targetPos = CLUES_DATA.clue_gym_fok.pos; targetFloor = 1;
+      } else if (GAME_STATE.questStage === 2) {
+        targetPos = CLUES_DATA.clue_desk.pos; targetFloor = 2;
+      } else if (GAME_STATE.questStage === 3) {
+        targetPos = CLUES_DATA.clue_cctv.pos; targetFloor = 1;
+      } else if (GAME_STATE.questStage === 4) {
+        targetPos = null;
+      } else if (GAME_STATE.questStage === 5) {
+        targetPos = CLUES_DATA.clue_pipe_stash.pos; targetFloor = 2;
+      } else if (GAME_STATE.questStage === 6) {
+        targetPos = CLUES_DATA.clue_spot_plate.pos; targetFloor = 2;
+      } else if (GAME_STATE.questStage === 7) {
+        targetPos = CLUES_DATA.clue_rooftop_burner.pos; targetFloor = 3;
+      }
+
+      if (targetPos && GAME_STATE.currentFloor === targetFloor) {
+        objectiveArrowMesh.visible = true;
+        objectiveArrowMesh.position.x = targetPos.x;
+        objectiveArrowMesh.position.z = targetPos.z;
+        objectiveArrowMesh.userData.baseY = targetPos.y + 1.8;
+      } else {
+        objectiveArrowMesh.visible = false;
+      }
+    }
+
+    function buildArchitecture() {
+      const mats = {
+        foyerFloor: new THREE.MeshStandardMaterial({ color: 0x1f2937, roughness: 0.45 }),
+        woodFloor: new THREE.MeshStandardMaterial({ color: 0x54321d, roughness: 0.6 }),
+        corridorFloor: new THREE.MeshStandardMaterial({ color: 0x242b3b, roughness: 0.45 }),
+        rooftopFloor: new THREE.MeshStandardMaterial({ color: 0x221f28, roughness: 0.85 }),
+        stairMat: new THREE.MeshStandardMaterial({ color: 0x3b4456, roughness: 0.4, metalness: 0.3 }),
+        railingMat: new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.3, metalness: 0.8 }),
+        wallMat: new THREE.MeshStandardMaterial({ color: 0xdfd3c5, roughness: 0.85 }),
+        halfWallMat: new THREE.MeshStandardMaterial({ color: 0xc8b8a6, roughness: 0.85 }),
+        darkMetal: new THREE.MeshStandardMaterial({ color: 0x222733, metalness: 0.7, roughness: 0.35 }),
+        cctvTerminalMat: new THREE.MeshStandardMaterial({ color: 0x064e3b, metalness: 0.8, roughness: 0.2 }),
+        deskWood: new THREE.MeshStandardMaterial({ color: 0xa35e30, roughness: 0.5 }),
+        targetDeskWood: new THREE.MeshStandardMaterial({ color: 0xc2410c, roughness: 0.4 }),
+        chalkboard: new THREE.MeshStandardMaterial({ color: 0x143121, roughness: 0.8 }),
+        posterColor1: new THREE.MeshBasicMaterial({ color: 0x38bdf8 }),
+        vendingMat: new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.5, roughness: 0.4 }),
+        tapeYellow: new THREE.MeshBasicMaterial({ color: 0xfacc15, side: THREE.DoubleSide })
+      };
+
+      const f1Floor = new THREE.Mesh(new THREE.PlaneGeometry(28, 18), mats.foyerFloor);
+      f1Floor.rotation.x = -Math.PI / 2;
+      floor1Group.add(f1Floor);
+
+      const f1WallN = new THREE.Mesh(new THREE.BoxGeometry(28, 3.2, 0.4), mats.wallMat);
+      f1WallN.position.set(0, 1.6, -9); floor1Group.add(f1WallN);
+      const f1WallW = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), mats.wallMat);
+      f1WallW.position.set(-14, 1.6, 0); floor1Group.add(f1WallW);
+      const f1WallS = new THREE.Mesh(new THREE.BoxGeometry(28, 1.2, 0.4), mats.halfWallMat);
+      f1WallS.position.set(0, 0.6, 9); floor1Group.add(f1WallS);
+      const f1WallE = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), mats.wallMat);
+      f1WallE.position.set(14, 1.6, 0); floor1Group.add(f1WallE);
+
+      const trophyMesh = new THREE.Mesh(new THREE.BoxGeometry(3.6, 2.2, 0.8), mats.darkMetal);
+      trophyMesh.position.set(-2.0, 1.1, -7.5); floor1Group.add(trophyMesh);
+
+      const cctvTerminalMesh = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.3, 0.8), mats.cctvTerminalMat);
+      cctvTerminalMesh.position.set(2.0, 0.65, -7.5); floor1Group.add(cctvTerminalMesh);
+      const cctvScreenMesh = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.8, 0.1), new THREE.MeshBasicMaterial({ color: 0x10b981 }));
+      cctvScreenMesh.position.set(2.0, 1.4, -7.4); floor1Group.add(cctvScreenMesh);
+
+      const bench = new THREE.Mesh(new THREE.BoxGeometry(5.0, 0.6, 1.2), mats.woodFloor);
+      bench.position.set(-9.5, 0.3, 4.0); floor1Group.add(bench);
+
+      const basketball = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 10), new THREE.MeshStandardMaterial({ color: 0xea580c }));
+      basketball.position.set(-8.0, 0.22, 4.0); floor1Group.add(basketball);
+
+      const vending = new THREE.Mesh(new THREE.BoxGeometry(1.6, 2.6, 1.0), mats.vendingMat);
+      vending.position.set(8.0, 1.3, -7.5); floor1Group.add(vending);
+
+      const bulletin = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.4, 0.08), mats.darkMetal);
+      bulletin.position.set(5.5, 1.6, -8.76); floor1Group.add(bulletin);
+
+      const stair1Steps = 10, s1Rise = 3.8 / 10, s1Run = 5.0 / 10;
+      for (let s = 0; s < stair1Steps; s++) {
+        const sx = 8.0 + s * s1Run + s1Run / 2;
+        const sh = (s + 1) * s1Rise;
+        const step = new THREE.Mesh(new THREE.BoxGeometry(s1Run * 1.02, sh, 3.5), mats.stairMat);
+        step.position.set(sx, sh / 2, 1.0);
+        floor1Group.add(step);
+      }
+
+      stairABarrierMesh = new THREE.Group();
+      const postA1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal); postA1.position.set(8.1, 0.6, -0.7);
+      const postA2 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal); postA2.position.set(8.1, 0.6, 2.7);
+      const tapeA = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.18, 3.4), mats.tapeYellow); tapeA.position.set(8.1, 0.75, 1.0);
+      stairABarrierMesh.add(postA1, postA2, tapeA);
+      floor1Group.add(stairABarrierMesh);
+
+      const f2West = new THREE.Mesh(new THREE.PlaneGeometry(21.5, 18), mats.corridorFloor);
+      f2West.rotation.x = -Math.PI / 2; f2West.position.set(-3.25, 3.8, 0); floor2Group.add(f2West);
+
+      const f2EastN = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 7.8), mats.corridorFloor);
+      f2EastN.rotation.x = -Math.PI / 2; f2EastN.position.set(10.75, 3.8, -5.1); floor2Group.add(f2EastN);
+
+      const f2EastS = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 5.8), mats.corridorFloor);
+      f2EastS.rotation.x = -Math.PI / 2; f2EastS.position.set(10.75, 3.8, 6.1); floor2Group.add(f2EastS);
+
+      const f2RailN = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.0, 0.1), mats.railingMat); f2RailN.position.set(10.5, 4.3, -1.2); floor2Group.add(f2RailN);
+      const f2RailS = new THREE.Mesh(new THREE.BoxGeometry(5.6, 1.0, 0.1), mats.railingMat); f2RailS.position.set(10.5, 4.3, 3.2); floor2Group.add(f2RailS);
+      const f2RailW = new THREE.Mesh(new THREE.BoxGeometry(0.1, 1.0, 4.4), mats.railingMat); f2RailW.position.set(7.6, 4.3, 1.0); floor2Group.add(f2RailW);
+
+      const f2WallN = new THREE.Mesh(new THREE.BoxGeometry(28, 3.2, 0.4), mats.wallMat); f2WallN.position.set(0, 5.4, -9); floor2Group.add(f2WallN);
+      const f2WallW = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), mats.wallMat); f2WallW.position.set(-14, 5.4, 0); floor2Group.add(f2WallW);
+      const f2WallS = new THREE.Mesh(new THREE.BoxGeometry(28, 1.2, 0.4), mats.halfWallMat); f2WallS.position.set(0, 4.4, 9); floor2Group.add(f2WallS);
+      const f2WallE = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 18), mats.wallMat); f2WallE.position.set(14, 5.4, 0); floor2Group.add(f2WallE);
+
+      const f2BackWall = new THREE.Mesh(new THREE.BoxGeometry(16.0, 3.2, 0.4), mats.wallMat); f2BackWall.position.set(2.5, 5.4, -0.3); floor2Group.add(f2BackWall);
+      const f2StairPartition = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 8.8), mats.wallMat); f2StairPartition.position.set(8.5, 5.4, -4.6); floor2Group.add(f2StairPartition);
+      const f2Divider = new THREE.Mesh(new THREE.BoxGeometry(0.4, 3.2, 10), mats.wallMat); f2Divider.position.set(-2.5, 5.4, -4.0); floor2Group.add(f2Divider);
+
+      const board = new THREE.Mesh(new THREE.BoxGeometry(6, 1.6, 0.1), mats.chalkboard); board.position.set(-8.5, 5.4, -8.8); floor2Group.add(board);
+
+      const deskCols = [-11, -8.5, -6], deskRows = [-7.5, -5.5, -3.5];
+      deskCols.forEach(dx => {
+        deskRows.forEach(dz => {
+          const isTarget = (dx === -8.5 && dz === -7.5);
+          const dg = new THREE.Group();
+          const dtop = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.08, 0.65), isTarget ? mats.targetDeskWood : mats.deskWood);
+          dtop.position.set(0, 0.72, 0); dg.add(dtop);
+          const book = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.04, 0.22), mats.posterColor1); book.position.set(0.2, 0.78, 0.05); dg.add(book);
+          const chair = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.05, 0.45), mats.deskWood); chair.position.set(0, 0.42, 0.55); dg.add(chair);
+          dg.position.set(dx, 3.8, dz); floor2Group.add(dg);
+          SOLID_OBSTACLES.push({ minX: dx - 0.6, maxX: dx + 0.6, minZ: dz - 0.35, maxZ: dz + 0.35, floor: 2 });
+        });
+      });
+
+      const lockers = [-2.0, 0.5, 3.0, 5.5, 7.5];
+      lockers.forEach(lx => {
+        const lg = new THREE.Group();
+        const body = new THREE.Mesh(new THREE.BoxGeometry(1.3, 2.2, 0.65), mats.darkMetal); lg.add(body);
+        const handle = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.22, 0.05), mats.railingMat); handle.position.set(0.45, 0, 0.35); lg.add(handle);
+        lg.position.set(lx, 4.9, 0.1); floor2Group.add(lg);
+      });
+
+      const pipe = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 3.0, 12), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.8 }));
+      pipe.position.set(6.5, 5.3, 5.2); floor2Group.add(pipe);
+
+      const labTable = new THREE.Mesh(new THREE.BoxGeometry(6.0, 1.0, 1.6), new THREE.MeshStandardMaterial({ color: 0x0f172a }));
+      labTable.position.set(9.0, 4.35, 7.0); floor2Group.add(labTable);
+
+      const stair2Steps = 10, s2Rise = 3.8 / 10, s2Run = 5.0 / 10;
+      for (let s = 0; s < stair2Steps; s++) {
+        const sx = -8.0 - s * s2Run - s2Run / 2;
+        const sh = 3.8 + (s + 1) * s2Rise;
+        const step = new THREE.Mesh(new THREE.BoxGeometry(s2Run * 1.02, sh, 3.5), mats.stairMat);
+        step.position.set(sx, sh / 2, 7.0); floor2Group.add(step);
+      }
+
+      stairBBarrierMesh = new THREE.Group();
+      const postB1 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal); postB1.position.set(-8.0, 4.4, 5.3);
+      const postB2 = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 1.2), mats.darkMetal); postB2.position.set(-8.0, 4.4, 8.7);
+      const tapeB = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.18, 3.4), mats.tapeYellow); tapeB.position.set(-8.0, 4.55, 7.0);
+      stairBBarrierMesh.add(postB1, postB2, tapeB); floor2Group.add(stairBBarrierMesh);
+
+      const roofMain = new THREE.Mesh(new THREE.PlaneGeometry(21.5, 18), mats.rooftopFloor);
+      roofMain.rotation.x = -Math.PI / 2; roofMain.position.set(3.25, 7.6, 0); floor3Group.add(roofMain);
+
+      const roofWN = new THREE.Mesh(new THREE.PlaneGeometry(6.5, 18), mats.rooftopFloor);
+      roofWN.rotation.x = -Math.PI / 2; roofWN.position.set(-10.75, 7.6, 0); floor3Group.add(roofWN);
+
+      const fenceMat = new THREE.MeshStandardMaterial({ color: 0x94a3b8, metalness: 0.8 });
+      const fenceN = new THREE.Mesh(new THREE.BoxGeometry(28, 1.3, 0.2), fenceMat); fenceN.position.set(0, 8.25, -9); floor3Group.add(fenceN);
+      const fenceS = new THREE.Mesh(new THREE.BoxGeometry(28, 1.3, 0.2), fenceMat); fenceS.position.set(0, 8.25, 9); floor3Group.add(fenceS);
+      const fenceE = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.3, 18), fenceMat); fenceE.position.set(14, 8.25, 0); floor3Group.add(fenceE);
+      const fenceW = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1.3, 18), fenceMat); fenceW.position.set(-14, 8.25, 0); floor3Group.add(fenceW);
+
+      const tank = new THREE.Mesh(new THREE.CylinderGeometry(2.0, 2.0, 3.2, 16), new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.6 }));
+      tank.position.set(8.0, 9.2, 4.0); floor3Group.add(tank);
+
+      const vent = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.6, 1.8), new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.7 }));
+      vent.position.set(-5.0, 8.4, -3.5); floor3Group.add(vent);
+
+      spawnMarker('clue_gym_fok', -9.5, 1.25, 4.0, 1, 'clue', '🩹');
+      spawnMarker('cctv_terminal', 2.0, 1.2, -7.5, 1, 'clue', '📹');
+      spawnMarker('notice_board', 5.5, 1.2, -8.0, 1, 'egg', '📌');
+      spawnMarker('trophy_case', -2.0, 1.2, -7.5, 1, 'egg', '🏆');
+      spawnMarker('vending_machine', 8.0, 1.2, -7.5, 1, 'egg', '🥤');
+
+      spawnMarker('clue_desk', -8.5, 5.05, -7.5, 2, 'clue', '📝');
+      spawnMarker('locker_11', -2.0, 5.0, 0.1, 2, 'locker', '11');
+      spawnMarker('locker_13', 0.5, 5.0, 0.1, 2, 'locker', '13');
+      spawnMarker('locker_15', 3.0, 5.0, 0.1, 2, 'locker', '15');
+      spawnMarker('clue_corridor', 5.5, 5.05, 0.1, 2, 'locker', '17');
+      spawnMarker('locker_19', 7.5, 5.0, 0.1, 2, 'locker', '19');
+
+      spawnMarker('clue_pipe_stash', 6.5, 5.05, 5.2, 2, 'clue', '🧪');
+      spawnMarker('clue_spot_plate', 9.0, 5.05, 7.0, 2, 'clue', '🔬');
+      spawnMarker('lost_and_found', -1.0, 5.0, 2.5, 2, 'egg', '📦');
+      spawnMarker('lab_microscope', 12.0, 5.0, 7.0, 2, 'egg', '🔬');
+
+      spawnMarker('clue_rooftop_burner', -5.0, 8.85, -2.5, 3, 'clue', '📱');
+      spawnMarker('rooftop_telescope', 8.0, 8.8, -6.5, 3, 'egg', '🔭');
+      spawnMarker('rooftop_guitar', -8.0, 8.8, 4.5, 3, 'egg', '🎸');
+    }
+
+    function spawnMarker(key, x, y, z, targetFloor, type = 'clue', symbol = '🔍') {
+      const g = new THREE.Group();
+      g.position.set(x, y, z);
+
+      if (type === 'clue') {
+        const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.32, 0), new THREE.MeshStandardMaterial({
+          color: 0xf59e0b, emissive: 0xff6600, emissiveIntensity: 1.1, roughness: 0.1
+        }));
+        g.add(gem);
+        const ring = new THREE.Mesh(new THREE.RingGeometry(0.45, 0.65, 16), new THREE.MeshBasicMaterial({ color: 0xf59e0b, side: THREE.DoubleSide, transparent: true, opacity: 0.75 }));
+        ring.rotateX(-Math.PI / 2); ring.position.y = -1.1; g.add(ring);
+        const sprite = createIconSprite(symbol, 'rgba(30, 27, 75, 0.95)', '#f59e0b');
+        sprite.position.y = 0.6; g.add(sprite);
+        g.userData = { clueId: key, floor: targetFloor, gemMesh: gem, ringMesh: ring, spriteMesh: sprite, initialY: y, type };
+      } else if (type === 'egg') {
+        const prism = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.28, 6), new THREE.MeshStandardMaterial({
+          color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.8, roughness: 0.2
+        }));
+        g.add(prism);
+        const ring = new THREE.Mesh(new THREE.RingGeometry(0.35, 0.5, 16), new THREE.MeshBasicMaterial({ color: 0x0284c7, side: THREE.DoubleSide, transparent: true, opacity: 0.6 }));
+        ring.rotateX(-Math.PI / 2); ring.position.y = -0.9; g.add(ring);
+        const sprite = createIconSprite(symbol, 'rgba(12, 25, 44, 0.95)', '#38bdf8');
+        sprite.position.y = 0.55; g.add(sprite);
+        g.userData = { clueId: key, floor: targetFloor, gemMesh: prism, ringMesh: ring, spriteMesh: sprite, initialY: y, type };
+      } else {
+        const sprite = createIconSprite(symbol, 'rgba(15, 23, 42, 0.95)', '#94a3b8');
+        sprite.scale.set(0.65, 0.65, 1.0); sprite.position.y = 0.4;
+        g.userData = { clueId: key, floor: targetFloor, spriteMesh: sprite, initialY: y, type };
+      }
+
+      interactableMeshes.push(g);
+      if (targetFloor === 1) floor1Group.add(g);
+      else if (targetFloor === 2) floor2Group.add(g);
+      else if (targetFloor === 3) floor3Group.add(g);
+    }
+
+    function updateFloorVisibility() {
+      if (!floor1Group) return;
+      const f = GAME_STATE.currentFloor;
+      floor1Group.visible = true;
+      floor2Group.visible = (f >= 2);
+      floor3Group.visible = (f >= 3);
+      updateObjectiveArrow();
+    }
+
+    function updateStairBarriers() {
+      if (stairABarrierMesh) stairABarrierMesh.visible = (GAME_STATE.questStage < 2);
+      if (stairBBarrierMesh) stairBBarrierMesh.visible = (GAME_STATE.questStage < 7);
+    }
+
+    function renderMinimap() {
+      if (!minimapCtx || !minimapCanvas || !player) return;
+      const w = minimapCanvas.width, h = minimapCanvas.height;
+      minimapCtx.clearRect(0, 0, w, h);
+      minimapCtx.fillStyle = "#070a14"; minimapCtx.fillRect(0, 0, w, h);
+
+      const mapX = (wx) => ((wx + 14) / 28) * w;
+      const mapZ = (wz) => ((wz + 9) / 18) * h;
+      const f = GAME_STATE.currentFloor;
+
+      if (f === 1) {
+        minimapCtx.fillStyle = "#1e293b"; minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(14) - mapX(-14), mapZ(9) - mapZ(-9));
+        minimapCtx.fillStyle = "#eab308"; minimapCtx.fillRect(mapX(8), mapZ(-1), mapX(13) - mapX(8), mapZ(3) - mapZ(-1));
+      } else if (f === 2) {
+        minimapCtx.fillStyle = "#1e293b"; minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(-2.5) - mapX(-14), mapZ(1) - mapZ(-9));
+        minimapCtx.fillStyle = "#172554"; minimapCtx.fillRect(mapX(-14), mapZ(1), mapX(14) - mapX(-14), mapZ(5) - mapZ(1));
+        minimapCtx.fillStyle = "#0c4a6e"; minimapCtx.fillRect(mapX(2), mapZ(5), mapX(14) - mapX(2), mapZ(9) - mapZ(5));
+      } else if (f === 3) {
+        minimapCtx.fillStyle = "#3b0764"; minimapCtx.fillRect(mapX(-14), mapZ(-9), mapX(14) - mapX(-14), mapZ(9) - mapZ(-9));
+      }
+
+      Object.values(EASTER_EGGS).forEach(egg => {
+        if (egg.floor === f && egg.id !== 'cctv_terminal') {
+          minimapCtx.beginPath();
+          minimapCtx.arc(mapX(egg.pos.x), mapZ(egg.pos.z), 2.5, 0, Math.PI * 2);
+          minimapCtx.fillStyle = "#38bdf8"; minimapCtx.fill();
+        }
+      });
+
+      Object.values(CLUES_DATA).forEach(clue => {
+        if (clue.id === 'clue_corridor' && GAME_STATE.questStage <= 4) return;
+
+        const found = GAME_STATE.cluesFound.has(clue.id);
+        if (clue.floor === f) {
+          minimapCtx.beginPath();
+          minimapCtx.arc(mapX(clue.pos.x), mapZ(clue.pos.z), found ? 2.5 : 4.0, 0, Math.PI * 2);
+          minimapCtx.fillStyle = found ? "#10b981" : (clue.stage === GAME_STATE.questStage ? "#22c55e" : "#f59e0b");
+          minimapCtx.fill();
+        }
+      });
+
+      const px = mapX(player.mesh.position.x), pz = mapZ(player.mesh.position.z);
+      const heading = player.mesh.rotation.y;
+      minimapCtx.save();
+      minimapCtx.translate(px, pz);
+      minimapCtx.rotate(heading);
+      minimapCtx.beginPath();
+      minimapCtx.moveTo(0, 5); minimapCtx.lineTo(-3.5, -4); minimapCtx.lineTo(3.5, -4);
+      minimapCtx.closePath();
+      minimapCtx.fillStyle = "#f97316";
+      minimapCtx.fill();
+      minimapCtx.restore();
+    }
+
+    function cycleCameraPreset() {
+      GAME_STATE.cameraPresetIdx = (GAME_STATE.cameraPresetIdx + 1) % CAMERA_PRESETS.length;
+      const preset = CAMERA_PRESETS[GAME_STATE.cameraPresetIdx];
+      const textElem = document.getElementById('cam-mode-text');
+      if (textElem) textElem.textContent = preset.name;
+      sound.playDialogueBlip();
+    }
+
+    function rotateCameraByDegrees(deg) {
+      GAME_STATE.cameraAngleY += (deg * Math.PI) / 180;
+      sound.playDialogueBlip();
+    }
+
+    const touchJoystickInput = { x: 0, z: 0 };
+    let joystickActive = false, joystickTouchId = null, joystickCenter = { x: 0, y: 0 };
+
+    function updateJoystickCenter() {
+      const jb = document.getElementById('joystick-base');
+      if (!jb) return;
+      const rect = jb.getBoundingClientRect();
+      joystickCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    }
+
+    function updateJoystickPosition(clientX, clientY) {
+      const jThumb = document.getElementById('joystick-thumb');
+      const maxDist = 38;
+      const dx = clientX - joystickCenter.x;
+      const dy = clientY - joystickCenter.y;
+      const dist = Math.hypot(dx, dy);
+      const clamped = Math.min(dist, maxDist);
+      const angle = Math.atan2(dy, dx);
+      const tx = Math.cos(angle) * clamped;
+      const ty = Math.sin(angle) * clamped;
+      if (jThumb) jThumb.style.transform = `translate(${tx}px, ${ty}px)`;
+      touchJoystickInput.x = tx / maxDist;
+      touchJoystickInput.z = ty / maxDist;
+    }
+
+    let rightTouchId = null, lastTouchX = 0;
+    let lastInteractionTimestamp = 0;
+    function canTriggerInput() {
+      const now = performance.now();
+      if (now - lastInteractionTimestamp < 180) return false;
+      lastInteractionTimestamp = now;
+      return true;
+    }
+
+    function startDialogueQueue(lines, callback = null) {
+      GAME_STATE.dialogueQueue = lines.slice();
+      GAME_STATE.dialogueCallback = callback;
+      GAME_STATE.isDialogueOpen = true;
+      nextDialogue();
+    }
+
+    function updatePortrait(portraitKey) {
+      if (!dialoguePortrait) return;
+      if (portraitKey && PORTRAIT_MAP[portraitKey]) {
+        dialoguePortrait.src = PORTRAIT_MAP[portraitKey];
+        dialoguePortrait.onerror = () => { dialoguePortrait.style.display = 'none'; };
+        dialoguePortrait.onload = () => { dialoguePortrait.style.display = 'block'; };
+        dialoguePortrait.style.display = 'block';
+        dialoguePortrait.classList.remove('opacity-0', 'translate-y-3');
+        dialoguePortrait.classList.add('opacity-100', 'translate-y-0');
+      } else {
+        dialoguePortrait.classList.remove('opacity-100', 'translate-y-0');
+        dialoguePortrait.classList.add('opacity-0', 'translate-y-3');
+        dialoguePortrait.style.display = 'none';
+        dialoguePortrait.src = '';
+      }
+    }
+
+    function nextDialogue() {
+      if (!GAME_STATE.dialogueQueue || GAME_STATE.dialogueQueue.length === 0) {
+        closeDialogue();
+        return;
+      }
+      const current = GAME_STATE.dialogueQueue.shift();
+      if (dialogueSpeaker) dialogueSpeaker.textContent = current.speaker;
+      if (dialogueRoleTag) dialogueRoleTag.textContent = current.role;
+      if (dialogueText) dialogueText.textContent = current.text;
+
+      const pKey = current.portrait || null;
+      updatePortrait(pKey);
+
+      if (dialoguePanelCard) {
+        dialoguePanelCard.classList.remove('dialogue-type-monologue', 'dialogue-type-narration', 'dialogue-type-call');
+        if (current.type === 'monologue') {
+          dialoguePanelCard.classList.add('dialogue-type-monologue');
+          if (dialogueAvatar) dialogueAvatar.textContent = '💭';
+        } else if (current.type === 'narration') {
+          dialoguePanelCard.classList.add('dialogue-type-narration');
+          if (dialogueAvatar) dialogueAvatar.textContent = '📜';
+        } else if (current.type === 'call') {
+          dialoguePanelCard.classList.add('dialogue-type-call');
+          if (dialogueAvatar) dialogueAvatar.textContent = '📱';
+        } else {
+          if (dialogueAvatar) dialogueAvatar.textContent = '🧑‍💼';
+        }
+      }
+
+      if (dialogueBox) {
+        dialogueBox.classList.remove('pointer-events-none', 'opacity-0', 'translate-y-4');
+        dialogueBox.classList.add('pointer-events-auto', 'opacity-100', 'translate-y-0');
+      }
+      sound.playDialogueBlip();
+    }
+
+    function closeDialogue() {
+      if (dialogueBox) {
+        dialogueBox.classList.remove('pointer-events-auto', 'opacity-100', 'translate-y-0');
+        dialogueBox.classList.add('pointer-events-none', 'opacity-0', 'translate-y-4');
+      }
+      updatePortrait(null);
+      GAME_STATE.isDialogueOpen = false;
+      if (GAME_STATE.dialogueCallback) {
+        const cb = GAME_STATE.dialogueCallback;
+        GAME_STATE.dialogueCallback = null;
+        cb();
+      }
+    }
+
+    function checkProximity() {
+      if (!GAME_STATE.started || GAME_STATE.isDialogueOpen || GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen || GAME_STATE.isLockerModalOpen || GAME_STATE.isCctvModalOpen || !player) {
+        if (interactionPrompt) interactionPrompt.style.opacity = '0';
+        GAME_STATE.activeInteractable = null;
+        return;
+      }
+
+      const px = player.mesh.position.x, pz = player.mesh.position.z;
+      const currentFloor = GAME_STATE.currentFloor;
+      let closestObj = null, minDist = 3.2;
+
+      for (const clue of Object.values(CLUES_DATA)) {
+        if (clue.floor === currentFloor) {
+          const dist = Math.hypot(px - clue.pos.x, pz - clue.pos.z);
+          if (dist < minDist) { minDist = dist; closestObj = { type: 'clue', data: clue }; }
+        }
+      }
+
+      if (currentFloor === 2) {
+        for (const locker of Object.values(DUMMY_LOCKERS)) {
+          const dist = Math.hypot(px - locker.pos.x, pz - locker.pos.z);
+          if (dist < minDist) { minDist = dist; closestObj = { type: 'dummy_locker', data: locker }; }
+        }
+      }
+
+      for (const egg of Object.values(EASTER_EGGS)) {
+        if (egg.floor === currentFloor && egg.id !== 'cctv_terminal') {
+          const dist = Math.hypot(px - egg.pos.x, pz - egg.pos.z);
+          if (dist < minDist) { minDist = dist; closestObj = { type: 'easter_egg', data: egg }; }
+        }
+      }
+
+      GAME_STATE.activeInteractable = closestObj;
+
+      if (closestObj && interactionPrompt && promptActionText) {
+        let actionLabel = "調查現場";
+        if (closestObj.type === 'clue') {
+          if (closestObj.data.id === 'clue_corridor') {
+            if (GAME_STATE.questStage < 4) {
+              actionLabel = "檢視：儲物櫃";
+            } else {
+              actionLabel = GAME_STATE.cluesFound.has('clue_corridor') ? "已解鎖：17 號儲物櫃" : "排查：17 號儲物櫃";
+            }
+          } else if (closestObj.data.id === 'clue_cctv') {
+            actionLabel = GAME_STATE.cluesFound.has('clue_cctv') ? "已鎖定：監控影像存檔" : "調取：閉路電視回放";
+          } else if (GAME_STATE.cluesFound.has(closestObj.data.id)) {
+            actionLabel = `查看：${closestObj.data.name.split(' ')[0]}`;
+          } else {
+            actionLabel = `搜查：${closestObj.data.name.split(' ')[0]}`;
+          }
+        } else if (closestObj.type === 'dummy_locker') {
+          actionLabel = GAME_STATE.questStage < 4 ? "檢視：儲物櫃" : `排查：${closestObj.data.num} 號櫃`;
+        } else if (closestObj.type === 'easter_egg') {
+          actionLabel = `檢視：${closestObj.data.name.split(' ')[0]}`;
+        }
+        promptActionText.textContent = actionLabel;
+        if (promptInputBadge) promptInputBadge.textContent = isTouchDevice ? '👆' : 'E';
+        interactionPrompt.style.opacity = '1';
+        interactionPrompt.style.transform = 'translate(-50%, 0) scale(1)';
+      } else if (interactionPrompt) {
+        interactionPrompt.style.opacity = '0';
+        interactionPrompt.style.transform = 'translate(-50%, 0) scale(0.95)';
+      }
+    }
+
+    function updateObjective(text) {
+      const elem = document.getElementById('hud-current-objective');
+      if (elem) elem.textContent = text;
+      updateObjectiveArrow();
+      saveGameProgress();
+    }
+
+    function collectClue(clueId) {
+      if (!GAME_STATE.cluesFound.has(clueId)) {
+        GAME_STATE.cluesFound.add(clueId);
+        sound.playClueFound();
+        updateClueBadges();
+        saveGameProgress();
+      }
+    }
+
+    function updateClueBadges() {
+      const count = GAME_STATE.cluesFound.size;
+      const badge = document.getElementById('hud-clue-badge');
+      const ind = document.getElementById('minimap-clue-indicator');
+      const countText = document.getElementById('clue-count-text');
+      const lockedProgress = document.getElementById('locked-clue-progress');
+
+      if (badge) badge.textContent = `${count}/${TOTAL_CLUES}`;
+      if (ind) ind.textContent = `物證: ${count}/${TOTAL_CLUES}`;
+      if (countText) countText.textContent = count;
+      if (lockedProgress) lockedProgress.textContent = `${count}/${TOTAL_CLUES}`;
+
+      const lockedNotice = document.getElementById('mindpalace-locked-notice');
+      const formArea = document.getElementById('mindpalace-form-area');
+      if (count >= TOTAL_CLUES) {
+        if (lockedNotice) lockedNotice.classList.add('hidden');
+        if (formArea) formArea.classList.remove('hidden');
+      } else {
+        if (lockedNotice) lockedNotice.classList.remove('hidden');
+        if (formArea) formArea.classList.add('hidden');
+      }
+      renderNotebookClues();
+    }
+
+    function triggerInvestigation() {
+      if (!canTriggerInput()) return;
+      haptic(15);
+
+      if (GAME_STATE.isDialogueOpen) { nextDialogue(); return; }
+      if (GAME_STATE.isLabModalOpen || GAME_STATE.isNotebookOpen || GAME_STATE.isLockerModalOpen || GAME_STATE.isCctvModalOpen) return;
+
+      const target = GAME_STATE.activeInteractable;
+      if (!target) return;
+      sound.playDialogueBlip();
+
+      if (GAME_STATE.questStage === 1 && target.type !== 'clue') {
+        startDialogueQueue([
+          { type: "monologue", speaker: "梁澤銘", role: "優先目標", portrait: "梁澤銘", text: "（展霆休克的西側更衣室就在前方。先排查現場遺留物。）" }
+        ]);
+        return;
+      }
+
+      if (target.type === 'easter_egg') {
+        startDialogueQueue([
+          { type: "narration", speaker: "校園環境紀錄", role: target.data.name, text: target.data.desc },
+          { type: "monologue", speaker: "梁澤銘", role: "調查員手記", portrait: "梁澤銘", text: target.data.monologue }
+        ]);
+        return;
+      }
+
+      if (target.type === 'dummy_locker' || (target.type === 'clue' && target.data.id === 'clue_corridor')) {
+        if (GAME_STATE.questStage < 2) {
+          startDialogueQueue([
+            { type: "monologue", speaker: "梁澤銘", role: "現場勘查", portrait: "梁澤銘", text: "（西側更衣室尚未勘查完畢，切勿分心。）" }
+          ]);
+          return;
+        }
+        if (GAME_STATE.questStage === 2) {
+          startDialogueQueue([
+            { type: "monologue", speaker: "梁澤銘", role: "現場勘查", portrait: "梁澤銘", text: "（走廊儲物櫃眾多，盲目排查會打草驚蛇。先登上 2F 班房搜查課桌。）" }
+          ]);
+          return;
+        }
+        if (GAME_STATE.questStage === 3) {
+          startDialogueQueue([
+            { type: "monologue", speaker: "梁澤銘", role: "現場勘查", portrait: "梁澤銘", text: "（先前往 1F 大堂終端調取監控，確認涉案黑影在哪個櫃投放了物證。）" }
+          ]);
+          return;
+        }
+        if (GAME_STATE.questStage === 4 && target.type === 'dummy_locker') {
+          startDialogueQueue([
+            { type: "narration", speaker: "儲物櫃排查紀錄", role: "儲物櫃翻查", text: target.data.desc },
+            { type: "monologue", speaker: "梁澤銘", role: "調查分析", portrait: "梁澤銘", text: `（這是 ${target.data.num} 號櫃，鎖具正常。監控拍到的涉案目標是 17 號櫃。）` }
+          ]);
+          return;
+        }
+      }
+
+      if (target.type === 'clue') {
+        const clue = target.data;
+        if (GAME_STATE.cluesFound.has(clue.id)) {
+          if (clue.id === 'clue_cctv') {
+            openCctvModal();
+            return;
+          }
+          startDialogueQueue([
+            { type: "narration", speaker: "物證回顧", role: clue.zone, text: `【${clue.name}】已歸檔：\n${clue.fullDesc}` },
+            { type: "monologue", speaker: "梁澤銘", role: "鑑證備忘", portrait: "梁澤銘", text: `（鑑識細節：${clue.forensic}）` }
+          ]);
+          return;
+        }
+
+        if (clue.stage > GAME_STATE.questStage) {
+          let hint = "留意右上角當前目標指引。";
+          if (GAME_STATE.questStage === 1) hint = "先前往更衣室長椅排查展霆遺留物。";
+          else if (GAME_STATE.questStage === 2) hint = "登上 2F 中六B班房搜查岑詠蕎課桌。";
+          else if (GAME_STATE.questStage === 3) hint = "返回 1F 大堂保安終端調取監控回放。";
+          else if (GAME_STATE.questStage === 4) hint = "在 2F 走廊找出並排查 17 號儲物櫃。";
+          else if (GAME_STATE.questStage === 5) hint = "在化學室外排水管暗角搜查原液。";
+          else if (GAME_STATE.questStage === 6) hint = "兩份樣品已備齊，進入實驗室化驗。";
+          startDialogueQueue([{ type: "monologue", speaker: "梁澤銘", role: "偵查順序", portrait: "梁澤銘", text: `（${hint}）` }]);
+          return;
+        }
+
+        if (clue.stage === 1) {
+          collectClue(clue.id);
+          GAME_STATE.questStage = 2;
+          updateStairBarriers();
+          updateObjective("登上 2F，搜查中六B班岑詠蕎課桌 (2/7)");
+          startDialogueQueue([
+            { type: "narration", speaker: "現場物證起獲", role: "更衣室長椅", text: "長椅夾縫起獲摔裂煙彈與破損護膝，壓著調劑師便條：『膝傷痛就抽兩口，保證止痛放鬆、學界照樣上場。你同岑詠蕎一樣，何必死頂？』" },
+            { type: "monologue", speaker: "梁澤銘", role: "因果分析", portrait: "梁澤銘", text: "（毒販以『速效止痛』誘騙展霆，便條更指向岑詠蕎！東側階梯封鎖已除，立刻上 2F 查看詠蕎課桌。）" }
+          ]);
+        } else if (clue.stage === 2) {
+          collectClue(clue.id);
+          GAME_STATE.questStage = 3;
+          updateObjective("前往 1F 大堂保安終端，回放 2F 走廊監控 (3/7)");
+          startDialogueQueue([
+            { type: "narration", speaker: "現場物證起獲", role: "中六B班課桌", text: "課桌漏出深紫油液（樣品 A）。試卷滿是痙攣刺痕；手機草稿寫道：『手震停唔到……喺走廊無人儲物櫃攞貨……密碼係1樓展板寫嘅大麻代號……救命……』" },
+            { type: "monologue", speaker: "梁澤銘", role: "關鍵動向", portrait: "梁澤銘", text: "（走廊儲物櫃眾多，盲目翻查只會打草驚蛇。先回 1F 保安終端調取監控，鎖定涉案櫃號！）" }
+          ]);
+        } else if (clue.stage === 3) {
+          openCctvModal();
+        } else if (clue.stage === 4) {
+          openLockerModal();
+        } else if (clue.stage === 5) {
+          collectClue(clue.id);
+          GAME_STATE.questStage = 6;
+          updateObjective("進入 2F 理科實驗室，進行雙試管快篩化驗 (6/7)");
+          startDialogueQueue([
+            { type: "narration", speaker: "物證起獲", role: "排水管暗角", text: "搜出真空包裝煙彈（樣品 B），外包裝印著極具偽裝性的『100%草本提取極速提神原液』標籤。" },
+            { type: "monologue", speaker: "梁澤銘", role: "化驗準備", portrait: "梁澤銘", text: "（課桌樣品 A 與暗角樣品 B 齊備。進入旁邊實驗室進行雙試管顯色比對，確診具體毒物成分。）" }
+          ]);
+        } else if (clue.stage === 6) {
+          openLabModal();
+        } else if (clue.stage === 7) {
+          sound.playPhoneRing();
+          collectClue(clue.id);
+          GAME_STATE.questStage = 8;
+          updateClueBadges();
+          updateObjective("打開【卷宗】進入【思維宮殿】，定案收網 (7/7)");
+          startDialogueQueue([
+            { 
+              type: "narration", speaker: "現場物證起獲", role: "天台排風箱", 
+              text: "天台起獲跑腿阿強的學生證、三千元贓款與字條：『幫調劑師放兩次煙彈收$1,500……我無吸食只係跑腿借櫃交收，未成年最多警誡掛？』手機瘋狂震動——" 
+            },
+            { 
+              type: "call", speaker: "暗夜調劑師", role: "電話通聯", portrait: "暗夜調劑師", 
+              text: "『喂？！咪制書院點解有差人封鎖？！阿強，霍展霆同岑詠蕎抽搐嘅片拍低未？！唔畀五十萬封口費，今晚我就將片發去全港中學，等佢哋身敗名裂！……喂？你唔係阿強？！』" 
+            },
+            { 
+              type: "monologue", speaker: "梁澤銘", role: "法律威懾與定案", portrait: "梁澤銘", 
+              text: "（荒謬至極！跑腿運毒法律上一律等同『販運危險藥物』！香港法庭多次嚴正宣告：【年輕絕非減刑理由】！最高判處罰款 500 萬港元及終身監禁！\n全案 7 大物證已全部集齊，立即打開【📋 卷宗】進入【思維宮殿】定案收網！）" 
+            }
+          ], () => {
+            toggleNotebook();
+            switchNotebookTab('mindpalace');
+          });
+        }
+      }
+    }
+
+    function openCctvModal() {
+      cctvModal = document.getElementById('cctv-modal');
+      if (cctvModal) {
+        cctvModal.classList.remove('pointer-events-none', 'opacity-0');
+        cctvModal.classList.add('pointer-events-auto', 'opacity-100');
+        GAME_STATE.isCctvModalOpen = true;
+        renderCctvFrame();
+      }
+    }
+
+    function closeCctvModal() {
+      if (cctvModal) {
+        cctvModal.classList.remove('pointer-events-auto', 'opacity-100');
+        cctvModal.classList.add('pointer-events-none', 'opacity-0');
+        GAME_STATE.isCctvModalOpen = false;
+      }
+    }
+
+    function renderCctvFrame() {
+      if (!cctvCanvas) {
+        cctvCanvas = document.getElementById('cctv-canvas');
+        if (cctvCanvas) cctvCtx = cctvCanvas.getContext('2d');
+      }
+      if (!cctvCtx || !cctvCanvas) return;
+
+      const w = cctvCanvas.width = 480;
+      const h = cctvCanvas.height = 270;
+      const progress = GAME_STATE.cctvProgress;
+
+      cctvCtx.fillStyle = "#020b06";
+      cctvCtx.fillRect(0, 0, w, h);
+
+      const vpX = 390;
+      const vpY = 95;
+
+      cctvCtx.strokeStyle = "rgba(16, 185, 129, 0.2)";
+      cctvCtx.lineWidth = 1;
+      for (let gy = 0; gy <= h; gy += 45) {
+        cctvCtx.beginPath();
+        cctvCtx.moveTo(0, gy);
+        cctvCtx.lineTo(vpX, vpY);
+        cctvCtx.stroke();
+      }
+
+      cctvCtx.strokeStyle = "#059669";
+      cctvCtx.lineWidth = 1.5;
+      cctvCtx.beginPath();
+      cctvCtx.moveTo(0, 30); cctvCtx.lineTo(vpX, vpY);
+      cctvCtx.moveTo(0, 245); cctvCtx.lineTo(vpX, vpY);
+      cctvCtx.stroke();
+
+      const lockerNames = ["11", "13", "15", "17", "19"];
+      const lockerT = [0.06, 0.20, 0.35, 0.51, 0.67];
+      const lockerWidthT = 0.10;
+
+      let locker17ScreenPos = { x: 0, y: 0 };
+
+      for (let i = 0; i < 5; i++) {
+        const t1 = lockerT[i];
+        const t2 = t1 + lockerWidthT;
+
+        const x1 = t1 * (vpX - 0);
+        const x2 = t2 * (vpX - 0);
+
+        const topY1 = 45 + t1 * (vpY - 45);
+        const topY2 = 45 + t2 * (vpY - 45);
+        const botY1 = 235 + t1 * (vpY - 235);
+        const botY2 = 235 + t2 * (vpY - 235);
+
+        const is17 = (i === 3);
+        if (is17) {
+          locker17ScreenPos.x = (x1 + x2) / 2;
+          locker17ScreenPos.y = (topY1 + botY1) / 2;
+        }
+
+        cctvCtx.fillStyle = is17 ? "rgba(16, 185, 129, 0.3)" : "rgba(30, 41, 59, 0.7)";
+        cctvCtx.strokeStyle = is17 ? "#34d399" : "#475569";
+        cctvCtx.lineWidth = is17 ? 1.5 : 1;
+
+        cctvCtx.beginPath();
+        cctvCtx.moveTo(x1, topY1);
+        cctvCtx.lineTo(x2, topY2);
+        cctvCtx.lineTo(x2, botY2);
+        cctvCtx.lineTo(x1, botY1);
+        cctvCtx.closePath();
+        cctvCtx.fill();
+        cctvCtx.stroke();
+
+        cctvCtx.strokeStyle = "rgba(16, 185, 129, 0.4)";
+        cctvCtx.beginPath();
+        const midY1 = (topY1 + botY1) * 0.35;
+        const midY2 = (topY2 + botY2) * 0.35;
+        cctvCtx.moveTo(x1 + 3, midY1); cctvCtx.lineTo(x2 - 3, midY2);
+        cctvCtx.stroke();
+
+        cctvCtx.fillStyle = is17 ? "#6ee7b7" : "#94a3b8";
+        cctvCtx.font = "bold 10px monospace";
+        cctvCtx.fillText(lockerNames[i], x1 + 4, topY1 + 14);
+      }
+
+      const suspectTag = document.getElementById('cctv-suspect-tag');
+      const logText = document.getElementById('cctv-log-text');
+      const timeSec = document.getElementById('cctv-timer-sec');
+      const timeDisplay = document.getElementById('cctv-time-display');
+
+      const secVal = Math.floor(12 + (progress * 0.45));
+      const secStr = secVal < 10 ? '0' + secVal : '' + secVal;
+      if (timeSec) timeSec.textContent = secStr;
+      if (timeDisplay) timeDisplay.textContent = `16:40:${secStr}`;
+
+      if (progress >= 43 && progress <= 47) {
+        const charX = locker17ScreenPos.x + 12;
+        const charY = locker17ScreenPos.y + 10;
+
+        cctvCtx.fillStyle = "rgba(225, 29, 72, 0.9)";
+        cctvCtx.beginPath();
+        cctvCtx.arc(charX, charY - 26, 8, 0, Math.PI * 2);
+        cctvCtx.fill();
+
+        cctvCtx.fillStyle = "#0f172a";
+        cctvCtx.fillRect(charX - 10, charY - 30, 14, 4);
+
+        cctvCtx.fillStyle = "rgba(225, 29, 72, 0.85)";
+        cctvCtx.fillRect(charX - 9, charY - 18, 18, 38);
+        
+        cctvCtx.strokeStyle = "#f43f5e";
+        cctvCtx.lineWidth = 3;
+        cctvCtx.beginPath();
+        cctvCtx.moveTo(charX - 4, charY - 12);
+        cctvCtx.lineTo(locker17ScreenPos.x + 4, charY - 6);
+        cctvCtx.stroke();
+
+        if (suspectTag) {
+          suspectTag.classList.remove('hidden');
+          suspectTag.style.left = `${(charX / w) * 100 - 15}%`;
+          suspectTag.style.top = `${((charY - 60) / h) * 100}%`;
+        }
+        if (logText) {
+          logText.innerHTML = "<strong class=\"text-emerald-400\">【影像捕捉】</strong>黑影正將物品塞入 17 號儲物櫃！請立即截圖存證。";
+        }
+      } else {
+        if (suspectTag) suspectTag.classList.add('hidden');
+        if (logText) {
+          logText.textContent = "走廊未見人員活動。請滑動時間軸尋找黑影投放物品的關鍵影像。";
+        }
+      }
+    }
+
+    function captureCctvFrame() {
+      if (GAME_STATE.cctvProgress >= 43 && GAME_STATE.cctvProgress <= 47) {
+        sound.playClueFound();
+        haptic([30, 40]);
+        closeCctvModal();
+        collectClue('clue_cctv');
+        GAME_STATE.hasCctvClue = true;
+        GAME_STATE.questStage = 4;
+        updateObjective("在 2F 走廊找出並排查 17 號儲物櫃 (4/7)");
+        startDialogueQueue([
+          { type: "narration", speaker: "閉路電視截圖取證", role: "物證歸檔", text: "成功截獲 16:40:32 關鍵幀！清晰記錄黑影將改裝煙彈塞入 2F 走廊【17 號儲物櫃】。" },
+          { type: "monologue", speaker: "梁澤銘", role: "偵查鎖定", portrait: "梁澤銘", text: "（目標已鎖定為 17 號櫃。登上 2F 走廊親自解鎖！）" }
+        ]);
+      } else {
+        sound.playLockBuzzer();
+        const logText = document.getElementById('cctv-log-text');
+        if (logText) {
+          logText.innerHTML = "<span class=\"text-rose-400 font-bold animate-pulse\">⚠️ 取證無效：當前時間未見可疑動向，請繼續滑動時間軸。</span>";
+        }
+      }
+    }
+
+    function openLockerModal() {
+      if (lockerModal) {
+        lockerModal.classList.remove('pointer-events-none', 'opacity-0');
+        lockerModal.classList.add('pointer-events-auto', 'opacity-100');
+        GAME_STATE.isLockerModalOpen = true;
+        renderLockerDials();
+        const err = document.getElementById('locker-error-feedback');
+        if (err) err.textContent = "";
+      }
+    }
+
+    function closeLockerModal() {
+      if (lockerModal) {
+        lockerModal.classList.remove('pointer-events-auto', 'opacity-100');
+        lockerModal.classList.add('pointer-events-none', 'opacity-0');
+        GAME_STATE.isLockerModalOpen = false;
+      }
+    }
+
+    function changeLockerDigit(index, delta) {
+      sound.playDialClick();
+      GAME_STATE.lockerDigits[index] = (GAME_STATE.lockerDigits[index] + delta + 10) % 10;
+      renderLockerDials();
+    }
+
+    function renderLockerDials() {
+      for (let i = 0; i < 3; i++) {
+        const valElem = document.getElementById(`dial-${i}-val`);
+        if (valElem) valElem.textContent = GAME_STATE.lockerDigits[i];
+      }
+    }
+
+    function submitLockerCode() {
+      const code = GAME_STATE.lockerDigits.join('');
+      const card = document.getElementById('locker-modal-card');
+      const err = document.getElementById('locker-error-feedback');
+
+      if (code === "420") {
+        sound.playClueFound();
+        closeLockerModal();
+        collectClue('clue_corridor');
+        GAME_STATE.questStage = 5;
+        updateObjective("搜查 2F 化學室外排水管暗角 (5/7)");
+        startDialogueQueue([
+          { type: "narration", speaker: "鎖具彈開", role: "17號儲物櫃", text: "輸入【420】，滾輪彈開。起獲便條：『咪制書院節點：試用裝已放入空櫃。特調原液已暫存【化學室外排水管暗角】，取後即銷毀。』" },
+          { type: "monologue", speaker: "梁澤銘", role: "因果分析", portrait: "梁澤銘", text: "（原液藏在化學室外排水管暗角，立即前往搜查。）" }
+        ]);
+      } else {
+        sound.playLockBuzzer();
+        if (card) {
+          card.classList.remove('animate-shake');
+          void card.offsetWidth;
+          card.classList.add('animate-shake');
+        }
+        if (err) err.textContent = "❌ 密碼不符（請回想 1F 宣傳板上的大麻俗稱代號）。";
+      }
+    }
+
+    function showLockerHint() {
+      sound.playDialogueBlip();
+      closeLockerModal();
+      startDialogueQueue([
+        { type: "monologue", speaker: "梁澤銘", role: "思維回想", portrait: "梁澤銘", text: "（詠蕎草稿提及大麻俗稱代號……1 樓大堂抗毒板上寫著代號正是 420！）" }
+      ]);
+    }
+
+    function openLabModal() {
+      if (labModal) {
+        labModal.classList.remove('pointer-events-none', 'opacity-0');
+        labModal.classList.add('pointer-events-auto', 'opacity-100');
+        GAME_STATE.isLabModalOpen = true;
+        resetSpotPlate();
+      }
+    }
+
+    function closeLabModal() {
+      if (labModal) {
+        labModal.classList.remove('pointer-events-auto', 'opacity-100');
+        labModal.classList.add('pointer-events-none', 'opacity-0');
+        GAME_STATE.isLabModalOpen = false;
+      }
+    }
+
+    function spotStepApplyReagent1() {
+      sound.playPipetteDrop();
+      const statusBadge = document.getElementById('spot-status-badge');
+      const verdictText = document.getElementById('spot-verdict-text');
+      const step1 = document.getElementById('spot-step-1');
+      const step2 = document.getElementById('spot-step-2');
+      const btn1 = document.getElementById('btn-spot-reagent1');
+      const btn2 = document.getElementById('btn-spot-reagent2');
+
+      if (statusBadge) {
+        statusBadge.textContent = "排除 氯胺酮 (陰性)";
+        statusBadge.className = "px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600/50 text-[10px]";
+      }
+      if (verdictText) {
+        verdictText.innerHTML = "兩支試管維持澄清。<strong class=\"text-emerald-400\">【陰性反應】</strong>排除氯胺酮。請點擊 <strong class=\"text-cyan-400\">2️⃣ 滴入 依托咪酯試劑</strong>。";
+      }
+      if (step1) {
+        step1.className = "py-1 rounded bg-emerald-950 text-emerald-300 border border-emerald-600";
+        step1.textContent = "步驟 1: 排除 氯胺酮 ✓";
+      }
+      if (step2) step2.className = "py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600";
+      if (btn1) {
+        btn1.disabled = true;
+        btn1.className = "flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm border border-slate-700 cursor-not-allowed";
+      }
+      if (btn2) {
+        btn2.disabled = false;
+        btn2.className = "flex-1 py-2 rounded-xl bg-purple-700 hover:bg-purple-600 text-white font-bold text-xs sm:text-sm border border-purple-400 active:scale-95 transition shadow-md cursor-pointer";
+      }
+    }
+
+    function spotStepApplyReagent2() {
+      sound.playPipetteDrop();
+      haptic([25, 40, 35]);
+      const tubeA = document.getElementById('tube-a-liquid');
+      const tubeB = document.getElementById('tube-b-liquid');
+      const statusBadge = document.getElementById('spot-status-badge');
+      const verdictText = document.getElementById('spot-verdict-text');
+      const step2 = document.getElementById('spot-step-2');
+      const btn2 = document.getElementById('btn-spot-reagent2');
+      const submitBtn = document.getElementById('btn-spot-submit');
+
+      if (tubeA) { tubeA.style.backgroundColor = '#701a75'; tubeA.style.filter = 'brightness(1.2) drop-shadow(0 0 6px rgba(192, 38, 211, 0.8))'; }
+      if (tubeB) { tubeB.style.backgroundColor = '#581c87'; tubeB.style.filter = 'brightness(1.2) drop-shadow(0 0 6px rgba(168, 85, 247, 0.8))'; }
+      if (statusBadge) {
+        statusBadge.textContent = "確診 依托咪酯 (陽性)";
+        statusBadge.className = "px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600 text-[10px] font-black animate-pulse";
+      }
+      if (verdictText) {
+        verdictText.innerHTML = "<strong class=\"text-rose-400\">【強陽性反應】</strong>雙試管生成紫褐色沉澱。樣品確診為受管制麻醉藥<strong class=\"text-amber-300\">「依托咪酯」</strong>！";
+      }
+      if (step2) {
+        step2.className = "py-1 rounded bg-rose-950 text-rose-300 border border-rose-600";
+        step2.textContent = "步驟 2: 確診 依托咪酯 ✓";
+      }
+      if (btn2) {
+        btn2.disabled = true;
+        btn2.className = "flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm border border-slate-700 cursor-not-allowed";
+      }
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.className = "flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-lg transition active:scale-95 animate-bounce cursor-pointer";
+      }
+    }
+
+    function resetSpotPlate() {
+      const tubeA = document.getElementById('tube-a-liquid');
+      const tubeB = document.getElementById('tube-b-liquid');
+      const statusBadge = document.getElementById('spot-status-badge');
+      const verdictText = document.getElementById('spot-verdict-text');
+      const step1 = document.getElementById('spot-step-1');
+      const step2 = document.getElementById('spot-step-2');
+      const btn1 = document.getElementById('btn-spot-reagent1');
+      const btn2 = document.getElementById('btn-spot-reagent2');
+      const submitBtn = document.getElementById('btn-spot-submit');
+
+      if (tubeA) { tubeA.style.backgroundColor = 'rgba(168, 85, 247, 0.4)'; tubeA.style.filter = 'none'; }
+      if (tubeB) { tubeB.style.backgroundColor = 'rgba(6, 182, 212, 0.4)'; tubeB.style.filter = 'none'; }
+      if (statusBadge) {
+        statusBadge.textContent = "待檢驗";
+        statusBadge.className = "px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600/50 text-[10px]";
+      }
+      if (verdictText) verdictText.innerHTML = "請點擊下方 <strong class=\"text-cyan-400\">1️⃣ 滴入 氯胺酮試劑</strong>，排查是否為常規毒品。";
+      if (step1) { step1.className = "py-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-600"; step1.textContent = "步驟 1: 排查 氯胺酮"; }
+      if (step2) { step2.className = "py-1 rounded bg-slate-900 text-slate-500 border border-slate-800"; step2.textContent = "步驟 2: 確診 依托咪酯"; }
+      if (btn1) {
+        btn1.disabled = false;
+        btn1.className = "flex-1 py-2 rounded-xl bg-sky-700 hover:bg-sky-600 text-white font-bold text-xs sm:text-sm border border-sky-400 active:scale-95 transition shadow-md cursor-pointer";
+      }
+      if (btn2) {
+        btn2.disabled = true;
+        btn2.className = "flex-1 py-2 rounded-xl bg-slate-800 text-slate-500 font-bold text-xs sm:text-sm border border-slate-700 transition cursor-not-allowed";
+      }
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.className = "flex-1 py-2 rounded-xl bg-cyan-600 text-white font-bold text-xs sm:text-sm shadow-lg transition active:scale-95 disabled:opacity-30 disabled:pointer-events-none";
+      }
+    }
+
+    function spotStepSubmitReport() {
+      closeLabModal();
+      collectClue('clue_spot_plate');
+      GAME_STATE.hasIdentifiedEtomidate = true;
+      GAME_STATE.questStage = 7;
+      updateStairBarriers();
+      updateObjective("登上 3F 天台，排查排風箱通聯手機 (7/7)");
+      sound.playPhoneRing();
+
+      startDialogueQueue([
+        { type: "narration", speaker: "化驗報告結論", role: "定性鑑證", text: "交叉化驗確鑿：兩份樣品均驗出管制麻醉藥【依托咪酯】。所謂『草本提神』純屬害人謊言。" },
+        { type: "monologue", speaker: "梁澤銘", role: "警覺", portrait: "梁澤銘", text: "（等等……天台傳來急促的手機鈴聲！階梯封鎖已除，立刻上去截獲通聯！）" }
+      ]);
+    }
+
+    function toggleNotebook() {
+      if (!notebookModal) return;
+      const isOpen = !notebookModal.classList.contains('pointer-events-none');
+      if (isOpen) {
+        notebookModal.classList.remove('pointer-events-auto', 'opacity-100');
+        notebookModal.classList.add('pointer-events-none', 'opacity-0');
+        GAME_STATE.isNotebookOpen = false;
+      } else {
+        notebookModal.classList.remove('pointer-events-none', 'opacity-0');
+        notebookModal.classList.add('pointer-events-auto', 'opacity-100');
+        GAME_STATE.isNotebookOpen = true;
+        updateClueBadges();
+        renderNotebookClues();
+        sound.playDialogueBlip();
+      }
+    }
+
+    function switchNotebookTab(tab) {
+      const btnClues = document.getElementById('tab-btn-clues');
+      const btnMind = document.getElementById('tab-btn-mindpalace');
+      const btnProfiles = document.getElementById('tab-btn-profiles');
+      const tabClues = document.getElementById('tab-content-clues');
+      const tabMind = document.getElementById('tab-content-mindpalace');
+      const tabProfiles = document.getElementById('tab-content-profiles');
+      const detailPanel = document.getElementById('clue-detail-panel');
+
+      [btnClues, btnMind, btnProfiles].forEach(b => {
+        if (b) b.className = "px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold bg-slate-800 text-slate-300 transition cursor-pointer";
+      });
+      [tabClues, tabMind, tabProfiles].forEach(t => { if (t) t.classList.add('hidden'); });
+      if (detailPanel) detailPanel.classList.add('hidden');
+
+      if (tab === 'clues') {
+        if (btnClues) btnClues.className = "px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold bg-orange-500 text-white transition cursor-pointer";
+        if (tabClues) tabClues.classList.remove('hidden');
+      } else if (tab === 'mindpalace') {
+        if (btnMind) btnMind.className = "px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold bg-orange-500 text-white transition cursor-pointer";
+        if (tabMind) tabMind.classList.remove('hidden');
+        updateClueBadges();
+      } else if (tab === 'profiles') {
+        if (btnProfiles) btnProfiles.className = "px-2.5 py-1 rounded-lg text-xs sm:text-sm font-bold bg-orange-500 text-white transition cursor-pointer";
+        if (tabProfiles) tabProfiles.classList.remove('hidden');
+      }
+      sound.playDialogueBlip();
+    }
+
+    function showClueDetail(clue) {
+      const panel = document.getElementById('clue-detail-panel');
+      const title = document.getElementById('detail-clue-title');
+      const meta = document.getElementById('detail-clue-meta');
+      const body = document.getElementById('detail-clue-body');
+      const forensic = document.getElementById('detail-clue-forensic');
+      const icon = document.getElementById('detail-clue-icon');
+
+      if (!panel || !title || !body || !forensic) return;
+      icon.textContent = clue.icon;
+      title.textContent = clue.name;
+      meta.textContent = `📍 搜查地點：${clue.zone} • 第 ${clue.floor} 層`;
+      body.textContent = clue.fullDesc;
+      forensic.innerHTML = `<strong>🔬 鑑識分析：</strong>${clue.forensic}`;
+      panel.classList.remove('hidden');
+      sound.playDialogueBlip();
+    }
+
+    function renderNotebookClues() {
+      const container = document.getElementById('tab-content-clues');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const cluesList = [
+        CLUES_DATA.clue_gym_fok, CLUES_DATA.clue_desk, CLUES_DATA.clue_cctv,
+        CLUES_DATA.clue_corridor, CLUES_DATA.clue_pipe_stash,
+        CLUES_DATA.clue_spot_plate, CLUES_DATA.clue_rooftop_burner
+      ];
+
+      cluesList.forEach((c) => {
+        const isFound = GAME_STATE.cluesFound.has(c.id);
+        const card = document.createElement('div');
+        card.className = `p-2 rounded-xl border flex flex-col justify-between transition active:scale-95 ${
+          isFound 
+            ? 'bg-slate-900/90 border-amber-500/60 text-amber-200 cursor-pointer hover:border-amber-400' 
+            : 'bg-slate-950/60 border-slate-800 text-slate-600 cursor-not-allowed'
+        }`;
+        card.innerHTML = `
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm">${isFound ? c.icon : '🔒'}</span>
+            <span class="text-xs font-bold truncate">${isFound ? (c.zone.split(' ')[1] || c.zone) : '未解鎖'}</span>
+          </div>
+          <p class="text-[11px] sm:text-xs leading-tight mt-1 line-clamp-2 ${isFound ? 'text-slate-300' : 'text-slate-600'}">
+            ${isFound ? c.shortDesc : '依指引前往搜查...'}
+          </p>
+          <div class="text-[11px] font-mono mt-1 ${isFound ? 'text-orange-400 font-bold' : 'text-slate-600'}">
+            ${isFound ? '✓ 閱覽詳情' : '待搜查'}
+          </div>
+        `;
+        if (isFound) card.addEventListener('click', () => showClueDetail(c));
+        container.appendChild(card);
+      });
+    }
+
+    function submitFinalDeduction() {
+      if (GAME_STATE.cluesFound.size < TOTAL_CLUES) { sound.playDialogueBlip(); return; }
+
+      const v1 = document.getElementById('deduce-vector')?.value;
+      const v2 = document.getElementById('deduce-motive')?.value;
+      const v3 = document.getElementById('deduce-action')?.value;
+
+      if (v1 === 'correct' && v2 === 'correct' && v3 === 'correct') {
+        if (notebookModal) {
+          notebookModal.classList.remove('pointer-events-auto', 'opacity-100');
+          notebookModal.classList.add('pointer-events-none', 'opacity-0');
+        }
+        GAME_STATE.isNotebookOpen = false;
+        if (victoryScreen) {
+          victoryScreen.classList.remove('pointer-events-none', 'opacity-0');
+          victoryScreen.classList.add('pointer-events-auto', 'opacity-100');
+        }
+        sound.playClueFound();
+      } else {
+        sound.playDialogueBlip();
+        const deduceHeader = document.getElementById('deduce-header');
+        if (deduceHeader) {
+          deduceHeader.textContent = "❌ 定案邏輯有誤，請核對化驗結果與勒索錄音！";
+          deduceHeader.className = "text-xs sm:text-sm font-bold text-rose-400 mb-1 animate-pulse";
+        }
+      }
+    }
+
+    function handleRestartConfirm() {
+      if (confirm("確定要重啟調查嗎？現場搜查進度將重新開始。")) {
+        try { localStorage.removeItem(SAVE_STORAGE_KEY); } catch(e) {}
+        window.location.reload();
+      }
+    }
+
+    function startGame(resume = false) {
+      const title = document.getElementById('title-screen');
+      if (title) title.style.display = 'none';
+      GAME_STATE.started = true;
+      sound.init();
+
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      try {
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock('landscape').catch(() => {});
+        }
+      } catch(e) {}
+
+      if (resume) {
+        const saved = checkSavedProgress();
+        if (saved) {
+          GAME_STATE.questStage = Math.min(saved.questStage || 1, 8);
+          GAME_STATE.cluesFound = new Set(saved.cluesFound || []);
+          GAME_STATE.currentFloor = saved.currentFloor || 1;
+          GAME_STATE.hasCctvClue = !!saved.hasCctvClue;
+          GAME_STATE.hasIdentifiedEtomidate = !!saved.hasIdentifiedEtomidate;
+          updateClueBadges();
+          updateStairBarriers();
+          updateFloorVisibility();
+
+          let resumeHint = "排查現場";
+          if (GAME_STATE.questStage === 2) resumeHint = "登上 2F，搜查中六B班岑詠蕎課桌 (2/7)";
+          else if (GAME_STATE.questStage === 3) resumeHint = "前往 1F 大堂保安終端，回放 2F 走廊監控 (3/7)";
+          else if (GAME_STATE.questStage === 4) resumeHint = "在 2F 走廊找出並排查 17 號儲物櫃 (4/7)";
+          else if (GAME_STATE.questStage === 5) resumeHint = "搜查 2F 化學室外排水管暗角 (5/7)";
+          else if (GAME_STATE.questStage === 6) resumeHint = "進入 2F 理科實驗室，進行雙試管快篩化驗 (6/7)";
+          else if (GAME_STATE.questStage === 7) resumeHint = "登上 3F 天台，排查排風箱通聯手機 (7/7)";
+          else if (GAME_STATE.questStage >= 8) resumeHint = "打開【卷宗】進入【思維宮殿】，定案收網 (7/7)";
+          updateObjective(resumeHint);
+          return;
+        }
+      }
+
+      setTimeout(() => {
+        startDialogueQueue([
+          {
+            type: "dialogue", speaker: "梁澤銘", role: "特約安全調查員", portrait: "梁澤銘",
+            text: "我是特約安全調查員梁澤銘。現場封鎖線已生效，專案搜查正式展開。"
+          },
+          {
+            type: "monologue", speaker: "梁澤銘", role: "現場勘查", portrait: "梁澤銘",
+            text: "（展霆在更衣室休克，詠蕎在試場痙攣……先跟隨綠色導標前往西側更衣室排查遺留物。）"
+          }
+        ]);
+      }, 400);
+    }
+
+    function setupEventListeners() {
+      document.getElementById('btn-start-game')?.addEventListener('click', () => startGame(false));
+      document.getElementById('btn-resume-game')?.addEventListener('click', () => startGame(true));
+      document.getElementById('btn-restart-hud')?.addEventListener('click', handleRestartConfirm);
+      document.getElementById('btn-cam-cycle')?.addEventListener('click', cycleCameraPreset);
+      document.getElementById('btn-open-notebook')?.addEventListener('click', toggleNotebook);
+      document.getElementById('btn-close-notebook')?.addEventListener('click', toggleNotebook);
+      document.getElementById('btn-close-clue-detail')?.addEventListener('click', () => {
+        document.getElementById('clue-detail-panel')?.classList.add('hidden');
+      });
+      document.getElementById('btn-rotate-left')?.addEventListener('click', () => rotateCameraByDegrees(-45));
+      document.getElementById('btn-rotate-right')?.addEventListener('click', () => rotateCameraByDegrees(45));
+
+      const interactBtn = document.getElementById('mobile-interact-btn');
+      if (interactBtn) {
+        interactBtn.addEventListener('pointerdown', (e) => {
+          e.preventDefault(); e.stopPropagation();
+          triggerInvestigation();
+        });
+      }
+
+      dialogueBox?.addEventListener('pointerdown', (e) => {
+        e.preventDefault(); e.stopPropagation();
+        if (canTriggerInput()) nextDialogue();
+      });
+
+      document.getElementById('btn-toggle-sound')?.addEventListener('click', () => {
+        const isMuted = sound.toggleMute();
+        const icon = document.getElementById('icon-sound-on');
+        if (icon) icon.style.opacity = isMuted ? '0.3' : '1';
+      });
+
+      document.getElementById('btn-close-cctv')?.addEventListener('click', closeCctvModal);
+      document.getElementById('cctv-scrubber')?.addEventListener('input', (e) => {
+        GAME_STATE.cctvProgress = parseInt(e.target.value, 10);
+        renderCctvFrame();
+      });
+      document.getElementById('btn-cctv-capture')?.addEventListener('click', captureCctvFrame);
+
+      document.getElementById('btn-close-locker')?.addEventListener('click', closeLockerModal);
+      document.getElementById('dial-0-up')?.addEventListener('click', () => changeLockerDigit(0, 1));
+      document.getElementById('dial-0-down')?.addEventListener('click', () => changeLockerDigit(0, -1));
+      document.getElementById('dial-1-up')?.addEventListener('click', () => changeLockerDigit(1, 1));
+      document.getElementById('dial-1-down')?.addEventListener('click', () => changeLockerDigit(1, -1));
+      document.getElementById('dial-2-up')?.addEventListener('click', () => changeLockerDigit(2, 1));
+      document.getElementById('dial-2-down')?.addEventListener('click', () => changeLockerDigit(2, -1));
+      document.getElementById('btn-submit-lock')?.addEventListener('click', submitLockerCode);
+      document.getElementById('btn-locker-clue-hint')?.addEventListener('click', showLockerHint);
+
+      document.getElementById('btn-close-lab')?.addEventListener('click', closeLabModal);
+      document.getElementById('btn-spot-reagent1')?.addEventListener('click', spotStepApplyReagent1);
+      document.getElementById('btn-spot-reagent2')?.addEventListener('click', spotStepApplyReagent2);
+      document.getElementById('btn-spot-reset')?.addEventListener('click', resetSpotPlate);
+      document.getElementById('btn-spot-submit')?.addEventListener('click', spotStepSubmitReport);
+
+      document.getElementById('tab-btn-clues')?.addEventListener('click', () => switchNotebookTab('clues'));
+      document.getElementById('tab-btn-mindpalace')?.addEventListener('click', () => switchNotebookTab('mindpalace'));
+      document.getElementById('tab-btn-profiles')?.addEventListener('click', () => switchNotebookTab('profiles'));
+      document.getElementById('btn-submit-deduction')?.addEventListener('click', submitFinalDeduction);
+
+      document.getElementById('btn-restart-game')?.addEventListener('click', () => {
+        try { localStorage.removeItem(SAVE_STORAGE_KEY); } catch(e) {}
+        window.location.reload();
+      });
+      document.getElementById('btn-force-portrait-continue')?.addEventListener('click', () => {
+        const overlay = document.getElementById('landscape-orientation-overlay');
+        if (overlay) overlay.style.display = 'none';
+      });
+
+      window.addEventListener('keydown', (e) => {
+        keys[e.code] = true;
+        if (e.code === 'KeyE' || e.code === 'Space') triggerInvestigation();
+        else if (e.code === 'KeyQ') rotateCameraByDegrees(-45);
+        else if (e.code === 'KeyR') rotateCameraByDegrees(45);
+        else if (e.code === 'Tab') { e.preventDefault(); toggleNotebook(); }
+        else if (e.code === 'Escape') {
+          if (GAME_STATE.isLockerModalOpen) closeLockerModal();
+          else if (GAME_STATE.isLabModalOpen) closeLabModal();
+          else if (GAME_STATE.isNotebookOpen) toggleNotebook();
+          else if (GAME_STATE.isCctvModalOpen) closeCctvModal();
+        }
+      });
+
+      window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+      window.addEventListener('resize', () => {
+        if (!renderer || !camera) return;
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const dpr = Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1.5 : 2.0);
+        renderer.setPixelRatio(dpr);
+        updateJoystickCenter();
+      }, { passive: true });
+
+      const jContainer = document.getElementById('touch-joystick-container');
+      const jThumb = document.getElementById('joystick-thumb');
+
+      if (jContainer && jThumb) {
+        jContainer.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          if (joystickActive) return;
+          const touch = e.changedTouches ? e.changedTouches[0] : e;
+          joystickActive = true;
+          joystickTouchId = touch.identifier ?? 'mouse';
+          updateJoystickCenter();
+          updateJoystickPosition(touch.clientX, touch.clientY);
+        }, { passive: false });
+
+        window.addEventListener('touchmove', (e) => {
+          if (!joystickActive) return;
+          let touch = null;
+          if (e.changedTouches) {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+              if (e.changedTouches[i].identifier === joystickTouchId) { touch = e.changedTouches[i]; break; }
+            }
+          } else {
+            touch = e;
+          }
+          if (!touch) return;
+          if (e.cancelable) e.preventDefault();
+          updateJoystickPosition(touch.clientX, touch.clientY);
+        }, { passive: false });
+
+        const endJoystick = (e) => {
+          if (!joystickActive) return;
+          if (e.changedTouches) {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+              if (e.changedTouches[i].identifier === joystickTouchId) {
+                joystickActive = false; joystickTouchId = null;
+                touchJoystickInput.x = 0; touchJoystickInput.z = 0;
+                if (jThumb) jThumb.style.transform = `translate(0px, 0px)`;
+                break;
+              }
+            }
+          } else {
+            joystickActive = false; joystickTouchId = null;
+            touchJoystickInput.x = 0; touchJoystickInput.z = 0;
+            if (jThumb) jThumb.style.transform = `translate(0px, 0px)`;
+          }
+        };
+        window.addEventListener('touchend', endJoystick, { passive: false });
+        window.addEventListener('touchcancel', endJoystick, { passive: false });
+      }
+
+      window.addEventListener('touchstart', (e) => {
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          const target = document.elementFromPoint(t.clientX, t.clientY) || t.target;
+          if (target && target.closest('button, #touch-joystick-container, #mobile-controls-cluster, #dialogue-box, #lab-modal, #notebook-modal, #locker-modal, #cctv-modal, header, .glass-panel, .glass-btn')) continue;
+          if (t.clientX > window.innerWidth * 0.40 && rightTouchId === null) {
+            rightTouchId = t.identifier;
+            lastTouchX = t.clientX;
+          }
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (rightTouchId === null) return;
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          const t = e.changedTouches[i];
+          if (t.identifier === rightTouchId) {
+            const deltaX = t.clientX - lastTouchX;
+            lastTouchX = t.clientX;
+            GAME_STATE.cameraAngleY -= deltaX * 0.0075;
+            break;
+          }
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchend', (e) => {
+        if (rightTouchId === null) return;
+        for (let i = 0; i < e.changedTouches.length; i++) {
+          if (e.changedTouches[i].identifier === rightTouchId) { rightTouchId = null; break; }
+        }
+      }, { passive: true });
+    }
+
+    const clock = new THREE.Clock();
+    let isTabVisible = true, animationFrameId = null;
+
+    function gameLoop() {
+      if (!isTabVisible) return;
+      animationFrameId = requestAnimationFrame(gameLoop);
+      const delta = Math.min(clock.getDelta(), 0.1);
+
+      if (GAME_STATE.started && player) {
+        let moveX = 0, moveZ = 0;
+        if (keys['KeyW'] || keys['ArrowUp']) moveZ -= 1;
+        if (keys['KeyS'] || keys['ArrowDown']) moveZ += 1;
+        if (keys['KeyA'] || keys['ArrowLeft']) moveX -= 1;
+        if (keys['KeyD'] || keys['ArrowRight']) moveX += 1;
+
+        if (Math.hypot(touchJoystickInput.x, touchJoystickInput.z) > 0.05) {
+          moveX = touchJoystickInput.x; moveZ = touchJoystickInput.z;
+        }
+
+        if (!GAME_STATE.isDialogueOpen && !GAME_STATE.isNotebookOpen && !GAME_STATE.isLabModalOpen && !GAME_STATE.isLockerModalOpen && !GAME_STATE.isCctvModalOpen) {
+          player.update(delta, moveX, moveZ);
+        } else {
+          player.update(delta, 0, 0);
+        }
+
+        const preset = CAMERA_PRESETS[GAME_STATE.cameraPresetIdx];
+        const targetCamX = player.mesh.position.x + Math.sin(GAME_STATE.cameraAngleY) * preset.dist;
+        const targetCamZ = player.mesh.position.z + Math.cos(GAME_STATE.cameraAngleY) * preset.dist;
+        const targetCamY = player.mesh.position.y + preset.height;
+
+        camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetCamX, 5.0 * delta);
+        camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetCamZ, 5.0 * delta);
+        camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetCamY, 5.0 * delta);
+        camera.lookAt(player.mesh.position.x, player.mesh.position.y + 1.2, player.mesh.position.z);
+
+        const time = clock.getElapsedTime();
+        interactableMeshes.forEach(m => {
+          if (m.userData.gemMesh) {
+            m.userData.gemMesh.rotation.y += 2.0 * delta;
+            m.position.y = m.userData.initialY + Math.sin(time * 3.2) * 0.12;
+          }
+          if (m.userData.ringMesh) m.userData.ringMesh.rotation.z += 0.8 * delta;
+          if (m.userData.spriteMesh) {
+            m.userData.spriteMesh.position.y = (m.userData.type === 'clue' ? 0.6 : 0.4) + Math.sin(time * 4.0) * 0.06;
+          }
+        });
+
+        if (objectiveArrowMesh && objectiveArrowMesh.visible) {
+          objectiveArrowMesh.rotation.y += 1.5 * delta;
+          const baseY = objectiveArrowMesh.userData.baseY || 3.0;
+          objectiveArrowMesh.position.y = baseY + Math.sin(time * 4.5) * 0.25;
+        }
+        if (duskParticles) duskParticles.rotation.y = time * 0.02;
+
+        checkProximity();
+        renderMinimap();
+      }
+
+      if (renderer && scene && camera) renderer.render(scene, camera);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      isTabVisible = !document.hidden;
+      if (isTabVisible) {
+        clock.getDelta();
+        if (sound.ctx && sound.ctx.state === 'suspended' && !sound.isMuted) {
+          sound.ctx.resume().catch(()=>{});
+        }
+        gameLoop();
+      } else {
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        if (sound.ctx && sound.ctx.state === 'running') {
+          sound.ctx.suspend().catch(()=>{});
+        }
+      }
+    });
+
+    function bootApp() {
+      minimapCanvas = document.getElementById('minimap-canvas');
+      minimapCtx = minimapCanvas ? minimapCanvas.getContext('2d') : null;
+      dialogueBox = document.getElementById('dialogue-box');
+      dialoguePanelCard = document.getElementById('dialogue-panel-card');
+      dialogueSpeaker = document.getElementById('dialogue-speaker');
+      dialogueRoleTag = document.getElementById('dialogue-role-tag');
+      dialogueText = document.getElementById('dialogue-text');
+      dialogueAvatar = document.getElementById('dialogue-avatar');
+      dialoguePortrait = document.getElementById('dialogue-portrait');
+      interactionPrompt = document.getElementById('interaction-prompt');
+      promptActionText = document.getElementById('prompt-action-text');
+      promptInputBadge = document.getElementById('prompt-input-badge');
+      labModal = document.getElementById('lab-modal');
+      notebookModal = document.getElementById('notebook-modal');
+      victoryScreen = document.getElementById('victory-screen');
+      lockerModal = document.getElementById('locker-modal');
+      cctvModal = document.getElementById('cctv-modal');
+
+      setupEventListeners();
+      updateJoystickCenter();
+      updateClueBadges();
+
+      const saved = checkSavedProgress();
+      if (saved && saved.questStage > 1) {
+        const resumeBtn = document.getElementById('btn-resume-game');
+        const stageLbl = document.getElementById('saved-stage-label');
+        if (resumeBtn) resumeBtn.classList.remove('hidden');
+        if (stageLbl) stageLbl.textContent = `進度 ${Math.min(saved.questStage, 8)}/7`;
+      }
+
+      if (init3DWorld()) {
+        gameLoop();
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bootApp);
+    } else {
+      bootApp();
+    }
+  </script>
+</body>
+</html>
